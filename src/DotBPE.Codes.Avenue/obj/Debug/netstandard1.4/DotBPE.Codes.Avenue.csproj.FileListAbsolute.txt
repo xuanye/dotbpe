@@ -1,0 +1,7 @@
+E:\work\github\DotBPE\src\DotBPE.Codes.Avenue\bin\Debug\netstandard1.4\DotBPE.Codes.Avenue.deps.json
+E:\work\github\DotBPE\src\DotBPE.Codes.Avenue\bin\Debug\netstandard1.4\DotBPE.Codes.Avenue.dll
+E:\work\github\DotBPE\src\DotBPE.Codes.Avenue\bin\Debug\netstandard1.4\DotBPE.Codes.Avenue.pdb
+E:\work\github\DotBPE\src\DotBPE.Codes.Avenue\obj\Debug\netstandard1.4\DotBPE.Codes.Avenue.csprojResolveAssemblyReference.cache
+E:\work\github\DotBPE\src\DotBPE.Codes.Avenue\obj\Debug\netstandard1.4\DotBPE.Codes.Avenue.AssemblyInfo.cs
+E:\work\github\DotBPE\src\DotBPE.Codes.Avenue\obj\Debug\netstandard1.4\DotBPE.Codes.Avenue.dll
+E:\work\github\DotBPE\src\DotBPE.Codes.Avenue\obj\Debug\netstandard1.4\DotBPE.Codes.Avenue.pdb
