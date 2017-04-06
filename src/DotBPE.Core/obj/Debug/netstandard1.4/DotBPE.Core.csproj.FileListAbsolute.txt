@@ -1,3 +1,0 @@
-E:\work\github\DotBPE\src\DotBPE.Core\bin\Debug\netstandard1.4\DotBPE.Core.deps.json
-E:\work\github\DotBPE\src\DotBPE.Core\obj\Debug\netstandard1.4\DotBPE.Core.csprojResolveAssemblyReference.cache
-E:\work\github\DotBPE\src\DotBPE.Core\obj\Debug\netstandard1.4\DotBPE.Core.AssemblyInfo.cs
