@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc
 {
-    public interface IMessageSender<TMessage> where TMessage:IMessage
+    public interface IRpcContext<TMessage> where TMessage:IMessage
     {
         Task SendAsync(TMessage data);
         Task SendAndFlushAsync(TMessage data);

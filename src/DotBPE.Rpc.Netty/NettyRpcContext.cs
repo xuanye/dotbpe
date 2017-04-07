@@ -7,12 +7,12 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Netty
 {
-    public class NettyServerMessageSender<TMessage> : IMessageSender<TMessage> where TMessage : IMessage
+    public class NettyRpcContext<TMessage> : IRpcContext<TMessage> where TMessage : IMessage
     {
         private readonly IChannelHandlerContext _context;
         private readonly IMessageCodecs<TMessage> _codecs;
         private readonly NettyBufferManager bufferManager;
-        public NettyServerMessageSender(IChannelHandlerContext context,IMessageCodecs<TMessage> codecs)
+        public NettyRpcContext(IChannelHandlerContext context,IMessageCodecs<TMessage> codecs)
         {
             this._context = context;
             this._codecs = codecs;

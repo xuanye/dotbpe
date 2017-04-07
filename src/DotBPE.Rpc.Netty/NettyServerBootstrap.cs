@@ -16,10 +16,12 @@ namespace DotBPE.Rpc.Netty
         private readonly ILogger _logger;
         private IChannel _channel;
         private readonly IMessageCodecs<IMessage> _msgCodecs;
-        public NettyServerBootstrap(IMessageCodecs<IMessage> msgCodecs, ILogger logger)
+        private readonly IMessageHandler<IMessage> _handler;
+        public NettyServerBootstrap(IMessageHandler<IMessage> handler, IMessageCodecs<IMessage> msgCodecs, ILogger logger)
         {
             this._logger = logger;
             this._msgCodecs = msgCodecs;
+            this._handler = handler;
         }
 
         public void Dispose()
@@ -44,19 +46,29 @@ namespace DotBPE.Rpc.Netty
                 .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
                     var pipeline = channel.Pipeline;
-                    pipeline.AddLast(new LengthFieldPrepender(4));
-                    pipeline.AddLast(new LengthFieldBasedFrameDecoder(int.MaxValue, 0, 4, 0, 4));
 
-               
-                    pipeline.AddLast(new ChannelDecodeHandler<IMessage>(_msgCodecs));
-                    
+                    MessageMeta meta = _msgCodecs.GetMessageMeta();
+                  
+                    //消息前处理
+                    pipeline.AddLast(
+                        new LengthFieldBasedFrameDecoder(
+                            meta.MaxFrameLength,
+                            meta.LengthFieldOffset, 
+                            meta.LengthFieldLength, 
+                            meta.LengthAdjustment, 
+                            meta.InitialBytesToStrip
+                        )
+                    );
+
+                    pipeline.AddLast(new ChannelDecodeHandler<IMessage>(_msgCodecs)); 
                     pipeline.AddLast(new ServerHandlerAdapter(async (ctx, message) =>
                     {
                         //这里的消息已经解码了，需要后处理，并产地给处理程序如何发送回复消息的接口
-                        var sender = new NettyServerMessageSender<IMessage>(ctx, _msgCodecs);
-                        await OnReceived(sender, message);
+                        var context = new NettyRpcContext<IMessage>(ctx, _msgCodecs);
+
+                        // 这里添加实际的消息处理程序
+                        await this._handler.RecieveAsync(context, message);
                     }, _logger));
-                    
 
                 }));
 
