@@ -8,16 +8,22 @@ using System.Collections.Generic;
 using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Hosting;
+using DotNetty.Common.Internal.Logging;
+using DotNetty.Handlers.Logging;
+using Microsoft.Extensions.Logging.Console;
+using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace DotBPE.Rpc.Netty
 {
-    public class NettyServerBootstrap : IServerBootstrap
+    public class NettyServerBootstrap<TMessage> : IServerBootstrap where TMessage :IMessage
     {
-        private readonly ILogger _logger;
+        private readonly ILogger<NettyServerBootstrap<TMessage>> _logger;
         private IChannel _channel;
-        private readonly IMessageCodecs<IMessage> _msgCodecs;
-        private readonly IMessageHandler<IMessage> _handler;
-        public NettyServerBootstrap(IMessageHandler<IMessage> handler, IMessageCodecs<IMessage> msgCodecs, ILogger logger)
+        private readonly IMessageCodecs<TMessage> _msgCodecs;
+        private readonly IMessageHandler<TMessage> _handler;
+        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, ILogger<NettyServerBootstrap<TMessage>> logger)
         {
             this._logger = logger;
             this._msgCodecs = msgCodecs;
@@ -36,6 +42,7 @@ namespace DotBPE.Rpc.Netty
 
         public async Task StartAsync(EndPoint endPoint)
         {
+            InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
             var bossGroup = new MultithreadEventLoopGroup(1);
             var workerGroup = new MultithreadEventLoopGroup();
             var bootstrap = new ServerBootstrap();
@@ -43,12 +50,15 @@ namespace DotBPE.Rpc.Netty
                 .Group(bossGroup, workerGroup)
                 .Channel<TcpServerSocketChannel>()
                 .Option(ChannelOption.SoBacklog, 100)
+                .Handler(new LoggingHandler("SRV-LSTN"))
                 .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
                     var pipeline = channel.Pipeline;
 
+                    pipeline.AddLast(new LoggingHandler("SRV-CONN"));
                     MessageMeta meta = _msgCodecs.GetMessageMeta();
                   
+
                     //消息前处理
                     pipeline.AddLast(
                         new LengthFieldBasedFrameDecoder(
@@ -60,15 +70,8 @@ namespace DotBPE.Rpc.Netty
                         )
                     );
 
-                    pipeline.AddLast(new ChannelDecodeHandler<IMessage>(_msgCodecs)); 
-                    pipeline.AddLast(new ServerHandlerAdapter(async (ctx, message) =>
-                    {
-                        //这里的消息已经解码了，需要后处理，并产地给处理程序如何发送回复消息的接口
-                        var context = new NettyRpcContext<IMessage>(ctx, _msgCodecs);
-
-                        // 这里添加实际的消息处理程序
-                        await this._handler.RecieveAsync(context, message);
-                    }, _logger));
+                    pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs)); 
+                    pipeline.AddLast(new ServerChannelHandlerAdapter<TMessage>(this, _logger));
 
                 }));
 
@@ -76,6 +79,14 @@ namespace DotBPE.Rpc.Netty
 
           
             this._logger.LogDebug($"服务主机启动成功，监听地址：{endPoint}。");
+        }
+
+        public void ChannelRead(IChannelHandlerContext ctx, TMessage message)
+        {
+            var context = new NettyRpcContext<TMessage>(ctx, _msgCodecs);
+
+            // 这里添加实际的消息处理程序
+            this._handler.ReceiveAsync(context, message);
         }
     }
 }

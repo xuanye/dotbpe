@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text;
+using DotBPE.Rpc.Codes;
 using DotNetty.Buffers;
 
 namespace DotBPE.Rpc.Netty
@@ -14,7 +15,7 @@ namespace DotBPE.Rpc.Netty
 
         internal IBufferReader CreateBufferReader(IByteBuffer input)
         {
-            throw new NotImplementedException();
+            return new NettyByteBufferReader(input);
         }
     }
 
@@ -59,6 +60,18 @@ namespace DotBPE.Rpc.Netty
         {
             return this._buffer.ReadShort();
         }
+
+        public ushort ReadUShort()
+        {
+            return this._buffer.ReadUnsignedShort();
+        }
+
+        public uint ReadUInt()
+        {
+            return this._buffer.ReadUnsignedInt();
+        }
+
+        public int ReadableBytes => _buffer.ReadableBytes;
     }
     public class NettyByteBufferWriter : IBufferWriter
     {
@@ -102,17 +115,23 @@ namespace DotBPE.Rpc.Netty
             this._buffer.WriteShort(value);
             return this;
         }
+
+        public IBufferWriter WriteUInt(uint value)
+        {
+            this._buffer.WriteUnsignedInt(value);
+            return this;
+        }
+
+        public IBufferWriter WriteUShort(ushort value)
+        {
+            this._buffer.WriteUnsignedShort(value);
+            return this;
+        }
+
         public IBufferWriter WriteLong(long value)
         {
             this._buffer.WriteLong(value);
             return this;
-        }
-
-        public byte[] GetBuffer()
-        {           
-            byte[] buffer = new byte[this._buffer.ReadableBytes];
-            this._buffer.GetBytes(0, buffer);
-            return buffer;
         }
     }
 }
