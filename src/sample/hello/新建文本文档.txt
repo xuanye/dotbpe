@@ -1,0 +1,3 @@
+protoc -I=./protos --csharp_out=./_g ./protos/rpc.proto
+
+protoc -I=./protos  --plugin=protoc-gen-custom=plugin.py --custom_out=./_g ./protos/rpc.proto
