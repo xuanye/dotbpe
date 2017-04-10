@@ -53,7 +53,7 @@ option csharp_namespace = "Google.Protobuf.Compiler";
 // [END csharp_declaration]
 option go_package = "plugin_go";
 
-import "../descriptor.proto";
+import "google/protobuf/descriptor.proto";
 
 // An encoded CodeGeneratorRequest is written to the plugin's stdin.
 message CodeGeneratorRequest {

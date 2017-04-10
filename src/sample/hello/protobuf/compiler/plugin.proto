@@ -44,24 +44,16 @@
 // plugin should be named "protoc-gen-$NAME", and will then be used when the
 // flag "--${NAME}_out" is passed to protoc.
 
-syntax = "proto2";
+syntax = "proto3";
 package google.protobuf.compiler;
 option java_package = "com.google.protobuf.compiler";
 option java_outer_classname = "PluginProtos";
-
-option go_package = "github.com/golang/protobuf/protoc-gen-go/plugin;plugin_go";
+// [START csharp_declaration]
+option csharp_namespace = "Google.Protobuf.Compiler";
+// [END csharp_declaration]
+option go_package = "plugin_go";
 
 import "google/protobuf/descriptor.proto";
-
-// The version number of protocol compiler.
-message Version {
-  optional int32 major = 1;
-  optional int32 minor = 2;
-  optional int32 patch = 3;
-  // A suffix for alpha, beta or rc release, e.g., "alpha-1", "rc2". It should
-  // be empty for mainline stable releases.
-  optional string suffix = 4;
-}
 
 // An encoded CodeGeneratorRequest is written to the plugin's stdin.
 message CodeGeneratorRequest {
@@ -71,7 +63,7 @@ message CodeGeneratorRequest {
   repeated string file_to_generate = 1;
 
   // The generator parameter passed on the command-line.
-  optional string parameter = 2;
+  string parameter = 2;
 
   // FileDescriptorProtos for all files in files_to_generate and everything
   // they import.  The files will appear in topological order, so each file
@@ -85,9 +77,6 @@ message CodeGeneratorRequest {
   // is not similarly optimized on protoc's end -- it will store all fields in
   // memory at once before sending them to the plugin.
   repeated FileDescriptorProto proto_file = 15;
-
-  // The version number of protocol compiler.
-  optional Version compiler_version = 3;
 }
 
 // The plugin writes an encoded CodeGeneratorResponse to stdout.
@@ -100,7 +89,7 @@ message CodeGeneratorResponse {
   // problem in protoc itself -- such as the input CodeGeneratorRequest being
   // unparseable -- should be reported by writing a message to stderr and
   // exiting with a non-zero status code.
-  optional string error = 1;
+  string error = 1;
 
   // Represents a single generated file.
   message File {
@@ -115,7 +104,7 @@ message CodeGeneratorResponse {
     // files need not reside completely in memory at one time.  Note that as of
     // this writing protoc does not optimize for this -- it will read the entire
     // CodeGeneratorResponse before writing files to disk.
-    optional string name = 1;
+    string name = 1;
 
     // If non-empty, indicates that the named file should already exist, and the
     // content here is to be inserted into that file at a defined insertion
@@ -154,10 +143,10 @@ message CodeGeneratorResponse {
     // command line.
     //
     // If |insertion_point| is present, |name| must also be present.
-    optional string insertion_point = 2;
+    string insertion_point = 2;
 
     // The file contents.
-    optional string content = 15;
+    string content = 15;
   }
   repeated File file = 15;
 }
