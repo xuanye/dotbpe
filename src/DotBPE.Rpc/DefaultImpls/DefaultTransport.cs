@@ -2,7 +2,7 @@
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
-using Microsoft.Extensions.Logging;
+using DotBPE.Rpc.Logging;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
@@ -10,19 +10,20 @@ namespace DotBPE.Rpc.DefaultImpls
         where TMessage : InvokeMessage
     {
         private readonly IRpcContext<TMessage> _context;
-        private readonly ILogger _logger;
-     
+        static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransport<TMessage>>();
 
-       
 
-        public DefaultTransport(IRpcContext<TMessage> context, ILogger logger) 
+        public DefaultTransport(IRpcContext<TMessage> context) 
         {
-            this._context = context;
-            this._logger = logger;
+            this._context = context;          
         }
-       
-        
-        
+
+        public async Task CloseAsync()
+        {         
+            await this._context.CloseAsync();
+            this.Dispose();
+        }
+
         public void Dispose()
         {
             //TODO:清理缓存
@@ -32,7 +33,7 @@ namespace DotBPE.Rpc.DefaultImpls
         {
             try
             {
-                _logger.LogDebug("准备发送消息。");
+                Logger.Debug("准备发送消息。");
               
                 try
                 {
@@ -43,11 +44,11 @@ namespace DotBPE.Rpc.DefaultImpls
                 {
                     throw new RpcCommunicationException("与服务端通讯时发生了异常。", exception);
                 }
-                 _logger.LogDebug("消息发送成功。");
+                Logger.Debug("消息发送成功。");
             }
             catch (Exception exception)
             {
-                _logger.LogError("消息发送失败。", exception);
+                Logger.Error("消息发送失败。", exception);
                 throw;
             }
         }

@@ -1,21 +1,22 @@
 ﻿using System;
 using System.Collections.Concurrent;
 using System.Net;
+using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
-using Microsoft.Extensions.Logging;
+using DotBPE.Rpc.Logging;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
     public class DefaultTransportFactory<TMessage>:ITransportFactory<TMessage> where TMessage:InvokeMessage
     {
-        private readonly ILogger _logger;
+        static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransportFactory<TMessage>>();
         private readonly IClientBootstrap<TMessage> _bootstrap;
 
         private readonly ConcurrentDictionary<EndPoint, Lazy<ITransport<TMessage>>> _clients 
             = new ConcurrentDictionary<EndPoint, Lazy<ITransport<TMessage>>>();
-        public DefaultTransportFactory(IClientBootstrap<TMessage> bootstrap, ILogger<DefaultTransportFactory<TMessage>> logger)
+        public DefaultTransportFactory(IClientBootstrap<TMessage> bootstrap)
         {
-            this._logger = logger;
+            
             this._bootstrap = bootstrap;
             this._bootstrap.Disconnected += Bootstrap_Disconnected;
         }
@@ -23,7 +24,7 @@ namespace DotBPE.Rpc.DefaultImpls
         private void Bootstrap_Disconnected(object sender, EndPoint endpoint)
         {
             _clients.TryRemove(endpoint, out var _);
-            this._logger.LogDebug("连接已经断开");
+            Logger.Debug("连接已经断开");
         }
 
         public ITransport<TMessage> CreateTransport(EndPoint endpoint) 
@@ -36,7 +37,7 @@ namespace DotBPE.Rpc.DefaultImpls
 
                             var bootstrap = _bootstrap;
                             var context = bootstrap.ConnectAsync(k).Result;
-                            var transportans = new DefaultTransport<TMessage>(context, _logger);
+                            var transportans = new DefaultTransport<TMessage>(context);
                             return transportans;
                         }
                     )).Value;
@@ -48,6 +49,24 @@ namespace DotBPE.Rpc.DefaultImpls
             }
         }
 
-      
+        public async Task CloseTransport(EndPoint serverAddress)
+        {
+            try
+            {
+                if(_clients.ContainsKey(serverAddress))
+                {
+                    bool success = _clients.TryRemove(serverAddress, out var lazyTransport);
+                    if (success && lazyTransport !=null && lazyTransport.IsValueCreated)
+                    {
+                        await lazyTransport.Value.CloseAsync();
+                    }
+                }
+                    
+            }
+            catch(Exception ex)
+            {
+                Logger.Error($"主动关闭连接{serverAddress}时发生异常:" + ex.ToString());
+            }
+        }
     }
 }

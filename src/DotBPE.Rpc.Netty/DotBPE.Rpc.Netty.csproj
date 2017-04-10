@@ -10,7 +10,6 @@
     <PackageReference Include="DotNetty.Common" Version="0.4.4" />
     <PackageReference Include="DotNetty.Handlers" Version="0.4.4" />
     <PackageReference Include="DotNetty.Transport" Version="0.4.4" />
-    <PackageReference Include="Microsoft.Extensions.Logging" Version="1.1.1" />
   </ItemGroup>
 
   <ItemGroup>

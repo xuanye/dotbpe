@@ -12,34 +12,29 @@ using System.Net;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotNetty.Codecs;
-using DotNetty.Common.Internal.Logging;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Console;
+using DotBPE.Rpc.Logging;
 
 namespace DotBPE.Rpc.Netty
 {
     public class NettyClientBootstrap<TMessage>:IClientBootstrap<TMessage> where TMessage:InvokeMessage
     {
-        private readonly ILogger<NettyClientBootstrap<TMessage>> _logger;
-
         private readonly Bootstrap _bootstrap;
         private readonly IMessageHandler<TMessage> _handler;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
-        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, ILogger<NettyClientBootstrap<TMessage>> logger)
+        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs)
         {
-            _logger = logger;
+            
             _bootstrap = InitBootstrap();
             _handler = handler;
             _msgCodecs = msgCodecs;
         }
 
         private Bootstrap InitBootstrap()
-        {
-            InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
+        {           
             var bootstrap = new Bootstrap();
             bootstrap
                 .Channel<TcpSocketChannel>()
@@ -63,7 +58,7 @@ namespace DotBPE.Rpc.Netty
                     );
 
                     pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs));
-                    pipeline.AddLast(new ClientChannelHandlerAdapter<TMessage>(this,_logger));
+                    pipeline.AddLast(new ClientChannelHandlerAdapter<TMessage>(this));
                   
                 }));
             return bootstrap;

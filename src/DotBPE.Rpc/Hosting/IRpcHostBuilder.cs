@@ -1,23 +1,15 @@
 ﻿using System;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace DotBPE.Rpc.Hosting
 {
     public interface IRpcHostBuilder
     {
-        IServerHost Build();
-      
-        IRpcHostBuilder UseLoggerFactory(ILoggerFactory loggerFactory);
+        IServerHost Build();     
 
-
-        IRpcHostBuilder ConfigureServices(Action<IServiceCollection> configureServices);
-
-      
-        IRpcHostBuilder ConfigureLogging(Action<ILoggerFactory> configureLogging);
+        IRpcHostBuilder ConfigureServices(Action<IServiceCollection> configureServices);          
 
         IRpcHostBuilder UseSetting(string key, string value);
-
        
         string GetSetting(string key);
     }

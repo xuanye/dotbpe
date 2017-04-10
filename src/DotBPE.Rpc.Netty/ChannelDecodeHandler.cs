@@ -17,7 +17,7 @@ namespace DotBPE.Rpc.Netty
         }
         protected override void Decode(IChannelHandlerContext context, IByteBuffer input, List<object> output)
         {
-            IBufferReader reader = this._nettyBufferManager.CreateBufferReader(input);
+            IBufferReader reader = NettyBufferManager.CreateBufferReader(input);
             IMessage message = this._codecs.Decode(reader);
             output.Add(message);
         }

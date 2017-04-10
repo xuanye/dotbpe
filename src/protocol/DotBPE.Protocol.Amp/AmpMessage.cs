@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Helper;
+using DotBPE.Rpc.Utils;
 
 namespace DotBPE.Protocol.Amp
 {

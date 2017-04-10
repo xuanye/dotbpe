@@ -3,24 +3,22 @@ using System.Collections.Generic;
 using System.Text;
 using DotBPE.Rpc.Codes;
 using DotNetty.Transport.Channels;
-using Microsoft.Extensions.Logging;
+using DotBPE.Rpc.Logging;
 
 namespace DotBPE.Rpc.Netty
 {
     public class ClientChannelHandlerAdapter<TMessage> : SimpleChannelInboundHandler<TMessage> where TMessage :InvokeMessage
     {
         private readonly NettyClientBootstrap<TMessage> _bootstrap;
-        private readonly ILogger _logger;
+        static readonly ILogger Logger = Environment.Logger.ForType<ClientChannelHandlerAdapter<TMessage>>();
 
-        public ClientChannelHandlerAdapter(NettyClientBootstrap<TMessage> bootstrap,ILogger logger)
+        public ClientChannelHandlerAdapter(NettyClientBootstrap<TMessage> bootstrap)
         {
-            this._bootstrap = bootstrap;
-            this._logger = logger;
+            this._bootstrap = bootstrap;           
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
-        {
-            Console.WriteLine("连接已经建立...");
+        {           
             base.ChannelActive(context);
         }
         /// <summary>
@@ -35,12 +33,12 @@ namespace DotBPE.Rpc.Netty
         
         protected override void ChannelRead0(IChannelHandlerContext ctx, TMessage msg)
         {
-            Console.WriteLine("收到一条消息...");
+         
             this._bootstrap.ChannelRead(ctx, msg);
         }
         public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
         {
-            Console.WriteLine("Exception: " + exception);
+            Logger.Error("Exception: " + exception);
         }
     }
 }

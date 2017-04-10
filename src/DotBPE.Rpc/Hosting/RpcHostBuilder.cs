@@ -8,7 +8,6 @@ using DotBPE.Rpc.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.ObjectPool;
 
 namespace DotBPE.Rpc.Hosting
@@ -19,15 +18,13 @@ namespace DotBPE.Rpc.Hosting
         private RpcHostOption _options;
 
         private readonly List<Action<IServiceCollection>> _configureServicesDelegates;
-        private readonly List<Action<ILoggerFactory>> _configureLoggingDelegates;
 
         private readonly IConfiguration _config;
-        private ILoggerFactory _loggerFactory;
+
         private bool _rpcHostBuilt = false;
         public RpcHostBuilder()
         {
-            _configureServicesDelegates = new List<Action<IServiceCollection>>();
-            _configureLoggingDelegates = new List<Action<ILoggerFactory>>();
+            _configureServicesDelegates = new List<Action<IServiceCollection>>();            
 
             _config = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "DotRPC_")
@@ -57,11 +54,7 @@ namespace DotBPE.Rpc.Hosting
             return host;
         }
 
-        public IRpcHostBuilder UseLoggerFactory(ILoggerFactory loggerFactory)
-        {
-            _loggerFactory = loggerFactory ?? throw new ArgumentNullException(nameof(loggerFactory));
-            return this;
-        }
+  
 
         public IRpcHostBuilder ConfigureServices(Action<IServiceCollection> configureServices)
         {
@@ -74,16 +67,7 @@ namespace DotBPE.Rpc.Hosting
             return this;
         }
 
-        public IRpcHostBuilder ConfigureLogging(Action<ILoggerFactory> configureLogging)
-        {
-            if (configureLogging == null)
-            {
-                throw new ArgumentNullException(nameof(configureLogging));
-            }
-
-            _configureLoggingDelegates.Add(configureLogging);
-            return this;
-        }
+   
 
         public IRpcHostBuilder UseSetting(string key, string value)
         {
@@ -108,34 +92,13 @@ namespace DotBPE.Rpc.Hosting
             var services = new ServiceCollection();
 
             services.AddSingleton(_options);
-            // The configured ILoggerFactory is added as a singleton here. AddLogging below will not add an additional one.
-            if (_loggerFactory == null)
-            {
-                _loggerFactory = new LoggerFactory();
-                services.AddSingleton(provider => _loggerFactory);
-            }
-            else
-            {
-                services.AddSingleton(_loggerFactory);
-            }
-
-            foreach (var configureLogging in _configureLoggingDelegates)
-            {
-                configureLogging(_loggerFactory);
-            }
-
-            //This is required to add ILogger of T.
-            services.AddLogging();
-
+       
             var listener = new DiagnosticListener("DotRPC");
             services.AddSingleton<DiagnosticListener>(listener);
-            services.AddSingleton<DiagnosticSource>(listener);
-
-      
+            services.AddSingleton<DiagnosticSource>(listener);      
 
          
             services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
-
          
             services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
 
@@ -148,11 +111,7 @@ namespace DotBPE.Rpc.Hosting
         }
 
         private void AddApplicationServices(IServiceCollection services, IServiceProvider hostingServiceProvider)
-        {
-            
-            var loggerFactory = hostingServiceProvider.GetService<ILoggerFactory>();
-            services.Replace(ServiceDescriptor.Singleton(typeof(ILoggerFactory), loggerFactory));
-
+        {       
             var listener = hostingServiceProvider.GetService<DiagnosticListener>();
             services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticListener), listener));
             services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticSource), listener));

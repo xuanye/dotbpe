@@ -13,32 +13,31 @@ namespace HelloRpc.Client
     {
         static void Main(string[] args)
         {
+
             Console.OutputEncoding = Encoding.UTF8;
-            var actor = new DefaultClientActor();
-            actor.Recieved += Actor_Recieved;
+           
             var client = new RpcClientBuilder()
                 .AddCore<AmpMessage>()
                 .UserNettyClient<AmpMessage>()
                 .ConfigureServices((services) =>
                 {
-                    services.AddSingleton<IServiceActor<AmpMessage>>(actor)
-                    .AddSingleton<IServiceActorLocator<AmpMessage>,ClientActorLocator>()
-                    .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
+                    services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
                 })
                 .UseSetting("serverIp","127.0.0.1")
                 .UseSetting("serverPort","6201")
                 .Build<AmpMessage>();
 
+            client.Recieved += Client_Recieved;
             Console.WriteLine("Echo Client Starting");
             client.SendString("Hello");
             Console.ReadLine();
         }
 
-        private static void Actor_Recieved(object sender, MessageRecievedEventArgs<AmpMessage> e)
+        private static void Client_Recieved(object sender, MessageRecievedEventArgs<AmpMessage> e)
         {
             e.Context.SendAsync(e.Message);
             Console.WriteLine($"[Client]:Message Receieved:{e.Message.ServiceId}:{e.Message.MessageId}");
-        }
+        }      
     }
 
     public static class RpcClientExtensions

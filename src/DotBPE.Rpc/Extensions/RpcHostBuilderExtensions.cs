@@ -7,7 +7,7 @@ namespace DotBPE.Rpc.Extensions
 {
     public static class RpcHostBuilderExtensions
     {
-        public static IRpcHostBuilder AddRpcCore<TMessage>(this IRpcHostBuilder builder) where TMessage : IMessage
+        public static IRpcHostBuilder AddRpcCore<TMessage>(this IRpcHostBuilder builder) where TMessage : InvokeMessage
         {
             builder.ConfigureServices((services) =>
             {

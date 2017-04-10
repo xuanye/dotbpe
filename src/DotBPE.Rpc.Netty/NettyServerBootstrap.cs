@@ -2,7 +2,6 @@
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -10,22 +9,19 @@ using System.Text;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Hosting;
-using DotNetty.Common.Internal.Logging;
+using DotBPE.Rpc.Logging;
 using DotNetty.Handlers.Logging;
-using Microsoft.Extensions.Logging.Console;
-using LogLevel = Microsoft.Extensions.Logging.LogLevel;
 
 namespace DotBPE.Rpc.Netty
 {
-    public class NettyServerBootstrap<TMessage> : IServerBootstrap where TMessage :IMessage
+    public class NettyServerBootstrap<TMessage> : IServerBootstrap where TMessage :InvokeMessage
     {
-        private readonly ILogger<NettyServerBootstrap<TMessage>> _logger;
+        static readonly ILogger Logger = Environment.Logger.ForType<NettyServerBootstrap<TMessage>>();
         private IChannel _channel;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
         private readonly IMessageHandler<TMessage> _handler;
-        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, ILogger<NettyServerBootstrap<TMessage>> logger)
-        {
-            this._logger = logger;
+        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs)
+        {           
             this._msgCodecs = msgCodecs;
             this._handler = handler;
         }
@@ -41,8 +37,7 @@ namespace DotBPE.Rpc.Netty
         }
 
         public async Task StartAsync(EndPoint endPoint)
-        {
-            InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
+        {           
             var bossGroup = new MultithreadEventLoopGroup(1);
             var workerGroup = new MultithreadEventLoopGroup();
             var bootstrap = new ServerBootstrap();
@@ -71,14 +66,14 @@ namespace DotBPE.Rpc.Netty
                     );
 
                     pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs)); 
-                    pipeline.AddLast(new ServerChannelHandlerAdapter<TMessage>(this, _logger));
+                    pipeline.AddLast(new ServerChannelHandlerAdapter<TMessage>(this));
 
                 }));
 
             this._channel = await bootstrap.BindAsync(endPoint);
 
           
-            this._logger.LogDebug($"服务主机启动成功，监听地址：{endPoint}。");
+            Logger.Debug($"服务主机启动成功，监听地址：{endPoint}。");
         }
 
         public void ChannelRead(IChannelHandlerContext ctx, TMessage message)

@@ -11,13 +11,16 @@ namespace DotBPE.Rpc.Netty
     public class NettyRpcContext<TMessage> : IRpcContext<TMessage> where TMessage : IMessage
     {
         private readonly IChannelHandlerContext _context;
-        private readonly IMessageCodecs<TMessage> _codecs;
-        private readonly NettyBufferManager _bufferManager;
+        private readonly IMessageCodecs<TMessage> _codecs;       
         public NettyRpcContext(IChannelHandlerContext context,IMessageCodecs<TMessage> codecs)
         {
             this._context = context;
-            this._codecs = codecs;
-            this._bufferManager = new NettyBufferManager();
+            this._codecs = codecs;         
+        }
+
+        public Task CloseAsync()
+        {
+            return _context.CloseAsync();
         }
 
         public Task SendAsync(TMessage message)
@@ -28,7 +31,7 @@ namespace DotBPE.Rpc.Netty
         private IByteBuffer GetBuffer(TMessage message)
         {
             var buff = this._context.Allocator.Buffer(message.Length);
-            IBufferWriter writer = this._bufferManager.CreateBufferWriter(buff);
+            IBufferWriter writer = NettyBufferManager.CreateBufferWriter(buff);
             this._codecs.Encode(message, writer);
             return buff;
         }    

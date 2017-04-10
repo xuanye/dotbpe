@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotBPE.Rpc.Helper
+namespace DotBPE.Rpc.Utils
 {
     public static class IdUtils
     {

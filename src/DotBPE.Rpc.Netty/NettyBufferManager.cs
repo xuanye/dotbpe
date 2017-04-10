@@ -8,12 +8,12 @@ namespace DotBPE.Rpc.Netty
 {
     public class NettyBufferManager
     {
-        internal IBufferWriter CreateBufferWriter(IByteBuffer buffer)
+        internal static IBufferWriter CreateBufferWriter(IByteBuffer buffer)
         {
             return new NettyByteBufferWriter(buffer);
         }
 
-        internal IBufferReader CreateBufferReader(IByteBuffer input)
+        internal static IBufferReader CreateBufferReader(IByteBuffer input)
         {
             return new NettyByteBufferReader(input);
         }

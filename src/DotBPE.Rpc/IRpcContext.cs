@@ -10,5 +10,6 @@ namespace DotBPE.Rpc
     public interface IRpcContext<in TMessage> where TMessage:IMessage
     {
         Task SendAsync(TMessage data);
+        Task CloseAsync();
     }
 }

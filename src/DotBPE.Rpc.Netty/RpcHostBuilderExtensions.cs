@@ -9,7 +9,7 @@ namespace DotBPE.Rpc.Netty
 {
     public static class RpcHostBuilderExtensions
     {
-        public static IRpcHostBuilder UseNettyServer<TMessage>(this IRpcHostBuilder builder) where TMessage : IMessage
+        public static IRpcHostBuilder UseNettyServer<TMessage>(this IRpcHostBuilder builder) where TMessage : InvokeMessage
         {
             builder.ConfigureServices((services) =>
             {
