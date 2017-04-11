@@ -35,7 +35,10 @@ namespace DotBPE.Rpc.Netty
                 this._channel = null;
             }           
         }
-
+        public Task ShutdownAsync()
+        {
+            return this._channel.CloseAsync();
+        }
         public async Task StartAsync(EndPoint endPoint)
         {           
             var bossGroup = new MultithreadEventLoopGroup(1);
@@ -71,8 +74,7 @@ namespace DotBPE.Rpc.Netty
                 }));
 
             this._channel = await bootstrap.BindAsync(endPoint);
-
-          
+           
             Logger.Debug($"服务主机启动成功，监听地址：{endPoint}。");
         }
 
@@ -83,5 +85,7 @@ namespace DotBPE.Rpc.Netty
             // 这里添加实际的消息处理程序
             this._handler.ReceiveAsync(context, message);
         }
+
+        
     }
 }

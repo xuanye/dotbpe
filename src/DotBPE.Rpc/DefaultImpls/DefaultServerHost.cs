@@ -19,9 +19,9 @@ namespace DotBPE.Rpc.DefaultImpls
             this._option = option;
         }
 
-        public void Dispose()
+        public Task ShutdownAsync()
         {
-            _bootstrap?.Dispose();
+            return this._bootstrap.ShutdownAsync();
         }
 
         public Task StartAsync()

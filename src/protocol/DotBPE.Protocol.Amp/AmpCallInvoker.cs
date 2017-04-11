@@ -29,7 +29,6 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 var callbackTask = RegisterResultCallbackAsync(request.Id);               
                 try
                 {
-
                     //发送
                     await base.RpcClient.SendAsync(request);
                 }
@@ -39,7 +38,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 }
 
                 Logger.Debug("消息发送成功。");
-
+               
                 return await callbackTask;
             }
             catch (Exception exception)

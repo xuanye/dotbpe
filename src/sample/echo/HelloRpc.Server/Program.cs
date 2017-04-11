@@ -27,14 +27,12 @@ namespace HelloRpc.Server
                 .UseAmp()
                 .AddServiceActor(new GreeterImpl())
                 .Build();
-          
-            Task.Factory.StartNew(async () =>
-            {
-                //启动主机
-                await host.StartAsync();
-                Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
-            });
+
+            host.StartAsync().Wait();
+
+            Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
             Console.ReadLine();
+            host.ShutdownAsync().Wait();
 
         }
     }

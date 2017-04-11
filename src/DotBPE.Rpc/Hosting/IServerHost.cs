@@ -3,8 +3,10 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Hosting
 {
-    public interface IServerHost:IDisposable
+    public interface IServerHost
     {
         Task StartAsync();
+
+        Task ShutdownAsync();
     }
 }

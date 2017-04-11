@@ -17,10 +17,10 @@ namespace HelloRpc.Common
         {
             AmpMessage message = AmpMessage.CreateRequestMessage(100, 1);
             message.Data = request.ToByteArray();
-
+                       
             var response = await base.CallInvoker.AsyncCall(message);
             if (response != null && response.Data !=null)
-            {               
+            { 
                return HelloReply.Parser.ParseFrom(response.Data); 
             }
             throw new RpcException("请求出错，请检查!");
