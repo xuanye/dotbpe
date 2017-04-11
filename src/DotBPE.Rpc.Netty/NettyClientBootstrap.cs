@@ -39,6 +39,7 @@ namespace DotBPE.Rpc.Netty
             bootstrap
                 .Channel<TcpSocketChannel>()
                 .Option(ChannelOption.TcpNodelay, true)
+                .Option(ChannelOption.ConnectTimeout, TimeSpan.FromSeconds(3))
                 .Group(new MultithreadEventLoopGroup())
                 .Handler(new ActionChannelInitializer<ISocketChannel>(c =>
                 {
@@ -46,6 +47,8 @@ namespace DotBPE.Rpc.Netty
                     pipeline.AddLast(new LoggingHandler("CLT-CONN"));
                     MessageMeta meta = _msgCodecs.GetMessageMeta();
                    
+                    //TODO:这里要添加一个心跳包的拦截器
+
                     //消息前处理
                     pipeline.AddLast(
                         new LengthFieldBasedFrameDecoder(

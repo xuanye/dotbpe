@@ -20,7 +20,7 @@ namespace HelloRpc.Server
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-
+           
             var host = new RpcHostBuilder()
                 .AddRpcCore<AmpMessage>()
                 .UseNettyServer<AmpMessage>()

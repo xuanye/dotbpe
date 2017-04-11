@@ -36,13 +36,8 @@ namespace DotBPE.Rpc
         /// Invokes a simple remote call in a blocking fashion.
         /// </summary>
         public abstract TMessage BlockingCall(TMessage request);
+        
 
-
-
-        /// <summary>
-        /// Invokes a simple remote call asynchronously.
-        /// </summary>
-        public abstract Task<TMessage> AsyncCall(TMessage request);
-          
+        public abstract Task<TMessage> AsyncCall(TMessage request,int timeOut=3000);
     }
 }
