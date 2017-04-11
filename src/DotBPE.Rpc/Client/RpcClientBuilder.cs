@@ -38,12 +38,12 @@ namespace DotBPE.Rpc
            
             var hostingServices = BuildCommonServices();
             var applicationServices = hostingServices.Clone();
-            var hostingServiceProvider = hostingServices.BuildServiceProvider();
+            var clientServiceProvider = hostingServices.BuildServiceProvider();
 
-            AddApplicationServices(applicationServices, hostingServiceProvider);
+            AddApplicationServices(applicationServices, clientServiceProvider);
 
-            var client = hostingServiceProvider.GetRequiredService<IRpcClient<TMessage>>();
-
+            var client = clientServiceProvider.GetRequiredService<IRpcClient<TMessage>>();
+            Environment.SetServiceProvider(clientServiceProvider);
             return client;
         }
 

@@ -1,4 +1,5 @@
-﻿using DotBPE.Rpc.Logging;
+﻿using DotBPE.Rpc.Exceptions;
+using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Utils;
 using System;
 using System.Collections.Generic;
@@ -10,6 +11,7 @@ namespace DotBPE.Rpc
     {
         static ILogger logger = new NullLogger();
 
+        static IServiceProvider serviceProvider = null;
 
         /// <summary>
         /// Gets application-wide logger used by gRPC.
@@ -23,6 +25,19 @@ namespace DotBPE.Rpc
             }
         }
 
+        public static IServiceProvider ServiceProvider {
+
+            get
+            {
+                if(serviceProvider == null)
+                {
+                    throw new RpcException("ServiceProvider 未设置，请检查程序是否正确启动");
+                }
+                return serviceProvider;
+            }
+        }
+
+
         /// <summary>
         /// Sets the application-wide logger that should be used by gRPC.
         /// </summary>
@@ -30,6 +45,16 @@ namespace DotBPE.Rpc
         {
             Preconditions.CheckNotNull(customLogger, "customLogger");
             logger = customLogger;
+        }
+
+        /// <summary>
+        /// 设置当前环境的ServiceProvider
+        /// </summary>
+        /// <param name="provider"></param>
+        public static void SetServiceProvider(IServiceProvider provider)
+        {
+            Preconditions.CheckNotNull(provider, "provider");
+            serviceProvider = provider;
         }
     }
 }

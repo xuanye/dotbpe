@@ -19,10 +19,30 @@ namespace DotBPE.Rpc.DefaultImpls
             this._actorLocator = actorLocator;          
         }
 
+        /// <summary>
+        /// 消息处理订阅，可以添加日志等等功能
+        /// </summary>
         public event EventHandler<MessageRecievedEventArgs<TMessage>> Recieved;
 
+       
+        private void RaiseReceivedEvent(IRpcContext<TMessage> context, TMessage message)
+        {
+            if (Recieved != null)
+            {
+                try
+                {
+                    Recieved(this, new MessageRecievedEventArgs<TMessage>(context, message));
+                }
+                catch
+                {
+
+                }
+            }
+        }
         public Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message)
         {
+            RaiseReceivedEvent(context, message);
+
             var actor =  this._actorLocator.LocateServiceActor(message);
             if(actor == null) // 找不到对应的执行程序
             {

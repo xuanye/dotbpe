@@ -20,12 +20,12 @@ namespace DotBPE.Rpc.Netty
         }
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            Console.WriteLine($"客户端连接上了{context.Channel.RemoteAddress}");
+            Logger.Debug($"客户端连接上了{context.Channel.RemoteAddress}");
             base.ChannelActive(context);
         }
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
-            Console.WriteLine("收到一条消息...");
+            Logger.Debug("收到一条消息...");
             Task.Run(() =>
             {
                 this._bootstrap.ChannelRead(context, msg);

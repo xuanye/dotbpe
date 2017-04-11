@@ -51,6 +51,8 @@ namespace DotBPE.Rpc.Hosting
 
             var host = hostingServiceProvider.GetRequiredService<IServerHost>();
 
+            Environment.SetServiceProvider(hostingServiceProvider);
+
             return host;
         }
 

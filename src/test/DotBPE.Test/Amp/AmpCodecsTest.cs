@@ -22,7 +22,7 @@ namespace DotBPE.Test.Amp
                 ServiceId = 10000,
                 MessageId = 101
             };
-            msg.Data = Encoding.UTF8.GetBytes(msg.UniqueId);
+            msg.Data = Encoding.UTF8.GetBytes("ABC");
             IByteBuffer buffer = Unpooled.Buffer(msg.Length);
 
             var bufferReader =new NettyByteBufferReader(buffer);
@@ -33,8 +33,8 @@ namespace DotBPE.Test.Amp
 
             Assert.Equal(msg.MessageId, otherMsg.MessageId);
             Assert.Equal(msg.ServiceId, otherMsg.ServiceId);
-            string uid = Encoding.UTF8.GetString(otherMsg.Data);
-            Assert.Equal(msg.UniqueId, uid);
+            string data = Encoding.UTF8.GetString(otherMsg.Data);
+            Assert.Equal("abc", data);
         }
     }
 }

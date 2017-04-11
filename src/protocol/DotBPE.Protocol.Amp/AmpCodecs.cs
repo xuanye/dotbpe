@@ -27,6 +27,7 @@ namespace DotBPE.Protocol.Amp
         {
             writer.WriteByte(message.Version);
             writer.WriteInt(message.Length);
+            writer.WriteInt(message.Sequence);
             writer.WriteByte((byte) message.InvokeMessageType);
             writer.WriteUShort(message.ServiceId);
             writer.WriteUShort(message.MessageId);
@@ -46,7 +47,7 @@ namespace DotBPE.Protocol.Amp
             }
             msg.Version = reader.ReadByte();
             int length = reader.ReadInt();
-
+            msg.Sequence = reader.ReadInt();
             byte type = reader.ReadByte();
             if (type > 3 || type < 1)
             {
@@ -68,7 +69,7 @@ namespace DotBPE.Protocol.Amp
             msg.ServiceId = reader.ReadUShort();
             msg.MessageId = reader.ReadUShort();
 
-            int left = length - 10;
+            int left = length - 14;
             if (left > 0)
             {
                 if (left > reader.ReadableBytes)
