@@ -27,7 +27,7 @@ namespace HelloRpc.Client
                 {
                     break;
                 }
-                var reply = greeter.SayHelloAsnyc(new HelloRequest()
+                var reply = greeter.HelloPlusAsnyc(new HelloRequest()
                 {
                     Name = name
                 }).Result;

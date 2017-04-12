@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.26403.0
+VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.Test", "test\DotBPE.Test\DotBPE.Test.csproj", "{1C25E1A9-A965-4680-A86A-775224B2FAD4}"
 EndProject
@@ -15,7 +15,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.Protocol.Amp", "prot
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{8C724D8D-4073-4A47-A588-AF825A7EAAEF}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "echo", "echo", "{3CEF66BD-989A-4E50-8349-8D2B013BE10B}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hellorpc", "hellorpc", "{3CEF66BD-989A-4E50-8349-8D2B013BE10B}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloRpc.Server", "sample\echo\HelloRpc.Server\HelloRpc.Server.csproj", "{81066E51-BF97-4D38-8CAD-2F52E9C5BD49}"
 EndProject
