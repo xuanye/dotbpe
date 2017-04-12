@@ -16,8 +16,19 @@ namespace DotBPE.Rpc.Hosting
                 throw new ArgumentNullException(nameof(configuration));
             }
             this.ApplicationName = configuration["appName"];
-            this.HostIP = string.IsNullOrEmpty(configuration["hostIp"]) ? "127.0.0.1" : configuration["hostIp"];
-            this.HostPort = ParseInt(configuration, "hostPort", 6201);
+
+            string localAddress = configuration["hostAddress"];
+            if (string.IsNullOrEmpty(localAddress))
+            {
+                localAddress = "127.0.0.1:6201";
+            }
+            string[] arr_Address = localAddress.Split(':');
+            if(arr_Address.Length != 2)
+            {
+                throw new ArgumentException("地址配置错误："+ localAddress);
+            }
+            this.HostIP = arr_Address[0];
+            this.HostPort = int.Parse(arr_Address[1]);
         }
 
         public string ApplicationName { get; set; }

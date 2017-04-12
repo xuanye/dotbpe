@@ -1,0 +1,6 @@
+{
+    "hostAddress":"*:6201",
+    "remoteServices":[
+        {"serviceId":"101","msgIds":"1,2","remoteAddress":"127.0.0.1:6202"}
+    ]
+}

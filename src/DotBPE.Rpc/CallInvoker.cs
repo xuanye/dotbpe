@@ -10,34 +10,31 @@ namespace DotBPE.Rpc
 {
     public abstract class CallInvoker<TMessage> where TMessage : InvokeMessage
     {
-       
+        private readonly IMessageSender<TMessage> msgSender;
 
-        private readonly IRpcClient<TMessage> rpcClient;
-      
-        public CallInvoker(IRpcClient<TMessage> client)
+        public CallInvoker(IMessageSender<TMessage> sender)
         {
-            this.rpcClient = client;
-            this.rpcClient.Recieved += MessageRecieved;
+            this.msgSender = sender;
+            this.msgSender.Recieved += MessageRecieved;
         }
 
-
-        protected IRpcClient<TMessage> RpcClient
+        protected IMessageSender<TMessage> MessageSender
         {
             get
             {
-                return this.rpcClient;
+                return this.msgSender;
             }
         }
 
         protected abstract void MessageRecieved(object sender, MessageRecievedEventArgs<TMessage> e);
-       
+
 
         /// <summary>
         /// Invokes a simple remote call in a blocking fashion.
         /// </summary>
         public abstract TMessage BlockingCall(TMessage request);
-        
 
-        public abstract Task<TMessage> AsyncCall(TMessage request,int timeOut=3000);
+
+        public abstract Task<TMessage> AsyncCall(TMessage request, int timeOut = 3000);
     }
 }

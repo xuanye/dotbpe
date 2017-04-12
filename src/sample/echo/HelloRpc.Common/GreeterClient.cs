@@ -7,28 +7,29 @@ using Google.Protobuf;
 
 namespace HelloRpc.Common
 {
-    public sealed class GreeterClient : AmpInvokeClient
+    public sealed class GreeterClient : AmpInvokeClient,IGreeterClient
     {
-        public GreeterClient(IRpcClient<AmpMessage> client) : base(client)
+        public GreeterClient(IMessageSender<AmpMessage> sender) : base(sender)
         {
 
         }
+
         public async Task<HelloReply> SayHelloAsnyc(HelloRequest request)
         {
             AmpMessage message = AmpMessage.CreateRequestMessage(100, 1);
             message.Data = request.ToByteArray();
-                       
+
             var response = await base.CallInvoker.AsyncCall(message);
             if (response != null && response.Data !=null)
-            { 
-               return HelloReply.Parser.ParseFrom(response.Data); 
+            {
+               return HelloReply.Parser.ParseFrom(response.Data);
             }
             throw new RpcException("请求出错，请检查!");
         }
 
         public HelloReply SayHello(HelloRequest request)
         {
-            AmpMessage message = AmpMessage.CreateRequestMessage(100, 1);             
+            AmpMessage message = AmpMessage.CreateRequestMessage(100, 1);
             message.Data = request.ToByteArray();
 
             var response = base.CallInvoker.BlockingCall(message);
@@ -39,4 +40,5 @@ namespace HelloRpc.Common
             throw new RpcException("请求出错，请检查!");
         }
     }
+
 }

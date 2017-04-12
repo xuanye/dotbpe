@@ -21,7 +21,7 @@ namespace DotBPE.Rpc.Netty
         private readonly IMessageCodecs<TMessage> _msgCodecs;
         private readonly IMessageHandler<TMessage> _handler;
         public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs)
-        {           
+        {
             this._msgCodecs = msgCodecs;
             this._handler = handler;
         }
@@ -30,17 +30,16 @@ namespace DotBPE.Rpc.Netty
         {
             if(this._channel.Open || this._channel.Active)
             {
-                Task task = this._channel.CloseAsync();
-                task.Wait();
+                this._channel.CloseAsync().Wait();
                 this._channel = null;
-            }           
+            }
         }
         public Task ShutdownAsync()
         {
             return this._channel.CloseAsync();
         }
         public async Task StartAsync(EndPoint endPoint)
-        {           
+        {
             var bossGroup = new MultithreadEventLoopGroup(1);
             var workerGroup = new MultithreadEventLoopGroup();
             var bootstrap = new ServerBootstrap();
@@ -55,26 +54,26 @@ namespace DotBPE.Rpc.Netty
 
                     pipeline.AddLast(new LoggingHandler("SRV-CONN"));
                     MessageMeta meta = _msgCodecs.GetMessageMeta();
-                  
+
 
                     //消息前处理
                     pipeline.AddLast(
                         new LengthFieldBasedFrameDecoder(
                             meta.MaxFrameLength,
-                            meta.LengthFieldOffset, 
-                            meta.LengthFieldLength, 
-                            meta.LengthAdjustment, 
+                            meta.LengthFieldOffset,
+                            meta.LengthFieldLength,
+                            meta.LengthAdjustment,
                             meta.InitialBytesToStrip
                         )
                     );
 
-                    pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs)); 
+                    pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs));
                     pipeline.AddLast(new ServerChannelHandlerAdapter<TMessage>(this));
 
                 }));
 
             this._channel = await bootstrap.BindAsync(endPoint);
-           
+
             Logger.Debug($"服务主机启动成功，监听地址：{endPoint}。");
         }
 
@@ -86,6 +85,6 @@ namespace DotBPE.Rpc.Netty
             this._handler.ReceiveAsync(context, message);
         }
 
-        
+
     }
 }

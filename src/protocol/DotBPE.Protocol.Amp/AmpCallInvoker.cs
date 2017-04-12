@@ -16,41 +16,41 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private int sendSequence = 0 ;
         private static object lockObj = new object();
-        public AmpCallInvoker(IRpcClient<AmpMessage> rpcClient) : base(rpcClient)
+        public AmpCallInvoker(IMessageSender<AmpMessage> sener) : base(sener)
         {
         }
-            
+
         public async override Task<AmpMessage> AsyncCall(AmpMessage request, int timeOut = 3000)
         {
             try
             {
                 AutoSetSequence(request);
                 var callbackTask = RegisterResultCallbackAsync(request.Id,timeOut);
-                          
+
                 try
-                {                   
-                    //发送                  
-                    await base.RpcClient.SendAsync(request);
+                {
+                    //发送
+                    await base.MessageSender.SendAsync(request);
                 }
                 catch (Exception exception)
                 {
                     RemoveResultCallback(request.Id);
                     throw new RpcCommunicationException ("与服务端通讯时发生了异常。", exception);
                 }
-                
+
                 return await callbackTask;
             }
             catch (Exception exception)
-            {             
-                Logger.Error("消息发送失败。", exception);
+            {
+                Logger.Error("消息发送失败：", exception);
                 throw;
             }
         }
 
-       
+
         public override AmpMessage BlockingCall(AmpMessage request)
         {
-            return this.AsyncCall(request).Result;           
+            return this.AsyncCall(request).Result;
         }
 
         protected override void MessageRecieved(object sender, MessageRecievedEventArgs<AmpMessage> e)
@@ -61,11 +61,11 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             }
 
             if(e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.Response) //只处理回复消息
-            {                
+            {
                 Logger.Info($"接收到消息:{e.Message.Id}");
                 var message = e.Message;
                 TaskCompletionSource<AmpMessage> task;
-                if (_resultDictionary.ContainsKey(message.Id) 
+                if (_resultDictionary.ContainsKey(message.Id)
                     && _resultDictionary.TryGetValue(message.Id, out task))
                 {
                     task.SetResult(message);
@@ -94,10 +94,10 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         private Task<AmpMessage> RegisterResultCallbackAsync(string id,int timeOut)
         {
             var tcs = new TaskCompletionSource<AmpMessage>();
-           
+
             _resultDictionary.TryAdd(id, tcs);
             var task = tcs.Task;
-            //设置超时              
+            //设置超时
             if (Task.WhenAny(task, Task.Delay(timeOut)).Result != task)
             {
                 // timeout logic
@@ -108,10 +108,13 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private void AutoSetSequence(AmpMessage request)
         {
+            if(request.Sequence>0){
+                return;
+            }
             lock (lockObj)
             {
                 request.Sequence = this.sendSequence++;
-            }           
+            }
         }
     }
 }

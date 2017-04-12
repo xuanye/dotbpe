@@ -12,8 +12,7 @@ namespace DotBPE.Rpc.Netty
         {
             builder.ConfigureServices((services) =>
             {
-                services.AddSingleton<IClientBootstrap<TMessage>,NettyClientBootstrap<TMessage>>()
-                .AddSingleton<IRpcClient<TMessage>,DefaultRpcClient<TMessage>>();
+                services.AddSingleton<IClientBootstrap<TMessage>,NettyClientBootstrap<TMessage>>();
             });
             return builder;
         }

@@ -1,4 +1,4 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿
 using System;
 using System.Net;
 using System.Text;
@@ -11,6 +11,8 @@ using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
 using Microsoft.Extensions.Logging;
 using HelloRpc.Common;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace HelloRpc.Server
 {
@@ -20,12 +22,17 @@ namespace HelloRpc.Server
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
-           
+            var config = new ConfigurationBuilder()
+                .AddJsonFile("dotbpe.config.json", optional: true)
+                .Build();
+
             var host = new RpcHostBuilder()
-                .AddRpcCore<AmpMessage>()
-                .UseNettyServer<AmpMessage>()
-                .UseAmp()
-                .AddServiceActor(new GreeterImpl())
+                .UseConfiguration(config)
+                .AddRpcCore<AmpMessage>() //添加核心依赖
+                .UseNettyServer<AmpMessage>()  //使用使用Netty默认实现
+                .UseAmp() //使用Amp协议中的默认实现
+                .UseAmpClient() //还要调用外部服务
+                .AddServiceActor(new GreeterImpl())  //注册服务
                 .Build();
 
             host.StartAsync().Wait();

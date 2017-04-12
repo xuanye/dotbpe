@@ -5,6 +5,9 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using DotBPE.Rpc.Extensions;
+using DotBPE.Rpc.Netty;
+using DotBPE.Rpc.DefaultImpls;
 
 namespace DotBPE.Protocol.Amp
 {
@@ -17,6 +20,23 @@ namespace DotBPE.Protocol.Amp
                 services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>()
                     .AddSingleton<IServiceActorLocator<AmpMessage>, ServiceActorLocator>();
             });
+            return builder;
+        }
+
+        /// <summary>
+        /// 即是全服务端 ，同时又是客户端
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static IRpcHostBuilder UseAmpClient(this IRpcHostBuilder builder){
+
+            builder.ConfigureServices((services)=>{
+
+                services.AddSingleton<IRpcClient<AmpMessage>,DefaultRpcClient<AmpMessage>>()
+                    .AddSingleton<ITransportFactory<AmpMessage>,DefaultTransportFactory<AmpMessage>>()
+                    .AddSingleton<IClientBootstrap<AmpMessage>,NettyClientBootstrap<AmpMessage>>();
+            });
+
             return builder;
         }
         public static IRpcHostBuilder AddServiceActor(this IRpcHostBuilder builder,params IServiceActor<AmpMessage>[] actors)
