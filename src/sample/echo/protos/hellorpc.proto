@@ -15,15 +15,25 @@ package dotbpe;
 option csharp_namespace = "HelloRpc.Common";
 // [END csharp_declaration]
 
+import "DotBpe.proto";
+
 //[START_RPC_SERVICE]
 // The greeting service definition.
 service Greeter {
+  option (dotbpe.service_id)= 100 ;//设定服务ID
   // Sends a greeting
-  rpc HelloPlus (HelloRequest) returns (HelloResponse) {}
+  rpc HelloPlus (HelloRequest) returns (HelloResponse) {
+    option (dotbpe.message_id)= 1 ;//设定消息ID
+  }
+
 }
 
 service Math{
-    rpc Add (AddRequest) returns (AddResponse) {}
+  option (dotbpe.service_id)= 101 ; //设定服务ID
+
+  rpc Add (AddRequest) returns (AddResponse) {
+    option (dotbpe.message_id)= 1 ; //设定消息ID
+  }
 }
 //[END_RPC_SERVICE]
 
@@ -43,7 +53,6 @@ message AddRequest {
   int32 right = 2;
 }
 
-// The response message containing the greetings
 message AddResponse {
   int32 total = 1;
 }

@@ -24,6 +24,7 @@ namespace DotBPE.Rpc.DefaultImpls
             this._handler = handler;
             this._handler.Recieved += Message_Recieved;
             this._router = router;
+            this._actorLocator = actorLocator;
         }
         private void Message_Recieved(object sender, MessageRecievedEventArgs<TMessage> args)
         {

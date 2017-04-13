@@ -2,6 +2,7 @@
 using Google.Protobuf.Reflection;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Text;
 
@@ -10,30 +11,24 @@ namespace DotBPE.ProtobufPlugin
     public class DotbpeGen
     {
         public static void Generate(CodeGeneratorRequest request, CodeGeneratorResponse response)
-        {           
+        {
             foreach (var protofile in request.ProtoFile)
             {
-                GenerateByProtoFile(protofile, response);
-
-                var nfile = new CodeGeneratorResponse.Types.File();
-                nfile.Name = protofile.Name + ".json";
-
-                string content = "";
-                foreach (var service in protofile.Service)
-                {
-                    int serviceId;
-                    service.Options.CustomOptions.TryGetInt32(10000, out serviceId);
-                    content = string.Format("serviceName={0},serviceId={1}", service.Name, serviceId);
-
+                try{
+                    GenerateByProtoFile(protofile, response);
                 }
-
-                nfile.Content = content;
-                response.File.Add(nfile);
+                catch(Exception ex){
+                    using (Stream stream = File.Create("./error.txt"))
+                    {
+                        byte[] err = Encoding.UTF8.GetBytes(ex.Message+ex.StackTrace);
+                        stream.Write(err,0,err.Length);
+                    }
+                    response.Error += ex.Message;
+                }
             }
         }
         private static void GenerateByProtoFile(FileDescriptorProto protofile, CodeGeneratorResponse response)
         {
-
             GenerateServer(protofile, response);
             GenerateClient(protofile, response);
 
@@ -48,12 +43,12 @@ namespace DotBPE.ProtobufPlugin
                 sb.AppendLine($"// source: {protofile.Name}");
                 //还可以生成注释
 
-                sb.AppendLine("// #region Designer generated code");
+                sb.AppendLine("#region Designer generated code");
                 sb.AppendLine("");
                 sb.AppendLine("using System; ");
                 sb.AppendLine("using System.Threading.Tasks; ");
+                sb.AppendLine("using DotBPE.Rpc; ");
                 sb.AppendLine("using DotBPE.Protocol.Amp; ");
-                sb.AppendLine("using DotBPE.Rpc.Exceptions; ");
                 sb.AppendLine("using Google.Protobuf; ");
                 sb.AppendLine("");
 
@@ -62,15 +57,26 @@ namespace DotBPE.ProtobufPlugin
                 //生成代码
                 for (var i = 0; i < protofile.Service.Count; i++)
                 {
+                    sb.AppendLine("");
+                    sb.AppendLine("//start for class Abstract"+protofile.Service[i].Name);
                     GenerateServiceForServer(protofile.Service[i], sb);
+                    sb.AppendLine("//end for class Abstract"+protofile.Service[i].Name);
                 }
                 sb.AppendLine("}\n");
                 sb.AppendLine("#endregion\n");
+
+                var nfile = new CodeGeneratorResponse.Types.File
+                {
+                    Name = GetFileName(protofile.Name) + "Server.g.cs",
+                    Content = sb.ToString()
+                };
+                response.File.Add(nfile);
             }
 
         }
         private static void GenerateClient(FileDescriptorProto protofile, CodeGeneratorResponse response)
         {
+
             if (protofile.Service != null && protofile.Service.Count > 0)
             {
                 //生成文件头
@@ -79,10 +85,11 @@ namespace DotBPE.ProtobufPlugin
                 sb.AppendLine($"// source: {protofile.Name}");
                 //还可以生成注释
 
-                sb.AppendLine("// #region Designer generated code");
+                sb.AppendLine("#region Designer generated code");
                 sb.AppendLine("");
                 sb.AppendLine("using System; ");
                 sb.AppendLine("using System.Threading.Tasks; ");
+                sb.AppendLine("using DotBPE.Rpc; ");
                 sb.AppendLine("using DotBPE.Protocol.Amp; ");
                 sb.AppendLine("using DotBPE.Rpc.Exceptions; ");
                 sb.AppendLine("using Google.Protobuf; ");
@@ -91,63 +98,181 @@ namespace DotBPE.ProtobufPlugin
                 string ns = GetFileNamespace(protofile);
                 sb.AppendLine("namespace " + ns + " {");
                 //生成代码
+
                 for (var i = 0; i < protofile.Service.Count; i++)
                 {
+                    sb.AppendLine("");
+                    sb.AppendLine("//start for class "+protofile.Service[i].Name+"Client");
                     GenerateServiceForClient(protofile.Service[i], sb);
+                    sb.AppendLine("//end for class "+protofile.Service[i].Name+"Client");
                 }
-                sb.AppendLine("}\n");
-                sb.AppendLine("#endregion\n");
+                sb.AppendLine("}");
+                sb.AppendLine("#endregion");
+
+                //生成文件
+                var nfile = new CodeGeneratorResponse.Types.File();
+                nfile.Name = GetFileName(protofile.Name) + "Client.g.cs";
+                nfile.Content =  sb.ToString();
+                response.File.Add(nfile);
             }
 
         }
 
-        private static void GenerateServiceForClient(ServiceDescriptorProto serviceDescriptorProto, StringBuilder sb)
+        private static void GenerateServiceForClient(ServiceDescriptorProto service, StringBuilder sb)
         {
-            sb.AppendLine("//服务");
-
-            /*
-             public sealed class GreeterClient : AmpInvokeClient
-    {
-        public GreeterClient(IMessageSender<AmpMessage> sender) : base(sender)
-        {
-
-        }
-
-        public async Task<HelloResponse> HelloPlusAsnyc(HelloRequest request)
-        {
-            AmpMessage message = AmpMessage.CreateRequestMessage(100, 1);
-            message.Data = request.ToByteArray();
-
-            var response = await base.CallInvoker.AsyncCall(message);
-            if (response != null && response.Data !=null)
+            int serviceId;
+            bool hasServiceId = service.Options.CustomOptions.TryGetInt32(10000, out serviceId);
+            if (!hasServiceId || serviceId <= 0)
             {
-               return HelloResponse.Parser.ParseFrom(response.Data);
+                throw new Exception("Service=" + service.Name + " ServiceId NOT_FOUND");
             }
-            throw new RpcException("请求出错，请检查!");
-        }
-
-        public HelloResponse HelloPlus(HelloRequest request)
-        {
-            AmpMessage message = AmpMessage.CreateRequestMessage(100, 1);
-            message.Data = request.ToByteArray();
-
-            var response = base.CallInvoker.BlockingCall(message);
-            if (response != null && response.Data != null)
+            if (serviceId >= ushort.MaxValue)
             {
-                return HelloResponse.Parser.ParseFrom(response.Data);
+                throw new Exception("Service=" + service.Name + "ServiceId too large");
             }
-            throw new RpcException("请求出错，请检查!");
+
+            sb.AppendFormat("public sealed class {0}Client : AmpInvokeClient \n",service.Name);
+            sb.AppendLine("{");
+            //构造函数
+            sb.AppendLine($"public {service.Name}Client(IRpcClient<AmpMessage> client) : base(client)");
+            sb.AppendLine("{");
+            sb.AppendLine("}");
+
+            //循环方法
+            for(var i = 0 ; i < service.Method.Count ; i++){
+                var method = service.Method[i];
+                int msgId ;
+                bool hasMsgId= method.Options.CustomOptions.TryGetInt32(10000,out msgId);
+                if (!hasMsgId || msgId <= 0)
+                {
+                    throw new Exception("Service" + service.Name + "." + method.Name + " ' MessageId NOT_FINDOUT ");
+                }
+                if (msgId >= ushort.MaxValue)
+                {
+                    throw new Exception("Service" + service.Name + "." + method.Name + " is too large");
+                }
+                //异步方法
+                string outType = GetTypeName(method.OutputType);
+                string inType = GetTypeName(method.InputType);
+
+                sb.AppendLine($"public async Task<{outType}> {method.Name}Asnyc({inType} request)");
+                sb.AppendLine("{");
+                sb.AppendLine($"AmpMessage message = AmpMessage.CreateRequestMessage({serviceId}, {msgId});");
+                sb.AppendLine("message.Data = request.ToByteArray();");
+                sb.AppendLine("var response = await base.CallInvoker.AsyncCall(message);");
+                sb.AppendLine("if (response != null && response.Data !=null)");
+                sb.AppendLine("{");
+                sb.AppendLine($"return {outType}.Parser.ParseFrom(response.Data);");
+                sb.AppendLine("}");
+                sb.AppendLine("throw new RpcException(\"请求出错，请检查!\");");
+                sb.AppendLine("}");
+                sb.AppendLine();
+                sb.AppendLine("//同步方法");
+                sb.AppendLine($"public {outType} {method.Name}({inType} request)");
+                sb.AppendLine("{");
+                sb.AppendLine($"AmpMessage message = AmpMessage.CreateRequestMessage({serviceId}, {msgId});");
+                sb.AppendLine("message.Data = request.ToByteArray();");
+                sb.AppendLine("var response =  base.CallInvoker.BlockingCall(message);");
+                sb.AppendLine("if (response != null && response.Data !=null)");
+                sb.AppendLine("{");
+                sb.AppendLine($"return {outType}.Parser.ParseFrom(response.Data);");
+                sb.AppendLine("}");
+                sb.AppendLine("throw new RpcException(\"请求出错，请检查!\");");
+                sb.AppendLine("}");
+            }
+            //循环方法end
+
+            sb.AppendLine("}");
+            //类结束
+
         }
-    }
-             */
-        }
-        private static void GenerateServiceForServer(ServiceDescriptorProto serviceDescriptorProto, StringBuilder sb)
+        private static void GenerateServiceForServer(ServiceDescriptorProto service, StringBuilder sb)
         {
-            throw new NotImplementedException();
+            int serviceId;
+            bool hasServiceId = service.Options.CustomOptions.TryGetInt32(10000, out serviceId);
+            if(!hasServiceId || serviceId<=0){
+                throw new Exception("Service="+service.Name+" ServiceId NOT_FOUND");
+            }
+            if(serviceId>=ushort.MaxValue){
+                throw new Exception("Service="+service.Name+ "ServiceId too large" );
+            }
+
+            sb.AppendFormat("public abstract class {0}Base : IServiceActor<AmpMessage> \n", service.Name);
+            sb.AppendLine("{");
+            sb.AppendLine("public string Id => \""+serviceId+"$0\";");
+
+
+
+            StringBuilder sbIfState = new StringBuilder();
+
+            //循环方法
+            for(var i = 0 ; i < service.Method.Count ; i++){
+                var method = service.Method[i];
+                int msgId ;
+                bool hasMsgId= method.Options.CustomOptions.TryGetInt32(10000,out msgId);
+                if(!hasMsgId || msgId<=0){
+                    throw new Exception("Service"+service.Name+"."+method.Name+" ' MessageId NOT_FINDOUT ");
+                }
+                if(msgId>=ushort.MaxValue){
+                    throw new Exception("Service" + service.Name+"."+method.Name+" is too large");
+                }
+                //异步方法
+                string outType = GetTypeName(method.OutputType);
+                string inType = GetTypeName(method.InputType);
+
+
+                sb.AppendLine("//调用委托");
+                sb.AppendLine(
+                    $"private async Task Receive{method.Name}Async(IRpcContext<AmpMessage> context, AmpMessage req)");
+                sb.AppendLine("{");
+                sb.AppendLine($"var request = {inType}.Parser.ParseFrom(req.Data);");
+                sb.AppendLine($"var data = await {method.Name}Async(request);");
+                sb.AppendLine("var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);");
+                sb.AppendLine("response.Sequence = req.Sequence;");
+                sb.AppendLine("response.Data = data.ToByteArray();");
+                sb.AppendLine("await context.SendAsync(response);");
+                sb.AppendLine("}");
+
+                sb.AppendLine();
+
+
+                sb.AppendLine("//抽象方法");
+                sb.AppendLine($"public abstract Task<{outType}> {method.Name}Async({inType} request);");
+
+                //拼装if调用语句
+                sbIfState.AppendFormat("//方法{0}.{1}\n",service.Name,method.Name);
+                sbIfState.AppendLine("if(req.MessageId == "+msgId+"){return this.Receive"+method.Name+"Async(context, req);}");
+            }
+            //循环方法end
+            //生成主调用代码
+            sb.AppendLine("public Task Receive(IRpcContext<AmpMessage> context, AmpMessage req)");
+            sb.AppendLine("{");
+            sb.Append(sbIfState);
+            sb.AppendLine("return Task.CompletedTask;");
+            sb.AppendLine("}");
+
+
+            sb.AppendLine("}");
+            //类结束
+
         }
         private static string GetFileNamespace(FileDescriptorProto protofile)
         {
-            throw new NotImplementedException();
-        }        
+            string ns = protofile.Options.CsharpNamespace;
+            if (string.IsNullOrEmpty(ns))
+            {
+                throw new Exception("" + protofile.Name + ".proto did not set csharp_namespace");
+            }
+            return ns;
+        }
+
+        private static string GetFileName(string fileProto)
+        {
+            return fileProto.Split('.')[0];
+        }
+        private static string GetTypeName(string typeFullName)
+        {
+            return typeFullName.Split('.').Last();
+        }
     }
 }

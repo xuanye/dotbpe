@@ -2,12 +2,12 @@
 
 syntax = "proto3";
 package dotbpe;
-option java_package = "com.dotbpe.protobuf.extensions";
-option java_outer_classname = "DotbpeProtos";
+option java_package = "com.google.protobuf.extensions";
+option java_outer_classname = "GoogleProtos";
 // [START csharp_declaration]
-option csharp_namespace = "DotBpe.Protobuf.Extensions";
+option csharp_namespace = "Google.Protobuf.Reflection";
 // [END csharp_declaration]
-option go_package = "dotbpe_go";
+option go_package = "google_go";
 
 import "google/protobuf/descriptor.proto";
 

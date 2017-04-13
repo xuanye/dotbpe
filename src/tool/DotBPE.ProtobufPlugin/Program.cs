@@ -5,7 +5,6 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using Google.Protobuf;
-using Newtonsoft.Json;
 
 namespace DotBPE.ProtobufPlugin
 {
@@ -13,7 +12,7 @@ namespace DotBPE.ProtobufPlugin
     {
         static void Main(string[] args)
         {
-
+            Console.OutputEncoding = System.Text.Encoding.UTF8;
             CodeGeneratorRequest request;
             var response = new CodeGeneratorResponse();
             try
@@ -40,24 +39,7 @@ namespace DotBPE.ProtobufPlugin
         }
         private static void ParseCode(CodeGeneratorRequest request, CodeGeneratorResponse response)
         {
-            List<string> slist = new List<string>();
-            foreach( var protofile in request.ProtoFile)
-            {
-                var nfile = new CodeGeneratorResponse.Types.File();
-                nfile.Name = protofile.Name + ".json";
-
-                string content = "";
-                foreach(var service in protofile.Service)
-                {
-                    int serviceId;
-                    service.Options.CustomOptions.TryGetInt32(10000, out serviceId);
-                    content = string.Format("serviceName={0},serviceId={1}", service.Name, serviceId);
-
-                }
-               
-                nfile.Content = content;
-                response.File.Add(nfile);
-            }
+           DotbpeGen.Generate(request,response);
         }
     }
 }

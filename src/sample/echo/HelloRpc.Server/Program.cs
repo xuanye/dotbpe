@@ -21,7 +21,7 @@ namespace HelloRpc.Server
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-
+           
             var config = new ConfigurationBuilder()
                 .AddJsonFile("dotbpe.config.json", optional: true)
                 .Build();
