@@ -25,15 +25,15 @@ namespace HelloRpc.Common
         {
             if(req.MessageId == 1)
             {
-                return this.ReceiveHelloPlusAsnyc(context, req);
+                return this.ReceiveHelloPlusAsync(context, req);
             }
             return Task.CompletedTask;
         }
 
-        private async Task ReceiveHelloPlusAsnyc(IRpcContext<AmpMessage> context, AmpMessage req)
+        private async Task ReceiveHelloPlusAsync(IRpcContext<AmpMessage> context, AmpMessage req)
         {
             var request = HelloRequest.Parser.ParseFrom(req.Data);
-            var data = await HelloPlusAsnyc(request);
+            var data = await HelloPlusAsync(request);
             var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
             response.Sequence = req.Sequence;
             response.Data = data.ToByteArray();
@@ -44,7 +44,7 @@ namespace HelloRpc.Common
         /// </summary>
         /// <param name="request"></param>
         /// <returns></returns>
-        public abstract Task<HelloResponse> HelloPlusAsnyc(HelloRequest request);
+        public abstract Task<HelloResponse> HelloPlusAsync(HelloRequest request);
     }
     public abstract class MathBase: IServiceActor<AmpMessage>
     {
@@ -59,15 +59,15 @@ namespace HelloRpc.Common
         {
             if(req.MessageId == 1)
             {
-                return this.ReceiveAddAsnyc(context, req);
+                return this.ReceiveAddAsync(context, req);
             }
             return Task.CompletedTask;
         }
 
-        private async Task ReceiveAddAsnyc(IRpcContext<AmpMessage> context, AmpMessage req)
+        private async Task ReceiveAddAsync(IRpcContext<AmpMessage> context, AmpMessage req)
         {
             var request = addRequest.Parser.ParseFrom(req.Data);
-            var data = await AddAsnyc(request);
+            var data = await AddAsync(request);
             var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
             response.Sequence = req.Sequence;
             response.Data = data.ToByteArray();
@@ -78,6 +78,6 @@ namespace HelloRpc.Common
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        public abstract Task<addResponse> AddAsnyc(addRequest req);
+        public abstract Task<addResponse> AddAsync(addRequest req);
     }
 }

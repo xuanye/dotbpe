@@ -12,11 +12,11 @@ namespace DotBPE.Rpc.DefaultImpls
         static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransportFactory<TMessage>>();
         private readonly IClientBootstrap<TMessage> _bootstrap;
 
-        private readonly ConcurrentDictionary<EndPoint, Lazy<ITransport<TMessage>>> _clients 
+        private readonly ConcurrentDictionary<EndPoint, Lazy<ITransport<TMessage>>> _clients
             = new ConcurrentDictionary<EndPoint, Lazy<ITransport<TMessage>>>();
         public DefaultTransportFactory(IClientBootstrap<TMessage> bootstrap)
         {
-            
+
             this._bootstrap = bootstrap;
             this._bootstrap.Disconnected += Bootstrap_Disconnected;
         }
@@ -27,7 +27,7 @@ namespace DotBPE.Rpc.DefaultImpls
             Logger.Debug("连接已经断开");
         }
 
-        public ITransport<TMessage> CreateTransport(EndPoint endpoint) 
+        public ITransport<TMessage> CreateTransport(EndPoint endpoint)
         {
             try
             {
@@ -49,7 +49,7 @@ namespace DotBPE.Rpc.DefaultImpls
             }
         }
 
-        public async Task CloseTransport(EndPoint serverAddress)
+        public async Task CloseTransportAsync(EndPoint serverAddress)
         {
             try
             {
@@ -61,7 +61,7 @@ namespace DotBPE.Rpc.DefaultImpls
                         await lazyTransport.Value.CloseAsync();
                     }
                 }
-                    
+
             }
             catch(Exception ex)
             {

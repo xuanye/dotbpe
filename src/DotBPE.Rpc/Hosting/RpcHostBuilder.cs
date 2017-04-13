@@ -24,12 +24,12 @@ namespace DotBPE.Rpc.Hosting
         private bool _rpcHostBuilt = false;
         public RpcHostBuilder()
         {
-            _configureServicesDelegates = new List<Action<IServiceCollection>>();            
+            _configureServicesDelegates = new List<Action<IServiceCollection>>();
 
             _config = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "DotRPC_")
                 .Build();
-         
+
         }
 
 
@@ -41,7 +41,7 @@ namespace DotBPE.Rpc.Hosting
             }
             _rpcHostBuilt = true;
 
-           
+
 
             var hostingServices = BuildCommonServices();
             var applicationServices = hostingServices.Clone();
@@ -50,13 +50,12 @@ namespace DotBPE.Rpc.Hosting
             AddApplicationServices(applicationServices, hostingServiceProvider);
 
             var host = hostingServiceProvider.GetRequiredService<IServerHost>();
-
+         
             Environment.SetServiceProvider(hostingServiceProvider);
-
             return host;
         }
 
-  
+
 
         public IRpcHostBuilder ConfigureServices(Action<IServiceCollection> configureServices)
         {
@@ -69,7 +68,7 @@ namespace DotBPE.Rpc.Hosting
             return this;
         }
 
-   
+
 
         public IRpcHostBuilder UseSetting(string key, string value)
         {
@@ -86,23 +85,24 @@ namespace DotBPE.Rpc.Hosting
         {
             _options = new RpcHostOption(_config);
 
-          
+
             var applicationName = _options.ApplicationName ?? "DotBPE Application";
 
-        
+
 
             var services = new ServiceCollection();
 
             services.AddSingleton(_options);
-       
+
             var listener = new DiagnosticListener("DotRPC");
             services.AddSingleton<DiagnosticListener>(listener);
-            services.AddSingleton<DiagnosticSource>(listener);      
+            services.AddSingleton<DiagnosticSource>(listener);
 
-         
+
             services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
-         
+
             services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
+
 
             foreach (var configureServices in _configureServicesDelegates)
             {
@@ -113,7 +113,7 @@ namespace DotBPE.Rpc.Hosting
         }
 
         private void AddApplicationServices(IServiceCollection services, IServiceProvider hostingServiceProvider)
-        {       
+        {
             var listener = hostingServiceProvider.GetService<DiagnosticListener>();
             services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticListener), listener));
             services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticSource), listener));

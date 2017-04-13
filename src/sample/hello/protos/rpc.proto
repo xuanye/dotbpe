@@ -15,13 +15,21 @@ package dotbpe;
 option csharp_namespace = "DotBPE.Examples.HelloRpc";
 // [END csharp_declaration]
 
+import "google/protobuf/descriptor.proto";
+
+//扩展服务
+extend google.protobuf.ServiceOptions {
+  int32 service_id = 10000;
+}
+
 //[START_RPC_SERVICE]
 // The greeting service definition.
 service Greeter {
+  option (service_id)= 100 ;
   // Sends a greeting
-  rpc SayHello (HelloRequest) returns (HelloReply) {}
-  // Sends another greeting
-  rpc SayHelloAgain (HelloRequest) returns (HelloReply) {}
+  rpc SayHello (HelloRequest) returns (HelloReply) {
+
+  }
 }
 //[END_RPC_SERVICE]
 // [START messages]

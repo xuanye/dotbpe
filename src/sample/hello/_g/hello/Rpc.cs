@@ -22,14 +22,15 @@ namespace DotBPE.Examples.HelloRpc {
     static RpcReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "CglycGMucHJvdG8SBmRvdGJwZSIcCgxIZWxsb1JlcXVlc3QSDAoEbmFtZRgB",
-            "IAEoCSIdCgpIZWxsb1JlcGx5Eg8KB21lc3NhZ2UYASABKAkyfgoHR3JlZXRl",
-            "chI2CghTYXlIZWxsbxIULmRvdGJwZS5IZWxsb1JlcXVlc3QaEi5kb3RicGUu",
-            "SGVsbG9SZXBseSIAEjsKDVNheUhlbGxvQWdhaW4SFC5kb3RicGUuSGVsbG9S",
-            "ZXF1ZXN0GhIuZG90YnBlLkhlbGxvUmVwbHkiAEIbqgIYRG90QlBFLkV4YW1w",
-            "bGVzLkhlbGxvUnBjYgZwcm90bzM="));
+            "CglycGMucHJvdG8SBmRvdGJwZRogZ29vZ2xlL3Byb3RvYnVmL2Rlc2NyaXB0",
+            "b3IucHJvdG8iHAoMSGVsbG9SZXF1ZXN0EgwKBG5hbWUYASABKAkiHQoKSGVs",
+            "bG9SZXBseRIPCgdtZXNzYWdlGAEgASgJMkcKB0dyZWV0ZXISNgoIU2F5SGVs",
+            "bG8SFC5kb3RicGUuSGVsbG9SZXF1ZXN0GhIuZG90YnBlLkhlbGxvUmVwbHki",
+            "ABoEgPEEZDo0CgpzZXJ2aWNlX2lkEh8uZ29vZ2xlLnByb3RvYnVmLlNlcnZp",
+            "Y2VPcHRpb25zGJBOIAEoBUIbqgIYRG90QlBFLkV4YW1wbGVzLkhlbGxvUnBj",
+            "YgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { },
+          new pbr::FileDescriptor[] { pbr::FileDescriptor.DescriptorProtoFileDescriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DotBPE.Examples.HelloRpc.HelloRequest), global::DotBPE.Examples.HelloRpc.HelloRequest.Parser, new[]{ "Name" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DotBPE.Examples.HelloRpc.HelloReply), global::DotBPE.Examples.HelloRpc.HelloReply.Parser, new[]{ "Message" }, null, null, null)

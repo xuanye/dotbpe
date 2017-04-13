@@ -111,8 +111,13 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             if(request.Sequence>0){
                 return;
             }
+
             lock (lockObj)
             {
+                if(this.sendSequence > int.MaxValue -1000000) //快越界了，就重置一下,一台服务应该没那么繁忙吧
+                {
+                    this.sendSequence  = 1 ;
+                }
                 request.Sequence = this.sendSequence++;
             }
         }

@@ -10,6 +10,6 @@ namespace DotBPE.Rpc
     public interface ITransportFactory<in TMessage> where TMessage : InvokeMessage
     {
         ITransport<TMessage> CreateTransport(EndPoint endpoint);
-        Task CloseTransport(EndPoint serverAddress);
+        Task CloseTransportAsync(EndPoint serverAddress);
     }
 }

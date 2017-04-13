@@ -23,7 +23,7 @@ service Greeter {
 }
 
 service Math{
-    rpc Add (addRequest) returns (addResponse) {}
+    rpc Add (AddRequest) returns (AddResponse) {}
 }
 //[END_RPC_SERVICE]
 
@@ -38,13 +38,13 @@ message HelloResponse {
   string message = 1;
 }
 
-message addRequest {
+message AddRequest {
   int32 left = 1;
   int32 right = 2;
 }
 
 // The response message containing the greetings
-message addResponse {
+message AddResponse {
   int32 total = 1;
 }
 // [END messages]

@@ -32,7 +32,8 @@ namespace DotBPE.Protocol.Amp
 
             builder.ConfigureServices((services)=>{
 
-                services.AddSingleton<IRpcClient<AmpMessage>,DefaultRpcClient<AmpMessage>>()
+                services.AddSingleton<IRpcClient<AmpMessage>,BridgeRpcClient<AmpMessage>>() //在服务端使用客户端链接 需要使用桥接式的实现
+                    .AddSingleton<IBridgeRouter<AmpMessage>,AmpBridgeRouter>() //桥接路由器
                     .AddSingleton<ITransportFactory<AmpMessage>,DefaultTransportFactory<AmpMessage>>()
                     .AddSingleton<IClientBootstrap<AmpMessage>,NettyClientBootstrap<AmpMessage>>();
             });

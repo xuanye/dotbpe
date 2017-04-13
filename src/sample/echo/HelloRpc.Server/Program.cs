@@ -27,7 +27,7 @@ namespace HelloRpc.Server
                 .Build();
 
             var host = new RpcHostBuilder()
-                .UseConfiguration(config)
+                .UseConfiguration(config) //使用配置文件
                 .AddRpcCore<AmpMessage>() //添加核心依赖
                 .UseNettyServer<AmpMessage>()  //使用使用Netty默认实现
                 .UseAmp() //使用Amp协议中的默认实现
@@ -46,10 +46,17 @@ namespace HelloRpc.Server
 
     public class GreeterImpl : GreeterBase
     {
-        public override Task<HelloReply> SayHelloAsnyc(HelloRequest request)
+        public override async Task<HelloResponse> HelloPlusAsync(HelloRequest request)
         {
-            var reply = new HelloReply() { Message = "Hello " + request.Name };
-            return Task.FromResult(reply);
+            var addReq = new addRequest();
+            addReq.Left = 1;
+            addReq.Right = 2;
+
+            MathClient math  = ClientProxy.GetClient<MathClient>();
+
+            var  addRep = await math.AddAsnyc(addReq);
+            var reply = new HelloResponse() { Message = "Hello " + request.Name +" 1+2 =" +addRep.Total };
+            return reply;
         }
     }
 

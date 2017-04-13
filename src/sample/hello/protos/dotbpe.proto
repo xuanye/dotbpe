@@ -1,0 +1,20 @@
+
+
+syntax = "proto3";
+package dotbpe;
+option java_package = "com.dotbpe.protobuf.extensions";
+option java_outer_classname = "DotbpeProtos";
+// [START csharp_declaration]
+option csharp_namespace = "DotBpe.Protobuf.Extensions";
+// [END csharp_declaration]
+option go_package = "dotbpe_go";
+
+import "google/protobuf/descriptor.proto";
+
+//扩展服务
+extend google.protobuf.ServiceOptions {
+  int32 service_id = 10000;
+}
+extend google.protobuf.MethodOptions {
+  int32 message_id = 10000;
+}

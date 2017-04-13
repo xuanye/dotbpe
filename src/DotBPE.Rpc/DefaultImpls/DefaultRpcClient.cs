@@ -21,7 +21,7 @@ namespace DotBPE.Rpc.DefaultImpls
     {
         static readonly ILogger Logger = Environment.Logger.ForType<DefaultRpcClient<TMessage>>();
         private readonly ITransportFactory<TMessage> _factory;
-      
+
         private readonly IConfiguration _config;
         private EndPoint _defaultServerAddress = null;
 
@@ -32,7 +32,7 @@ namespace DotBPE.Rpc.DefaultImpls
             IMessageHandler<TMessage> handler
            )
         {
-            this._factory = factory;         
+            this._factory = factory;
             this._config = config;
             this._handler = handler;
             this._handler.Recieved += Message_Recieved;
@@ -54,7 +54,7 @@ namespace DotBPE.Rpc.DefaultImpls
         {
             var remote = GetDefaultRemoteAddress();
             return this.SendAsync(remote, message);
-        }       
+        }
 
         private EndPoint GetDefaultRemoteAddress()
         {
@@ -79,7 +79,7 @@ namespace DotBPE.Rpc.DefaultImpls
 
         public Task CloseAsync(EndPoint serverAddress)
         {
-            return this._factory.CloseTransport(serverAddress);
+            return this._factory.CloseTransportAsync(serverAddress);
         }
     }
 }
