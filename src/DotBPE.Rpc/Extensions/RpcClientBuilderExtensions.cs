@@ -12,7 +12,7 @@ namespace DotBPE.Rpc.Extensions
     {
         public static IRpcClientBuilder AddCore<TMessage>(this IRpcClientBuilder builder) where TMessage:InvokeMessage
         {
-            
+
             builder.ConfigureServices((services) =>
             {
                 services.AddSingleton<ITransportFactory<TMessage>,DefaultTransportFactory<TMessage>>()

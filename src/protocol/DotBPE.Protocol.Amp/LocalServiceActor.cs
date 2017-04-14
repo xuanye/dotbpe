@@ -21,9 +21,9 @@ namespace DotBPE.Protocol.Amp
                 return "AmpLocalServiceActor";
             }
         }
-       
 
-        public Task Receive(IRpcContext<AmpMessage> context, AmpMessage message)
+
+        public Task ReceiveAsync(IRpcContext<AmpMessage> context, AmpMessage message)
         {
             //TODO:本地服务的话
             throw new NotImplementedException();

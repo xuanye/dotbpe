@@ -94,6 +94,10 @@ namespace DotBPE.Rpc.Hosting
 
             services.AddSingleton(_options);
 
+            //类型绑定配置文件
+            services.AddOptions();
+            services.Configure<Options.RemoteServicesOption>(_config.GetSection("remoteServices"));
+
             var listener = new DiagnosticListener("DotRPC");
             services.AddSingleton<DiagnosticListener>(listener);
             services.AddSingleton<DiagnosticSource>(listener);

@@ -16,7 +16,7 @@ namespace DotBPE.Rpc.Netty
 
         public ServerChannelHandlerAdapter(NettyServerBootstrap<TMessage> bootstrap):base(true)
         {
-            this._bootstrap = bootstrap;           
+            this._bootstrap = bootstrap;
         }
         public override void ChannelActive(IChannelHandlerContext context)
         {
@@ -24,18 +24,20 @@ namespace DotBPE.Rpc.Netty
             base.ChannelActive(context);
         }
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
-        {
-            Logger.Debug("收到一条消息...");
-            Task.Run(() =>
+        {           
+            Logger.Debug("读取消息");
+            Task.Factory.StartNew(() =>
             {
                 this._bootstrap.ChannelRead(context, msg);
-            });           
+            });
+           
+            Logger.Debug("异步读取消息完成");
         }
-        
-        public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
-        {  
-            Logger.Error($"与客户端：{context.Channel.RemoteAddress}通信时发送了错误。", exception);
 
+        public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
+        {
+            Logger.Error(ex,$"与客户端：{context.Channel.RemoteAddress}通信时发送了错误");
+            context.CloseAsync(); //关闭连接
         }
     }
 }

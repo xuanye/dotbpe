@@ -23,6 +23,7 @@ namespace DotBPE.Rpc.Extensions
             foreach(var setting in config.AsEnumerable()){
                builder.UseSetting(setting.Key,setting.Value);
             }
+          
             return builder;
         }
 

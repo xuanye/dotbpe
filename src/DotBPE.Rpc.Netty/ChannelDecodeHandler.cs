@@ -19,7 +19,10 @@ namespace DotBPE.Rpc.Netty
         {
             IBufferReader reader = NettyBufferManager.CreateBufferReader(input);
             IMessage message = this._codecs.Decode(reader);
-            output.Add(message);
+            if(message != null)
+            {
+                output.Add(message);
+            }           
         }
     }
 }

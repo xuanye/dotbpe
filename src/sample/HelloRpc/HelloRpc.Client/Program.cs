@@ -16,13 +16,14 @@ namespace HelloRpc.Client
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+            DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());
 
             var client = DotBpeAmpClient.Create("127.0.0.1:6201");
             var greeter = new GreeterClient(client);
             while (true)
             {
-                Console.WriteLine("-------------请输入你的名字-------------");
-                string name = Console.ReadLine();
+
+                string name = "xuanye";
                 if ("bye".Equals(name))
                 {
                     break;
@@ -30,11 +31,11 @@ namespace HelloRpc.Client
                 var reply = greeter.HelloPlusAsnyc(new HelloRequest()
                 {
                     Name = name
-                }).Result;
-              
-                Console.WriteLine($"---------------收到服务端返回:{reply.Message}-----------");
+                },600000).Result;
+
+                DotBPE.Rpc.Environment.Logger.Debug($"---------------收到服务端返回:{reply.Message}-----------");
             }
-        }      
+        }
     }
 
 

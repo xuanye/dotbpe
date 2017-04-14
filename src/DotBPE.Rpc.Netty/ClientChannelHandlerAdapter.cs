@@ -14,11 +14,12 @@ namespace DotBPE.Rpc.Netty
 
         public ClientChannelHandlerAdapter(NettyClientBootstrap<TMessage> bootstrap)
         {
-            this._bootstrap = bootstrap;           
+            this._bootstrap = bootstrap;
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
-        {           
+        {
+            Logger.Debug($"服务端{context.Channel.RemoteAddress}连接成功");
             base.ChannelActive(context);
         }
         /// <summary>
@@ -28,17 +29,19 @@ namespace DotBPE.Rpc.Netty
         public override void ChannelInactive(IChannelHandlerContext context)
         {
             // 这里应该移除之前ITransprotFactory中的缓存 或者通知对方
+            Logger.Debug($"服务端{context.Channel.RemoteAddress}断开连接");
             this._bootstrap.OnChannelInactive(context);
         }
-        
+
         protected override void ChannelRead0(IChannelHandlerContext ctx, TMessage msg)
         {
-         
+
             this._bootstrap.ChannelRead(ctx, msg);
         }
-        public override void ExceptionCaught(IChannelHandlerContext context, Exception exception)
+        public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
-            Logger.Error("Exception: " + exception);
+            Logger.Error(ex,$"服务端{context.Channel.RemoteAddress}通信时发送了错误");
+            context.CloseAsync(); //关闭连接
         }
     }
 }

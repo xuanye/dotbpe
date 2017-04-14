@@ -22,6 +22,7 @@ namespace DotBPE.Rpc.Netty
 {
     public class NettyClientBootstrap<TMessage>:IClientBootstrap<TMessage> where TMessage:InvokeMessage
     {
+        static ILogger Logger = Environment.Logger.ForType<NettyClientBootstrap<TMessage>>();
         private readonly Bootstrap _bootstrap;
         private readonly IMessageHandler<TMessage> _handler;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
@@ -69,8 +70,10 @@ namespace DotBPE.Rpc.Netty
 
         public async Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint)
         {
-           var channel =  await this._bootstrap.ConnectAsync(endpoint);
-           return new NettyRpcClientContext<TMessage>(channel, this._msgCodecs);
+            Logger.Debug("开始创建链接{0}");
+            var channel =  await this._bootstrap.ConnectAsync(endpoint);
+            Logger.Debug("成功创建链接{0}");
+            return new NettyRpcClientContext<TMessage>(channel, this._msgCodecs);
         }
 
         public event EventHandler<EndPoint> Disconnected;

@@ -13,10 +13,10 @@ namespace DotBPE.Rpc.DefaultImpls
         static readonly ILogger Logger = Environment.Logger.ForType<DefaultMessageHandler<TMessage>>();
 
         private readonly IServiceActorLocator<TMessage> _actorLocator;
-   
+
         public DefaultMessageHandler(IServiceActorLocator<TMessage> actorLocator)
         {
-            this._actorLocator = actorLocator;          
+            this._actorLocator = actorLocator;
         }
 
         /// <summary>
@@ -24,24 +24,20 @@ namespace DotBPE.Rpc.DefaultImpls
         /// </summary>
         public event EventHandler<MessageRecievedEventArgs<TMessage>> Recieved;
 
-       
+
         private void RaiseReceivedEvent(IRpcContext<TMessage> context, TMessage message)
         {
-            if (Recieved != null)
-            {
-                try
-                {
-                    Recieved(this, new MessageRecievedEventArgs<TMessage>(context, message));
-                }
-                catch
-                {
-
-                }
-            }
+            Recieved?.Invoke(this, new MessageRecievedEventArgs<TMessage>(context, message));
         }
         public Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message)
-        {
+        {           
             RaiseReceivedEvent(context, message);
+
+            //本地服务互调也会进入到这里，但是这里不能再重复处理了，不然就是死循环
+            if(message.InvokeMessageType != InvokeMessageType.Request)
+            {
+                return Task.CompletedTask;
+            }
 
             var actor =  this._actorLocator.LocateServiceActor(message);
             if(actor == null) // 找不到对应的执行程序
@@ -51,10 +47,7 @@ namespace DotBPE.Rpc.DefaultImpls
             }
             else
             {
-                return Task.Run(() =>
-                {
-                    actor.Receive(context, message);
-                });               
+                return actor.ReceiveAsync(context, message);
             }
         }
     }

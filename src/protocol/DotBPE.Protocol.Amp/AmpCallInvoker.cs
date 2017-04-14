@@ -16,11 +16,11 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private int sendSequence = 0 ;
         private static object lockObj = new object();
-        public AmpCallInvoker(IMessageSender<AmpMessage> sener) : base(sener)
+        public AmpCallInvoker(IRpcClient<AmpMessage> client) : base(client)
         {
         }
 
-        public async override Task<AmpMessage> AsyncCall(AmpMessage request, int timeOut = 3000)
+        public async override Task<AmpMessage> AsyncCall(AmpMessage request, int timeOut =5000)
         {
             try
             {
@@ -30,7 +30,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 try
                 {
                     //发送
-                    await base.MessageSender.SendAsync(request);
+                    await base.RpcClient.SendAsync(request);
                 }
                 catch (Exception exception)
                 {
@@ -42,7 +42,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             }
             catch (Exception exception)
             {
-                Logger.Error("消息发送失败：", exception);
+                Logger.Error(exception,"与服务端通讯时发生了异常:");
                 throw;
             }
         }
@@ -68,9 +68,12 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 if (_resultDictionary.ContainsKey(message.Id)
                     && _resultDictionary.TryGetValue(message.Id, out task))
                 {
+
                     task.SetResult(message);
+                    Logger.Info("消息Id{0},回调设置成功",message.Id);
                     // 移除字典
-                    _resultDictionary.TryRemove(message.Id, out var _);
+                    RemoveResultCallback(message.Id);
+
                 }
             }
         }
@@ -78,7 +81,8 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private void RemoveResultCallback(string id)
         {
-            _resultDictionary.TryRemove(id, out var _);
+            var removed = _resultDictionary.TryRemove(id, out var _);
+            Logger.Info("消息Id{0},移除队列{1}",id,removed?"成功":"失败");
         }
 
         private void TimeOutCallBack(string id)
@@ -86,9 +90,10 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             TaskCompletionSource<AmpMessage> task;
             if (_resultDictionary.TryGetValue(id, out task))
             {
+                Logger.Warning("消息{0},回调超时",id);
                 task.SetException(new RpcCommunicationException("操作超时！"));
                 // 移除字典
-                _resultDictionary.TryRemove(id, out var _);
+                RemoveResultCallback(id);
             }
         }
         private Task<AmpMessage> RegisterResultCallbackAsync(string id,int timeOut)
@@ -97,12 +102,15 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
             _resultDictionary.TryAdd(id, tcs);
             var task = tcs.Task;
+            Task.Factory.StartNew( ()=>{
+                if (Task.WhenAny(task, Task.Delay(timeOut)).Result != task)
+                {
+                    // timeout logic
+                    TimeOutCallBack(id);
+                }
+            });
             //设置超时
-            if (Task.WhenAny(task, Task.Delay(timeOut)).Result != task)
-            {
-                // timeout logic
-                TimeOutCallBack(id);
-            }
+
             return task;
         }
 

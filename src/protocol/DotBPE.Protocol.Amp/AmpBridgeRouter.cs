@@ -61,7 +61,7 @@ namespace DotBPE.Protocol.Amp
         }
         private static List<EndPoint> ParseEndPointFromString(string remoteAddress)
         {
-            Preconditions.CheckArgument(string.IsNullOrEmpty(remoteAddress), $"服务地址配置错误：{remoteAddress}");
+            Preconditions.CheckArgument(!string.IsNullOrEmpty(remoteAddress), $"服务地址配置错误：{remoteAddress}");
             string[] arr_address = remoteAddress.Split(',');
             List<EndPoint> list = new List<EndPoint>();
             for(int i=0; i< arr_address.Length; i++)

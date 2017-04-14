@@ -17,11 +17,11 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "sample", "sample", "{8C724D
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "hellorpc", "hellorpc", "{3CEF66BD-989A-4E50-8349-8D2B013BE10B}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloRpc.Server", "sample\echo\HelloRpc.Server\HelloRpc.Server.csproj", "{81066E51-BF97-4D38-8CAD-2F52E9C5BD49}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloRpc.Server", "sample\HelloRpc\HelloRpc.Server\HelloRpc.Server.csproj", "{81066E51-BF97-4D38-8CAD-2F52E9C5BD49}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloRpc.Client", "sample\echo\HelloRpc.Client\HelloRpc.Client.csproj", "{A9E460A2-4F40-4CD2-8EEC-2EC7A91DF705}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloRpc.Client", "sample\HelloRpc\HelloRpc.Client\HelloRpc.Client.csproj", "{A9E460A2-4F40-4CD2-8EEC-2EC7A91DF705}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloRpc.Common", "sample\echo\HelloRpc.Common\HelloRpc.Common.csproj", "{FC675D96-CB7E-45DC-B3BE-9BC353F2C7D6}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "HelloRpc.Common", "sample\HelloRpc\HelloRpc.Common\HelloRpc.Common.csproj", "{FC675D96-CB7E-45DC-B3BE-9BC353F2C7D6}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "protocol", "protocol", "{24F11944-A046-4398-BE33-3CD7BF870237}"
 EndProject

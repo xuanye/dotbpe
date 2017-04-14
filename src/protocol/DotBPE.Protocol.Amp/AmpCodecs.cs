@@ -40,6 +40,10 @@ namespace DotBPE.Protocol.Amp
 
         public AmpMessage Decode(IBufferReader reader)
         {
+            if(reader.ReadableBytes == 0)
+            {
+                return null;
+            }
             AmpMessage msg = new AmpMessage();
             if (reader.ReadableBytes < 10)
             {

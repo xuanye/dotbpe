@@ -21,7 +21,9 @@ namespace HelloRpc.Server
         static void Main(string[] args)
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
-           
+
+            DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());
+
             var config = new ConfigurationBuilder()
                 .AddJsonFile("dotbpe.config.json", optional: true)
                 .Build();
@@ -32,13 +34,26 @@ namespace HelloRpc.Server
                 .UseNettyServer<AmpMessage>()  //使用使用Netty默认实现
                 .UseAmp() //使用Amp协议中的默认实现
                 .UseAmpClient() //还要调用外部服务
-                .AddServiceActor(new GreeterImpl())  //注册服务
+                .AddServiceActor(
+                    new GreeterImpl(),
+                    new MathImpl()
+                )  //注册服务
                 .Build();
 
             host.StartAsync().Wait();
 
-            Console.WriteLine($"服务端启动成功，{DateTime.Now}。");
-            Console.ReadLine();
+            /*
+           
+            */
+            Console.WriteLine("按任意键退出服务，任意键不包括任何电源键/关机键");
+            Console.ReadKey();
+            var addReq = new AddRequest();
+            addReq.Left = 1;
+            addReq.Right = 2;
+
+            MathClient math = ClientProxy.GetClient<MathClient>();
+            var addRep = math.AddAsnyc(addReq, 600000).Result;
+            Console.ReadKey();
             host.ShutdownAsync().Wait();
 
         }
@@ -46,17 +61,28 @@ namespace HelloRpc.Server
 
     public class GreeterImpl : GreeterBase
     {
+        static readonly DotBPE.Rpc.Logging.ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<GreeterImpl>();
         public override async Task<HelloResponse> HelloPlusAsync(HelloRequest request)
         {
-            var addReq = new addRequest();
+            Logger.Debug("收到Hello请求，name={0}",request.Name);
+            var addReq = new AddRequest();
             addReq.Left = 1;
             addReq.Right = 2;
 
             MathClient math  = ClientProxy.GetClient<MathClient>();
-
-            var  addRep = await math.AddAsnyc(addReq);
-            var reply = new HelloResponse() { Message = "Hello " + request.Name +" 1+2 =" +addRep.Total };
+            Logger.Debug("创建mathclient成功");
+            var addRep = await math.AddAsnyc(addReq,60000);
+            Logger.Debug("调用mathclient成功 total="+addRep.Total);
+            var reply = new HelloResponse() { Message = "Hello " + request.Name +" plus:"+addRep.Total};
             return reply;
+        }
+    }
+
+    public class MathImpl:MathBase{
+        public override Task<AddResponse> AddAsync(AddRequest request){
+            var response = new AddResponse();
+            response.Total = request.Left +request.Right;
+            return Task.FromResult(response);
         }
     }
 

@@ -9,7 +9,7 @@ namespace DotBPE.Protocol.Amp
 {
     public abstract class AmpInvokeClient : InvokeClientBase<AmpMessage>
     {
-        public AmpInvokeClient(IMessageSender<AmpMessage> sender):base(new AmpCallInvoker(sender))
+        public AmpInvokeClient(IRpcClient<AmpMessage> client):base(new AmpCallInvoker(client))
         {
         }
     }

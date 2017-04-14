@@ -1,14 +1,28 @@
 {
     "version": "0.2.0",
     "configurations": [
+        ".NET Core Launch (console)"
         {
-            "name": ".NET Core Launch (console)",
+            "name": "Debug HelloRpc Server",
             "type": "coreclr",
             "request": "launch",
             "preLaunchTask": "build",
-            "program": "${workspaceRoot}\\src\\test\\DotBPE.Test\\bin\\Debug\\netcoreapp1.1\\DotBPE.Test.dll",
+            "program": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server\\bin\\Debug\\netcoreapp1.1\\HelloRpc.Server.dll",
             "args": [],
-            "cwd": "${workspaceRoot}\\src\\test\\DotBPE.Test",
+            "cwd": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server",
+            "console": "internalConsole",
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+         ".NET Core Launch (console)"
+        {
+            "name": "Debug HelloRpc Client",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build",
+            "program": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client\\bin\\Debug\\netcoreapp1.1\\HelloRpc.Client.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client",
             "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"

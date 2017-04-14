@@ -53,6 +53,7 @@ namespace DotBPE.Rpc.DefaultImpls
         public Task SendAsync(TMessage message)
         {
             var remote = GetDefaultRemoteAddress();
+            Logger.Debug("远端地址:{0}",remote);
             return this.SendAsync(remote, message);
         }
 

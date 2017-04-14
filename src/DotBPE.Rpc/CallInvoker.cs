@@ -10,19 +10,19 @@ namespace DotBPE.Rpc
 {
     public abstract class CallInvoker<TMessage> where TMessage : InvokeMessage
     {
-        private readonly IMessageSender<TMessage> msgSender;
+        private readonly IRpcClient<TMessage> _client;
 
-        public CallInvoker(IMessageSender<TMessage> sender)
+        public CallInvoker(IRpcClient<TMessage> client)
         {
-            this.msgSender = sender;
-            this.msgSender.Recieved += MessageRecieved;
+            this._client = client;
+            this._client.Recieved += MessageRecieved;
         }
 
-        protected IMessageSender<TMessage> MessageSender
+        protected IRpcClient<TMessage> RpcClient
         {
             get
             {
-                return this.msgSender;
+                return this._client;
             }
         }
 

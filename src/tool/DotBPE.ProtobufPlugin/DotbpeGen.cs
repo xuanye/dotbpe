@@ -67,7 +67,7 @@ namespace DotBPE.ProtobufPlugin
 
                 var nfile = new CodeGeneratorResponse.Types.File
                 {
-                    Name = GetFileName(protofile.Name) + "Server.g.cs",
+                    Name = GetFileName(protofile.Name) + "Server.cs",
                     Content = sb.ToString()
                 };
                 response.File.Add(nfile);
@@ -111,7 +111,7 @@ namespace DotBPE.ProtobufPlugin
 
                 //生成文件
                 var nfile = new CodeGeneratorResponse.Types.File();
-                nfile.Name = GetFileName(protofile.Name) + "Client.g.cs";
+                nfile.Name = GetFileName(protofile.Name) + "Client.cs";
                 nfile.Content =  sb.ToString();
                 response.File.Add(nfile);
             }
@@ -155,11 +155,11 @@ namespace DotBPE.ProtobufPlugin
                 string outType = GetTypeName(method.OutputType);
                 string inType = GetTypeName(method.InputType);
 
-                sb.AppendLine($"public async Task<{outType}> {method.Name}Asnyc({inType} request)");
+                sb.AppendLine($"public async Task<{outType}> {method.Name}Asnyc({inType} request,int timeOut=3000)");
                 sb.AppendLine("{");
                 sb.AppendLine($"AmpMessage message = AmpMessage.CreateRequestMessage({serviceId}, {msgId});");
                 sb.AppendLine("message.Data = request.ToByteArray();");
-                sb.AppendLine("var response = await base.CallInvoker.AsyncCall(message);");
+                sb.AppendLine("var response = await base.CallInvoker.AsyncCall(message,timeOut);");
                 sb.AppendLine("if (response != null && response.Data !=null)");
                 sb.AppendLine("{");
                 sb.AppendLine($"return {outType}.Parser.ParseFrom(response.Data);");
@@ -245,7 +245,7 @@ namespace DotBPE.ProtobufPlugin
             }
             //循环方法end
             //生成主调用代码
-            sb.AppendLine("public Task Receive(IRpcContext<AmpMessage> context, AmpMessage req)");
+            sb.AppendLine("public Task ReceiveAsync(IRpcContext<AmpMessage> context, AmpMessage req)");
             sb.AppendLine("{");
             sb.Append(sbIfState);
             sb.AppendLine("return Task.CompletedTask;");
@@ -263,16 +263,26 @@ namespace DotBPE.ProtobufPlugin
             {
                 throw new Exception("" + protofile.Name + ".proto did not set csharp_namespace");
             }
-            return ns;
+            return ConvertCamelCase(ns);
         }
 
         private static string GetFileName(string fileProto)
         {
-            return fileProto.Split('.')[0];
+            string nomalName = fileProto.Split('.')[0];
+            return ConvertCamelCase(nomalName);
         }
+
+        private static string ConvertCamelCase(string nomalName)
+        {
+            return String.Join("", nomalName.Split('_').Select(_ =>
+            {
+                return _.Substring(0, 1).ToUpper() + _.Substring(1);
+            }));
+        }
+
         private static string GetTypeName(string typeFullName)
         {
-            return typeFullName.Split('.').Last();
+            return ConvertCamelCase(typeFullName.Split('.').Last());
         }
     }
 }

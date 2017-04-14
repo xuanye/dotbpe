@@ -23,8 +23,9 @@ namespace DotBPE.Rpc.DefaultImpls
 
         private void Bootstrap_Disconnected(object sender, EndPoint endpoint)
         {
-            _clients.TryRemove(endpoint, out var _);
-            Logger.Debug("连接已经断开");
+            var removed = _clients.TryRemove(endpoint, out var _);
+            
+            Logger.Debug("连接{0}已经断开,移除ITransport{1},当前连接数量{2}",endpoint,removed?"成功":"失败",_clients.Keys.Count);
         }
 
         public ITransport<TMessage> CreateTransport(EndPoint endpoint)
@@ -33,11 +34,10 @@ namespace DotBPE.Rpc.DefaultImpls
             {
                 return _clients.GetOrAdd(endpoint
                     , k => new Lazy<ITransport<TMessage>>(() =>
-                        {
-
-                            var bootstrap = _bootstrap;
-                            var context = bootstrap.ConnectAsync(k).Result;
+                        {                          
+                            var context = _bootstrap.ConnectAsync(k).Result;
                             var transportans = new DefaultTransport<TMessage>(context);
+                              Logger.Debug("连接{0},创建ITransport成功",endpoint);
                             return transportans;
                         }
                     )).Value;
@@ -69,4 +69,6 @@ namespace DotBPE.Rpc.DefaultImpls
             }
         }
     }
+
+
 }

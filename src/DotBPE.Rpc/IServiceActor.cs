@@ -9,6 +9,6 @@ namespace DotBPE.Rpc
     public interface IServiceActor<TMessage> where TMessage :IMessage
     {
         string Id { get; }
-        Task Receive(IRpcContext<TMessage> context, TMessage message);
+        Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message);
     }
 }

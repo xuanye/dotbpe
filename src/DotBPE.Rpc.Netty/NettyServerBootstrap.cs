@@ -77,12 +77,12 @@ namespace DotBPE.Rpc.Netty
             Logger.Debug($"服务主机启动成功，监听地址：{endPoint}。");
         }
 
-        public void ChannelRead(IChannelHandlerContext ctx, TMessage message)
+        public Task ChannelRead(IChannelHandlerContext ctx, TMessage message)
         {
             var context = new NettyRpcContext<TMessage>(ctx, _msgCodecs);
 
             // 这里添加实际的消息处理程序
-            this._handler.ReceiveAsync(context, message);
+            return this._handler.ReceiveAsync(context, message);
         }
 
 

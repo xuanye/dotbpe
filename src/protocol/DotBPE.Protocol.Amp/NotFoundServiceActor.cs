@@ -14,7 +14,7 @@ namespace DotBPE.Protocol.Amp
             get { return "40400$404"; }
         }
 
-        public async Task Receive(IRpcContext<AmpMessage> context, AmpMessage message)
+        public async Task ReceiveAsync(IRpcContext<AmpMessage> context, AmpMessage message)
         {
             AmpMessage response = new AmpMessage
             {
