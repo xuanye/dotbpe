@@ -1,13 +1,12 @@
 
-
+// [START declaration]
 syntax = "proto3";
 package dotbpe;
-option java_package = "com.google.protobuf.extensions";
-option java_outer_classname = "GoogleProtos";
+// [END declaration]
+
 // [START csharp_declaration]
-option csharp_namespace = "Google.Protobuf.Reflection";
+option csharp_namespace = "HelloRpc.Common";
 // [END csharp_declaration]
-option go_package = "google_go";
 
 import "google/protobuf/descriptor.proto";
 

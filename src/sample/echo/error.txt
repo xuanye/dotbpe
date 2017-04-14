@@ -1,7 +1,0 @@
-输入字符串的格式不正确。   在 System.Text.StringBuilder.AppendFormatHelper(IFormatProvider provider, String format, ParamsArray args)
-   在 System.String.FormatHelper(IFormatProvider provider, String format, ParamsArray args)
-   在 System.String.Format(String format, Object arg0, Object arg1)
-   在 DotBPE.ProtobufPlugin.DotbpeGen.GenerateServiceForServer(ServiceDescriptorProto service, StringBuilder sb)
-   在 DotBPE.ProtobufPlugin.DotbpeGen.GenerateServer(FileDescriptorProto protofile, CodeGeneratorResponse response)
-   在 DotBPE.ProtobufPlugin.DotbpeGen.GenerateByProtoFile(FileDescriptorProto protofile, CodeGeneratorResponse response)
-   在 DotBPE.ProtobufPlugin.DotbpeGen.Generate(CodeGeneratorRequest request, CodeGeneratorResponse response)
