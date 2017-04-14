@@ -28,14 +28,14 @@ namespace DotBPE.Rpc.Netty
         private readonly IMessageCodecs<TMessage> _msgCodecs;
         public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs)
         {
-            
+
             _bootstrap = InitBootstrap();
             _handler = handler;
             _msgCodecs = msgCodecs;
         }
 
         private Bootstrap InitBootstrap()
-        {           
+        {
             var bootstrap = new Bootstrap();
             bootstrap
                 .Channel<TcpSocketChannel>()
@@ -47,7 +47,7 @@ namespace DotBPE.Rpc.Netty
                     var pipeline = c.Pipeline;
                     pipeline.AddLast(new LoggingHandler("CLT-CONN"));
                     MessageMeta meta = _msgCodecs.GetMessageMeta();
-                   
+
                     //TODO:这里要添加一个心跳包的拦截器
 
                     //消息前处理
@@ -63,7 +63,7 @@ namespace DotBPE.Rpc.Netty
 
                     pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs));
                     pipeline.AddLast(new ClientChannelHandlerAdapter<TMessage>(this));
-                  
+
                 }));
             return bootstrap;
         }

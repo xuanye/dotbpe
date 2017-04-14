@@ -24,16 +24,19 @@ namespace DotBPE.Rpc.Netty
             base.ChannelActive(context);
         }
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
-        {           
+        {
             Logger.Debug("读取消息");
             Task.Factory.StartNew(() =>
             {
                 this._bootstrap.ChannelRead(context, msg);
             });
-           
+
             Logger.Debug("异步读取消息完成");
         }
-
+        public override void ChannelReadComplete(IChannelHandlerContext contex)
+        {
+            contex.Flush();
+        }
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
             Logger.Error(ex,$"与客户端：{context.Channel.RemoteAddress}通信时发送了错误");
