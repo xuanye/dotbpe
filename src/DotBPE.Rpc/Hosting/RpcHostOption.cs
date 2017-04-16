@@ -20,7 +20,7 @@ namespace DotBPE.Rpc.Hosting
             string localAddress = configuration["hostAddress"];
             if (string.IsNullOrEmpty(localAddress))
             {
-                localAddress = "127.0.0.1:6201";
+                localAddress = "0.0.0.0:6201";
             }
             string[] arr_Address = localAddress.Split(':');
             if(arr_Address.Length != 2)

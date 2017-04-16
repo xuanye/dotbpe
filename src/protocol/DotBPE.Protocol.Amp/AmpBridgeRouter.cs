@@ -28,7 +28,7 @@ namespace DotBPE.Protocol.Amp
                 var routeOptions = this._options.Value;
                 foreach ( var option in routeOptions)
                 {
-                    List<EndPoint> address = ParseEndPointFromString(option.RemoteAddress);
+                    List<EndPoint> address =ParseUtils.ParseEndPointListFromString(option.RemoteAddress);
 
                     string key;
                     if (string.IsNullOrEmpty(option.MessageIds))
@@ -59,17 +59,6 @@ namespace DotBPE.Protocol.Amp
                 routerDict.Add(key, remoteAddress);
             }
         }
-        private static List<EndPoint> ParseEndPointFromString(string remoteAddress)
-        {
-            Preconditions.CheckArgument(!string.IsNullOrEmpty(remoteAddress), $"服务地址配置错误：{remoteAddress}");
-            string[] arr_address = remoteAddress.Split(',');
-            List<EndPoint> list = new List<EndPoint>();
-            for(int i=0; i< arr_address.Length; i++)
-            {
-                list.Add(ParseUtils.ParseEndPointFromString(arr_address[i]));
-            }
-            return list;
-        }
 
         public RouterPoint GetRouterPoint(AmpMessage message)
         {
@@ -87,10 +76,10 @@ namespace DotBPE.Protocol.Amp
             if (routerDict.ContainsKey(msgKey))
             {
                 point.RoutePointType = RoutePointType.Remote;
-                point.RemoteAddress = ChooseEndPoint(keyService, routerDict[msgKey]); 
+                point.RemoteAddress = ChooseEndPoint(keyService, routerDict[msgKey]);
                 return point;
             }
-           
+
             return point;
         }
 
@@ -120,7 +109,7 @@ namespace DotBPE.Protocol.Amp
                 }
             }
             return list[chooseIndex];
-            
+
         }
     }
 }

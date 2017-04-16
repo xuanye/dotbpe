@@ -70,10 +70,10 @@ namespace DotBPE.Rpc.Netty
 
         public async Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint)
         {
-            Logger.Debug("开始创建链接{0}");
+            Logger.Debug("开始创建链接{0}",endpoint);
             var channel =  await this._bootstrap.ConnectAsync(endpoint);
-            Logger.Debug("成功创建链接{0}");
-            return new NettyRpcClientContext<TMessage>(channel, this._msgCodecs);
+            Logger.Debug("成功创建链接{0}",endpoint);
+            return new NettyRpcContext<TMessage>(channel, this._msgCodecs);
         }
 
         public event EventHandler<EndPoint> Disconnected;
@@ -86,8 +86,13 @@ namespace DotBPE.Rpc.Netty
 
         public void ChannelRead(IChannelHandlerContext ctx, TMessage msg)
         {
-            var context = new NettyRpcClientContext<TMessage>(ctx.Channel, this._msgCodecs);
+            var context = new NettyRpcContext<TMessage>(ctx.Channel, this._msgCodecs);
             this._handler.ReceiveAsync(context, msg);
+        }
+
+        public void Dispose()
+        {
+
         }
     }
 }

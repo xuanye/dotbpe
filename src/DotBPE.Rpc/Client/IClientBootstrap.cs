@@ -7,7 +7,7 @@ using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Rpc
 {
-    public interface IClientBootstrap<TMessage> where TMessage :IMessage
+    public interface IClientBootstrap<TMessage>:IDisposable where TMessage :IMessage
     {
         Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint);
 

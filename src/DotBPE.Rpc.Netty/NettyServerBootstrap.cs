@@ -79,7 +79,7 @@ namespace DotBPE.Rpc.Netty
 
         public Task ChannelRead(IChannelHandlerContext ctx, TMessage message)
         {
-            var context = new NettyRpcContext<TMessage>(ctx, _msgCodecs);
+            var context = new NettyRpcContext<TMessage>(ctx.Channel, _msgCodecs);
 
             // 这里添加实际的消息处理程序
             return this._handler.ReceiveAsync(context, message);

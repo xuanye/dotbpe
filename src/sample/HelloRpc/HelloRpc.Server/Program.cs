@@ -41,19 +41,14 @@ namespace HelloRpc.Server
                 .Build();
 
             host.StartAsync().Wait();
-
+            // 服务预热，首先建立好 需要的链接
+            host.Preheating().Wait();
             /*
-           
+
             */
             Console.WriteLine("按任意键退出服务，任意键不包括任何电源键/关机键");
             Console.ReadKey();
-            var addReq = new AddRequest();
-            addReq.Left = 1;
-            addReq.Right = 2;
 
-            MathClient math = ClientProxy.GetClient<MathClient>();
-            var addRep = math.AddAsnyc(addReq, 600000).Result;
-            Console.ReadKey();
             host.ShutdownAsync().Wait();
 
         }

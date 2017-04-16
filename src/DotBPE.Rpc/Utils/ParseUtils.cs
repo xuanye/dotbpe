@@ -27,7 +27,34 @@ namespace DotBPE.Rpc.Utils
             {
                 throw new ArgumentException($"格式化地址错误，参数为空:{address}", ex);
             }
-            
+
+        }
+
+
+        public static string ParseEndPointToString(EndPoint endpoint){
+            IPEndPoint ip =  endpoint as IPEndPoint;
+            if(ip !=null){
+                if (ip.Address.IsIPv4MappedToIPv6)
+                {
+                    return ip.Address.MapToIPv4().ToString() + ":" + ip.Port;
+                }
+                return ip.Address.ToString()+":"+ip.Port;
+            }
+            if(endpoint !=null){
+                return endpoint.Serialize().ToString();
+            }
+            return "";
+        }
+        public static List<EndPoint> ParseEndPointListFromString(string remoteAddress)
+        {
+            Preconditions.CheckArgument(!string.IsNullOrEmpty(remoteAddress), $"服务地址配置错误：{remoteAddress}");
+            string[] arr_address = remoteAddress.Split(',');
+            List<EndPoint> list = new List<EndPoint>();
+            for(int i=0; i< arr_address.Length; i++)
+            {
+                list.Add(ParseEndPointFromString(arr_address[i]));
+            }
+            return list;
         }
     }
 }

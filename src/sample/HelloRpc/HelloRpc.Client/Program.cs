@@ -23,7 +23,7 @@ namespace HelloRpc.Client
             while (true)
             {
 
-                string name = "xuanye";
+                string name = Console.ReadLine();
                 if ("bye".Equals(name))
                 {
                     break;

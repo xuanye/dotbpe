@@ -7,6 +7,11 @@ namespace DotBPE.Rpc.Hosting
     {
         Task StartAsync();
 
+        /// <summary>
+        /// 预热，初始化工作
+        /// </summary>
+        /// <returns></returns>
+        Task Preheating();
         Task ShutdownAsync();
     }
 }
