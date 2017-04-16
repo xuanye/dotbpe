@@ -22,7 +22,7 @@ namespace HelloRpc.Client
             var greeter = new GreeterClient(client);
             while (true)
             {
-
+                Console.WriteLine("请输入你的名称");
                 string name = Console.ReadLine();
                 if ("bye".Equals(name))
                 {

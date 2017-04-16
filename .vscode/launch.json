@@ -1,37 +1,37 @@
 {
     "version": "0.2.0",
     "configurations": [
-        ".NET Core Launch (console)"
+        "HelloRpcClientLaunch"
         {
-            "name": "Debug HelloRpc Server",
+            "name": "HelloRpcServer",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "buildServer",
             "program": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server\\bin\\Debug\\netcoreapp1.1\\HelloRpc.Server.dll",
             "args": [],
             "cwd": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server",
-            "console": "internalConsole",
+            "externalConsole":true,
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         },
-         ".NET Core Launch (console)"
+        "HelloRpcClientLaunch"
         {
-            "name": "Debug HelloRpc Client",
+            "name": "HelloRpcClient",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build",
+            "preLaunchTask": "buildClient",
             "program": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client\\bin\\Debug\\netcoreapp1.1\\HelloRpc.Client.dll",
             "args": [],
             "cwd": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client",
-            "console": "internalConsole",
+            "externalConsole":true,
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
-        },
+        }
+    ]
+    "compounds": [
         {
-            "name": ".NET Core Attach",
-            "type": "coreclr",
-            "request": "attach",
-            "processId": "${command:pickProcess}"
+            "name": "Server/Client",
+            "configurations": ["HelloRpcServer", "HelloRpcClient"]
         }
     ]
 }

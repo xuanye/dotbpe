@@ -31,7 +31,7 @@ namespace DotBPE.Test.Amp
             Assert.Equal(msg.MessageId, otherMsg.MessageId);
             Assert.Equal(msg.ServiceId, otherMsg.ServiceId);
             string data = Encoding.UTF8.GetString(otherMsg.Data);
-            Assert.Equal("abc", data);
+            Assert.Equal("ABC", data);
         }
     }
 }
