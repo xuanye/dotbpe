@@ -28,28 +28,24 @@ var host = new RpcHostBuilder()
 ```
 1: 使用配置文件 UseConfiguration
 2: 添加Rpc的核心组件 AddRpcCore
-IMessageHandler:
-负责服务端获得消息后交由它来处理，实际是在NettyChannel读取成功调用IMessageHandler的ReceiveAsync方法
-在默认的DefaultMessageHandler的ReceiveAsync 会触发接口的Recieved事件
+>IMessageHandler:
+>负责服务端获得消息后交由它来处理，实际是在NettyChannel读取成功调用IMessageHandler的ReceiveAsync方法
+>在默认的DefaultMessageHandler的ReceiveAsync 会触发接口的Recieved事件
 
-IServerHost
-仅仅是IServerBootstrap的包装
+>IServerHost
+>仅仅是IServerBootstrap的包装
+
 3: 添加NettyServerBootstrap的实现 UseNettyServer
 4: 添加Amp协议的部分 UseAmp
-IMessageCodecs 编解码相关
-IServiceActorLocator 本地服务定位 通过ServiceId和MessageId组织一个特殊的标识去查找
+>IMessageCodecs 编解码相关
+>IServiceActorLocator 本地服务定位 通过ServiceId和MessageId组织一个特殊的标识去查找
 
 
 5: 客户端实现（既是客户端又是服务端） UseAmpClient
-IRpcClient: 客户端实现，内部通过ITransportFactory 创建 ITransport，通过订阅IMessageHandler的Received事件来获取服务端返回
-ITransportFactory：缓存ITransport，通过地址EndPoint作为Key来查找或者重新创建
-ITransport: 对IClientBootstrap的包装,可在默认实现中添加多链接的实现
-IClientBootstrap：NettyClientBootstrap的实现
+>IRpcClient: 客户端实现，内部通过ITransportFactory 创建 ITransport，通过订阅IMessageHandler的Received事件来获取服务端返回
+>ITransportFactory：缓存ITransport，通过地址EndPoint作为Key来查找或者重新创建
+>ITransport: 对IClientBootstrap的包装,可在默认实现中添加多链接的实现
+>IClientBootstrap：NettyClientBootstrap的实现
 
 6:本地服务实现注册： AddServiceActor
 
-依赖代码自动生成工具
-
-
-## 问题
-1： 无法在服务端ServerChannelHandler的ChannelRead事件中，新建Netty Client ,所以服务端所有的对外连接（使用Netty Client去调用其他RPC服务器）必须在服务启动时，进行预热（就是先建立好连接）
