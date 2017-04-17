@@ -18,7 +18,7 @@ namespace HelloRpc.Client
             Console.OutputEncoding = Encoding.UTF8;
             DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());
 
-            var client = DotBpeAmpClient.Create("127.0.0.1:6201");
+            var client = AmpClient.Create("127.0.0.1:6201");
             var greeter = new GreeterClient(client);
             while (true)
             {
@@ -31,7 +31,7 @@ namespace HelloRpc.Client
                 var reply = greeter.HelloPlusAsnyc(new HelloRequest()
                 {
                     Name = name
-                },600000).Result;
+                },3000).Result;
 
                 DotBPE.Rpc.Environment.Logger.Debug($"---------------收到服务端返回:{reply.Message}-----------");
             }

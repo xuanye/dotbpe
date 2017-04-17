@@ -29,8 +29,8 @@ namespace DotBPE.Rpc.DefaultImpls
         {
             Recieved?.Invoke(this, new MessageRecievedEventArgs<TMessage>(context, message));
         }
-        public Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message)
-        {           
+        public virtual Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message)
+        {
             RaiseReceivedEvent(context, message);
 
             //本地服务互调也会进入到这里，但是这里不能再重复处理了，不然就是死循环

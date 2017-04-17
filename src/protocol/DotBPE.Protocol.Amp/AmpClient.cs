@@ -9,7 +9,7 @@ using System.Text;
 
 namespace DotBPE.Protocol.Amp
 {
-    public class DotBpeAmpClient
+    public class AmpClient
     {
         public static IRpcClient<AmpMessage> Create(string remoteAddress)
         {

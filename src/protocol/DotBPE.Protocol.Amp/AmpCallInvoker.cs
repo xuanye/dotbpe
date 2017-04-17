@@ -59,7 +59,11 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             {
                 throw new RpcBizException("收到了空消息");
             }
-
+            if(e.Message.ServiceId == 0){
+                //心跳消息
+                Logger.Info("收到服务端心跳消息Id{0}",e.Message.Id);
+                return ;
+            }
             if(e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.Response) //只处理回复消息
             {
                 Logger.Info($"接收到消息:{e.Message.Id}");

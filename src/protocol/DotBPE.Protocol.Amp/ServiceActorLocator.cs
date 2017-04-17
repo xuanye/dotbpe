@@ -15,11 +15,9 @@ namespace DotBPE.Protocol.Amp
         /// <returns></returns>
         public IServiceActor<AmpMessage> LocateServiceActor(AmpMessage message)
         {
-            //TODO:
-            //step1: 根据服务号消息号查找配置，看是否在配置文件中配置了，远端服务号和消息号
-            //step2: 如果是远端服务，则获取默认远端服务调用者RemoteServiceActor
-            //step3: 否则通过服务注册器 获取本地服务实现。
-
+            if(message.ServiceId ==0 ){ //心跳消息
+               return HeartbeatActor.Default;
+            }
 
             //以下的是本地服务的实现
             string serviceActorId = message.ServiceId + "$0";
@@ -34,7 +32,7 @@ namespace DotBPE.Protocol.Amp
             {
                 return msgActor;
             }
-            return new NotFoundServiceActor();
+            return  NotFoundServiceActor.Default;
         }
     }
 }

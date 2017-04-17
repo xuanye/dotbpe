@@ -57,7 +57,7 @@ namespace DotBPE.Rpc.Netty
                     MessageMeta meta = _msgCodecs.GetMessageMeta();
 
                     // IdleStateHandler
-                    pipeline.AddLast("timeout", new IdleStateHandler(0,0,meta.PingInterval/1000*2)); //服务端双倍来处理
+                    pipeline.AddLast("timeout", new IdleStateHandler(0,0,meta.HeartbeatInterval/1000*2)); //服务端双倍来处理
 
                     //消息前处理
                     pipeline.AddLast(
@@ -83,7 +83,6 @@ namespace DotBPE.Rpc.Netty
         public Task ChannelRead(IChannelHandlerContext ctx, TMessage message)
         {
             var context = new NettyRpcContext<TMessage>(ctx.Channel, _msgCodecs);
-
             // 这里添加实际的消息处理程序
             return this._handler.ReceiveAsync(context, message);
         }

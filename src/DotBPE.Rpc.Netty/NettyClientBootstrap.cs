@@ -29,7 +29,7 @@ namespace DotBPE.Rpc.Netty
         private readonly IMessageHandler<TMessage> _handler;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
 
-        private static IByteBuffer _heartbeatBuff =null;
+
         public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs)
         {
 
@@ -54,7 +54,7 @@ namespace DotBPE.Rpc.Netty
 
 
                     // IdleStateHandler
-                    pipeline.AddLast("timeout", new IdleStateHandler(0,0,meta.PingInterval/1000));
+                    pipeline.AddLast("timeout", new IdleStateHandler(0,0,meta.HeartbeatInterval/1000));
                     //消息前处理
                     pipeline.AddLast(
                         new LengthFieldBasedFrameDecoder(
@@ -103,13 +103,14 @@ namespace DotBPE.Rpc.Netty
         /// <returns></returns>
         public Task SendHeartbeatAsync(IChannelHandlerContext ctx,IdleStateEvent state){
             //获取心跳包的打包内容
-            if(_heartbeatBuff == null){
-               TMessage message = this._msgCodecs.HeartbeatMessage();
-               _heartbeatBuff  = Unpooled.Buffer(message.Length);
-               var bufferWritter = NettyBufferManager.CreateBufferWriter(_heartbeatBuff);
-               this._msgCodecs.Encode(message,bufferWritter);
-            }
-            return ctx.WriteAsync(_heartbeatBuff);
+
+            TMessage message = this._msgCodecs.HeartbeatMessage();
+            var heartbeatBuff  = ctx.Allocator.Buffer(message.Length);
+            var bufferWritter = NettyBufferManager.CreateBufferWriter(heartbeatBuff);
+            this._msgCodecs.Encode(message,bufferWritter);
+
+            Logger.Info("向服务端{0}发送心跳包",ctx.Channel.RemoteAddress);
+            return ctx.WriteAndFlushAsync(heartbeatBuff);
         }
         public void Dispose()
         {

@@ -44,6 +44,6 @@
         /// 心跳间隔时间，单位毫秒
         /// </summary>
         /// <returns></returns>
-        public int PingInterval{get;set;}
+        public int HeartbeatInterval{get;set;}
     }
 }

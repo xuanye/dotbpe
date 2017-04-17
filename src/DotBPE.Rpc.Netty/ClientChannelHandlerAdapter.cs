@@ -36,7 +36,6 @@ namespace DotBPE.Rpc.Netty
 
         protected override void ChannelRead0(IChannelHandlerContext ctx, TMessage msg)
         {
-
             this._bootstrap.ChannelRead(ctx, msg);
         }
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)

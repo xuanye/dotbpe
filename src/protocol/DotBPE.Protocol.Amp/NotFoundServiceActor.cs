@@ -9,6 +9,8 @@ namespace DotBPE.Protocol.Amp
 {
     public class NotFoundServiceActor: IServiceActor<AmpMessage>
     {
+        public static NotFoundServiceActor Default  = new NotFoundServiceActor();
+
         public string Id
         {
             get { return "40400$404"; }
