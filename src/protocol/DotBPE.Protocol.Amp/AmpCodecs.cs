@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------
 #endregion
 
+using System;
 using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Protocol.Amp
@@ -35,7 +36,7 @@ namespace DotBPE.Protocol.Amp
             {
                 writer.WriteBytes(message.Data);
             }
-           
+
         }
 
         public AmpMessage Decode(IBufferReader reader)
@@ -69,7 +70,7 @@ namespace DotBPE.Protocol.Amp
                     msg.InvokeMessageType = InvokeMessageType.Notify;
                     break;
             }
-            
+
             msg.ServiceId = reader.ReadUShort();
             msg.MessageId = reader.ReadUShort();
 
@@ -84,12 +85,19 @@ namespace DotBPE.Protocol.Amp
                 reader.ReadBytes(msg.Data);
             }
             return msg;
-           
+
         }
 
         public MessageMeta GetMessageMeta()
         {
             return AmpMeta;
+        }
+
+        public AmpMessage HeartbeatMessage()
+        {
+            AmpMessage message  = AmpMessage.CreateRequestMessage(0,0);
+            return message;
+
         }
     }
 }

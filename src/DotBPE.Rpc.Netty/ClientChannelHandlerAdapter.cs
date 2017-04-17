@@ -4,6 +4,7 @@ using System.Text;
 using DotBPE.Rpc.Codes;
 using DotNetty.Transport.Channels;
 using DotBPE.Rpc.Logging;
+using DotNetty.Handlers.Timeout;
 
 namespace DotBPE.Rpc.Netty
 {
@@ -42,6 +43,15 @@ namespace DotBPE.Rpc.Netty
         {
             Logger.Error(ex,$"服务端{context.Channel.RemoteAddress}通信时发送了错误");
             context.CloseAsync(); //关闭连接
+        }
+
+        public override void UserEventTriggered(IChannelHandlerContext context, object evt){
+            if(evt is IdleStateEvent){
+                var eventState = evt as IdleStateEvent;
+                if(eventState !=null){
+                    this._bootstrap.SendHeartbeatAsync(context,eventState);
+                }
+            }
         }
     }
 }

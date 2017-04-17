@@ -11,6 +11,7 @@ using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Hosting;
 using DotBPE.Rpc.Logging;
 using DotNetty.Handlers.Logging;
+using DotNetty.Handlers.Timeout;
 
 namespace DotBPE.Rpc.Netty
 {
@@ -55,6 +56,8 @@ namespace DotBPE.Rpc.Netty
                     pipeline.AddLast(new LoggingHandler("SRV-CONN"));
                     MessageMeta meta = _msgCodecs.GetMessageMeta();
 
+                    // IdleStateHandler
+                    pipeline.AddLast("timeout", new IdleStateHandler(0,0,meta.PingInterval/1000*2)); //服务端双倍来处理
 
                     //消息前处理
                     pipeline.AddLast(

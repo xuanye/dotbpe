@@ -1,11 +1,10 @@
 {
     "version": "0.1.0",
-    "isShellCommand": true,
-    "args": [],
     "tasks": [
         {
             "taskName": "UnitTest",
             "command": "dotnet",
+            "isShellCommand": true,
             "args": [
                 "test"
                 "${workspaceRoot}\\src\\test\\DotBPE.Test\\DotBPE.Test.csproj"
@@ -16,6 +15,7 @@
         {
             "taskName": "buildClient",
             "command": "dotnet",
+            "isShellCommand": true,
             "args": [
                 "build",
                 "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client\\HelloRpc.Client.csproj"
@@ -27,6 +27,7 @@
         {
             "taskName": "buildServer",
             "command": "dotnet",
+            "isShellCommand": true,
             "args": [
                 "build",
                 "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server\\HelloRpc.Server.csproj"
