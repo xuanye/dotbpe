@@ -4,6 +4,7 @@ using DotBPE.Rpc;
 using System.Collections.Concurrent;
 using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Exceptions;
+using System.Threading;
 
 namespace DotBPE.Protocol.Amp
 {
@@ -124,14 +125,9 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 return;
             }
 
-            lock (lockObj)
-            {
-                if(this.sendSequence > int.MaxValue -1000000) //快越界了，就重置一下,一台服务应该没那么繁忙吧
-                {
-                    this.sendSequence  = 1 ;
-                }
-                request.Sequence = this.sendSequence++;
-            }
+            int id = Interlocked.Increment(ref this.sendSequence);
+            request.Sequence =id ;
+
         }
     }
 }

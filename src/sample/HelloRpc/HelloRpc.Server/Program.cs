@@ -1,18 +1,14 @@
 ﻿
 using System;
-using System.Net;
-using System.Text;
 using DotBPE.Protocol.Amp;
-using DotBPE.Rpc;
 using DotBPE.Rpc.Netty;
 using System.Threading.Tasks;
-using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
-using Microsoft.Extensions.Logging;
 using HelloRpc.Common;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using DotBPE.Rpc;
 
 namespace HelloRpc.Server
 {
@@ -34,10 +30,11 @@ namespace HelloRpc.Server
                 .UseNettyServer<AmpMessage>()  //使用使用Netty默认实现
                 .UseAmp() //使用Amp协议中的默认实现
                 .UseAmpClient() //还要调用外部服务
-                .AddServiceActor(
-                    new GreeterImpl(),
-                    new MathImpl()
-                )  //注册服务
+                .AddServiceActors(actors =>
+                {
+                    actors.Add<GreeterImpl>()
+                        .Add<MathImpl>();
+                }) //注册服务
                 .Build();
 
             host.StartAsync().Wait();

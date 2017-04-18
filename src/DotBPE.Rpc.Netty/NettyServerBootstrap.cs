@@ -2,10 +2,7 @@
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Hosting;
@@ -77,7 +74,6 @@ namespace DotBPE.Rpc.Netty
 
             this._channel = await bootstrap.BindAsync(endPoint);
 
-            Logger.Debug($"服务主机启动成功，监听地址：{endPoint}。");
         }
 
         public Task ChannelRead(IChannelHandlerContext ctx, TMessage message)

@@ -120,8 +120,9 @@ namespace DotBPE.Rpc.Netty
                 if(_channels.Count  ==0){
                     throw new Exceptions.RpcException("NettyRpcMultiplexContext wasn't inited");
                 }
-                seq++;
-                var index = Math.Abs( seq  % _channels.Count) ; // 获取一个IChannel
+
+                int id = Interlocked.Increment(ref this.seq);
+                var index = Math.Abs( id  % _channels.Count) ; // 获取一个IChannel
                 channel = _channels[index];
             }
             return channel;

@@ -1,12 +1,13 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DotBPE.Rpc;
+﻿using DotBPE.Rpc;
 
 namespace DotBPE.Protocol.Amp
 {
     public class ServiceActorLocator: IServiceActorLocator<AmpMessage>
     {
+        private readonly IServiceActorContainer<AmpMessage> _container;
+        public ServiceActorLocator(IServiceActorContainer<AmpMessage> container){
+            this._container = container;
+        }
 
         /// <summary>
         ///
@@ -20,19 +21,21 @@ namespace DotBPE.Protocol.Amp
             }
 
             //以下的是本地服务的实现
-            string serviceActorId = message.ServiceId + "$0";
-            var serviceActor = SimpleServiceActorFactory.GetServiceActor(serviceActorId);
-            if(serviceActor != null)
-            {
-                return serviceActor;
-            }
             string msgActorId = $"{message.ServiceId}${message.MessageId}";
-            var msgActor = SimpleServiceActorFactory.GetServiceActor(msgActorId);
+            var msgActor = _container.GetById(msgActorId);
             if(msgActor != null)
             {
                 return msgActor;
             }
-            return  NotFoundServiceActor.Default;
+
+            string serviceActorId = message.ServiceId + "$0";
+            var serviceActor = _container.GetById(serviceActorId);
+            if(serviceActor != null)
+            {
+                return serviceActor;
+            }
+
+            return NotFoundServiceActor.Default;
         }
     }
 }

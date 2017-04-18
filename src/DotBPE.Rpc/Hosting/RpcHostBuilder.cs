@@ -50,7 +50,6 @@ namespace DotBPE.Rpc.Hosting
             AddApplicationServices(applicationServices, hostingServiceProvider);
 
             var host = hostingServiceProvider.GetRequiredService<IServerHost>();
-
             Environment.SetServiceProvider(hostingServiceProvider);
             return host;
         }

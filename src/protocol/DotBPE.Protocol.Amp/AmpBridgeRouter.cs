@@ -66,17 +66,18 @@ namespace DotBPE.Protocol.Amp
             point.RoutePointType = RoutePointType.Local;
 
             string keyService = $"{message.ServiceId}$0";
-            if (routerDict.ContainsKey(keyService))
-            {
-                point.RoutePointType = RoutePointType.Remote;
-                point.RemoteAddress = ChooseEndPoint(keyService, routerDict[keyService]);
-                return point;
-            }
             string msgKey = $"{message.ServiceId}${message.MessageId}";
             if (routerDict.ContainsKey(msgKey))
             {
                 point.RoutePointType = RoutePointType.Remote;
                 point.RemoteAddress = ChooseEndPoint(keyService, routerDict[msgKey]);
+                return point;
+            }
+
+            if (routerDict.ContainsKey(keyService))
+            {
+                point.RoutePointType = RoutePointType.Remote;
+                point.RemoteAddress = ChooseEndPoint(keyService, routerDict[keyService]);
                 return point;
             }
 
