@@ -17,6 +17,7 @@ namespace DotBPE.Protocol.Amp
             {
                 services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>()
                     .AddSingleton<IServiceActorLocator<AmpMessage>, ServiceActorLocator>()
+                    .AddSingleton<IRpcClient<AmpMessage>,MockRpcClient<AmpMessage>>()
                     .AddSingleton<IServiceActorContainer<AmpMessage>,DefaultServiceActorContainer<AmpMessage>>();
             });
             return builder;
@@ -30,6 +31,8 @@ namespace DotBPE.Protocol.Amp
         public static IRpcHostBuilder UseAmpClient(this IRpcHostBuilder builder){
 
             builder.ConfigureServices((services)=>{
+
+                services.Remove(ServiceDescriptor.Singleton(typeof(IRpcClient<AmpMessage>)));
 
                 services.AddSingleton<IRpcClient<AmpMessage>,BridgeRpcClient<AmpMessage>>() //在服务端使用客户端链接 需要使用桥接式的实现
                     .AddSingleton<IBridgeRouter<AmpMessage>,AmpBridgeRouter>() //桥接路由器
@@ -53,9 +56,9 @@ namespace DotBPE.Protocol.Amp
                 {
                     services.AddSingleton(typeof(IServiceActor<AmpMessage>),actorType);
                 }
-               
+
             });
-            
+
             return builder;
         }
 
