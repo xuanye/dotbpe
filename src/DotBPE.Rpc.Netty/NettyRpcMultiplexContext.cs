@@ -16,7 +16,7 @@ namespace DotBPE.Rpc.Netty
         ILogger Logger  = Environment.Logger.ForType< NettyRpcMultiplexContext<TMessage>>();
         private readonly IMessageCodecs<TMessage> _codecs;
         private  readonly Bootstrap _bootstrap ;
-        private Endpoint _remoteAddress;
+        private EndPoint _remoteAddress;
         private List<IChannel> _channels = new List<IChannel>();
 
         private readonly bool _autoReConnect = true;
