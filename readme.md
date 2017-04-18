@@ -4,12 +4,13 @@ dotbpe是一款基于CSharp编写的RPC框架，但是它的目标不仅仅只�
 
 ## 待完成的功能
 1. 服务端服务间互调逻辑封装 ✓
-2. 客户端<-->服务端链接 心跳包
+2. 客户端<-->服务端链接 心跳包 ✓
 3. Protobuf代码生成插件 ✓
 4. 日志和监控
 5. 健康检查
 6. 插件开发（HttpServer,HttpClient,RedisClient,DBClient,LocalCache）
 7. 文档编写
+8. 客户端多链接实现
 
 
 

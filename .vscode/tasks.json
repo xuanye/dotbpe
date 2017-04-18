@@ -13,24 +13,12 @@
             "problemMatcher": "$msCompile",
         },
         {
-            "taskName": "buildClient",
+            "taskName": "BuildAll",
             "command": "dotnet",
             "isShellCommand": true,
             "args": [
                 "build",
-                "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client\\HelloRpc.Client.csproj"
-            ],
-
-            "isBuildCommand": true,
-            "problemMatcher": "$msCompile"
-        },
-        {
-            "taskName": "buildServer",
-            "command": "dotnet",
-            "isShellCommand": true,
-            "args": [
-                "build",
-                "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server\\HelloRpc.Server.csproj"
+                "${workspaceRoot}\\src\\DotBPE.sln"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

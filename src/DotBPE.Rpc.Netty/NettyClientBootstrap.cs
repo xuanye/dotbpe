@@ -22,16 +22,18 @@ using DotNetty.Buffers;
 
 namespace DotBPE.Rpc.Netty
 {
-    public class NettyClientBootstrap<TMessage>:IClientBootstrap<TMessage> where TMessage:InvokeMessage
+    public class NettyClientBootstrap<TMessage> : IClientBootstrap<TMessage> where TMessage : InvokeMessage
     {
         static ILogger Logger = Environment.Logger.ForType<NettyClientBootstrap<TMessage>>();
         private readonly Bootstrap _bootstrap;
         private readonly IMessageHandler<TMessage> _handler;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
 
+        private readonly RpcClientOption _clientOption;
 
-        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs)
+        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, RpcClientOption clientOption)
         {
+            this._clientOption = clientOption;
 
             _bootstrap = InitBootstrap();
             _handler = handler;
@@ -54,7 +56,7 @@ namespace DotBPE.Rpc.Netty
 
 
                     // IdleStateHandler
-                    pipeline.AddLast("timeout", new IdleStateHandler(0,0,meta.HeartbeatInterval/1000));
+                    pipeline.AddLast("timeout", new IdleStateHandler(0, 0, meta.HeartbeatInterval / 1000));
                     //消息前处理
                     pipeline.AddLast(
                         new LengthFieldBasedFrameDecoder(
@@ -75,18 +77,21 @@ namespace DotBPE.Rpc.Netty
 
         public async Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint)
         {
-            Logger.Debug("开始创建链接{0}",endpoint);
-            var channel =  await this._bootstrap.ConnectAsync(endpoint);
-            Logger.Debug("成功创建链接{0}",endpoint);
-            return new NettyRpcContext<TMessage>(channel, this._msgCodecs);
+            var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs);
+            await context.InitAsync(endpoint,_clientOption);
+            context.BindDisconnect(DisConnected);
+            return context;
         }
 
-        public event EventHandler<EndPoint> Disconnected;
+        public event EventHandler<DisConnectedArgs> DisConnected;
 
 
         public void OnChannelInactive(IChannelHandlerContext context)
         {
-            this.Disconnected?.Invoke(this, context.Channel.RemoteAddress);
+            var args = new DisConnectedArgs();
+            args.EndPoint = context.Channel.RemoteAddress;
+            args.ContextId  = context.Channel.Id.AsLongText();
+            this.DisConnected?.Invoke(this,args);
         }
 
         public void ChannelRead(IChannelHandlerContext ctx, TMessage msg)
@@ -101,15 +106,16 @@ namespace DotBPE.Rpc.Netty
         /// <param name="ctx"></param>
         /// <param name="state"></param>
         /// <returns></returns>
-        public Task SendHeartbeatAsync(IChannelHandlerContext ctx,IdleStateEvent state){
+        public Task SendHeartbeatAsync(IChannelHandlerContext ctx, IdleStateEvent state)
+        {
             //获取心跳包的打包内容
 
             TMessage message = this._msgCodecs.HeartbeatMessage();
-            var heartbeatBuff  = ctx.Allocator.Buffer(message.Length);
+            var heartbeatBuff = ctx.Allocator.Buffer(message.Length);
             var bufferWritter = NettyBufferManager.CreateBufferWriter(heartbeatBuff);
-            this._msgCodecs.Encode(message,bufferWritter);
+            this._msgCodecs.Encode(message, bufferWritter);
 
-            Logger.Info("向服务端{0}发送心跳包",ctx.Channel.RemoteAddress);
+            Logger.Info("向服务端{0}发送心跳包", ctx.Channel.RemoteAddress);
             return ctx.WriteAndFlushAsync(heartbeatBuff);
         }
         public void Dispose()

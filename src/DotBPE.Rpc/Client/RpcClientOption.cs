@@ -9,7 +9,7 @@ namespace DotBPE.Rpc
     {
         public RpcClientOption()
         {
-            
+
         }
 
         public RpcClientOption(IConfiguration configuration)
@@ -19,7 +19,20 @@ namespace DotBPE.Rpc
             {
                 throw new ArgumentNullException(nameof(configuration));
             }
-          
+
+            var multiplexCount = ParseInt(configuration,"multiplexCount",1);
+            if(multiplexCount<1){
+                multiplexCount = 1;
+            }
+            MultiplexCount = multiplexCount ;
+        }
+
+        /// <summary>
+        ///  客户端多链接数量，默认是1，即不使用多工，使用单链接
+        /// </summary>
+        /// <returns></returns>
+        public int MultiplexCount {
+            get;private set;
         }
         private static int ParseInt(IConfiguration configuration, string key, int defaultValue)
         {

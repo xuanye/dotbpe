@@ -11,6 +11,12 @@ namespace DotBPE.Rpc
     {
         Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint);
 
-        event EventHandler<EndPoint> Disconnected;
+        event EventHandler<DisConnectedArgs> DisConnected;
+    }
+
+    public class DisConnectedArgs{
+        public EndPoint EndPoint{get;set;}
+
+        public string ContextId{get;set;}
     }
 }
