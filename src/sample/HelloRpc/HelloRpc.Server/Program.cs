@@ -7,8 +7,6 @@ using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
 using HelloRpc.Common;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using DotBPE.Rpc;
 
 namespace HelloRpc.Server
 {
@@ -40,9 +38,7 @@ namespace HelloRpc.Server
             host.StartAsync().Wait();
             // 服务预热，首先建立好 需要的链接
             host.Preheating().Wait();
-            /*
 
-            */
             Console.WriteLine("按任意键退出服务，任意键不包括任何电源键/关机键");
             Console.ReadKey();
 
