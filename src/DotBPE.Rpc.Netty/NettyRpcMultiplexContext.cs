@@ -54,8 +54,9 @@ namespace DotBPE.Rpc.Netty
                 return channel.WriteAndFlushAsync(buff);
             }
             else{
+                Logger.Debug("ChannelId={0} 无效，准备移除",channel.Id.AsLongText());
                 TryRemove(channel); // 移除无用的Channel
-                StartConnect(channel.RemoteAddress); //启动自动重连
+                // StartConnect(channel.RemoteAddress); //启动自动重连
                 return SendAsync(data); // 重新调用一次 ，直到链接被移除完
             }
         }
@@ -89,12 +90,13 @@ namespace DotBPE.Rpc.Netty
             }
         }
 
-        internal void BindDisconnect(EventHandler<DisConnectedArgs> disConnected)
+        internal void BindDisconnect(IClientBootstrap<TMessage> clientBoot)
         {
-            disConnected += Channel_DisConnected ;
+            clientBoot.DisConnected += Channel_DisConnected ;
         }
 
         private void Channel_DisConnected(object sender ,DisConnectedArgs args){
+
             TryRemoveById(args.ContextId);
             StartConnect(args.EndPoint);
         }
@@ -130,7 +132,6 @@ namespace DotBPE.Rpc.Netty
 
         private void StartConnect(EndPoint endpoint){
             int tryCount  = 0;
-
             Thread thread = new Thread(new ThreadStart(()=>{
                 while(_autoReConnect){
                     tryCount++;

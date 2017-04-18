@@ -19,7 +19,6 @@ using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotBPE.Rpc.Logging;
 using DotNetty.Handlers.Timeout;
-using DotNetty.Buffers;
 using Microsoft.Extensions.Options;
 
 namespace DotBPE.Rpc.Netty
@@ -81,7 +80,7 @@ namespace DotBPE.Rpc.Netty
         {
             var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs);
             await context.InitAsync(endpoint,_clientOption?.Value);
-            context.BindDisconnect(DisConnected);
+            context.BindDisconnect(this);
             return context;
         }
 
@@ -93,6 +92,7 @@ namespace DotBPE.Rpc.Netty
             var args = new DisConnectedArgs();
             args.EndPoint = context.Channel.RemoteAddress;
             args.ContextId  = context.Channel.Id.AsLongText();
+            Logger.Debug("查找断线的处理事件是否存在，然后它={0}",this.DisConnected ==null?"不存在":"存在");
             this.DisConnected?.Invoke(this,args);
         }
 

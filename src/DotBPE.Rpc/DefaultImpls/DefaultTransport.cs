@@ -3,6 +3,7 @@ using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Logging;
+using DotBPE.Rpc.Utils;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
@@ -13,9 +14,11 @@ namespace DotBPE.Rpc.DefaultImpls
         static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransport<TMessage>>();
 
 
+
         public DefaultTransport(IRpcContext<TMessage> context)
         {
             this._context = context;
+            this.Id = IdUtils.NewId();
         }
 
         public async Task CloseAsync()
@@ -23,7 +26,7 @@ namespace DotBPE.Rpc.DefaultImpls
             await this._context.CloseAsync();
             this.Dispose();
         }
-
+        public string Id{get;private set;}
         public void Dispose()
         {
 

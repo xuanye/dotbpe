@@ -47,6 +47,7 @@ namespace DotBPE.Rpc.DefaultImpls
         public Task SendAsync(EndPoint serverAddress, TMessage message)
         {
             var transport = this._factory.CreateTransport(serverAddress);
+            Logger.Debug("使用Transport={0}发送消息",transport.Id);
             return transport.SendAsync(message);
         }
 

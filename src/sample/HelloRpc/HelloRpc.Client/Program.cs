@@ -28,12 +28,18 @@ namespace HelloRpc.Client
                 {
                     break;
                 }
-                var reply = greeter.HelloPlusAsnyc(new HelloRequest()
+                try
                 {
-                    Name = name
-                },3000).Result;
+                    var reply = greeter.HelloPlusAsnyc(new HelloRequest()
+                    {
+                        Name = name
+                    },3000).Result;
 
-                DotBPE.Rpc.Environment.Logger.Debug($"---------------收到服务端返回:{reply.Message}-----------");
+                    DotBPE.Rpc.Environment.Logger.Debug($"---------------收到服务端返回:{reply.Message}-----------");
+                }
+                catch(Exception ex){
+                    DotBPE.Rpc.Environment.Logger.Error("发生错误："+ex.Message);
+                }
             }
         }
     }
