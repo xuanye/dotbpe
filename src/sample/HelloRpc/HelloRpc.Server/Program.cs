@@ -62,7 +62,7 @@ namespace HelloRpc.Server
             addReq.Right = 2;
 
             MathClient math  = ClientProxy.GetClient<MathClient>();
-            var addRep = await math.AddAsnyc(addReq,60000);
+            var addRep = await math.AddAsnyc(addReq,3000);
 
             var reply = new HelloResponse() { Message = "Hello " + request.Name +" plus:"+addRep.Total};
             return reply;
