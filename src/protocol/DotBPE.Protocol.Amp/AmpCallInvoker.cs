@@ -10,7 +10,7 @@ namespace DotBPE.Protocol.Amp
 {
     public class AmpCallInvoker : CallInvoker<AmpMessage>
     {
-        static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<AmpMessage>();
+        static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<AmpCallInvoker>();
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>> _resultDictionary =
 new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();

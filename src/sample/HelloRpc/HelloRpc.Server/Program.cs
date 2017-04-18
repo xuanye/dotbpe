@@ -56,15 +56,14 @@ namespace HelloRpc.Server
         static readonly DotBPE.Rpc.Logging.ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<GreeterImpl>();
         public override async Task<HelloResponse> HelloPlusAsync(HelloRequest request)
         {
-            Logger.Debug("收到Hello请求，name={0}",request.Name);
+
             var addReq = new AddRequest();
             addReq.Left = 1;
             addReq.Right = 2;
 
             MathClient math  = ClientProxy.GetClient<MathClient>();
-            Logger.Debug("创建mathclient成功");
             var addRep = await math.AddAsnyc(addReq,60000);
-            Logger.Debug("调用mathclient成功 total="+addRep.Total);
+
             var reply = new HelloResponse() { Message = "Hello " + request.Name +" plus:"+addRep.Total};
             return reply;
         }
