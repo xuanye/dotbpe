@@ -5,6 +5,7 @@ using System.Threading;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Logging;
+using DotBPE.Rpc.Options;
 using DotNetty.Buffers;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
@@ -22,6 +23,8 @@ namespace DotBPE.Rpc.Netty
         private readonly bool _autoReConnect = true;
 
         private static object  _lockObj = new object();
+
+        private int seq = 0 ;
         public NettyRpcMultiplexContext(Bootstrap bootstrap, IMessageCodecs<TMessage> codecs)
         {
             this._bootstrap = bootstrap;
@@ -46,7 +49,9 @@ namespace DotBPE.Rpc.Netty
                 throw new Exceptions.RpcException("获取channel失败");
             }
             if( channel.Open ){
-                return channel.WriteAndFlushAsync(data);
+                var buff = GetBuffer(channel,data);
+                Logger.Debug("使用ChannelId={0} 通道发送",channel.Id.AsLongText());
+                return channel.WriteAndFlushAsync(buff);
             }
             else{
                 TryRemove(channel); // 移除无用的Channel
@@ -65,7 +70,8 @@ namespace DotBPE.Rpc.Netty
         public  Task InitAsync(EndPoint endpoint,RpcClientOption clientOption)
         {
             _remoteAddress  = endpoint;
-            return CreateConnection(endpoint,clientOption.MultiplexCount);
+            int multiplexCount  = clientOption !=null? clientOption.MultiplexCount:1;
+            return CreateConnection(endpoint,multiplexCount);
         }
         private async Task CreateConnection(EndPoint endpoint,int count)
         {
@@ -114,8 +120,8 @@ namespace DotBPE.Rpc.Netty
                 if(_channels.Count  ==0){
                     throw new Exceptions.RpcException("NettyRpcMultiplexContext wasn't inited");
                 }
-                int i = new Random().Next(10000);
-                var index = Math.Abs( i  % _channels.Count) ; // 随机获取一个IChannel
+                seq++;
+                var index = Math.Abs( seq  % _channels.Count) ; // 获取一个IChannel
                 channel = _channels[index];
             }
             return channel;
@@ -123,6 +129,7 @@ namespace DotBPE.Rpc.Netty
 
         private void StartConnect(EndPoint endpoint){
             int tryCount  = 0;
+
             Thread thread = new Thread(new ThreadStart(()=>{
                 while(_autoReConnect){
                     tryCount++;

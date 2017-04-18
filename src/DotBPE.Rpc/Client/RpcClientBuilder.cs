@@ -13,18 +13,17 @@ namespace DotBPE.Rpc
 {
     public class RpcClientBuilder:IRpcClientBuilder
     {
-        private RpcClientOption _options;
 
         private readonly List<Action<IServiceCollection>> _configureServicesDelegates;
-        
+
 
         private readonly IConfiguration _config;
-       
-       
+
+
         public RpcClientBuilder()
         {
             _configureServicesDelegates = new List<Action<IServiceCollection>>();
-          
+
 
             _config = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "DotRPC_")
@@ -35,7 +34,7 @@ namespace DotBPE.Rpc
 
         public IRpcClient<TMessage> Build<TMessage>() where TMessage :InvokeMessage
         {
-           
+
             var hostingServices = BuildCommonServices();
             var applicationServices = hostingServices.Clone();
             var clientServiceProvider = hostingServices.BuildServiceProvider();
@@ -47,7 +46,7 @@ namespace DotBPE.Rpc
             return client;
         }
 
-       
+
 
         public IRpcClientBuilder ConfigureServices(Action<IServiceCollection> configureServices)
         {
@@ -73,16 +72,14 @@ namespace DotBPE.Rpc
 
         private IServiceCollection BuildCommonServices()
         {
-            _options = new RpcClientOption(_config);
 
             var services = new ServiceCollection();
 
-            services.AddSingleton(_options);
             // The configured ILoggerFactory is added as a singleton here. AddLogging below will not add an additional one.
-            
-            services.AddSingleton<IConfiguration>(_config);
 
-         
+            services.AddOptions();
+            services.Configure<Options.RpcClientOption>(_config);  // 添加作为客户端的配置
+
 
             var listener = new DiagnosticListener("DotRPC");
             services.AddSingleton<DiagnosticListener>(listener);

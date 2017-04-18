@@ -11,6 +11,7 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Options;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Bootstrapping;
@@ -19,6 +20,7 @@ using DotNetty.Transport.Channels.Sockets;
 using DotBPE.Rpc.Logging;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Buffers;
+using Microsoft.Extensions.Options;
 
 namespace DotBPE.Rpc.Netty
 {
@@ -29,11 +31,11 @@ namespace DotBPE.Rpc.Netty
         private readonly IMessageHandler<TMessage> _handler;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
 
-        private readonly RpcClientOption _clientOption;
+        private readonly IOptions<RpcClientOption> _clientOption;
 
-        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, RpcClientOption clientOption)
+        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, IOptions<RpcClientOption> option)
         {
-            this._clientOption = clientOption;
+            this._clientOption = option;
 
             _bootstrap = InitBootstrap();
             _handler = handler;
@@ -78,7 +80,7 @@ namespace DotBPE.Rpc.Netty
         public async Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint)
         {
             var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs);
-            await context.InitAsync(endpoint,_clientOption);
+            await context.InitAsync(endpoint,_clientOption?.Value);
             context.BindDisconnect(DisConnected);
             return context;
         }
