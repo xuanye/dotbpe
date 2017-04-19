@@ -99,6 +99,9 @@ namespace DotBPE.Rpc.Netty
         public void ChannelRead(IChannelHandlerContext ctx, TMessage msg)
         {
             var context = new NettyRpcContext<TMessage>(ctx.Channel, this._msgCodecs);
+            context.LocalAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.LocalAddress);
+            context.RemoteAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.RemoteAddress);
+
             this._handler.ReceiveAsync(context, msg);
         }
 

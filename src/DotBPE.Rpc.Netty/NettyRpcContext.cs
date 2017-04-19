@@ -22,6 +22,11 @@ namespace DotBPE.Rpc.Netty
             this._codecs = codecs;
         }
 
+
+        public string RemoteAddress{get;set;}
+
+        public string LocalAddress {get;set;}
+
         public Task CloseAsync()
         {
             return this._channel.CloseAsync();

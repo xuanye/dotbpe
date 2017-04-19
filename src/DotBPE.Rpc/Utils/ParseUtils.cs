@@ -56,5 +56,18 @@ namespace DotBPE.Rpc.Utils
             }
             return list;
         }
+
+        public static string ParseEndPointToIPString(EndPoint endpoint)
+        {
+            IPEndPoint ip =  endpoint as IPEndPoint;
+            if(ip !=null){
+                if (ip.Address.IsIPv4MappedToIPv6)
+                {
+                    return ip.Address.MapToIPv4().ToString();
+                }
+                return ip.Address.ToString();
+            }
+            return "";
+        }
     }
 }

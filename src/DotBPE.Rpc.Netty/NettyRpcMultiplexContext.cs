@@ -25,6 +25,11 @@ namespace DotBPE.Rpc.Netty
         private static object  _lockObj = new object();
 
         private int seq = 0 ;
+
+        public string RemoteAddress{get;set;}
+
+        public string LocalAddress {get;set;}
+
         public NettyRpcMultiplexContext(Bootstrap bootstrap, IMessageCodecs<TMessage> codecs)
         {
             this._bootstrap = bootstrap;

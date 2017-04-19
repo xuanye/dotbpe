@@ -1,9 +1,6 @@
 
 using System;
-using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Utils
 {
@@ -18,7 +15,7 @@ namespace DotBPE.Rpc.Utils
         public static void RunBenchmark(int warmupIterations, int benchmarkIterations, Action action)
         {
             var logger = Environment.Logger;
-            
+
             logger.Info("Warmup iterations: {0}", warmupIterations);
             for (int i = 0; i < warmupIterations; i++)
             {
