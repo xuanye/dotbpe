@@ -1,0 +1,1 @@
+protoc  -I=./protos --csharp_out=./HelloRpc.Common/ --dotbpe_out=./HelloRpc.Common/ ./protos/dotbpe_option.proto ./protos/hello_rpc.proto --plugin=protoc-gen-dotbpe=./plugins/DotBPE.ProtobufPlugin.exe
