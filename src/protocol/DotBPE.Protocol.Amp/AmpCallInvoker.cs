@@ -74,7 +74,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                     && _resultDictionary.TryGetValue(message.Id, out task))
                 {
 
-                    task.SetResult(message);
+                    task.TrySetResult(message);
                     Logger.Info("消息Id{0},回调设置成功",message.Id);
                     // 移除字典
                     RemoveResultCallback(message.Id);
@@ -96,7 +96,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             if (_resultDictionary.TryGetValue(id, out task))
             {
                 Logger.Warning("消息{0},回调超时",id);
-                task.SetException(new RpcCommunicationException("操作超时！"));
+                task.TrySetException(new RpcCommunicationException("操作超时！"));
                 // 移除字典
                 RemoveResultCallback(id);
             }
