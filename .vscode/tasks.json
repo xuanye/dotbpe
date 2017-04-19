@@ -23,6 +23,28 @@
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "build_client",
+            "command": "dotnet",
+            "isShellCommand": true,
+            "args": [
+                "build",
+                "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client\\HelloRpc.Client.csproj"
+            ],
+            "isBuildCommand": false,
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "build_server",
+            "command": "dotnet",
+            "isShellCommand": true,
+            "args": [
+                "build",
+                "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server\\HelloRpc.Server.csproj"
+            ],
+            "isBuildCommand": false,
+            "problemMatcher": "$msCompile"
         }
     ]
 }
