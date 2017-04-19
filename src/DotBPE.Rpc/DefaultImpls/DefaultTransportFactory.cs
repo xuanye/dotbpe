@@ -19,9 +19,8 @@ namespace DotBPE.Rpc.DefaultImpls
         private static readonly object lockObj = new object();
         public DefaultTransportFactory(IClientBootstrap<TMessage> bootstrap)
         {
-
             this._bootstrap = bootstrap;
-            this._bootstrap.Disconnected += Bootstrap_Disconnected;
+            //this._bootstrap.DisConnected += Bootstrap_Disconnected;
         }
 
         private bool RemoveTransport(EndPoint key,out Lazy<ITransport<TMessage>> value){
@@ -62,11 +61,11 @@ namespace DotBPE.Rpc.DefaultImpls
             }
             return GetOrAdd(key,createAction);
         }
-        private void Bootstrap_Disconnected(object sender, EndPoint endpoint)
+        private void Bootstrap_Disconnected(object sender, DisConnectedArgs args)
         {
-            var removed = RemoveTransport(endpoint, out var _);
+            var removed = RemoveTransport(args.EndPoint, out var _);
 
-            Logger.Debug("连接{0}已经断开,移除ITransport{1},当前连接数量{2}",endpoint,removed?"成功":"失败",_clients.Keys.Count);
+            Logger.Debug("连接{0}已经断开,移除ITransport{1},当前连接数量{2}",args.EndPoint,removed?"成功":"失败",_clients.Keys.Count);
         }
 
         public ITransport<TMessage> CreateTransport(EndPoint endpoint)

@@ -11,9 +11,10 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Options;
 using DotBPE.Rpc.Exceptions;
-using Microsoft.Extensions.Configuration;
 using DotBPE.Rpc.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
@@ -22,18 +23,17 @@ namespace DotBPE.Rpc.DefaultImpls
         static readonly ILogger Logger = Environment.Logger.ForType<DefaultRpcClient<TMessage>>();
         private readonly ITransportFactory<TMessage> _factory;
 
-        private readonly IConfiguration _config;
         private EndPoint _defaultServerAddress = null;
-
+        private IOptions<RpcClientOption> _clientOption;
         private readonly IMessageHandler<TMessage> _handler;
 
         public DefaultRpcClient(ITransportFactory<TMessage> factory,
-            IConfiguration config,
+            IOptions<RpcClientOption> clientOption,
             IMessageHandler<TMessage> handler
            )
         {
+            this._clientOption = clientOption;
             this._factory = factory;
-            this._config = config;
             this._handler = handler;
             this._handler.Recieved += Message_Recieved;
         }
@@ -47,6 +47,7 @@ namespace DotBPE.Rpc.DefaultImpls
         public Task SendAsync(EndPoint serverAddress, TMessage message)
         {
             var transport = this._factory.CreateTransport(serverAddress);
+            Logger.Debug("使用Transport={0}发送消息",transport.Id);
             return transport.SendAsync(message);
         }
 
@@ -61,13 +62,17 @@ namespace DotBPE.Rpc.DefaultImpls
         {
             if (_defaultServerAddress == null)
             {
-                string serverIp = this._config["serverIp"];
-                int port = int.Parse(this._config["serverPort"]);
-                if (string.IsNullOrEmpty(serverIp) || port <= 0)
+
+                if(_clientOption ==null){
+                    throw new RpcException("不存在默认的服务器地址");
+                }
+                string serverAddress = _clientOption.Value.DefaultServerAddress;
+                if (string.IsNullOrEmpty(serverAddress))
                 {
                     throw new RpcException("不存在默认的服务器地址");
                 }
-                _defaultServerAddress = new IPEndPoint(IPAddress.Parse(serverIp), port);
+
+                _defaultServerAddress = Utils.ParseUtils.ParseEndPointFromString(serverAddress);
             }
             return _defaultServerAddress;
         }

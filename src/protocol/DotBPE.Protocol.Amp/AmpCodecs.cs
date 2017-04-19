@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------
 #endregion
 
+using System;
 using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Protocol.Amp
@@ -19,7 +20,8 @@ namespace DotBPE.Protocol.Amp
             LengthAdjustment = -5, //包实际长度的纠正，如果包长包括包头和包体，则要减去Length之前的部分
             LengthFieldLength = 4, //长度字段的字节数 整型为4个字节
             LengthFieldOffset = 1, //长度属性的起始（偏移）位
-            MaxFrameLength = int.MaxValue
+            MaxFrameLength = int.MaxValue,
+            HeartbeatInterval = 60*1000 // 30秒没消息发一个心跳包
         };
 
 
@@ -35,7 +37,7 @@ namespace DotBPE.Protocol.Amp
             {
                 writer.WriteBytes(message.Data);
             }
-           
+
         }
 
         public AmpMessage Decode(IBufferReader reader)
@@ -69,7 +71,7 @@ namespace DotBPE.Protocol.Amp
                     msg.InvokeMessageType = InvokeMessageType.Notify;
                     break;
             }
-            
+
             msg.ServiceId = reader.ReadUShort();
             msg.MessageId = reader.ReadUShort();
 
@@ -84,12 +86,19 @@ namespace DotBPE.Protocol.Amp
                 reader.ReadBytes(msg.Data);
             }
             return msg;
-           
+
         }
 
         public MessageMeta GetMessageMeta()
         {
             return AmpMeta;
+        }
+
+        public AmpMessage HeartbeatMessage()
+        {
+            AmpMessage message  = AmpMessage.CreateRequestMessage(0,0);
+            return message;
+
         }
     }
 }

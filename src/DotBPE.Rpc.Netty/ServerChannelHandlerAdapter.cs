@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Logging;
+using DotNetty.Handlers.Timeout;
 
 namespace DotBPE.Rpc.Netty
 {
@@ -41,6 +42,16 @@ namespace DotBPE.Rpc.Netty
         {
             Logger.Error(ex,$"与客户端：{context.Channel.RemoteAddress}通信时发送了错误");
             context.CloseAsync(); //关闭连接
+        }
+        //服务端超时则直接关闭链接
+        public override void UserEventTriggered(IChannelHandlerContext context, object evt){
+            if(evt is IdleStateEvent){
+                var eventState = evt as IdleStateEvent;
+                if(eventState !=null){
+                    Logger.Error($"与客户端：{context.Channel.Id},{context.Channel.RemoteAddress} 通信超时，关闭其链接");
+                    context.CloseAsync(); //关闭连接
+                }
+            }
         }
     }
 }

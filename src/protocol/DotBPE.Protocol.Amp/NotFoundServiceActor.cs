@@ -9,9 +9,11 @@ namespace DotBPE.Protocol.Amp
 {
     public class NotFoundServiceActor: IServiceActor<AmpMessage>
     {
+        public static NotFoundServiceActor Default  = new NotFoundServiceActor();
+
         public string Id
         {
-            get { return "40400$404"; }
+            get { return "NotFoundServiceActor"; }
         }
 
         public async Task ReceiveAsync(IRpcContext<AmpMessage> context, AmpMessage message)
@@ -19,7 +21,6 @@ namespace DotBPE.Protocol.Amp
             AmpMessage response = new AmpMessage
             {
                 InvokeMessageType = InvokeMessageType.Response,
-                Data = Encoding.UTF8.GetBytes("服务不存在"),
                 ServiceId = 40400,
                 MessageId = 404
             };

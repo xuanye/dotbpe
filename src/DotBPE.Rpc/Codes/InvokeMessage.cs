@@ -3,7 +3,7 @@ namespace DotBPE.Rpc.Codes
 {
     public abstract class InvokeMessage:IMessage
     {
-      
+
 
         public string UniqueId { get; set; }
 
@@ -19,5 +19,6 @@ namespace DotBPE.Rpc.Codes
         Request = 1,
         Response = 2,
         Notify = 3
+
     }
 }

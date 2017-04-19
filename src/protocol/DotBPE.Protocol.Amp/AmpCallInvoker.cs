@@ -4,12 +4,13 @@ using DotBPE.Rpc;
 using System.Collections.Concurrent;
 using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Exceptions;
+using System.Threading;
 
 namespace DotBPE.Protocol.Amp
 {
     public class AmpCallInvoker : CallInvoker<AmpMessage>
     {
-        static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<AmpMessage>();
+        static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<AmpCallInvoker>();
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>> _resultDictionary =
 new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
@@ -59,7 +60,11 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             {
                 throw new RpcBizException("收到了空消息");
             }
-
+            if(e.Message.ServiceId == 0){
+                //心跳消息
+                Logger.Info("收到服务端心跳消息Id{0}",e.Message.Id);
+                return ;
+            }
             if(e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.Response) //只处理回复消息
             {
                 Logger.Info($"接收到消息:{e.Message.Id}");
@@ -69,7 +74,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                     && _resultDictionary.TryGetValue(message.Id, out task))
                 {
 
-                    task.SetResult(message);
+                    task.TrySetResult(message);
                     Logger.Info("消息Id{0},回调设置成功",message.Id);
                     // 移除字典
                     RemoveResultCallback(message.Id);
@@ -91,7 +96,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             if (_resultDictionary.TryGetValue(id, out task))
             {
                 Logger.Warning("消息{0},回调超时",id);
-                task.SetException(new RpcCommunicationException("操作超时！"));
+                task.TrySetException(new RpcCommunicationException("操作超时！"));
                 // 移除字典
                 RemoveResultCallback(id);
             }
@@ -120,14 +125,9 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 return;
             }
 
-            lock (lockObj)
-            {
-                if(this.sendSequence > int.MaxValue -1000000) //快越界了，就重置一下,一台服务应该没那么繁忙吧
-                {
-                    this.sendSequence  = 1 ;
-                }
-                request.Sequence = this.sendSequence++;
-            }
+            int id = Interlocked.Increment(ref this.sendSequence);
+            request.Sequence =id ;
+
         }
     }
 }

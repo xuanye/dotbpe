@@ -2,15 +2,13 @@
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using System;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Hosting;
 using DotBPE.Rpc.Logging;
 using DotNetty.Handlers.Logging;
+using DotNetty.Handlers.Timeout;
 
 namespace DotBPE.Rpc.Netty
 {
@@ -55,6 +53,8 @@ namespace DotBPE.Rpc.Netty
                     pipeline.AddLast(new LoggingHandler("SRV-CONN"));
                     MessageMeta meta = _msgCodecs.GetMessageMeta();
 
+                    // IdleStateHandler
+                    pipeline.AddLast("timeout", new IdleStateHandler(0,0,meta.HeartbeatInterval/1000*2)); //服务端双倍来处理
 
                     //消息前处理
                     pipeline.AddLast(
@@ -74,13 +74,11 @@ namespace DotBPE.Rpc.Netty
 
             this._channel = await bootstrap.BindAsync(endPoint);
 
-            Logger.Debug($"服务主机启动成功，监听地址：{endPoint}。");
         }
 
         public Task ChannelRead(IChannelHandlerContext ctx, TMessage message)
         {
             var context = new NettyRpcContext<TMessage>(ctx.Channel, _msgCodecs);
-
             // 这里添加实际的消息处理程序
             return this._handler.ReceiveAsync(context, message);
         }

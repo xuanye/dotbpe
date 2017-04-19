@@ -7,6 +7,7 @@
 // -----------------------------------------------------------------------
 #endregion
 
+using System;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
@@ -122,7 +123,7 @@ namespace DotBPE.Protocol.Avenue
             //signature
             input.ReadBytes(new byte[16]);
 
-            
+
             if (headlen > AvenueConstans.STANDARD_HEADLEN)
             {
                 message.XHead = new byte[headlen - AvenueConstans.STANDARD_HEADLEN];
@@ -138,6 +139,11 @@ namespace DotBPE.Protocol.Avenue
         public MessageMeta GetMessageMeta()
         {
             return Meta;
+        }
+
+        public AvenueMessage HeartbeatMessage()
+        {
+            throw new NotImplementedException();
         }
     }
 }

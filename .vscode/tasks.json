@@ -1,13 +1,25 @@
 {
     "version": "0.1.0",
-    "command": "dotnet",
     "isShellCommand": true,
-    "args": [],
     "tasks": [
         {
-            "taskName": "build",
+            "taskName": "UnitTest",
+            "command": "dotnet",
+            "isShellCommand": true,
             "args": [
+                "test"
                 "${workspaceRoot}\\src\\test\\DotBPE.Test\\DotBPE.Test.csproj"
+            ],
+            "isTestCommand": true,
+            "problemMatcher": "$msCompile",
+        },
+        {
+            "taskName": "BuildAll",
+            "command": "dotnet",
+            "isShellCommand": true,
+            "args": [
+                "build",
+                "${workspaceRoot}\\src\\DotBPE.sln"
             ],
             "isBuildCommand": true,
             "problemMatcher": "$msCompile"

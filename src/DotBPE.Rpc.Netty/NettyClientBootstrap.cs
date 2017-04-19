@@ -11,23 +11,30 @@ using System;
 using System.Net;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Options;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using DotBPE.Rpc.Logging;
+using DotNetty.Handlers.Timeout;
+using Microsoft.Extensions.Options;
 
 namespace DotBPE.Rpc.Netty
 {
-    public class NettyClientBootstrap<TMessage>:IClientBootstrap<TMessage> where TMessage:InvokeMessage
+    public class NettyClientBootstrap<TMessage> : IClientBootstrap<TMessage> where TMessage : InvokeMessage
     {
         static ILogger Logger = Environment.Logger.ForType<NettyClientBootstrap<TMessage>>();
         private readonly Bootstrap _bootstrap;
         private readonly IMessageHandler<TMessage> _handler;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
-        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs)
+
+        private readonly IOptions<RpcClientOption> _clientOption;
+
+        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, IOptions<RpcClientOption> option)
         {
+            this._clientOption = option;
 
             _bootstrap = InitBootstrap();
             _handler = handler;
@@ -48,8 +55,9 @@ namespace DotBPE.Rpc.Netty
                     pipeline.AddLast(new LoggingHandler("CLT-CONN"));
                     MessageMeta meta = _msgCodecs.GetMessageMeta();
 
-                    //TODO:这里要添加一个心跳包的拦截器
 
+                    // IdleStateHandler
+                    pipeline.AddLast("timeout", new IdleStateHandler(0, 0, meta.HeartbeatInterval / 1000));
                     //消息前处理
                     pipeline.AddLast(
                         new LengthFieldBasedFrameDecoder(
@@ -70,18 +78,22 @@ namespace DotBPE.Rpc.Netty
 
         public async Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint)
         {
-            Logger.Debug("开始创建链接{0}",endpoint);
-            var channel =  await this._bootstrap.ConnectAsync(endpoint);
-            Logger.Debug("成功创建链接{0}",endpoint);
-            return new NettyRpcContext<TMessage>(channel, this._msgCodecs);
+            var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs);
+            await context.InitAsync(endpoint,_clientOption?.Value);
+            context.BindDisconnect(this);
+            return context;
         }
 
-        public event EventHandler<EndPoint> Disconnected;
+        public event EventHandler<DisConnectedArgs> DisConnected;
 
 
         public void OnChannelInactive(IChannelHandlerContext context)
         {
-            this.Disconnected?.Invoke(this, context.Channel.RemoteAddress);
+            var args = new DisConnectedArgs();
+            args.EndPoint = context.Channel.RemoteAddress;
+            args.ContextId  = context.Channel.Id.AsLongText();
+            Logger.Debug("查找断线的处理事件是否存在，然后它={0}",this.DisConnected ==null?"不存在":"存在");
+            this.DisConnected?.Invoke(this,args);
         }
 
         public void ChannelRead(IChannelHandlerContext ctx, TMessage msg)
@@ -90,6 +102,24 @@ namespace DotBPE.Rpc.Netty
             this._handler.ReceiveAsync(context, msg);
         }
 
+        /// <summary>
+        /// 发送心跳包
+        /// </summary>
+        /// <param name="ctx"></param>
+        /// <param name="state"></param>
+        /// <returns></returns>
+        public Task SendHeartbeatAsync(IChannelHandlerContext ctx, IdleStateEvent state)
+        {
+            //获取心跳包的打包内容
+
+            TMessage message = this._msgCodecs.HeartbeatMessage();
+            var heartbeatBuff = ctx.Allocator.Buffer(message.Length);
+            var bufferWritter = NettyBufferManager.CreateBufferWriter(heartbeatBuff);
+            this._msgCodecs.Encode(message, bufferWritter);
+
+            Logger.Info("向服务端{0}发送心跳包", ctx.Channel.RemoteAddress);
+            return ctx.WriteAndFlushAsync(heartbeatBuff);
+        }
         public void Dispose()
         {
 

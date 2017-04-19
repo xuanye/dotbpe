@@ -50,7 +50,6 @@ namespace DotBPE.Rpc.Hosting
             AddApplicationServices(applicationServices, hostingServiceProvider);
 
             var host = hostingServiceProvider.GetRequiredService<IServerHost>();
-         
             Environment.SetServiceProvider(hostingServiceProvider);
             return host;
         }
@@ -96,6 +95,8 @@ namespace DotBPE.Rpc.Hosting
 
             //类型绑定配置文件
             services.AddOptions();
+            services.Configure<Options.RpcClientOption>(_config);  // 添加作为客户端的配置
+
             services.Configure<Options.RemoteServicesOption>(_config.GetSection("remoteServices"));
 
             var listener = new DiagnosticListener("DotRPC");

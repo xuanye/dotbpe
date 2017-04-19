@@ -3,30 +3,33 @@ using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Logging;
+using DotBPE.Rpc.Utils;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
-    public class DefaultTransport<TMessage> : ITransport<TMessage>, IDisposable 
+    public class DefaultTransport<TMessage> : ITransport<TMessage>, IDisposable
         where TMessage : InvokeMessage
     {
         private readonly IRpcContext<TMessage> _context;
         static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransport<TMessage>>();
 
 
-        public DefaultTransport(IRpcContext<TMessage> context) 
+
+        public DefaultTransport(IRpcContext<TMessage> context)
         {
-            this._context = context;          
+            this._context = context;
+            this.Id = IdUtils.NewId();
         }
 
         public async Task CloseAsync()
-        {         
+        {
             await this._context.CloseAsync();
             this.Dispose();
         }
-
+        public string Id{get;private set;}
         public void Dispose()
         {
-            //TODO:清理缓存
+
         }
 
         public async Task SendAsync(TMessage message)
@@ -34,7 +37,7 @@ namespace DotBPE.Rpc.DefaultImpls
             try
             {
                 Logger.Debug("准备发送消息。");
-              
+
                 try
                 {
                     //发送

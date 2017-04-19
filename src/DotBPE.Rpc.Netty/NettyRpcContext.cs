@@ -8,6 +8,9 @@ using DotNetty.Transport.Channels;
 
 namespace DotBPE.Rpc.Netty
 {
+    /// <summary>
+    /// 这个类是实现多连接的关键类，由这个类来实现多连接的切换
+    /// </summary>
     public class NettyRpcContext<TMessage> : IRpcContext<TMessage> where TMessage : IMessage
     {
         private readonly IChannel _channel;
@@ -28,6 +31,7 @@ namespace DotBPE.Rpc.Netty
         {
             IByteBuffer buf = GetBuffer(message);
             return this._channel.WriteAndFlushAsync(buf);
+
         }
         private IByteBuffer GetBuffer(TMessage message)
         {

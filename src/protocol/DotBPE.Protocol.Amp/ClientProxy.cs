@@ -1,7 +1,4 @@
-﻿
-using DotBPE.Rpc;
-using System.Collections.Generic;
-using System.Text;
+﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
@@ -26,11 +23,11 @@ namespace DotBPE.Protocol.Amp
                     if (!cache.ContainsKey(type))
                     {
                         cache.Add(type, client);
-                    }                   
+                    }
                 }
                 return client;
             }
-           
+
         }
     }
 }

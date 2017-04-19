@@ -5,6 +5,7 @@
         void Encode(TMessage message, IBufferWriter writer);
         TMessage Decode(IBufferReader reader);
         MessageMeta GetMessageMeta();
+        TMessage HeartbeatMessage();
     }
 
     public interface IMessage
@@ -38,5 +39,11 @@
         /// 跳过的字节数
         /// </summary>
         public int InitialBytesToStrip { get; set; }
+
+        /// <summary>
+        /// 心跳间隔时间，单位毫秒
+        /// </summary>
+        /// <returns></returns>
+        public int HeartbeatInterval{get;set;}
     }
 }
