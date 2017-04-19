@@ -1,13 +1,12 @@
-using System;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Rpc
 {
-    public class BridgeContext<TMessage> : IRpcContext<TMessage> where TMessage : InvokeMessage
+    public class LocalMockContext<TMessage> : IRpcContext<TMessage> where TMessage : InvokeMessage
     {
         private readonly IMessageHandler<TMessage> _handler;
-        public BridgeContext(IMessageHandler<TMessage> handler){
+        public LocalMockContext(IMessageHandler<TMessage> handler){
             this._handler = handler;
         }
         public Task CloseAsync()

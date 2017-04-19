@@ -69,7 +69,7 @@ namespace DotBPE.Rpc.DefaultImpls
             if(point.RoutePointType == RoutePointType.Local){ //本地调用流程
                 Logger.Debug("调用本地消息服务");
                 var actor= this._actorLocator.LocateServiceActor(message);
-                var context = new BridgeContext<TMessage>(this._handler); //MOCK Context
+                var context = new LocalMockContext<TMessage>(this._handler); //MOCK Context
                 return actor.ReceiveAsync(context,message);
             }
             else{

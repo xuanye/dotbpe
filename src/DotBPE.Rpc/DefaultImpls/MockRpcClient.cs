@@ -53,7 +53,7 @@ namespace DotBPE.Rpc.DefaultImpls
         {
             Logger.Debug("调用本地消息服务");
             var actor= this._actorLocator.LocateServiceActor(message);
-            var context = new BridgeContext<TMessage>(this._handler); //MOCK Context
+            var context = new LocalMockContext<TMessage>(this._handler); //MOCK Context
             return actor.ReceiveAsync(context,message);
         }
     }

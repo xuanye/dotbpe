@@ -1,8 +1,6 @@
 ﻿using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.DefaultImpls;
-using System;
-using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
