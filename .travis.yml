@@ -7,4 +7,4 @@ install:
   - dotnet restore ./src/DotBPE.sln
 script:
   - dotnet build ./src/DotBPE.sln -c Release
-  - dotnet test ./src//test/DotBPE.Test/DotBPE.Test.csproj
+  - dotnet test ./src/test/DotBPE.UnitTest/DotBPE.UnitTest.csproj
