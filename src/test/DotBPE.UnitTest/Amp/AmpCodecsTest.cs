@@ -5,7 +5,7 @@ using DotBPE.Rpc.Netty;
 using DotNetty.Buffers;
 using Xunit;
 
-namespace DotBPE.Test.Amp
+namespace DotBPE.UnitTest.Amp
 {
     public class AmpCodecsTest
     {

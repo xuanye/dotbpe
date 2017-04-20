@@ -1,13 +1,11 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
-     <TargetFramework>netstandard1.6</TargetFramework>
+    <TargetFramework>netstandard1.6</TargetFramework>
   </PropertyGroup>
-
   <ItemGroup>
     <PackageReference Include="Google.Protobuf" Version="3.2.0" />
   </ItemGroup>
-
   <ItemGroup>
     <ProjectReference Include="..\..\..\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
     <ProjectReference Include="..\..\..\DotBPE.Rpc\DotBPE.Rpc.csproj" />

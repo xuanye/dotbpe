@@ -2,7 +2,7 @@
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
-namespace DotBPE.Protocol.Amp
+namespace DotBPE.Rpc.Client
 {
     public class ClientProxy
     {

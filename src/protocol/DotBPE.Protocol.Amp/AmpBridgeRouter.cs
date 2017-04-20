@@ -1,6 +1,4 @@
-using System;
 using DotBPE.Rpc;
-using Microsoft.Extensions.Configuration;
 using DotBPE.Rpc.Options;
 using Microsoft.Extensions.Options;
 using System.Collections.Generic;
@@ -85,7 +83,7 @@ namespace DotBPE.Protocol.Amp
         }
 
         /// <summary>
-        /// 项目中可能需要更加复杂的计算算法
+        /// 项目中可能需要更加复杂的计算算法,可以考虑服务的有效性，或者可以设置权重什么的
         /// </summary>
         /// <param name="key"></param>
         /// <param name="list"></param>

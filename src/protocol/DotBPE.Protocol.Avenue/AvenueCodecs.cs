@@ -11,7 +11,6 @@ using System;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
-using Microsoft.VisualBasic;
 
 namespace DotBPE.Protocol.Avenue
 {

@@ -3,6 +3,7 @@ using System;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc.Netty;
 using System.Threading.Tasks;
+using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
 using HelloRpc.Common;

@@ -99,9 +99,7 @@ namespace DotBPE.Rpc.Hosting
 
             services.Configure<Options.RemoteServicesOption>(_config.GetSection("remoteServices"));
 
-            var listener = new DiagnosticListener("DotRPC");
-            services.AddSingleton<DiagnosticListener>(listener);
-            services.AddSingleton<DiagnosticSource>(listener);
+
 
 
             services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
@@ -119,9 +117,7 @@ namespace DotBPE.Rpc.Hosting
 
         private void AddApplicationServices(IServiceCollection services, IServiceProvider hostingServiceProvider)
         {
-            var listener = hostingServiceProvider.GetService<DiagnosticListener>();
-            services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticListener), listener));
-            services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticSource), listener));
+
         }
 
     }

@@ -81,9 +81,6 @@ namespace DotBPE.Rpc
             services.Configure<Options.RpcClientOption>(_config);  // 添加作为客户端的配置
 
 
-            var listener = new DiagnosticListener("DotRPC");
-            services.AddSingleton<DiagnosticListener>(listener);
-            services.AddSingleton<DiagnosticSource>(listener);
 
 
 
@@ -103,9 +100,7 @@ namespace DotBPE.Rpc
 
         private void AddApplicationServices(IServiceCollection services, IServiceProvider hostingServiceProvider)
         {
-            var listener = hostingServiceProvider.GetService<DiagnosticListener>();
-            services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticListener), listener));
-            services.Replace(ServiceDescriptor.Singleton(typeof(DiagnosticSource), listener));
+
         }
     }
 }

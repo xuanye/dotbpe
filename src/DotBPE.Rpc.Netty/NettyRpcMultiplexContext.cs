@@ -136,7 +136,7 @@ namespace DotBPE.Rpc.Netty
         }
 
         private void StartConnect(EndPoint endpoint){
-            int tryCount  = 0;
+            int tryCount  = 0;            
             Thread thread = new Thread(new ThreadStart(()=>{
                 while(_autoReConnect){
                     tryCount++;

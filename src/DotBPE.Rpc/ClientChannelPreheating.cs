@@ -1,20 +1,19 @@
-using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DotBPE.Rpc;
+using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Options;
 using DotBPE.Rpc.Utils;
 using Microsoft.Extensions.Options;
 
-namespace DotBPE.Protocol.Amp
+namespace DotBPE.Rpc
 {
-    public class ClientChannelPreheating : IPreheating
+   public class ClientChannelPreheating<TMessage> : IPreheating where TMessage:InvokeMessage
     {
         private readonly IOptions<RemoteServicesOption> _options;
-        private readonly ITransportFactory<AmpMessage> _factory;
+        private readonly ITransportFactory<TMessage> _factory;
 
-        public ClientChannelPreheating(IOptions<RemoteServicesOption> options, ITransportFactory<AmpMessage> factory)
+        public ClientChannelPreheating(IOptions<RemoteServicesOption> options, ITransportFactory<TMessage> factory)
         {
             this._factory = factory;
             this._options = options;

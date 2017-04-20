@@ -34,7 +34,7 @@ namespace DotBPE.Rpc.DefaultImpls
                     s = true;
                 }
                 else{
-                    Logger.Debug("什么没有这个地址{0}",addressKey);
+                    Logger.Warning("什么没有这个地址{0}",addressKey);
                 }
             }
             return s;
@@ -64,8 +64,6 @@ namespace DotBPE.Rpc.DefaultImpls
         private void Bootstrap_Disconnected(object sender, DisConnectedArgs args)
         {
             var removed = RemoveTransport(args.EndPoint, out var _);
-
-            Logger.Debug("连接{0}已经断开,移除ITransport{1},当前连接数量{2}",args.EndPoint,removed?"成功":"失败",_clients.Keys.Count);
         }
 
         public ITransport<TMessage> CreateTransport(EndPoint endpoint)
@@ -77,7 +75,6 @@ namespace DotBPE.Rpc.DefaultImpls
                         {
                             var context = _bootstrap.ConnectAsync(k).Result;
                             var transportans = new DefaultTransport<TMessage>(context);
-                              Logger.Debug("连接{0},创建ITransport成功",endpoint);
                             return transportans;
                         }
                     )).Value;

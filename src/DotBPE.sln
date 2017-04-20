@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
 VisualStudioVersion = 15.0.26403.3
 MinimumVisualStudioVersion = 15.0.26124.0
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.Test", "test\DotBPE.Test\DotBPE.Test.csproj", "{1C25E1A9-A965-4680-A86A-775224B2FAD4}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.UnitTest", "test\DotBPE.UnitTest\DotBPE.UnitTest.csproj", "{1C25E1A9-A965-4680-A86A-775224B2FAD4}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.Rpc", "DotBPE.Rpc\DotBPE.Rpc.csproj", "{104C8210-2989-4B1A-9CC0-9F6C0D58A595}"
 EndProject

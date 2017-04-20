@@ -1,4 +1,3 @@
-using System.Collections.Generic;
 using System.Net;
 
 namespace DotBPE.Rpc
@@ -6,7 +5,7 @@ namespace DotBPE.Rpc
 
     public class RouterPoint
     {
-       
+
         public EndPoint RemoteAddress { get; set; }
 
         public RoutePointType RoutePointType { get; set; }
