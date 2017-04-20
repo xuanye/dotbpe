@@ -1,12 +1,10 @@
-﻿using System;
-
-namespace DotBPE.IntegrationTesting.QpsServer
+﻿namespace DotBPE.IntegrationTesting.QpsServer
 {
-    class Program
+    public class Program
     {
-        static void Main(string[] args)
+        public static void Main(string[] args)
         {
-            Console.WriteLine("Hello World!");
+            QpsServerWorker.Run(args);
         }
     }
 }

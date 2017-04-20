@@ -49,14 +49,18 @@ namespace DotBPE.Protocol.Amp
         {
             ActorsCollection actorsCol = new ActorsCollection();
             actionCollects(actorsCol);
-            var actorTypes = actorsCol.GetAll();
+            var actorTypes = actorsCol.GetTypeAll();
+            var instances = actorsCol.GetInstanceAll();
             builder.ConfigureServices(services =>
             {
                 foreach (var actorType in actorTypes)
                 {
                     services.AddSingleton(typeof(IServiceActor<AmpMessage>),actorType);
                 }
-
+                foreach (var actor in instances)
+                {
+                    services.AddSingleton<IServiceActor<AmpMessage>>(actor);
+                }
             });
 
             return builder;
@@ -78,9 +82,11 @@ namespace DotBPE.Protocol.Amp
     public class ActorsCollection
     {
         private readonly List<Type> _list;
+        private readonly List<IServiceActor<AmpMessage>> _instances;
         public ActorsCollection()
         {
             _list = new List<Type>();
+            _instances = new List<IServiceActor<AmpMessage>>();
         }
         public ActorsCollection Add<TActor>() where TActor : class, IServiceActor<AmpMessage>
         {
@@ -90,10 +96,18 @@ namespace DotBPE.Protocol.Amp
             }
             return this;
         }
-
-        public List<Type> GetAll()
+        public ActorsCollection Add<TActor>(TActor actor) where TActor : class, IServiceActor<AmpMessage>
+        {
+            _instances.Add(actor);
+            return this;
+        }
+        public List<Type> GetTypeAll()
         {
             return _list;
+        }
+        public  List<IServiceActor<AmpMessage>> GetInstanceAll()
+        {
+            return _instances;
         }
     }
 }

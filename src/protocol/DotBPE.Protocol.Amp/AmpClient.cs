@@ -3,19 +3,17 @@ using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Netty;
 using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotBPE.Protocol.Amp
 {
     public class AmpClient
     {
-        public static IRpcClient<AmpMessage> Create(string remoteAddress)
+        public static IRpcClient<AmpMessage> Create(string remoteAddress,int multiplexCount=5)
         {
             // 生成Client的部分 可以在DotBPE.Protocol.Amp 进一步封装
             var client = new RpcClientBuilder()
                 .AddCore<AmpMessage>()
+                .UseSetting("MultiplexCount","1")
                 .UserNettyClient<AmpMessage>()
                 .ConfigureServices((services) =>
                 {

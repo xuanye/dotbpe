@@ -23,12 +23,22 @@ namespace DotBPE.Rpc.Extensions
             foreach(var setting in config.AsEnumerable()){
                builder.UseSetting(setting.Key,setting.Value);
             }
-          
+
             return builder;
         }
 
+        public static IRpcHostBuilder UseServer(this IRpcHostBuilder builder,string ip,int port)
+        {
+            builder.UseServer(string.Format("{0}:{1}",ip,port));
+            return builder;
+        }
+        public static IRpcHostBuilder UseServer(this IRpcHostBuilder builder,string address)
+        {
 
+            builder.UseSetting("hostAddress",address);
 
+            return builder;
+        }
 
     }
 }

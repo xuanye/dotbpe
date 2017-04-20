@@ -15,8 +15,15 @@ service BenchmarkTest{
     rpc Echo (BenchmarkMessage) returns (BenchmarkMessage){
         option (message_id)= 1 ;//设定消息ID
     };
+
+    rpc Quit (Void) returns (Void){
+        option (message_id)= 10000 ;//设定消息ID
+    };
 }
 
+message Void {
+
+}
 message BenchmarkMessage {
   string field1 = 1;
   int32 field2 = 2;

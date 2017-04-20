@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<package>
+  <metadata>
+    <id>DotBPE.Rpc</id>
+    <title>DotBPE.Rpc C#</title>
+    <summary>an C# RPC library and framework</summary>
+    <description>an C# RPC library and framework. See project site for more info.</description>
+    <version>$version$</version>
+    <authors>xuanye</authors>
+    <owners>vulcan</owners>
+    <licenseUrl>https://github.com/xuanye/dotbpe/blob/master/LICENSE</licenseUrl>
+    <projectUrl>https://github.com/xuanye/dotbpe</projectUrl>
+    <requireLicenseAcceptance>false</requireLicenseAcceptance>
+    <releaseNotes>Release $version$ of DotBPE.Rpc C#</releaseNotes>
+    <copyright>Copyright 2017,Vulcan.</copyright>
+    <tags>dotbpe RPC</tags>
+    <dependencies>
+      <dependency id="DotBPE.Rpc" version="$version$" />
+    </dependencies>
+  </metadata>
+  <files/>
+</package>

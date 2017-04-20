@@ -41,6 +41,30 @@ return BenchmarkMessage.Parser.ParseFrom(response.Data);
 }
 throw new RpcException("请求出错，请检查!");
 }
+public async Task<Void> QuitAsnyc(Void request,int timeOut=3000)
+{
+AmpMessage message = AmpMessage.CreateRequestMessage(50000, 10000);
+message.Data = request.ToByteArray();
+var response = await base.CallInvoker.AsyncCall(message,timeOut);
+if (response != null && response.Data !=null)
+{
+return Void.Parser.ParseFrom(response.Data);
+}
+throw new RpcException("请求出错，请检查!");
+}
+
+//同步方法
+public Void Quit(Void request)
+{
+AmpMessage message = AmpMessage.CreateRequestMessage(50000, 10000);
+message.Data = request.ToByteArray();
+var response =  base.CallInvoker.BlockingCall(message);
+if (response != null && response.Data !=null)
+{
+return Void.Parser.ParseFrom(response.Data);
+}
+throw new RpcException("请求出错，请检查!");
+}
 }
 //end for class BenchmarkTestClient
 }
