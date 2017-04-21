@@ -1,4 +1,5 @@
 using System;
+using System.Diagnostics;
 using System.Threading.Tasks;
 using CommandLine;
 using DotBPE.Protocol.Amp;
@@ -20,7 +21,7 @@ namespace DotBPE.IntegrationTesting
             [Option("rtc", Default = 1)]
             public int RunThreadCount {get;set;}
 
-            [Option("rtc", Default = 1)]
+            [Option("rc", Default = 1)]
             public int RunCount {get;set;}
 
             [Option("mpc", Default = 5)]
@@ -42,6 +43,7 @@ namespace DotBPE.IntegrationTesting
             .WithParsed(options =>
             {
                 var interopClient = new InteropClient(options);
+                Console.WriteLine("Start to Run!");
                 interopClient.Run().Wait();
             });
         }
@@ -52,19 +54,19 @@ namespace DotBPE.IntegrationTesting
             for(int i = 0 ; i< this._options.RunThreadCount ;i++){
                 tasks[i] = Task.Factory.StartNew( async ()=>{
                     var client = AmpClient.Create(this._options.Server,this._options.MultiplexCount);
-                    await RunTestCaseAsync(client);
+                    await RunTestCaseAsync(client,i);
                     await client.CloseAsync();
                 });
             }
             return Task.WhenAll(tasks);
-
         }
 
-        private Task RunTestCaseAsync(IRpcClient<AmpMessage> client)
+        private Task RunTestCaseAsync(IRpcClient<AmpMessage> client,int threadIndex)
         {
             switch(this._options.TestCase){
                 case "benchmark":
-                    return RunBenchmarkTestCaseAsync(client);
+                    Console.WriteLine("Run TestCase Benchmark!");
+                    return RunBenchmarkTestCaseAsync(client,threadIndex);
                 default:
                     Console.WriteLine("TestCase not implemented");
                     break;
@@ -72,15 +74,22 @@ namespace DotBPE.IntegrationTesting
             return Task.CompletedTask;
         }
 
-        private async Task RunBenchmarkTestCaseAsync(IRpcClient<AmpMessage> client)
+        private async Task RunBenchmarkTestCaseAsync(IRpcClient<AmpMessage> client,int threadIndex)
         {
+             var stopwatch = new Stopwatch();
+
             var msg = new BenchmarkMessage();
             msg.Field1 = "REQUEST";
             msg.Field2 = 1;
             BenchmarkTestClient btc = new BenchmarkTestClient(client);
+            stopwatch.Start();
             for(int i =0;i<this._options.RunCount ; i++){
                await btc.EchoAsnyc(msg);
             }
+            stopwatch.Stop();
+            Console.WriteLine("--------------------ThreadId={0}--------------------------------",threadIndex);
+            Console.WriteLine("Elapsed time: {0}ms", stopwatch.ElapsedMilliseconds);
+            Console.WriteLine("Ops per second: {0}", (int)((double)this._options.RunCount  * 1000 / stopwatch.ElapsedMilliseconds));
         }
     }
 }
