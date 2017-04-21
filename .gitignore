@@ -30,7 +30,6 @@ node_modules1/
 node_modules2/
 .build/
 logs/
-publish/
 typings/
 project.lock.json
 classes

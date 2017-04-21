@@ -80,7 +80,7 @@ namespace DotBPE.IntegrationTesting
             return Task.CompletedTask;
         }
 
-        private async Task RunBenchmarkTestCaseAsync(IRpcClient<AmpMessage> client,int threadIndex)
+        private Task RunBenchmarkTestCaseAsync(IRpcClient<AmpMessage> client,int threadIndex)
         {
              var stopwatch = new Stopwatch();
 
@@ -101,7 +101,8 @@ namespace DotBPE.IntegrationTesting
             Console.WriteLine("Error times: {0}", errorCount);
             Console.WriteLine("Elapsed time: {0}ms", stopwatch.ElapsedMilliseconds);
             Console.WriteLine("Ops per second: {0}", (int)((double)this._options.RunCount  * 1000 / stopwatch.ElapsedMilliseconds));
-            await btc.QuitAsnyc(new Void());
+            //await btc.QuitAsnyc(new Void());
+            return Task.CompletedTask;
         }
     }
 }
