@@ -35,7 +35,7 @@ namespace DotBPE.IntegrationTesting
         {
             this._options = options;
         }
-
+        private static int TOTAL_ERROR =0;
         public static void Run(string[] args)
         {
             var parserResult = Parser.Default.ParseArguments<ClientOption>(args)
@@ -48,7 +48,15 @@ namespace DotBPE.IntegrationTesting
             {
                 var interopClient = new InteropClient(options);
                 Console.WriteLine("Start to Run!");
+                TOTAL_ERROR = 0;
+                var swTotal = new Stopwatch();
+                swTotal.Start();
                 interopClient.Run().Wait();
+                swTotal.Stop();
+                Console.WriteLine("--------------------- total --------------------------------");
+                Console.WriteLine("Error times: {0}", TOTAL_ERROR);
+                Console.WriteLine("Elapsed time: {0}ms", swTotal.ElapsedMilliseconds);
+                Console.WriteLine("Ops per second: {0}", (int)((double)options.RunCount*options.RunThreadCount  * 1000 / swTotal.ElapsedMilliseconds));
             });
         }
 
@@ -57,12 +65,12 @@ namespace DotBPE.IntegrationTesting
             var tasks = new Task[ this._options.RunThreadCount];
             for(int i = 0 ; i< this._options.RunThreadCount ;i++){
 
-                tasks[i] = Task.Run( async ()=>{
+                tasks[i] = Task.Factory.StartNew( async (index)=>{
                     var client = AmpClient.Create(this._options.Server,this._options.MultiplexCount);
-                    var index = i ;
-                    await RunTestCaseAsync(client,index);
+
+                    await RunTestCaseAsync(client,(int)index);
                     await client.CloseAsync();
-                });
+                },i);
             }
             return Task.WhenAll(tasks);
         }
@@ -82,7 +90,7 @@ namespace DotBPE.IntegrationTesting
 
         private Task RunBenchmarkTestCaseAsync(IRpcClient<AmpMessage> client,int threadIndex)
         {
-             var stopwatch = new Stopwatch();
+            var stopwatch = new Stopwatch();
 
             var msg = new BenchmarkMessage();
             msg.Field1 = "REQUEST";
@@ -93,6 +101,7 @@ namespace DotBPE.IntegrationTesting
             for(int i =0;i<this._options.RunCount ; i++){
                 var rsp = btc.Echo(msg);
                 if(rsp.Field2 !=100){
+                    TOTAL_ERROR++;
                     errorCount ++;
                 }
             }
