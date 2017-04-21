@@ -1,8 +1,7 @@
 {
     "version": "0.2.0",
     "configurations": [
-        "HelloRpcClientLaunch"
-        {
+         {
             "name": "HelloRpcServer",
             "type": "coreclr",
             "request": "launch",
@@ -10,11 +9,10 @@
             "program": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server\\bin\\Debug\\netcoreapp1.1\\HelloRpc.Server.dll",
             "args": [],
             "cwd": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server",
-            "externalConsole":true,
+            "externalConsole": true,
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         },
-        "HelloRpcClientLaunch"
         {
             "name": "HelloRpcClient",
             "type": "coreclr",
@@ -23,15 +21,37 @@
             "program": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client\\bin\\Debug\\netcoreapp1.1\\HelloRpc.Client.dll",
             "args": [],
             "cwd": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client",
-            "externalConsole":true,
+            "externalConsole": true,
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "BenchmarkClient",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build_benchmark_client",
+            "program": "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.Client\\bin\\Debug\\netcoreapp1.1\\DotBPE.IntegrationTesting.Client.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.Client",
+            "externalConsole": true,
+            "stopAtEntry": false,
+            "internalConsoleOptions": "openOnSessionStart"
+        },
+        {
+            "name": "BenchmarkQpsServer",
+            "type": "coreclr",
+            "request": "launch",
+            "preLaunchTask": "build_benchmark_qpsserver",
+            "program": "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.QpsServer\\bin\\Debug\\netcoreapp1.1\\DotBPE.IntegrationTesting.QpsServer.dll",
+            "args": [],
+            "cwd": "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.QpsServer",
+            "externalConsole": true,
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         }
     ]
-    "compounds": [
-        {
-            "name": "Server/Client",
-            "configurations": ["HelloRpcServer", "HelloRpcClient"]
-        }
-    ]
+    "compounds": [{
+        "name": "Server/Client",
+        "configurations": ["HelloRpcServer", "HelloRpcClient"]
+    }]
 }

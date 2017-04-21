@@ -1,4 +1,5 @@
-﻿namespace DotBPE.IntegrationTesting.QpsServer
+﻿
+namespace DotBPE.IntegrationTesting.QpsServer
 {
     public class Program
     {

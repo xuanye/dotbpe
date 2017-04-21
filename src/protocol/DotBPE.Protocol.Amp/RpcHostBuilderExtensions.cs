@@ -16,9 +16,9 @@ namespace DotBPE.Protocol.Amp
             builder.ConfigureServices((services) =>
             {
                 services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>()
-                    .AddSingleton<IServiceActorLocator<AmpMessage>, ServiceActorLocator>()
-                    .AddSingleton<IRpcClient<AmpMessage>,MockRpcClient<AmpMessage>>()
-                    .AddSingleton<IServiceActorContainer<AmpMessage>,DefaultServiceActorContainer<AmpMessage>>();
+                    .AddSingleton<IServiceActorLocator<AmpMessage>, ServiceActorLocator>()                  
+                    .AddSingleton<IServiceActorContainer<AmpMessage>,DefaultServiceActorContainer<AmpMessage>>()
+                    .AddSingleton<IRpcClient<AmpMessage>, MockRpcClient<AmpMessage>>();
             });
             return builder;
         }

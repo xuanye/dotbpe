@@ -53,6 +53,7 @@ namespace DotBPE.IntegrationTesting
 
             await tcs.Task;
             await host.ShutdownAsync();
+            Console.WriteLine("server is Shutdown");
         }
     }
 }

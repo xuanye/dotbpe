@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CommandLine;
@@ -39,7 +39,11 @@ namespace DotBPE.IntegrationTesting
         public static void Run(string[] args)
         {
             var parserResult = Parser.Default.ParseArguments<ClientOption>(args)
-            .WithNotParsed(errors => System.Environment.Exit(1))
+            .WithNotParsed(errors =>
+            {
+                Console.WriteLine(errors);
+                System.Environment.Exit(1);
+            })
             .WithParsed(options =>
             {
                 var interopClient = new InteropClient(options);
@@ -52,9 +56,11 @@ namespace DotBPE.IntegrationTesting
         {
             var tasks = new Task[ this._options.RunThreadCount];
             for(int i = 0 ; i< this._options.RunThreadCount ;i++){
-                tasks[i] = Task.Factory.StartNew( async ()=>{
+
+                tasks[i] = Task.Run( async ()=>{
                     var client = AmpClient.Create(this._options.Server,this._options.MultiplexCount);
-                    await RunTestCaseAsync(client,i);
+                    var index = i ;
+                    await RunTestCaseAsync(client,index);
                     await client.CloseAsync();
                 });
             }
@@ -81,15 +87,21 @@ namespace DotBPE.IntegrationTesting
             var msg = new BenchmarkMessage();
             msg.Field1 = "REQUEST";
             msg.Field2 = 1;
+            int errorCount = 0;
             BenchmarkTestClient btc = new BenchmarkTestClient(client);
             stopwatch.Start();
             for(int i =0;i<this._options.RunCount ; i++){
-               await btc.EchoAsnyc(msg);
+                var rsp = btc.Echo(msg);
+                if(rsp.Field2 !=100){
+                    errorCount ++;
+                }
             }
             stopwatch.Stop();
-            Console.WriteLine("--------------------ThreadId={0}--------------------------------",threadIndex);
+            Console.WriteLine("--------------------- result {0}--------------------------------",threadIndex);
+            Console.WriteLine("Error times: {0}", errorCount);
             Console.WriteLine("Elapsed time: {0}ms", stopwatch.ElapsedMilliseconds);
             Console.WriteLine("Ops per second: {0}", (int)((double)this._options.RunCount  * 1000 / stopwatch.ElapsedMilliseconds));
+            await btc.QuitAsnyc(new Void());
         }
     }
 }

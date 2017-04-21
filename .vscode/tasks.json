@@ -11,7 +11,7 @@
                 "${workspaceRoot}\\src\\test\\DotBPE.Test\\DotBPE.Test.csproj"
             ],
             "isTestCommand": true,
-            "problemMatcher": "$msCompile",
+            "problemMatcher": "$msCompile"
         },
         {
             "taskName": "BuildAll",
@@ -42,6 +42,28 @@
             "args": [
                 "build",
                 "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server\\HelloRpc.Server.csproj"
+            ],
+            "isBuildCommand": false,
+            "problemMatcher": "$msCompile"
+        },
+        {
+            "taskName": "build_benchmark_client",
+            "command": "dotnet",
+            "isShellCommand": true,
+            "args": [
+                "build",
+                "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.Client\\DotBPE.IntegrationTesting.Client.csproj"
+            ],
+            "isBuildCommand": false,
+            "problemMatcher": "$msCompile"
+        },
+         {
+            "taskName": "build_benchmark_qpsserver",
+            "command": "dotnet",
+            "isShellCommand": true,
+            "args": [
+                "build",
+                "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.QpsServer\\DotBPE.IntegrationTesting.QpsServer.csproj"
             ],
             "isBuildCommand": false,
             "problemMatcher": "$msCompile"
