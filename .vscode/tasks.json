@@ -8,7 +8,7 @@
             "isShellCommand": true,
             "args": [
                 "test"
-                "${workspaceRoot}\\src\\test\\DotBPE.Test\\DotBPE.Test.csproj"
+                "${workspaceRoot}\\src\\test\\DotBPE.UnitTest\\DotBPE.UnitTest.csproj"
             ],
             "isTestCommand": true,
             "problemMatcher": "$msCompile"
