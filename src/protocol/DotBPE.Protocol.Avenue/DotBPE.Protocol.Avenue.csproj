@@ -5,7 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
+    <ProjectReference Include="..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
   </ItemGroup>
 
 </Project>

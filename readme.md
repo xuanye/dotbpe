@@ -1,5 +1,5 @@
 
-dotbpe
+dotbpe ![](https://travis-ci.org/xuanye/dotbpe.svg?branch=master)
 -------------
 dotbpe是一款基于CSharp编写的RPC框架，但是它的目标不仅仅只是解决rpc的问题，而是解决整个业务解决方案的问题，封装在常见的项目产品开发中的通用组件，让开发人员只专注于开发业务逻辑代码。底层通信默认实现基于DotNetty，可替换成其他Socket通信组件。dotbpe使用的默认协议名称叫Amp,编解码使用谷歌的Protobuf3,不过这些默认实现都是可以替换的。
 
@@ -9,7 +9,7 @@ dotbpe是一款基于CSharp编写的RPC框架，但是它的目标不仅仅只�
 
 ### 快速开始
 
-#### 1.  定义使用Protobuf来定义服务描述文件 
+#### 1.  定义使用Protobuf来定义服务描述文件
 
 ```protobuf
 //dotbpe_option.proto
@@ -134,7 +134,7 @@ namespace HelloRpc.Server
     }
 
     public class GreeterImpl : GreeterBase //实现真实的逻辑
-    {        
+    {
         public override Task<HelloResponse> HelloAsync(HelloRequest request)
         {
             return Task.FromResult(new HelloResponse() { Message = "Hello " + request.Name });
@@ -171,10 +171,10 @@ namespace HelloRpc.Client
 
             var client = AmpClient.Create("127.0.0.1:6201");
             var greeter = new GreeterClient(client);
-           
+
            Console.WriteLine("请输入你的名称");
            string name = Console.ReadLine();
-          
+
           try
           {
             var reply = greeter.HelloAsync(new HelloRequest(){Name = name}).Result;
@@ -182,7 +182,7 @@ namespace HelloRpc.Client
           }
           catch(Exception ex){
           	Console.WriteLine("发生错误："+ex.Message);
-          }            
+          }
         }
     }
 }

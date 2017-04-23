@@ -10,10 +10,9 @@ namespace DotBPE.Protocol.Amp
     {
         public static IRpcClient<AmpMessage> Create(string remoteAddress,int multiplexCount=5)
         {
-            // 生成Client的部分 可以在DotBPE.Protocol.Amp 进一步封装
             var client = new RpcClientBuilder()
                 .AddCore<AmpMessage>()
-                .UseSetting("MultiplexCount","1")
+                .UseSetting("MultiplexCount",multiplexCount.ToString())
                 .UserNettyClient<AmpMessage>()
                 .ConfigureServices((services) =>
                 {

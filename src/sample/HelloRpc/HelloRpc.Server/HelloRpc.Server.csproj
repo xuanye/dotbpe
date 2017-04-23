@@ -9,6 +9,9 @@
     <None Update="*.config.json">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
     </None>
+    <None Update="NLog.config">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+    </None>
   </ItemGroup>
 
   <ItemGroup>
@@ -17,17 +20,12 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
-    <ProjectReference Include="..\..\..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
+    <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
+    <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
     <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
     <ProjectReference Include="..\HelloRpc.Common\HelloRpc.Common.csproj" />
   </ItemGroup>
 
-  <ItemGroup>
-    <None Update="dotbpe.config.json">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
-    </None>
-  </ItemGroup>
 
 
 
