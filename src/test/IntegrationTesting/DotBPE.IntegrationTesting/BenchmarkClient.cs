@@ -17,7 +17,7 @@ public sealed class BenchmarkTestClient : AmpInvokeClient
 public BenchmarkTestClient(IRpcClient<AmpMessage> client) : base(client)
 {
 }
-public async Task<BenchmarkMessage> EchoAsnyc(BenchmarkMessage request,int timeOut=3000)
+public async Task<BenchmarkMessage> EchoAsync(BenchmarkMessage request,int timeOut=3000)
 {
 AmpMessage message = AmpMessage.CreateRequestMessage(50000, 1);
 message.Data = request.ToByteArray();
@@ -41,7 +41,7 @@ return BenchmarkMessage.Parser.ParseFrom(response.Data);
 }
 throw new RpcException("请求出错，请检查!");
 }
-public async Task<Void> QuitAsnyc(Void request,int timeOut=3000)
+public async Task<Void> QuitAsync(Void request,int timeOut=3000)
 {
 AmpMessage message = AmpMessage.CreateRequestMessage(50000, 10000);
 message.Data = request.ToByteArray();

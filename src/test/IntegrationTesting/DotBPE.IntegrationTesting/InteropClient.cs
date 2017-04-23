@@ -87,14 +87,17 @@ namespace DotBPE.IntegrationTesting
             }
             return Task.CompletedTask;
         }
-
+        private static BenchmarkMessage PrepareBenchmarkMessage(){
+            var msg = new BenchmarkMessage();
+            msg.Field1 = "REQUEST";
+            msg.Field2 = 1;
+            return msg;
+        }
         private Task RunBenchmarkTestCaseAsync(IRpcClient<AmpMessage> client,int threadIndex)
         {
             var stopwatch = new Stopwatch();
 
-            var msg = new BenchmarkMessage();
-            msg.Field1 = "REQUEST";
-            msg.Field2 = 1;
+            var msg = PrepareBenchmarkMessage();
             int errorCount = 0;
             BenchmarkTestClient btc = new BenchmarkTestClient(client);
             stopwatch.Start();

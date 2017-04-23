@@ -6,27 +6,39 @@ option csharp_namespace = "DotBPE.IntegrationTesting";
 
 
 
-import "dotbpe_option.proto";
+import public "dotbpe_option.proto";
 
 option optimize_for = SPEED;
 
+//Benchmark测试服务
 service BenchmarkTest{
     option (service_id)= 50000 ;//设定服务ID
+    //测试发送Echo消息
     rpc Echo (BenchmarkMessage) returns (BenchmarkMessage){
         option (message_id)= 1 ;//设定消息ID
-    };
-
+    };//Echo尾部的注释
+    // 测试发送退出消息
     rpc Quit (Void) returns (Void){
         option (message_id)= 10000 ;//设定消息ID
-    };
+    };//Quit尾部的注释
 }
 
+//我是void消息
 message Void {
 
 }
+//我是BenchmarkMessage消息
 message BenchmarkMessage {
-  string field1 = 1;
-  int32 field2 = 2;
+  //字段前的注释
+  string field1 = 1; //字段后的注释
+  //字段前的注释 多行
+  //字段前的字数多行
+  int32 field2 = 2; //字段后的注释
+
+  /**
+  * 字段前注释特殊格式
+  * 字段前注释特殊格式多行
+  */
   int32 field3 = 3;
   string field4 = 4;
   repeated fixed64 field5 = 5;

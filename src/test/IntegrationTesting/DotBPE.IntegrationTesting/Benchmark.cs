@@ -40,11 +40,11 @@ namespace DotBPE.IntegrationTesting {
             "KAgSDwoHZmllbGQ2NxhDIAEoBRIPCgdmaWVsZDY4GEQgASgFEhEKCGZpZWxk",
             "MTI4GIABIAEoBRIRCghmaWVsZDEyORiBASABKAkSEQoIZmllbGQxMzEYgwEg",
             "ASgFMoQBCg1CZW5jaG1hcmtUZXN0EkAKBEVjaG8SGC5kb3RicGUuQmVuY2ht",
-            "YXJrTWVzc2FnZRoYLmRvdGJwZS5CZW5jaG1hcmtNZXNzYWdlIgSA8QQBEikK",
-            "BFF1aXQSDC5kb3RicGUuVm9pZBoMLmRvdGJwZS5Wb2lkIgWA8QSQThoGgPEE",
-            "0IYDQh5IAaoCGURvdEJQRS5JbnRlZ3JhdGlvblRlc3RpbmdiBnByb3RvMw=="));
+            "YXJrTWVzc2FnZRoYLmRvdGJwZS5CZW5jaG1hcmtNZXNzYWdlIgTQ8xgBEikK",
+            "BFF1aXQSDC5kb3RicGUuVm9pZBoMLmRvdGJwZS5Wb2lkIgXQ8xiQThoGyPMY",
+            "0IYDQh5IAaoCGURvdEJQRS5JbnRlZ3JhdGlvblRlc3RpbmdQAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::HelloRpc.Common.DotbpeOptionReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::DotBPE.ProtoBuf.DotbpeOptionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DotBPE.IntegrationTesting.Void), global::DotBPE.IntegrationTesting.Void.Parser, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DotBPE.IntegrationTesting.BenchmarkMessage), global::DotBPE.IntegrationTesting.BenchmarkMessage.Parser, new[]{ "Field1", "Field2", "Field3", "Field4", "Field5", "Field9", "Field18", "Field80", "Field81", "Field280", "Field6", "Field22", "Field59", "Field7", "Field16", "Field130", "Field12", "Field17", "Field13", "Field14", "Field104", "Field100", "Field101", "Field102", "Field103", "Field29", "Field30", "Field60", "Field271", "Field272", "Field150", "Field23", "Field24", "Field25", "Field78", "Field67", "Field68", "Field128", "Field129", "Field131" }, null, null, null)
@@ -54,6 +54,9 @@ namespace DotBPE.IntegrationTesting {
 
   }
   #region Messages
+  /// <summary>
+  /// 我是void消息
+  /// </summary>
   public sealed partial class Void : pb::IMessage<Void> {
     private static readonly pb::MessageParser<Void> _parser = new pb::MessageParser<Void>(() => new Void());
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -143,6 +146,9 @@ namespace DotBPE.IntegrationTesting {
 
   }
 
+  /// <summary>
+  /// 我是BenchmarkMessage消息
+  /// </summary>
   public sealed partial class BenchmarkMessage : pb::IMessage<BenchmarkMessage> {
     private static readonly pb::MessageParser<BenchmarkMessage> _parser = new pb::MessageParser<BenchmarkMessage>(() => new BenchmarkMessage());
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -217,6 +223,9 @@ namespace DotBPE.IntegrationTesting {
     /// <summary>Field number for the "field1" field.</summary>
     public const int Field1FieldNumber = 1;
     private string field1_ = "";
+    /// <summary>
+    /// 字段前的注释
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public string Field1 {
       get { return field1_; }
@@ -228,6 +237,10 @@ namespace DotBPE.IntegrationTesting {
     /// <summary>Field number for the "field2" field.</summary>
     public const int Field2FieldNumber = 2;
     private int field2_;
+    /// <summary>
+    /// 字段前的注释 多行
+    /// 字段前的字数多行
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int Field2 {
       get { return field2_; }
@@ -239,6 +252,11 @@ namespace DotBPE.IntegrationTesting {
     /// <summary>Field number for the "field3" field.</summary>
     public const int Field3FieldNumber = 3;
     private int field3_;
+    /// <summary>
+    /// *
+    ///  字段前注释特殊格式
+    ///  字段前注释特殊格式多行
+    /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int Field3 {
       get { return field3_; }
