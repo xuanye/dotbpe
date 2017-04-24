@@ -5,9 +5,9 @@
     <TargetFramework>netcoreapp1.1</TargetFramework>
   </PropertyGroup>
   <ItemGroup>
-
     <None Update="NLog.config">
       <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>
   </ItemGroup>
   <ItemGroup>
@@ -17,6 +17,7 @@
   <ItemGroup>
     <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
     <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
+    <ProjectReference Include="..\..\..\core\DotBPE.Plugin\DotBPE.Plugin.csproj" />
     <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
     <ProjectReference Include="..\HelloRpc.Common\HelloRpc.Common.csproj" />
   </ItemGroup>

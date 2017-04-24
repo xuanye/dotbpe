@@ -1,18 +1,25 @@
 ﻿using System;
+using System.IO;
 using DotBPE.Rpc.Logging;
+
 
 namespace DotBPE.Plugin.Logging
 {
     public class NLoggerWrapper: ILogger
     {
+        public static void InitConfig(){
+            Console.WriteLine(Path.Combine(Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath,"NLog.config"));
+            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration(Path.Combine(Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath,"NLog.config"), true);
+        }
         readonly Type _forType;
         private readonly NLog.ILogger _logger;
         public NLoggerWrapper():this(typeof(NLoggerWrapper))
         {
-            
+
         }
         public NLoggerWrapper(Type forType)
         {
+
             this._forType = forType;
             this._logger = NLog.LogManager.GetLogger(this._forType.FullName);
         }
@@ -61,7 +68,7 @@ namespace DotBPE.Plugin.Logging
 
         public void Warning(Exception exception, string message)
         {
-            this._logger.Warn(exception, message); 
+            this._logger.Warn(exception, message);
         }
 
         public void Error(string message)

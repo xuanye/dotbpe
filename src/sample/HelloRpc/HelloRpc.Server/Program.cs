@@ -8,6 +8,7 @@ using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
 using HelloRpc.Common;
 using Microsoft.Extensions.Configuration;
+using DotBPE.Plugin.Logging;
 
 namespace HelloRpc.Server
 {
@@ -17,6 +18,8 @@ namespace HelloRpc.Server
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+            NLoggerWrapper.InitConfig();
+            DotBPE.Rpc.Environment.SetLogger(new NLoggerWrapper(typeof(Program)));
 
             var host = new RpcHostBuilder()
                 .AddRpcCore<AmpMessage>() //添加核心依赖
@@ -30,7 +33,7 @@ namespace HelloRpc.Server
 
             host.StartAsync().Wait();
 
-            Console.WriteLine("Rpc Server is Started....,Default Port:6201");
+            DotBPE.Rpc.Environment.Logger.Debug("Press any key to quit!");
             Console.ReadKey();
 
             host.ShutdownAsync().Wait();
@@ -40,7 +43,6 @@ namespace HelloRpc.Server
 
     public class GreeterImpl : GreeterBase
     {
-        static readonly DotBPE.Rpc.Logging.ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<GreeterImpl>();
         public override Task<HelloResponse> HelloAsync(HelloRequest request)
         {
             return Task.FromResult(new HelloResponse() { Message = "Hello " + request.Name });

@@ -28,11 +28,11 @@ namespace DotBPE.Rpc.DefaultImpls
             return this._bootstrap.ShutdownAsync();
         }
 
-        public Task StartAsync()
+        public async Task StartAsync()
         {
-            Logger.Debug($"server host at {_option.HostIP}:{_option.HostPort} ...");
             var endpoint = new IPEndPoint(IPAddress.Parse(_option.HostIP), _option.HostPort);
-            return this._bootstrap.StartAsync(endpoint);
+            await this._bootstrap.StartAsync(endpoint);
+             Logger.Debug($"server host at {_option.HostIP}:{_option.HostPort} ...");
         }
 
         public Task Preheating()

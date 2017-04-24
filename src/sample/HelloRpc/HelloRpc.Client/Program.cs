@@ -8,6 +8,7 @@ using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Netty;
 using Microsoft.Extensions.DependencyInjection;
 using HelloRpc.Common;
+using DotBPE.Plugin.Logging;
 
 namespace HelloRpc.Client
 {
@@ -16,6 +17,9 @@ namespace HelloRpc.Client
         static void Main(string[] args)
         {
             Console.OutputEncoding = Encoding.UTF8;
+
+            NLoggerWrapper.InitConfig();
+            DotBPE.Rpc.Environment.SetLogger(new NLoggerWrapper(typeof(Program)));
 
             var client = AmpClient.Create("127.0.0.1:6201");
             var greeter = new GreeterClient(client);
@@ -32,7 +36,7 @@ namespace HelloRpc.Client
                     var request =new HelloRequest(){Name = name};
                     var reply = greeter.HelloAsync(request).Result;
 
-                    Console.WriteLine($"---------------收到服务端返回:{reply.Message}-----------");
+                    DotBPE.Rpc.Environment.Logger.Debug($"---------------收到服务端返回:{reply.Message}-----------");
                 }
                 catch(Exception ex){
                     Console.WriteLine("发生错误："+ex.Message);
