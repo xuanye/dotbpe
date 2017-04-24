@@ -42,7 +42,7 @@ namespace DotBPE.Rpc.DefaultImpls
 
         public Task CloseAsync()
         {
-           throw new NotImplementedException("不存在默认地址，请使用CloseAsync(EndPoint serverAddress)关闭连接");
+           throw new NotImplementedException("There is no default address, call CloseAsync(EndPoint serverAddress) to close the connection");
         }
 
         /// <summary>
@@ -59,25 +59,24 @@ namespace DotBPE.Rpc.DefaultImpls
 
         public Task SendAsync(TMessage message)
         {
-             Logger.Debug("根据配置 查找对应位置 来获得Endpoint");
             //根据配置 查找对应位置 来获得Endpoint
             var point =  _router.GetRouterPoint(message);
             if(point==null){
-                Logger.Error("获取路由信息出错");
-                throw new Rpc.Exceptions.RpcException("获取路由信息出错，请检查配置");
+                Logger.Error("Get routing error");
+                throw new Rpc.Exceptions.RpcException("Get routing information error, please check the configuration");
             }
             if(point.RoutePointType == RoutePointType.Local){ //本地调用流程
-                Logger.Debug("调用本地消息服务");
+                Logger.Debug("Call  local  service");
                 var actor= this._actorLocator.LocateServiceActor(message);
                 var context = new LocalMockContext<TMessage>(this._handler); //MOCK Context
                 return actor.ReceiveAsync(context,message);
             }
             else{
-                Logger.Debug("调用远端消息服务{0}",point.RemoteAddress);
+                Logger.Debug("Call  remote  service{0}",point.RemoteAddress);
                 var transport = this._transportFactory.CreateTransport(point.RemoteAddress);
                 return transport.SendAsync(message);
             }
-            throw new NotImplementedException("不存在默认地址，请使用SendAsync(EndPoint serverAddress,AmpMessage message)发送消息");
+            throw new NotImplementedException("There is no default address,call SendAsync(EndPoint serverAddress,AmpMessage message) to send messages");
         }
     }
 }

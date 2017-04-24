@@ -30,7 +30,7 @@ namespace DotBPE.Rpc.DefaultImpls
 
         public Task StartAsync()
         {
-            Logger.Debug($"服务正在{_option.HostIP}:{_option.HostPort}启动中...");
+            Logger.Debug($"server host at {_option.HostIP}:{_option.HostPort} ...");
             var endpoint = new IPEndPoint(IPAddress.Parse(_option.HostIP), _option.HostPort);
             return this._bootstrap.StartAsync(endpoint);
         }

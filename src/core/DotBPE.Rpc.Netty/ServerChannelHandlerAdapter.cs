@@ -21,18 +21,18 @@ namespace DotBPE.Rpc.Netty
         }
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            Logger.Debug($"客户端连接上了{context.Channel.RemoteAddress}");
+            Logger.Debug($"client {context.Channel.RemoteAddress} connected");
             base.ChannelActive(context);
         }
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
-            Logger.Debug("读取消息");
+            Logger.Debug("ready to read message");
             Task.Factory.StartNew(() =>
             {
                 this._bootstrap.ChannelRead(context, msg);
             });
 
-            Logger.Debug("异步读取消息完成");
+            Logger.Debug("read message completed");
         }
         public override void ChannelReadComplete(IChannelHandlerContext contex)
         {
@@ -40,7 +40,7 @@ namespace DotBPE.Rpc.Netty
         }
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
-            Logger.Error(ex,$"与客户端：{context.Channel.RemoteAddress}通信时发送了错误");
+            Logger.Error(ex,$"client：{context.Channel.RemoteAddress} occur an exception ");
             context.CloseAsync(); //关闭连接
         }
         //服务端超时则直接关闭链接
@@ -48,7 +48,7 @@ namespace DotBPE.Rpc.Netty
             if(evt is IdleStateEvent){
                 var eventState = evt as IdleStateEvent;
                 if(eventState !=null){
-                    Logger.Error($"与客户端：{context.Channel.Id},{context.Channel.RemoteAddress} 通信超时，关闭其链接");
+                    Logger.Error($"client {context.Channel.Id},{context.Channel.RemoteAddress} is timeout，close it!");
                     context.CloseAsync(); //关闭连接
                 }
             }

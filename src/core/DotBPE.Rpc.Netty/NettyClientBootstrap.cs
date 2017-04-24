@@ -92,7 +92,6 @@ namespace DotBPE.Rpc.Netty
             var args = new DisConnectedArgs();
             args.EndPoint = context.Channel.RemoteAddress;
             args.ContextId  = context.Channel.Id.AsLongText();
-            Logger.Debug("查找断线的处理事件是否存在，然后它={0}",this.DisConnected ==null?"不存在":"存在");
             this.DisConnected?.Invoke(this,args);
         }
 
@@ -120,7 +119,6 @@ namespace DotBPE.Rpc.Netty
             var bufferWritter = NettyBufferManager.CreateBufferWriter(heartbeatBuff);
             this._msgCodecs.Encode(message, bufferWritter);
 
-            Logger.Info("向服务端{0}发送心跳包", ctx.Channel.RemoteAddress);
             return ctx.WriteAndFlushAsync(heartbeatBuff);
         }
         public void Dispose()

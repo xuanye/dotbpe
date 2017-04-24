@@ -27,7 +27,7 @@ namespace DotBPE.Rpc.DefaultImpls
                             actorDict.Add(actor.Id,actor);
                         }
                         else{
-                            Logger.Error("重复注册Actor，Id={0},Type={1}",actor.Id,actor.GetType());
+                            Logger.Error("Same Actor，Id={0},Type={1}",actor.Id,actor.GetType());
                         }
 
                     }

@@ -47,14 +47,13 @@ namespace DotBPE.Rpc.DefaultImpls
         public Task SendAsync(EndPoint serverAddress, TMessage message)
         {
             var transport = this._factory.CreateTransport(serverAddress);
-            Logger.Debug("使用Transport={0}发送消息",transport.Id);
+            Logger.Debug("Transport={0} send msg",transport.Id);
             return transport.SendAsync(message);
         }
 
         public Task SendAsync(TMessage message)
         {
             var remote = GetDefaultRemoteAddress();
-            Logger.Debug("远端地址:{0}",remote);
             return this.SendAsync(remote, message);
         }
 
@@ -64,12 +63,12 @@ namespace DotBPE.Rpc.DefaultImpls
             {
 
                 if(_clientOption ==null){
-                    throw new RpcException("不存在默认的服务器地址");
+                    throw new RpcException("no default server address");
                 }
                 string serverAddress = _clientOption.Value.DefaultServerAddress;
                 if (string.IsNullOrEmpty(serverAddress))
                 {
-                    throw new RpcException("不存在默认的服务器地址");
+                    throw new RpcException("no default server address");
                 }
 
                 _defaultServerAddress = Utils.ParseUtils.ParseEndPointFromString(serverAddress);

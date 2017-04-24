@@ -55,11 +55,11 @@ namespace DotBPE.Rpc.Netty
             }
             if( channel.Open ){
                 var buff = GetBuffer(channel,data);
-                Logger.Debug("使用ChannelId={0} 通道发送",channel.Id.AsLongText());
+                Logger.Debug("ChannelId={0} WriteAndFlushAsync",channel.Id.AsLongText());
                 return channel.WriteAndFlushAsync(buff);
             }
             else{
-                Logger.Debug("ChannelId={0} 无效，准备移除",channel.Id.AsLongText());
+                Logger.Debug("ChannelId={0} is invalid,ready to remove it",channel.Id.AsLongText());
                 TryRemove(channel); // 移除无用的Channel
                 // StartConnect(channel.RemoteAddress); //启动自动重连
                 return SendAsync(data); // 重新调用一次 ，直到链接被移除完
@@ -136,18 +136,18 @@ namespace DotBPE.Rpc.Netty
         }
 
         private void StartConnect(EndPoint endpoint){
-            int tryCount  = 0;            
+            int tryCount  = 0;
             Thread thread = new Thread(new ThreadStart(()=>{
                 while(_autoReConnect){
                     tryCount++;
-                    Logger.Debug("尝试在{0}秒后自动重连{1},尝试次数{2}",tryCount*5000,endpoint,tryCount);
+                    Logger.Debug("will reconnect after{0} second, try {2} times",tryCount*5000,endpoint,tryCount);
                     Thread.Sleep(tryCount*5000);
                     try{
                         CreateConnection(endpoint,1).Wait();
                         break;
                     }
                     catch{
-                        Logger.Error("自动重连{0}失败，尝试次数{1}",endpoint,tryCount);
+                        Logger.Error("reconnect {0} failed，try {1} times",endpoint,tryCount);
                     }
 
                 }

@@ -51,7 +51,6 @@ namespace DotBPE.Rpc.DefaultImpls
 
         public Task SendAsync(TMessage message)
         {
-            Logger.Debug("调用本地消息服务");
             var actor= this._actorLocator.LocateServiceActor(message);
             var context = new LocalMockContext<TMessage>(this._handler); //MOCK Context
             return actor.ReceiveAsync(context,message);

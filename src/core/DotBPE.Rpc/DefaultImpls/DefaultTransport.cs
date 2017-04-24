@@ -36,7 +36,7 @@ namespace DotBPE.Rpc.DefaultImpls
         {
             try
             {
-                Logger.Debug("准备发送消息。");
+
 
                 try
                 {
@@ -45,13 +45,13 @@ namespace DotBPE.Rpc.DefaultImpls
                 }
                 catch (Exception exception)
                 {
-                    throw new RpcCommunicationException("与服务端通讯时发生了异常。", exception);
+                    throw new RpcCommunicationException("send message error", exception);
                 }
-                Logger.Debug("消息发送成功。");
+
             }
             catch (Exception exception)
             {
-                Logger.Error("消息发送失败。", exception);
+                Logger.Error("send message error", exception);
                 throw;
             }
         }

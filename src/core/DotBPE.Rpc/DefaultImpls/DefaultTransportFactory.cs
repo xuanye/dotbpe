@@ -34,7 +34,7 @@ namespace DotBPE.Rpc.DefaultImpls
                     s = true;
                 }
                 else{
-                    Logger.Warning("什么没有这个地址{0}",addressKey);
+                    Logger.Warning("no transprot address{0}",addressKey);
                 }
             }
             return s;
@@ -98,7 +98,7 @@ namespace DotBPE.Rpc.DefaultImpls
             }
             catch(Exception ex)
             {
-                Logger.Error($"主动关闭连接{serverAddress}时发生异常:" + ex.ToString());
+                Logger.Error($"close connection {serverAddress} ,Exception:" + ex.ToString());
             }
         }
     }

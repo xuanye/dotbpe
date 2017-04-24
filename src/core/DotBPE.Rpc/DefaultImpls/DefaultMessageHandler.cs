@@ -42,7 +42,7 @@ namespace DotBPE.Rpc.DefaultImpls
             var actor =  this._actorLocator.LocateServiceActor(message);
             if(actor == null) // 找不到对应的执行程序
             {
-                Logger.Error("消息 ${message},没有配置的处理程序");
+                Logger.Error("IServiceActor NOT FOUND");
                 return Task.CompletedTask;
             }
             else
