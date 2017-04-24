@@ -3,11 +3,9 @@ using System;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc.Netty;
 using System.Threading.Tasks;
-using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
 using HelloRpc.Common;
-using Microsoft.Extensions.Configuration;
 using DotBPE.Plugin.Logging;
 
 namespace HelloRpc.Server
@@ -33,7 +31,7 @@ namespace HelloRpc.Server
 
             host.StartAsync().Wait();
 
-            DotBPE.Rpc.Environment.Logger.Debug("Press any key to quit!");
+            Console.WriteLine("Press any key to quit!");
             Console.ReadKey();
 
             host.ShutdownAsync().Wait();

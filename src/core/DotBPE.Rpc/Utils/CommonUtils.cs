@@ -3,10 +3,10 @@ namespace DotBPE.Rpc.Utils
     public static class CommonUtils
     {
         public static string GetAppRootPath(){
-            #if NET4
-                    var rootPath = AppDomain.CurrentDomain.BaseDirectory;
+            #if DOTNETCORE
+                var rootPath = System.AppContext.BaseDirectory;
             #else
-                    var rootPath = System.AppContext.BaseDirectory;
+                var rootPath = AppDomain.CurrentDomain.BaseDirectory;
             #endif
 
             return rootPath;

@@ -18,7 +18,7 @@ namespace DotBPE.Rpc.Netty
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            Logger.Debug($" Server {context.Channel.RemoteAddress} is connected ");
+            Logger.Info($" Server {context.Channel.RemoteAddress} is connected ");
             base.ChannelActive(context);
         }
         /// <summary>
@@ -28,7 +28,7 @@ namespace DotBPE.Rpc.Netty
         public override void ChannelInactive(IChannelHandlerContext context)
         {
             // 这里应该移除之前ITransprotFactory中的缓存 或者通知对方
-            Logger.Debug($"Server {context.Channel.RemoteAddress} Inactive");
+            Logger.Info($"Server {context.Channel.RemoteAddress} Inactive");
             this._bootstrap.OnChannelInactive(context);
         }
 

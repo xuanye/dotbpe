@@ -1,15 +1,14 @@
 ﻿using System;
 using System.IO;
 using DotBPE.Rpc.Logging;
-
+using DotBPE.Rpc.Utils;
 
 namespace DotBPE.Plugin.Logging
 {
     public class NLoggerWrapper: ILogger
     {
         public static void InitConfig(){
-            Console.WriteLine(Path.Combine(Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath,"NLog.config"));
-            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration(Path.Combine(Microsoft.Extensions.PlatformAbstractions.PlatformServices.Default.Application.ApplicationBasePath,"NLog.config"), true);
+            NLog.LogManager.Configuration = new NLog.Config.XmlLoggingConfiguration(Path.Combine( CommonUtils.GetAppRootPath(),"nlog.config"), true);
         }
         readonly Type _forType;
         private readonly NLog.ILogger _logger;
