@@ -107,6 +107,9 @@ namespace DotBPE.IntegrationTesting
                     TOTAL_ERROR++;
                     errorCount ++;
                 }
+                if( (i% 10000) ==0){
+                    Console.WriteLine("{0} times completed", i);
+                }
             }
             stopwatch.Stop();
             Console.WriteLine("--------------------- result {0}--------------------------------",threadIndex);
