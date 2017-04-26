@@ -3,7 +3,7 @@ set -ex
 cd $(dirname $0)/../../sample/HelloRpc/
 
 PROTOC=protoc
-PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/dotbpe_amp.exe
+PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/Protobuf.Gen.exe
 HELLORPC_DIR=./HelloRpc.Common/
 PROTO_DIR=../../protos
 

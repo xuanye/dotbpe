@@ -3,7 +3,7 @@ set -ex
 cd $(dirname $0)/../../test/IntegrationTesting/
 
 PROTOC=protoc
-PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/dotbpe_amp.exe
+PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/Protobuf.Gen.exe
 IntegrationTesting_DIR=./DotBPE.IntegrationTesting/
 PROTO_DIR=../../protos
 
