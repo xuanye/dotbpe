@@ -102,13 +102,10 @@ namespace DotBPE.IntegrationTesting
             BenchmarkTestClient btc = new BenchmarkTestClient(client);
             stopwatch.Start();
             for(int i =0;i<this._options.RunCount ; i++){
-                var rsp = btc.Echo(msg);
+                var rsp = btc.EchoAsync(msg).Result;
                 if(rsp.Field2 !=100){
                     TOTAL_ERROR++;
                     errorCount ++;
-                }
-                if( (i% 10000) ==0){
-                    Console.WriteLine("{0} times completed", i);
                 }
             }
             stopwatch.Stop();

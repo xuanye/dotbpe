@@ -1,6 +1,6 @@
 set -ex
 
-cd $(dirname $0)/../../test/IntegrationTesting/
+cd $(dirname $0)/../../src/test/IntegrationTesting/
 
 BUILD_DIR=../../../artifacts/IntegrationTesting/
 

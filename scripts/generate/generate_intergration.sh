@@ -1,6 +1,6 @@
 set -ex
 
-cd $(dirname $0)/../../test/IntegrationTesting/
+cd $(dirname $0)/../../src/test/IntegrationTesting/
 
 PROTOC=protoc
 PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/Protobuf.Gen.exe
