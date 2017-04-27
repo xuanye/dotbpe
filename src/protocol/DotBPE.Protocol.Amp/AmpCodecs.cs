@@ -55,23 +55,7 @@ namespace DotBPE.Protocol.Amp
             int length = reader.ReadInt();
             msg.Sequence = reader.ReadInt();
             byte type = reader.ReadByte();
-            if (type > 3 || type < 1)
-            {
-                throw new Rpc.Exceptions.RpcCodecException("InvokeMessageType 参数不正确");
-            }
-            switch (type)
-            {
-                case 1:
-                    msg.InvokeMessageType = InvokeMessageType.Request;
-                    break;
-                case 2:
-                    msg.InvokeMessageType = InvokeMessageType.Response;
-                    break;
-                case 3:
-                    msg.InvokeMessageType = InvokeMessageType.Notify;
-                    break;
-            }
-
+            msg.InvokeMessageType = InvokeMessageTypeParser.Parse(type);
             msg.ServiceId = reader.ReadUShort();
             msg.MessageId = reader.ReadUShort();
 

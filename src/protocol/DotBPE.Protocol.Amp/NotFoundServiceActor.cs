@@ -17,11 +17,11 @@ namespace DotBPE.Protocol.Amp
         {
             AmpMessage response = new AmpMessage
             {
-                InvokeMessageType = InvokeMessageType.Response,
-                ServiceId = 40400,
-                MessageId = 404
+                InvokeMessageType = InvokeMessageType.NotFound,
+                ServiceId = message.ServiceId,
+                MessageId = message.MessageId
             };
-
+            response.Sequence = message.Sequence;
             await context.SendAsync(response);
         }
     }

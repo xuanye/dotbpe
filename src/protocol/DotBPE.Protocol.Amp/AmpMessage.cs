@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Utils;
+﻿using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Protocol.Amp
 {
@@ -10,7 +6,7 @@ namespace DotBPE.Protocol.Amp
     {
         public AmpMessage()
         {
-            this.Version = 0;        
+            this.Version = 0;
         }
         public byte Version { get; set; }
         public ushort ServiceId { get; set; }

@@ -60,11 +60,25 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             {
                 throw new RpcBizException("empty message");
             }
-            if(e.Message.ServiceId == 0){
+            if(e.Message.ServiceId == 0 && e.Message.MessageId==0){
                 //心跳消息
                 Logger.Info("heart beat message Id{0}",e.Message.Id);
                 return ;
             }
+
+            if(e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.NotFound || e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.ERROR ){
+                Logger.Error("server response error msg ,type{0}",e.Message.InvokeMessageType );
+                var message = e.Message;
+                TaskCompletionSource<AmpMessage> task;
+                if (_resultDictionary.ContainsKey(message.Id)
+                    && _resultDictionary.TryGetValue(message.Id, out task))
+                {
+                    task.TrySetException(new RpcRemoteException(string.Format("server response error msg ,type{0}",e.Message.InvokeMessageType)));
+                    // 移除字典
+                    RemoveResultCallback(message.Id);
+                }
+            }
+
             if(e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.Response) //只处理回复消息
             {
                 Logger.Info($"receive message, id:{e.Message.Id}");
