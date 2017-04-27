@@ -54,9 +54,7 @@ namespace DotBPE.IntegrationTesting
     {
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddRpcCore<AmpMessage>() //添加核心依赖
-                    .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
-                    .AddAmp(); // 使用AMP协议
+            services.AddDotBPE(); // 使用AMP协议
 
             services.AddServiceActor<BenchmarkServerImpl,AmpMessage>();
 
@@ -65,7 +63,7 @@ namespace DotBPE.IntegrationTesting
 
         public void Configure(IAppBuilder app, IHostingEnvironment env)
         {
-            app.UseBpe<AmpMessage>();
+
         }
 
 

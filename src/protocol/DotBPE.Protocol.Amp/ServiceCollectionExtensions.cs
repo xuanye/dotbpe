@@ -6,6 +6,7 @@ using DotBPE.Rpc.Netty;
 using DotBPE.Rpc.DefaultImpls;
 using System;
 using System.Collections.Generic;
+using DotBPE.Rpc.Extensions;
 
 namespace DotBPE.Protocol.Amp
 {
@@ -37,6 +38,12 @@ namespace DotBPE.Protocol.Amp
 
         }
 
+        public static IServiceCollection AddDotBPE(this IServiceCollection services)
+        {
+            return services.AddRpcCore<AmpMessage>() //添加核心依赖
+                    .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
+                    .AddAmp(); // 使用AMP协议
+        }
 
     }
 

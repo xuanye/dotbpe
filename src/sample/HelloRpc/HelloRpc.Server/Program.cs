@@ -40,7 +40,6 @@ namespace HelloRpc.Server
         static ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<Startup>();
         public void Configure(IAppBuilder app, IHostingEnvironment env)
         {
-            app.UseBpe<AmpMessage>();
             Logger.Debug("Startup Configure");
         }
 
@@ -48,9 +47,7 @@ namespace HelloRpc.Server
         {
             Logger.Debug("Startup ConfigureServices");
 
-            services.AddRpcCore<AmpMessage>() //添加核心依赖
-            .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
-            .AddAmp(); // 使用AMP协议
+            services.AddDotBPE();
 
             services.AddServiceActors<AmpMessage>(actors =>{
                 actors.Add<GreeterImpl>();

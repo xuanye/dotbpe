@@ -12,11 +12,11 @@ namespace DotBPE.Rpc.DefaultImpls
         static ILogger Logger = Environment.Logger.ForType<DefaultServiceActorContainer<TMessage>>();
         private Dictionary<string, IServiceActor<TMessage>> actorDict = new Dictionary<string, IServiceActor<TMessage>>();
         private static object lockObj = new object();
-        public DefaultServiceActorContainer(){
-
+        public DefaultServiceActorContainer(IServiceProvider serviceProvider){
+            Initialize(serviceProvider);
         }
 
-        public void Initialize(IServiceProvider serviceProvider)
+        private void Initialize(IServiceProvider serviceProvider)
         {
            var actorList =  serviceProvider.GetServices<IServiceActor<TMessage>>();
             if(actorList !=null){
