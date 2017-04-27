@@ -13,5 +13,6 @@ namespace DotBPE.Rpc.Hosting
         /// <returns></returns>
         Task Preheating();
         Task ShutdownAsync();
+        void Initialize();
     }
 }

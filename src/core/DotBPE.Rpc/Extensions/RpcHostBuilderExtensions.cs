@@ -1,4 +1,5 @@
-﻿using DotBPE.Rpc.Codes;
+﻿using System;
+using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.DefaultImpls;
 using DotBPE.Rpc.Hosting;
 using Microsoft.Extensions.Configuration;
@@ -8,15 +9,6 @@ namespace DotBPE.Rpc.Extensions
 {
     public static class RpcHostBuilderExtensions
     {
-        public static IRpcHostBuilder AddRpcCore<TMessage>(this IRpcHostBuilder builder) where TMessage : InvokeMessage
-        {
-            builder.ConfigureServices((services) =>
-            {
-                services.AddSingleton<IMessageHandler<TMessage>, DefaultMessageHandler<TMessage>>()
-                    .AddSingleton<IServerHost, DefaultServerHost>();
-            });
-            return builder;
-        }
 
         public static IRpcHostBuilder UseConfiguration(this IRpcHostBuilder builder,IConfiguration config)
         {
@@ -35,9 +27,19 @@ namespace DotBPE.Rpc.Extensions
         public static IRpcHostBuilder UseServer(this IRpcHostBuilder builder,string address)
         {
 
-            builder.UseSetting("hostAddress",address);
+            builder.UseSetting(HostDefaultKey.HOSTADDRESS_KEY,address);
 
             return builder;
+        }
+
+        public static IRpcHostBuilder UseStartup<TStartup>(this IRpcHostBuilder builder) where TStartup:IStartup
+        {
+            var startupType =  typeof(TStartup);
+            var startupAssemblyName = startupType.FullName;
+            return builder.UseSetting(HostDefaultKey.STARTUPTYPE_KEY,startupAssemblyName).ConfigureServices(services=>{
+                services.AddSingleton(typeof(IStartup), startupType);
+            });
+
         }
 
     }

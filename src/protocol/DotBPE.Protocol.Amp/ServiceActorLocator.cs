@@ -12,7 +12,7 @@ namespace DotBPE.Protocol.Amp
         }
 
         /// <summary>
-        ///
+        /// Locate Service Actor
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
@@ -23,12 +23,6 @@ namespace DotBPE.Protocol.Amp
             }
 
             //以下的是本地服务的实现
-            string msgActorId = $"{message.ServiceId}${message.MessageId}";
-            var msgActor = _container.GetById(msgActorId);
-            if(msgActor != null)
-            {
-                return msgActor;
-            }
 
             string serviceActorId = message.ServiceId + "$0";
             var serviceActor = _container.GetById(serviceActorId);
@@ -36,6 +30,16 @@ namespace DotBPE.Protocol.Amp
             {
                 return serviceActor;
             }
+
+
+            string msgActorId = $"{message.ServiceId}${message.MessageId}";
+            var msgActor = _container.GetById(msgActorId);
+            if(msgActor != null)
+            {
+                return msgActor;
+            }
+
+
 
             return NotFoundServiceActor.Default;
         }

@@ -20,7 +20,7 @@ namespace DotBPE.Plugin.Logging
         {
 
             this._forType = forType;
-            this._logger = NLog.LogManager.GetLogger(this._forType.FullName);
+            this._logger = NLog.LogManager.GetLogger(this._forType.Name);
         }
 
         /// <summary>

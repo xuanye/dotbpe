@@ -1,8 +1,10 @@
-﻿using Microsoft.Extensions.DependencyInjection;
+﻿using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.DefaultImpls;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.Rpc.Extensions
 {
-    internal static class ServiceCollectionExtensions
+    internal static class ServiceCollectionExtensionsInner
     {
         public static IServiceCollection Clone(this IServiceCollection serviceCollection)
         {
@@ -12,6 +14,17 @@ namespace DotBPE.Rpc.Extensions
                 clone.Add(service);
             }
             return clone;
+        }
+
+    }
+
+    public static class ServiceCollectionExtensions
+    {
+
+        public static IServiceCollection AddRpcCore<TMessage>(this IServiceCollection services) where TMessage : InvokeMessage
+        {
+            return services.AddSingleton<IMessageHandler<TMessage>, DefaultMessageHandler<TMessage>>()
+                .AddSingleton<IServiceActorContainer<TMessage>,DefaultServiceActorContainer<TMessage>>();
         }
     }
 }

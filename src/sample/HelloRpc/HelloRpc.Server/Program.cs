@@ -7,6 +7,9 @@ using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
 using HelloRpc.Common;
 using DotBPE.Plugin.Logging;
+using DotBPE.Rpc;
+using Microsoft.Extensions.DependencyInjection;
+using DotBPE.Rpc.Logging;
 
 namespace HelloRpc.Server
 {
@@ -20,13 +23,7 @@ namespace HelloRpc.Server
             DotBPE.Rpc.Environment.SetLogger(new NLoggerWrapper(typeof(Program)));
 
             var host = new RpcHostBuilder()
-                .AddRpcCore<AmpMessage>() //添加核心依赖
-                .UseNettyServer<AmpMessage>()  //使用使用Netty默认实现
-                .UseAmp() //使用Amp协议中的默认实现
-                .AddServiceActors(actors =>
-                {
-                    actors.Add<GreeterImpl>();
-                }) //注册服务
+                .UseStartup<Startup>()
                 .Build();
 
             host.StartAsync().Wait();
@@ -38,7 +35,30 @@ namespace HelloRpc.Server
 
         }
     }
+    public class Startup : IStartup
+    {
+        static ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<Startup>();
+        public void Configure(IAppBuilder app, IHostingEnvironment env)
+        {
+            app.UseBpe<AmpMessage>();
+            Logger.Debug("Startup Configure");
+        }
 
+        public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            Logger.Debug("Startup ConfigureServices");
+
+            services.AddRpcCore<AmpMessage>() //添加核心依赖
+            .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
+            .AddAmp(); // 使用AMP协议
+
+            services.AddServiceActors<AmpMessage>(actors =>{
+                actors.Add<GreeterImpl>();
+            });
+
+            return services.BuildServiceProvider();
+        }
+    }
     public class GreeterImpl : GreeterBase
     {
         public override Task<HelloResponse> HelloAsync(HelloRequest request)

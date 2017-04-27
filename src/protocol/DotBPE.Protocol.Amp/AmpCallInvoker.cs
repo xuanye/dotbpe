@@ -36,15 +36,15 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 catch (Exception exception)
                 {
                     RemoveResultCallback(request.Id);
-                    throw new RpcCommunicationException ("与服务端通讯时发生了异常。", exception);
+                    throw new RpcCommunicationException ("rpc communication error", exception);
                 }
 
                 return await callbackTask;
             }
             catch (Exception exception)
             {
-                Logger.Error(exception,"与服务端通讯时发生了异常:");
-                throw;
+                Logger.Error(exception,"error occor:");
+                throw exception;
             }
         }
 
@@ -58,16 +58,16 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         {
             if(e.Message == null)
             {
-                throw new RpcBizException("收到了空消息");
+                throw new RpcBizException("empty message");
             }
             if(e.Message.ServiceId == 0){
                 //心跳消息
-                Logger.Info("收到服务端心跳消息Id{0}",e.Message.Id);
+                Logger.Info("heart beat message Id{0}",e.Message.Id);
                 return ;
             }
             if(e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.Response) //只处理回复消息
             {
-                Logger.Info($"接收到消息:{e.Message.Id}");
+                Logger.Info($"receive message, id:{e.Message.Id}");
                 var message = e.Message;
                 TaskCompletionSource<AmpMessage> task;
                 if (_resultDictionary.ContainsKey(message.Id)
@@ -75,7 +75,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 {
 
                     task.TrySetResult(message);
-                    Logger.Info("消息Id{0},回调设置成功",message.Id);
+                    Logger.Info("message {0},set result success",message.Id);
                     // 移除字典
                     RemoveResultCallback(message.Id);
 
@@ -87,7 +87,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         private void RemoveResultCallback(string id)
         {
             var removed = _resultDictionary.TryRemove(id, out var _);
-            Logger.Info("消息Id{0},移除队列{1}",id,removed?"成功":"失败");
+            Logger.Info("message {0},remove from queue {1}",id,removed?"success":"fail");
         }
 
         private void TimeOutCallBack(string id)
@@ -95,8 +95,8 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             TaskCompletionSource<AmpMessage> task;
             if (_resultDictionary.TryGetValue(id, out task))
             {
-                Logger.Warning("消息{0},回调超时",id);
-                task.TrySetException(new RpcCommunicationException("操作超时！"));
+                Logger.Warning("message {0}, timeout",id);
+                task.TrySetException(new RpcCommunicationException("operation timeout"));
                 // 移除字典
                 RemoveResultCallback(id);
             }

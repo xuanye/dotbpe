@@ -4,6 +4,7 @@ using System.Diagnostics;
 using System.Reflection;
 using System.Runtime.ExceptionServices;
 using System.Text;
+using DotBPE.Rpc.DefaultImpls;
 using DotBPE.Rpc.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -15,6 +16,7 @@ namespace DotBPE.Rpc.Hosting
     public class RpcHostBuilder:IRpcHostBuilder
     {
 
+        private readonly IHostingEnvironment _env;
         private RpcHostOption _options;
 
         private readonly List<Action<IServiceCollection>> _configureServicesDelegates;
@@ -24,6 +26,9 @@ namespace DotBPE.Rpc.Hosting
         private bool _rpcHostBuilt = false;
         public RpcHostBuilder()
         {
+            _env = new HostingEnvironment();
+
+
             _configureServicesDelegates = new List<Action<IServiceCollection>>();
 
             _config = new ConfigurationBuilder()
@@ -41,16 +46,15 @@ namespace DotBPE.Rpc.Hosting
             }
             _rpcHostBuilt = true;
 
-
-
             var hostingServices = BuildCommonServices();
             var applicationServices = hostingServices.Clone();
             var hostingServiceProvider = hostingServices.BuildServiceProvider();
 
-            AddApplicationServices(applicationServices, hostingServiceProvider);
 
-            var host = hostingServiceProvider.GetRequiredService<IServerHost>();
-            Environment.SetServiceProvider(hostingServiceProvider);
+            var host = new DefaultServerHost(hostingServiceProvider,applicationServices,this._options);
+
+            host.Initialize();
+
             return host;
         }
 
@@ -87,11 +91,13 @@ namespace DotBPE.Rpc.Hosting
 
             var applicationName = _options.ApplicationName ?? "DotBPE Application";
 
+            _env.Initialize(applicationName, _options);
 
 
             var services = new ServiceCollection();
 
             services.AddSingleton(_options);
+            services.AddSingleton(_env);
 
             //类型绑定配置文件
             services.AddOptions();
@@ -100,12 +106,17 @@ namespace DotBPE.Rpc.Hosting
             services.Configure<Options.RemoteServicesOption>(_config.GetSection("remoteServices"));
 
 
+            services.AddTransient<IAppBuilder, AppBuilder>();
 
 
             services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
 
             services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
 
+            if (string.IsNullOrEmpty(_options.StartupType))
+            {
+                services.AddSingleton<IStartup, DefaultStartup>();
+            }
 
             foreach (var configureServices in _configureServicesDelegates)
             {
@@ -113,11 +124,6 @@ namespace DotBPE.Rpc.Hosting
             }
 
             return services;
-        }
-
-        private void AddApplicationServices(IServiceCollection services, IServiceProvider hostingServiceProvider)
-        {
-
         }
 
     }

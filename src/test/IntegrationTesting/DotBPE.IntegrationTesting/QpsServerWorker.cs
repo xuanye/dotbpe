@@ -5,6 +5,8 @@ using DotBPE.Rpc.Netty;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
+using DotBPE.Rpc;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.IntegrationTesting
 {
@@ -35,25 +37,37 @@ namespace DotBPE.IntegrationTesting
             string ip = "0.0.0.0";
             int port = this._option.Port;
 
-            var tcs = new TaskCompletionSource<object>();
-            var workerServiceImpl = new BenchmarkServerImpl(() => { Task.Run(() => tcs.SetResult(null)); });
-
-             var host = new RpcHostBuilder()
-                .AddRpcCore<AmpMessage>() //添加核心依赖
-                .UseNettyServer<AmpMessage>()  //使用使用Netty默认实现
-                .UseAmp() //使用Amp协议中的默认实现
+            var host = new RpcHostBuilder()
                 .UseServer(ip,port)
-                .AddServiceActors(actors =>
-                {
-                    actors.Add(workerServiceImpl);
-                }) //注册服务
+                .UseStartup<QpsServerStartup>()
                 .Build();
             await host.StartAsync();
             Console.WriteLine("Running qps worker server on " + string.Format("{0}:{1}", ip, port));
-
-            await tcs.Task;
+            Console.ReadKey();
             await host.ShutdownAsync();
             Console.WriteLine("server is Shutdown");
         }
+    }
+
+
+    public class QpsServerStartup : IStartup
+    {
+        public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            services.AddRpcCore<AmpMessage>() //添加核心依赖
+                    .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
+                    .AddAmp(); // 使用AMP协议
+
+            services.AddServiceActor<BenchmarkServerImpl,AmpMessage>();
+
+            return services.BuildServiceProvider();
+        }
+
+        public void Configure(IAppBuilder app, IHostingEnvironment env)
+        {
+            app.UseBpe<AmpMessage>();
+        }
+
+
     }
 }

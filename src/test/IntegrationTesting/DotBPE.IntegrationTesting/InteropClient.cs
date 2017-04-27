@@ -57,6 +57,8 @@ namespace DotBPE.IntegrationTesting
                 Console.WriteLine("Error times: {0}", TOTAL_ERROR);
                 Console.WriteLine("Elapsed time: {0}ms", swTotal.ElapsedMilliseconds);
                 Console.WriteLine("Ops per second: {0}", (int)((double)options.RunCount*options.RunThreadCount  * 1000 / swTotal.ElapsedMilliseconds));
+                Console.WriteLine("press any key to quit!");
+                Console.ReadKey();
             });
         }
 
@@ -99,18 +101,20 @@ namespace DotBPE.IntegrationTesting
 
             var msg = PrepareBenchmarkMessage();
             int errorCount = 0;
+            int callCount = 0;
             BenchmarkTestClient btc = new BenchmarkTestClient(client);
             stopwatch.Start();
             for(int i =0;i<this._options.RunCount ; i++){
-                var rsp = btc.EchoAsync(msg).Result;
+                var rsp = btc.EchoAsync(msg,6000000).Result;
                 if(rsp.Field2 !=100){
                     TOTAL_ERROR++;
                     errorCount ++;
                 }
+                callCount++;
             }
             stopwatch.Stop();
             Console.WriteLine("--------------------- result {0}--------------------------------",threadIndex);
-            Console.WriteLine("Error times: {0}", errorCount);
+            Console.WriteLine("Call Echo {0} times,Error times: {1}",callCount, errorCount);
             Console.WriteLine("Elapsed time: {0}ms", stopwatch.ElapsedMilliseconds);
             Console.WriteLine("Ops per second: {0}", (int)((double)this._options.RunCount  * 1000 / stopwatch.ElapsedMilliseconds));
             //await btc.QuitAsnyc(new Void());
