@@ -36,7 +36,7 @@ if [ "$TRAVIS_BRANCH" == "master" ]; then
     dotnet nuget push ./$artifactsFolder/DotBPE.Protocol.Amp.${versionNumber}.nupkg -k $NUGET_KEY -s https://www.nuget.org
 
 
-    nuget pack ./DotBPE.nuspec  -Version $versionNumber -OutputDirectory ../$artifactsFolder
-    dotnet nuget push ./$artifactsFolder/DotBPE.${versionNumber}.nupkg -k $NUGET_KEY -s https://www.nuget.org
+    #nuget pack ./DotBPE.nuspec  -Version $versionNumber -OutputDirectory ../$artifactsFolder
+    #dotnet nuget push ./$artifactsFolder/DotBPE.${versionNumber}.nupkg -k $NUGET_KEY -s https://www.nuget.org
 
 fi
