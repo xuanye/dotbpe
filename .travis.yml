@@ -3,8 +3,6 @@ mono: none
 dotnet: 1.0.1
 dist: trusty
 solution: ./src/DotBPE.sln
-install:
-  - dotnet restore ./src/DotBPE.sln
+
 script:
-  - dotnet build ./src/DotBPE.sln -c Release
-  - dotnet test ./src/test/DotBPE.UnitTest/DotBPE.UnitTest.csproj
+  - ./script/publish/publish_package.sh
