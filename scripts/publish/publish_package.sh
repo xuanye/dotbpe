@@ -1,6 +1,6 @@
 set -ex
 
-cd $(dirname $0)/../src/
+cd $(dirname $0)/../../src/
 
 artifactsFolder="../artifacts"
 
