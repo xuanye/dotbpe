@@ -5,6 +5,8 @@ dotbpe是一款基于CSharp编写的RPC框架，但是它的目标不仅仅只�
 
 
 
+### 安装
+> PM> Install-Package DotBPE -Pre
 
 
 ### 快速开始
@@ -79,15 +81,16 @@ message HelloResponse {
 ```shell
 set -ex
 
-cd $(dirname $0)/../../sample/HelloRpc/
+cd $(dirname $0)/../../src/sample/HelloRpc/
 
 PROTOC=protoc
-PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/dotbpe_amp.exe
+PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/Protobuf.Gen.exe
 HELLORPC_DIR=./HelloRpc.Common/
 PROTO_DIR=../../protos
 
-$PROTOC  -I=$PROTO_DIR --csharp_out=$IntegrationTesting_DIR --dotbpe_out=$HELLORPC_DIR \
-    $PROTO_DIR/{dotbpe_option,hell_rpc}.proto  --plugin=$PLUGIN
+$PROTOC  -I=$PROTO_DIR --csharp_out=$HELLORPC_DIR --dotbpe_out=$HELLORPC_DIR \
+    $PROTO_DIR/{dotbpe_option,hello_rpc}.proto  --plugin=$PLUGIN
+
 ```
 
 #### 2. 编写服务端代码
@@ -98,11 +101,13 @@ using System;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc.Netty;
 using System.Threading.Tasks;
-using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
 using HelloRpc.Common;
-using Microsoft.Extensions.Configuration;
+using DotBPE.Plugin.Logging;
+using DotBPE.Rpc;
+using Microsoft.Extensions.DependencyInjection;
+using DotBPE.Rpc.Logging;
 
 namespace HelloRpc.Server
 {
@@ -112,28 +117,44 @@ namespace HelloRpc.Server
         {
             Console.OutputEncoding = System.Text.Encoding.UTF8;
 
+            NLoggerWrapper.InitConfig();
+            DotBPE.Rpc.Environment.SetLogger(new NLoggerWrapper(typeof(Program)));
 
             var host = new RpcHostBuilder()
-                .AddRpcCore<AmpMessage>() //添加核心依赖
-                .UseNettyServer<AmpMessage>()  //使用使用Netty默认实现
-                .UseAmp() //使用Amp协议中的默认实现
-                .AddServiceActors(actors =>
-                {
-                    actors.Add<GreeterImpl>();
-                }) //注册服务
+                .UseStartup<Startup>()
                 .Build();
 
             host.StartAsync().Wait();
 
-            Console.WriteLine("Rpc Server is Started....,Default Port:6201");
+            Console.WriteLine("Press any key to quit!");
             Console.ReadKey();
 
             host.ShutdownAsync().Wait();
 
         }
     }
+    public class Startup : IStartup
+    {
+        static ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<Startup>();
+        public void Configure(IAppBuilder app, IHostingEnvironment env)
+        {
+            Logger.Debug("Startup Configure");
+        }
 
-    public class GreeterImpl : GreeterBase //实现真实的逻辑
+        public IServiceProvider ConfigureServices(IServiceCollection services)
+        {
+            Logger.Debug("Startup ConfigureServices");
+
+            services.AddDotBPE();
+
+            services.AddServiceActors<AmpMessage>(actors =>{
+                actors.Add<GreeterImpl>();
+            });
+
+            return services.BuildServiceProvider();
+        }
+    }
+    public class GreeterImpl : GreeterBase
     {
         public override Task<HelloResponse> HelloAsync(HelloRequest request)
         {

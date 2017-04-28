@@ -5,4 +5,4 @@ dist: trusty
 solution: ./src/DotBPE.sln
 
 script:
-  - ./script/publish/publish_package.sh
+  - ./scripts/publish/publish_package.sh
