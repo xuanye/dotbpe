@@ -1,41 +1,60 @@
 using System.Collections.Generic;
+using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Rpc
 {
-    public class CallContext
+    public class CallContext<TMessage> where TMessage:InvokeMessage
     {
-        public CallContext(){
-            RequestHeader = new Dictionary<string,string>();
+        private readonly IRpcContext<TMessage> _context;
+        private readonly Dictionary<string,object> _items;
+
+        public CallContext(IRpcContext<TMessage> context){
+            this._context = context;
+            _items= new Dictionary<string,object>();
         }
-        /// <summary>
-        /// 本次调用经过的每一个节点
-        /// </summary>
-        /// <returns></returns>
-        public string Peer{get;set;}
 
-        /// <summary>
-        ///  用于调用返回的状态，暂时没用
-        /// </summary>
-        /// <returns></returns>
-        public int Status {get;set;}
-
-        /// <summary>
-        /// 由客户端调用者设置的头信息
-        /// </summary>
-        /// <returns></returns>
-        public Dictionary<string,string> RequestHeader{get;private set;}
-
-        /// <summary>
-        /// 终端客户端
-        /// </summary>
-        /// <returns></returns>
-        public string ClientId{
+        public string RemoteAddress{
             get{
-                if(this.RequestHeader.ContainsKey("CLIENT_IP")){
-                    return this.RequestHeader["CLIENT_IP"];
-                }
-                return "";
+                return this._context.RemoteAddress;
             }
         }
+        public string LocalAddress{
+            get{
+                return this._context.LocalAddress;
+            }
+        }
+
+
+        public bool ContainsKey(string key)
+        {
+            return _items.ContainsKey(key);
+        }
+
+        public object Get(string key)
+        {
+            if(ContainsKey(key)){
+                return _items[key];
+            }
+            return null;
+        }
+
+        public void Remove(string key)
+        {
+            if(ContainsKey(key)){
+                _items.Remove(key);
+            }
+
+        }
+
+        public void Set(string key,object item)
+        {
+            if(ContainsKey(key)){
+                _items[key]=item;
+            }
+            else{
+                _items.Add(key,item);
+            }
+        }
+
     }
 }

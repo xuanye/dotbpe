@@ -27,12 +27,11 @@ namespace DotBPE.Rpc.Netty
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
             Logger.Debug("ready to read message");
-            Task.Factory.StartNew(() =>
-            {
-                this._bootstrap.ChannelRead(context, msg);
+
+            this._bootstrap.ChannelRead(context, msg).ContinueWith( (task)=>{
+               Logger.Debug("read message completed");
             });
 
-            Logger.Debug("read message completed");
         }
         public override void ChannelReadComplete(IChannelHandlerContext contex)
         {

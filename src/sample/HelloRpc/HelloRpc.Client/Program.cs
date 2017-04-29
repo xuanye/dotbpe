@@ -1,14 +1,7 @@
 ﻿using System;
 using System.Text;
-using System.Threading.Tasks;
 using DotBPE.Protocol.Amp;
-using DotBPE.Rpc;
-using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Extensions;
-using DotBPE.Rpc.Netty;
-using Microsoft.Extensions.DependencyInjection;
 using HelloRpc.Common;
-using DotBPE.Plugin.Logging;
 
 namespace HelloRpc.Client
 {
@@ -23,10 +16,11 @@ namespace HelloRpc.Client
 
             var client = AmpClient.Create("127.0.0.1:6201");
             var greeter = new GreeterClient(client);
-            while (true)
+            int i = 0;
+            while (i<100)
             {
-                Console.WriteLine("请输入你的名称");
-                string name = Console.ReadLine();
+                //Console.WriteLine("请输入你的名称");
+                string name ="xuanye"; //Console.ReadLine();
                 if ("bye".Equals(name))
                 {
                     break;
@@ -34,14 +28,16 @@ namespace HelloRpc.Client
                 try
                 {
                     var request =new HelloRequest(){Name = name};
-                    var reply = greeter.HelloAsync(request).Result;
-
-                    Console.WriteLine($"---------------收到服务端返回:{reply.Message}-----------");
+                    greeter.HelloAsync(request).ContinueWith(task=>{
+                        Console.WriteLine($"---------------收到服务端返回:{task.Result.Message}-----------");
+                    });
+                    i++;
                 }
                 catch(Exception ex){
                     Console.WriteLine("发生错误："+ex.Message);
                 }
             }
+            Console.ReadKey();
         }
     }
 

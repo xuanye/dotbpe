@@ -18,10 +18,18 @@ namespace DotBPE.Rpc.Netty
         private IChannel _channel;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
         private readonly IMessageHandler<TMessage> _handler;
-        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs)
+
+        private readonly IContextAccessor<TMessage> _contextAccessor;
+
+         public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs):this(handler,msgCodecs,null)
+         {
+
+         }
+        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs,IContextAccessor<TMessage> contextAccessor)
         {
             this._msgCodecs = msgCodecs;
             this._handler = handler;
+            this._contextAccessor = contextAccessor;
         }
 
         public void Dispose()
@@ -76,13 +84,21 @@ namespace DotBPE.Rpc.Netty
 
         }
 
-        public Task ChannelRead(IChannelHandlerContext ctx, TMessage message)
+        public async Task ChannelRead(IChannelHandlerContext ctx, TMessage message)
         {
             var context = new NettyRpcContext<TMessage>(ctx.Channel, _msgCodecs);
             context.LocalAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.LocalAddress);
             context.RemoteAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.RemoteAddress);
+            if(_contextAccessor !=null){
+                _contextAccessor.CallContext = new CallContext<TMessage>(context);
+            }
             // 这里添加实际的消息处理程序
-            return this._handler.ReceiveAsync(context, message);
+            await this._handler.ReceiveAsync(context, message);
+
+            if(_contextAccessor !=null){
+                _contextAccessor.CallContext = null;
+            }
+            context =null;
         }
 
 

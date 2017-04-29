@@ -1,7 +1,6 @@
 ﻿
 using System;
 using DotBPE.Protocol.Amp;
-using DotBPE.Rpc.Netty;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
@@ -62,6 +61,8 @@ namespace HelloRpc.Server
         {
             return Task.FromResult(new HelloResponse() { Message = "Hello " + request.Name });
         }
+
+
     }
 
 }
