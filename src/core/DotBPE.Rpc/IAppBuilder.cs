@@ -1,5 +1,4 @@
 using System;
-using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Rpc
 {
