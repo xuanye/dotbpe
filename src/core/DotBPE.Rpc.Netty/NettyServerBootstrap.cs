@@ -92,10 +92,11 @@ namespace DotBPE.Rpc.Netty
             if(_contextAccessor !=null){
                 _contextAccessor.CallContext = new CallContext<TMessage>(context);
             }
-            // 这里添加实际的消息处理程序
+
             await this._handler.ReceiveAsync(context, message);
 
             if(_contextAccessor !=null){
+                _contextAccessor.CallContext.Dispose();
                 _contextAccessor.CallContext = null;
             }
             context =null;

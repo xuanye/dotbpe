@@ -1,12 +1,14 @@
+using System;
 using System.Collections.Generic;
 using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Rpc
 {
-    public class CallContext<TMessage> where TMessage:InvokeMessage
+
+    public class CallContext<TMessage>:IDisposable   where TMessage:InvokeMessage
     {
-        private readonly IRpcContext<TMessage> _context;
-        private readonly Dictionary<string,object> _items;
+        private IRpcContext<TMessage> _context;
+        private Dictionary<string,object> _items;
 
         public CallContext(IRpcContext<TMessage> context){
             this._context = context;
@@ -56,5 +58,11 @@ namespace DotBPE.Rpc
             }
         }
 
+        public void Dispose()
+        {
+           this._context = null;
+           this._items.Clear();
+           this._items = null;
+        }
     }
 }
