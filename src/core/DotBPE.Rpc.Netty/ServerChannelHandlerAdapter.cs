@@ -24,6 +24,11 @@ namespace DotBPE.Rpc.Netty
             Logger.Debug($"client {context.Channel.RemoteAddress} connected");
             base.ChannelActive(context);
         }
+        public override void ChannelInactive(IChannelHandlerContext context)
+        {
+            Logger.Debug($"client {context.Channel.RemoteAddress} disconnected");
+            base.ChannelInactive(context);
+        }
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
             Logger.Debug("ready to read message");
