@@ -15,14 +15,13 @@ dotbpe是一款基于CSharp编写的RPC框架，但是它的目标不仅仅只�
 
 ```protobuf
 //dotbpe_option.proto
-// [START declaration]
+
 syntax = "proto3";
 package dotbpe;
-// [END declaration]
 
-// [START csharp_declaration]
+
 option csharp_namespace = "DotBPE.ProtoBuf";
-// [END csharp_declaration]
+
 
 import "google/protobuf/descriptor.proto";
 

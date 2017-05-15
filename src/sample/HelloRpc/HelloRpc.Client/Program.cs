@@ -19,8 +19,8 @@ namespace HelloRpc.Client
             int i = 0;
             while (i<100)
             {
-                //Console.WriteLine("请输入你的名称");
-                string name ="xuanye"; //Console.ReadLine();
+                Console.WriteLine("请输入你的名称");
+                string name =Console.ReadLine();
                 if ("bye".Equals(name))
                 {
                     break;

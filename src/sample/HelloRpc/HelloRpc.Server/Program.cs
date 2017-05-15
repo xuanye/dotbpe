@@ -61,8 +61,6 @@ namespace HelloRpc.Server
         {
             return Task.FromResult(new HelloResponse() { Message = "Hello " + request.Name });
         }
-
-
     }
 
 }
