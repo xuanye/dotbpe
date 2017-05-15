@@ -2,8 +2,6 @@
 using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Utils;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotBPE.Rpc
 {
