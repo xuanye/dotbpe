@@ -17,6 +17,11 @@ service BenchmarkTest{
     rpc Echo (BenchmarkMessage) returns (BenchmarkMessage){
         option (message_id)= 1 ;//设定消息ID
     };//Echo尾部的注释
+
+    rpc TestCallContext (BenchmarkMessage) returns (BenchmarkMessage){
+        option (message_id)= 2 ;//设定消息ID
+    };
+
     // 测试发送退出消息
     rpc Quit (Void) returns (Void){
         option (message_id)= 10000 ;//设定消息ID

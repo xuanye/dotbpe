@@ -28,6 +28,19 @@ await context.SendAsync(response);
 //抽象方法
 public abstract Task<BenchmarkMessage> EchoAsync(BenchmarkMessage request);
 //调用委托
+private async Task ReceiveTestCallContextAsync(IRpcContext<AmpMessage> context, AmpMessage req)
+{
+var request = BenchmarkMessage.Parser.ParseFrom(req.Data);
+var data = await TestCallContextAsync(request);
+var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
+response.Sequence = req.Sequence;
+response.Data = data.ToByteArray();
+await context.SendAsync(response);
+}
+
+//抽象方法
+public abstract Task<BenchmarkMessage> TestCallContextAsync(BenchmarkMessage request);
+//调用委托
 private async Task ReceiveQuitAsync(IRpcContext<AmpMessage> context, AmpMessage req)
 {
 var request = Void.Parser.ParseFrom(req.Data);
@@ -44,6 +57,8 @@ public Task ReceiveAsync(IRpcContext<AmpMessage> context, AmpMessage req)
 {
 //方法BenchmarkTest.Echo
 if(req.MessageId == 1){return this.ReceiveEchoAsync(context, req);}
+//方法BenchmarkTest.TestCallContext
+if(req.MessageId == 2){return this.ReceiveTestCallContextAsync(context, req);}
 //方法BenchmarkTest.Quit
 if(req.MessageId == 10000){return this.ReceiveQuitAsync(context, req);}
 return Task.CompletedTask;

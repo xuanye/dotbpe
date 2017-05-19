@@ -39,10 +39,12 @@ namespace DotBPE.IntegrationTesting {
             "ZmllbGQyNBgYIAEoCBIPCgdmaWVsZDI1GBkgASgFEg8KB2ZpZWxkNzgYTiAB",
             "KAgSDwoHZmllbGQ2NxhDIAEoBRIPCgdmaWVsZDY4GEQgASgFEhEKCGZpZWxk",
             "MTI4GIABIAEoBRIRCghmaWVsZDEyORiBASABKAkSEQoIZmllbGQxMzEYgwEg",
-            "ASgFMoQBCg1CZW5jaG1hcmtUZXN0EkAKBEVjaG8SGC5kb3RicGUuQmVuY2ht",
-            "YXJrTWVzc2FnZRoYLmRvdGJwZS5CZW5jaG1hcmtNZXNzYWdlIgTQ8xgBEikK",
-            "BFF1aXQSDC5kb3RicGUuVm9pZBoMLmRvdGJwZS5Wb2lkIgXQ8xiQThoGyPMY",
-            "0IYDQh5IAaoCGURvdEJQRS5JbnRlZ3JhdGlvblRlc3RpbmdQAGIGcHJvdG8z"));
+            "ASgFMtEBCg1CZW5jaG1hcmtUZXN0EkAKBEVjaG8SGC5kb3RicGUuQmVuY2ht",
+            "YXJrTWVzc2FnZRoYLmRvdGJwZS5CZW5jaG1hcmtNZXNzYWdlIgTQ8xgBEksK",
+            "D1Rlc3RDYWxsQ29udGV4dBIYLmRvdGJwZS5CZW5jaG1hcmtNZXNzYWdlGhgu",
+            "ZG90YnBlLkJlbmNobWFya01lc3NhZ2UiBNDzGAISKQoEUXVpdBIMLmRvdGJw",
+            "ZS5Wb2lkGgwuZG90YnBlLlZvaWQiBdDzGJBOGgbI8xjQhgNCHkgBqgIZRG90",
+            "QlBFLkludGVncmF0aW9uVGVzdGluZ1AAYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::DotBPE.ProtoBuf.DotbpeOptionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {

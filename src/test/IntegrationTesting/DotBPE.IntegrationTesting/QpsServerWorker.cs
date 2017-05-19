@@ -58,6 +58,8 @@ namespace DotBPE.IntegrationTesting
 
             services.AddServiceActor<BenchmarkServerImpl,AmpMessage>();
 
+            services.AddSingleton<IContextAccessor<AmpMessage>, DefaultContextAccessor<AmpMessage>>();
+
             return services.BuildServiceProvider();
         }
 

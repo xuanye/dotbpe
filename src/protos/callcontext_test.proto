@@ -1,0 +1,32 @@
+
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "DotBPE.IntegrationTesting";
+
+
+
+import public "dotbpe_option.proto";
+
+option optimize_for = SPEED;
+
+//Benchmark测试服务
+service CallContextTest{
+    option (service_id)=  50001 ;//设定服务ID
+
+    rpc Test (VoidReq) returns (CommonRsp){
+        option (message_id)= 1 ;//设定消息ID
+    };
+
+}
+
+//我是void消息
+message VoidReq {
+
+}
+
+message CommonRsp {
+    int32 status = 1;
+    string message = 2;
+}
+
