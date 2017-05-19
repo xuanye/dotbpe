@@ -1,4 +1,4 @@
-using System;
+﻿using System;
 
 namespace DotBPE.Rpc.Utils
 {
@@ -58,7 +58,7 @@ namespace DotBPE.Rpc.Utils
             }
             return reference;
         }
-
+        
         /// <summary>
         /// Throws <see cref="InvalidOperationException"/> if condition is false.
         /// </summary>

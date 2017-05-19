@@ -19,7 +19,6 @@
                 <dependency id="DotBPE.Rpc" version="$version$" />
 				<dependency id="DotBPE.Rpc.Netty" version="$version$" />
 				<dependency id="DotBPE.Protocol.Amp" version="$version$" />
-				<dependency id="DotBPE.Plugin" version="$version$" />
             </group>
         </dependencies>
     </metadata>

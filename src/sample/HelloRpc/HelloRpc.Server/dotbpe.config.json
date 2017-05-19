@@ -1,7 +1,0 @@
-{
-    "hostAddress":"0.0.0.0:6201",
-    "multiplexCount":5,
-    "remoteServices":[
-        {"ServiceId":101,"MessageIds":"1","RemoteAddress":"127.0.0.1:6201"}
-    ]
-}
