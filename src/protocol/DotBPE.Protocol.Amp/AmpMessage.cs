@@ -1,4 +1,5 @@
-﻿using DotBPE.Rpc.Codes;
+﻿using System;
+using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Protocol.Amp
 {
@@ -31,6 +32,10 @@ namespace DotBPE.Protocol.Amp
                return 14 + (Data != null?Data.Length:0);
             }
         }
+
+        public override string ServiceIdentifier => $"{ServiceId}$0";
+
+        public override string MethodIdentifier => $"{ServiceId}${MessageId}";
 
         public static AmpMessage CreateRequestMessage(ushort serviceId, ushort messageId)
         {

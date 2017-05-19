@@ -8,6 +8,15 @@ namespace DotBPE.Rpc.Codes
 
         public abstract int Length { get; }
 
+
+        /// <summary>
+        /// 服务识别符,定位到某个服务
+        /// </summary>
+        public abstract string ServiceIdentifier { get; }
+        /// <summary>
+        /// 方法识别符，定位到某个方法
+        /// </summary>
+        public abstract string MethodIdentifier { get; }
     }
 
     public class InvokeMessageTypeParser

@@ -31,7 +31,7 @@ namespace DotBPE.Protocol.Amp
             services.Remove(ServiceDescriptor.Singleton(typeof(IRpcClient<AmpMessage>)));
 
             return services.AddSingleton<IRpcClient<AmpMessage>,BridgeRpcClient<AmpMessage>>() //在服务端使用客户端链接 需要使用桥接式的实现
-                    .AddSingleton<IBridgeRouter<AmpMessage>,AmpBridgeRouter>() //桥接路由器
+                    .AddSingleton<IBridgeRouter<AmpMessage>, LocalConfigBridgeRouter<AmpMessage>>() //桥接路由器
                     .AddSingleton<IPreheating,ClientChannelPreheating<AmpMessage>>() //预热
                     .AddSingleton<ITransportFactory<AmpMessage>,DefaultTransportFactory<AmpMessage>>()
                     .AddSingleton<IClientBootstrap<AmpMessage>,NettyClientBootstrap<AmpMessage>>();

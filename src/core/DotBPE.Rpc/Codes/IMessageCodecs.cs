@@ -11,6 +11,15 @@
     public interface IMessage
     {
         int Length{ get; }
+
+        /// <summary>
+        /// 服务识别符,定位到某个服务
+        /// </summary>
+        string ServiceIdentifier { get; }
+        /// <summary>
+        /// 方法识别符，定位到某个方法
+        /// </summary>
+        string MethodIdentifier { get; }
     }
 
     public class MessageMeta
