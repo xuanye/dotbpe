@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.ServiceRegistry
@@ -9,6 +10,6 @@ namespace DotBPE.Rpc.ServiceRegistry
         /// </summary>
         /// <param name="serviceCategory">服务分类</param>
         /// <returns></returns>
-        Task<ServiceMeta> FindServicesAsync(string serviceCategory);
+        Task<List<ServiceMeta>> FindServicesAsync(string serviceCategory);
     }
 }

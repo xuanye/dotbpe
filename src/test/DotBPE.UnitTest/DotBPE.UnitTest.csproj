@@ -19,7 +19,6 @@
   <ItemGroup>
     <ProjectReference Include="..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
     <ProjectReference Include="..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-    <ProjectReference Include="..\..\core\DotBPE.Plugin\DotBPE.Plugin.csproj" />
     <ProjectReference Include="..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
   </ItemGroup>
 
