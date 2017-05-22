@@ -89,15 +89,19 @@ namespace DotBPE.Rpc.Netty
             var context = new NettyRpcContext<TMessage>(ctx.Channel, _msgCodecs);
             context.LocalAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.LocalAddress);
             context.RemoteAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.RemoteAddress);
+
+            CallContext<TMessage> callContext = null;
             if(_contextAccessor !=null){
-                _contextAccessor.CallContext = new CallContext<TMessage>(context);
+                callContext = new CallContext<TMessage>(context);
+                _contextAccessor.CallContext = callContext;
             }
 
             await this._handler.ReceiveAsync(context, message);
 
-            if(_contextAccessor !=null){
-                _contextAccessor.CallContext.Dispose();
-                _contextAccessor.CallContext = null;
+            if( callContext !=null)
+            {
+                callContext.Dispose();
+                callContext = null; 
             }
             context =null;
         }

@@ -23,32 +23,28 @@ namespace DotBPE.IntegrationTesting {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "Cg9iZW5jaG1hcmsucHJvdG8SBmRvdGJwZRoTZG90YnBlX29wdGlvbi5wcm90",
-            "byIGCgRWb2lkIscFChBCZW5jaG1hcmtNZXNzYWdlEg4KBmZpZWxkMRgBIAEo",
-            "CRIOCgZmaWVsZDIYAiABKAUSDgoGZmllbGQzGAMgASgFEg4KBmZpZWxkNBgE",
-            "IAEoCRIOCgZmaWVsZDUYBSADKAYSDgoGZmllbGQ5GAkgASgJEg8KB2ZpZWxk",
-            "MTgYEiABKAkSDwoHZmllbGQ4MBhQIAEoCBIPCgdmaWVsZDgxGFEgASgIEhEK",
-            "CGZpZWxkMjgwGJgCIAEoBRIOCgZmaWVsZDYYBiABKAUSDwoHZmllbGQyMhgW",
-            "IAEoAxIPCgdmaWVsZDU5GDsgASgIEg4KBmZpZWxkNxgHIAEoCRIPCgdmaWVs",
-            "ZDE2GBAgASgFEhEKCGZpZWxkMTMwGIIBIAEoBRIPCgdmaWVsZDEyGAwgASgI",
-            "Eg8KB2ZpZWxkMTcYESABKAgSDwoHZmllbGQxMxgNIAEoCBIPCgdmaWVsZDE0",
-            "GA4gASgIEhAKCGZpZWxkMTA0GGggASgFEhAKCGZpZWxkMTAwGGQgASgFEhAK",
-            "CGZpZWxkMTAxGGUgASgFEhAKCGZpZWxkMTAyGGYgASgJEhAKCGZpZWxkMTAz",
-            "GGcgASgJEg8KB2ZpZWxkMjkYHSABKAUSDwoHZmllbGQzMBgeIAEoCBIPCgdm",
-            "aWVsZDYwGDwgASgFEhEKCGZpZWxkMjcxGI8CIAEoBRIRCghmaWVsZDI3MhiQ",
-            "AiABKAUSEQoIZmllbGQxNTAYlgEgASgFEg8KB2ZpZWxkMjMYFyABKAUSDwoH",
-            "ZmllbGQyNBgYIAEoCBIPCgdmaWVsZDI1GBkgASgFEg8KB2ZpZWxkNzgYTiAB",
-            "KAgSDwoHZmllbGQ2NxhDIAEoBRIPCgdmaWVsZDY4GEQgASgFEhEKCGZpZWxk",
-            "MTI4GIABIAEoBRIRCghmaWVsZDEyORiBASABKAkSEQoIZmllbGQxMzEYgwEg",
-            "ASgFMtEBCg1CZW5jaG1hcmtUZXN0EkAKBEVjaG8SGC5kb3RicGUuQmVuY2ht",
-            "YXJrTWVzc2FnZRoYLmRvdGJwZS5CZW5jaG1hcmtNZXNzYWdlIgTQ8xgBEksK",
-            "D1Rlc3RDYWxsQ29udGV4dBIYLmRvdGJwZS5CZW5jaG1hcmtNZXNzYWdlGhgu",
-            "ZG90YnBlLkJlbmNobWFya01lc3NhZ2UiBNDzGAISKQoEUXVpdBIMLmRvdGJw",
-            "ZS5Wb2lkGgwuZG90YnBlLlZvaWQiBdDzGJBOGgbI8xjQhgNCHkgBqgIZRG90",
-            "QlBFLkludGVncmF0aW9uVGVzdGluZ1AAYgZwcm90bzM="));
+            "byLHBQoQQmVuY2htYXJrTWVzc2FnZRIOCgZmaWVsZDEYASABKAkSDgoGZmll",
+            "bGQyGAIgASgFEg4KBmZpZWxkMxgDIAEoBRIOCgZmaWVsZDQYBCABKAkSDgoG",
+            "ZmllbGQ1GAUgAygGEg4KBmZpZWxkORgJIAEoCRIPCgdmaWVsZDE4GBIgASgJ",
+            "Eg8KB2ZpZWxkODAYUCABKAgSDwoHZmllbGQ4MRhRIAEoCBIRCghmaWVsZDI4",
+            "MBiYAiABKAUSDgoGZmllbGQ2GAYgASgFEg8KB2ZpZWxkMjIYFiABKAMSDwoH",
+            "ZmllbGQ1ORg7IAEoCBIOCgZmaWVsZDcYByABKAkSDwoHZmllbGQxNhgQIAEo",
+            "BRIRCghmaWVsZDEzMBiCASABKAUSDwoHZmllbGQxMhgMIAEoCBIPCgdmaWVs",
+            "ZDE3GBEgASgIEg8KB2ZpZWxkMTMYDSABKAgSDwoHZmllbGQxNBgOIAEoCBIQ",
+            "CghmaWVsZDEwNBhoIAEoBRIQCghmaWVsZDEwMBhkIAEoBRIQCghmaWVsZDEw",
+            "MRhlIAEoBRIQCghmaWVsZDEwMhhmIAEoCRIQCghmaWVsZDEwMxhnIAEoCRIP",
+            "CgdmaWVsZDI5GB0gASgFEg8KB2ZpZWxkMzAYHiABKAgSDwoHZmllbGQ2MBg8",
+            "IAEoBRIRCghmaWVsZDI3MRiPAiABKAUSEQoIZmllbGQyNzIYkAIgASgFEhEK",
+            "CGZpZWxkMTUwGJYBIAEoBRIPCgdmaWVsZDIzGBcgASgFEg8KB2ZpZWxkMjQY",
+            "GCABKAgSDwoHZmllbGQyNRgZIAEoBRIPCgdmaWVsZDc4GE4gASgIEg8KB2Zp",
+            "ZWxkNjcYQyABKAUSDwoHZmllbGQ2OBhEIAEoBRIRCghmaWVsZDEyOBiAASAB",
+            "KAUSEQoIZmllbGQxMjkYgQEgASgJEhEKCGZpZWxkMTMxGIMBIAEoBTJZCg1C",
+            "ZW5jaG1hcmtUZXN0EkAKBEVjaG8SGC5kb3RicGUuQmVuY2htYXJrTWVzc2Fn",
+            "ZRoYLmRvdGJwZS5CZW5jaG1hcmtNZXNzYWdlIgTQ8xgBGgbI8xjQhgNCHkgB",
+            "qgIZRG90QlBFLkludGVncmF0aW9uVGVzdGluZ1AAYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::DotBPE.ProtoBuf.DotbpeOptionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
-            new pbr::GeneratedClrTypeInfo(typeof(global::DotBPE.IntegrationTesting.Void), global::DotBPE.IntegrationTesting.Void.Parser, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DotBPE.IntegrationTesting.BenchmarkMessage), global::DotBPE.IntegrationTesting.BenchmarkMessage.Parser, new[]{ "Field1", "Field2", "Field3", "Field4", "Field5", "Field9", "Field18", "Field80", "Field81", "Field280", "Field6", "Field22", "Field59", "Field7", "Field16", "Field130", "Field12", "Field17", "Field13", "Field14", "Field104", "Field100", "Field101", "Field102", "Field103", "Field29", "Field30", "Field60", "Field271", "Field272", "Field150", "Field23", "Field24", "Field25", "Field78", "Field67", "Field68", "Field128", "Field129", "Field131" }, null, null, null)
           }));
     }
@@ -56,98 +52,6 @@ namespace DotBPE.IntegrationTesting {
 
   }
   #region Messages
-  /// <summary>
-  /// 我是void消息
-  /// </summary>
-  public sealed partial class Void : pb::IMessage<Void> {
-    private static readonly pb::MessageParser<Void> _parser = new pb::MessageParser<Void>(() => new Void());
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Void> Parser { get { return _parser; } }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pbr::MessageDescriptor Descriptor {
-      get { return global::DotBPE.IntegrationTesting.BenchmarkReflection.Descriptor.MessageTypes[0]; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    pbr::MessageDescriptor pb::IMessage.Descriptor {
-      get { return Descriptor; }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Void() {
-      OnConstruction();
-    }
-
-    partial void OnConstruction();
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Void(Void other) : this() {
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Void Clone() {
-      return new Void(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override bool Equals(object other) {
-      return Equals(other as Void);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Void other) {
-      if (ReferenceEquals(other, null)) {
-        return false;
-      }
-      if (ReferenceEquals(other, this)) {
-        return true;
-      }
-      return true;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override int GetHashCode() {
-      int hash = 1;
-      return hash;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public override string ToString() {
-      return pb::JsonFormatter.ToDiagnosticString(this);
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void WriteTo(pb::CodedOutputStream output) {
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int CalculateSize() {
-      int size = 0;
-      return size;
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Void other) {
-      if (other == null) {
-        return;
-      }
-    }
-
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(pb::CodedInputStream input) {
-      uint tag;
-      while ((tag = input.ReadTag()) != 0) {
-        switch(tag) {
-          default:
-            input.SkipLastField();
-            break;
-        }
-      }
-    }
-
-  }
-
   /// <summary>
   /// 我是BenchmarkMessage消息
   /// </summary>
@@ -158,7 +62,7 @@ namespace DotBPE.IntegrationTesting {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::DotBPE.IntegrationTesting.BenchmarkReflection.Descriptor.MessageTypes[1]; }
+      get { return global::DotBPE.IntegrationTesting.BenchmarkReflection.Descriptor.MessageTypes[0]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]

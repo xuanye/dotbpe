@@ -16,4 +16,4 @@ mkdir -p $IntegrationTesting_DIR
 
 
 $PROTOC  -I=$PROTO_DIR --csharp_out=$IntegrationTesting_DIR --dotbpe_out=$IntegrationTesting_DIR \
-    $PROTO_DIR/{dotbpe_option,benchmark}.proto  --plugin=$PLUGIN
+    $PROTO_DIR/{dotbpe_option,benchmark,callcontext_test}.proto  --plugin=$PLUGIN

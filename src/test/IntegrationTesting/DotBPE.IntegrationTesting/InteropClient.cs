@@ -72,6 +72,7 @@ namespace DotBPE.IntegrationTesting
 
                     await RunTestCaseAsync(client,(int)index);
                     await client.CloseAsync();
+                    Console.WriteLine("close client {0}", (int)index);
                 },i);
             }
             return Task.WhenAll(tasks);
@@ -83,6 +84,9 @@ namespace DotBPE.IntegrationTesting
                 case "benchmark":
                     Console.WriteLine("Run TestCase Benchmark!");
                     return RunBenchmarkTestCaseAsync(client,threadIndex);
+                case "callcontexttest":
+                    Console.WriteLine("Run TestCase CallContextTest!");
+                    return RunCallContextTestCaseAsync(client, threadIndex);
                 default:
                     Console.WriteLine("TestCase not implemented");
                     break;
@@ -95,14 +99,40 @@ namespace DotBPE.IntegrationTesting
             msg.Field2 = 1;
             return msg;
         }
-        private Task RunBenchmarkTestCaseAsync(IRpcClient<AmpMessage> client,int threadIndex)
+        private Task RunCallContextTestCaseAsync(IRpcClient<AmpMessage> proxy, int threadIndex)
+        {
+            int errorCount = 0;
+            int callCount = 0;
+            CallContextTestClient cctClient = new CallContextTestClient(proxy);
+            var stopwatch = new Stopwatch();
+            stopwatch.Start();
+            var req = new VoidReq();
+            for (int i = 0; i < this._options.RunCount; i++)
+            {
+                var rsp = cctClient.TestAsync(req).Result;
+                if (rsp.Status != 0)
+                {
+                    TOTAL_ERROR++;
+                    errorCount++;
+                }
+                callCount++;
+            }
+            stopwatch.Stop();
+            Console.WriteLine("--------------------- result {0}--------------------------------", threadIndex);
+            Console.WriteLine("Call TestAsync {0} times,Error times: {1}", callCount, errorCount);
+            Console.WriteLine("Elapsed time: {0}ms", stopwatch.ElapsedMilliseconds);
+            Console.WriteLine("Ops per second: {0}", (int)((double)this._options.RunCount * 1000 / stopwatch.ElapsedMilliseconds));          
+            return Task.CompletedTask;
+        }
+
+        private Task RunBenchmarkTestCaseAsync(IRpcClient<AmpMessage> proxy, int threadIndex)
         {
             var stopwatch = new Stopwatch();
 
             var msg = PrepareBenchmarkMessage();
             int errorCount = 0;
             int callCount = 0;
-            BenchmarkTestClient btc = new BenchmarkTestClient(client);
+            BenchmarkTestClient btc = new BenchmarkTestClient(proxy);
             stopwatch.Start();
             for(int i =0;i<this._options.RunCount ; i++){
                 var rsp = btc.EchoAsync(msg,6000000).Result;

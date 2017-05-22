@@ -1,4 +1,4 @@
-using CommandLine;
+﻿using CommandLine;
 using System;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc.Netty;
@@ -56,8 +56,12 @@ namespace DotBPE.IntegrationTesting
         {
             services.AddDotBPE(); // 使用AMP协议
 
-            services.AddServiceActor<BenchmarkServerImpl,AmpMessage>();
-
+            services.AddServiceActors<AmpMessage>( (actors) =>
+            {
+                actors.Add<BenchmarkServerImpl>()
+                      .Add<CallContextTestImpl>();
+            });
+            // 上下文获取器
             services.AddSingleton<IContextAccessor<AmpMessage>, DefaultContextAccessor<AmpMessage>>();
 
             return services.BuildServiceProvider();
