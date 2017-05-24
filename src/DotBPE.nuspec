@@ -2,7 +2,7 @@
 <package xmlns="http://schemas.microsoft.com/packaging/2012/06/nuspec.xsd">
     <metadata>
         <id>DotBPE</id>
-        <version>0.1.56-alpha</version>
+        <version>0.1.60-alpha</version>
         <title>DotBPE</title>
         <authors>xuanye</authors>
         <owners>xuanye</owners>
@@ -16,9 +16,9 @@
         <tags>rpc,dotnetty</tags>
         <dependencies>
             <group targetFramework=".NETStandard1.6">
-                <dependency id="DotBPE.Rpc" version="0.1.56-alpha" />
-				<dependency id="DotBPE.Rpc.Netty" version="0.1.56-alpha" />
-				<dependency id="DotBPE.Protocol.Amp" version="0.1.56-alpha" />
+                <dependency id="DotBPE.Rpc" version="0.1.60-alpha" />
+				<dependency id="DotBPE.Rpc.Netty" version="0.1.60-alpha" />
+				<dependency id="DotBPE.Protocol.Amp" version="0.1.60-alpha" />
             </group>
         </dependencies>
     </metadata>
