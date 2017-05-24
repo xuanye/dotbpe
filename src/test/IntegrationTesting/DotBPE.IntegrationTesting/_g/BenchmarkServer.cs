@@ -16,25 +16,33 @@ namespace DotBPE.IntegrationTesting
     {
         public override string Id => "50000$0";
         //调用委托
-        private async Task ReceiveEchoAsync(IRpcContext<AmpMessage> context, AmpMessage req)
+        private async Task<AmpMessage> ProcessEchoAsync(AmpMessage req)
         {
-            var request = BenchmarkMessage.Parser.ParseFrom(req.Data);
+            BenchmarkMessage request = null;
+            if (req.Data == null)
+            {
+                request = new BenchmarkMessage();
+            }
+            else
+            {
+                request = BenchmarkMessage.Parser.ParseFrom(req.Data);
+            }
             var data = await EchoAsync(request);
             var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
             response.Sequence = req.Sequence;
             response.Data = data.ToByteArray();
-            await context.SendAsync(response);
+            return response;
         }
 
         //抽象方法
         public abstract Task<BenchmarkMessage> EchoAsync(BenchmarkMessage request);
-        public override Task ReceiveAsync(IRpcContext<AmpMessage> context, AmpMessage req)
+        public override Task<AmpMessage> ProcessAsync(AmpMessage req)
         {
             switch (req.MessageId)
             {
                 //方法BenchmarkTest.Echo
-                case 1: return this.ReceiveEchoAsync(context, req);
-                default: return base.ReceiveNotFoundAsync(context, req);
+                case 1: return this.ProcessEchoAsync(req);
+                default: return base.ProcessNotFoundAsync(req);
             }
         }
     }

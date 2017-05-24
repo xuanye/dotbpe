@@ -31,24 +31,27 @@ namespace DotBPE.Rpc.DefaultImpls
         {
             Recieved?.Invoke(this, new MessageRecievedEventArgs<TMessage>(context, message));
         }
-        public virtual async Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message)
+        public virtual Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message)
         {
             RaiseReceivedEvent(context, message);
 
             //本地服务互调也会进入到这里，但是这里不能再重复处理了，不然就是死循环
             if(message.InvokeMessageType != InvokeMessageType.Request)
             {
-                return;
+                return Utils.TaskUtils.CompletedTask;
             }
 
             var actor =  this._actorLocator.LocateServiceActor(message);
             if(actor == null) // 找不到对应的执行程序
             {
                 Logger.Error("IServiceActor NOT FOUND");
+                return Utils.TaskUtils.CompletedTask;
             }
             else
             {
-                await actor.ReceiveAsync(context, message);
+                return actor.ReceiveAsync(context, message);
+
+
             }
         }
     }
