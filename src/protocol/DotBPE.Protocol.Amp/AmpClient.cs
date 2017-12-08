@@ -1,4 +1,4 @@
-﻿using DotBPE.Rpc;
+using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Netty;
@@ -8,7 +8,7 @@ namespace DotBPE.Protocol.Amp
 {
     public class AmpClient
     {
-        public static IRpcClient<AmpMessage> Create(string remoteAddress,int multiplexCount=5)
+        public static IRpcClient<AmpMessage> Create(string remoteAddress,int multiplexCount=1)
         {
             var client = new RpcClientBuilder()
                 .AddCore<AmpMessage>()

@@ -11,7 +11,7 @@ namespace DotBPE.Rpc.Logging
     public class TextWriterLogger : ILogger
     {
         // Format similar enough to C core log format except nanosecond precision is not supported.
-        const string DateTimeFormatString = "MMdd HH:mm:ss.ffffff";
+        const string DateTimeFormatString = "MMdd HH:mm:ss.fff";
 
         readonly Func<TextWriter> textWriterProvider;
         readonly Type forType;

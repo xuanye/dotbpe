@@ -1,4 +1,4 @@
-﻿using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Logging;
 using System;
 
@@ -8,7 +8,7 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc
 {
-    public abstract class CallInvoker<TMessage> where TMessage : InvokeMessage
+    public abstract class CallInvoker<TMessage>:IDisposable where TMessage : InvokeMessage
     {
         private readonly IRpcClient<TMessage> _client;
 
@@ -36,5 +36,10 @@ namespace DotBPE.Rpc
 
 
         public abstract Task<TMessage> AsyncCall(TMessage request, int timeOut = 3000);
+
+        public void Dispose()
+        {
+            this._client.Dispose();
+        }
     }
 }

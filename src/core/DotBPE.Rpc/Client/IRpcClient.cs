@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Text;
@@ -7,7 +7,7 @@ using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Rpc
 {
-    public interface IRpcClient<TMessage> where TMessage : InvokeMessage
+    public interface IRpcClient<TMessage>:IDisposable where TMessage : InvokeMessage
     {
         Task SendAsync(EndPoint serverAddrss, TMessage message);
 

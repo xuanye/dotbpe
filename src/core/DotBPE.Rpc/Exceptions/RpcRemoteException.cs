@@ -1,4 +1,4 @@
-﻿#region copyright
+#region copyright
 // -----------------------------------------------------------------------
 //  <copyright file="RpcException.cs” project="DotBPE.Rpc">
 //    文件说明:
@@ -18,12 +18,16 @@ namespace DotBPE.Rpc.Exceptions
         {
 
         }
-
-        public RpcRemoteException(string message) : base(message)
+        public RpcRemoteException(int code,string message) : base(message)
         {
-
+            this.Code = code;
         }
-        public RpcRemoteException(string message, Exception inner) : base(message, inner)
-        { }
+       
+        public RpcRemoteException(int code, string message, Exception inner) : base(message, inner)
+        {
+            this.Code = code;
+        }
+
+        public int Code { get; set; }
     }
 }

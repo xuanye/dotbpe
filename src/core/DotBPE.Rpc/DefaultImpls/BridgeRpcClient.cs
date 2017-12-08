@@ -78,5 +78,11 @@ namespace DotBPE.Rpc.DefaultImpls
             }
             throw new NotImplementedException("There is no default address,call SendAsync(EndPoint serverAddress,AmpMessage message) to send messages");
         }
+
+        public void Dispose()
+        {
+            //释放所有链接
+            this._transportFactory.Dispose();
+        }
     }
 }

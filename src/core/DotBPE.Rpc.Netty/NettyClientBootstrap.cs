@@ -1,4 +1,4 @@
-﻿#region copyright
+#region copyright
 // -----------------------------------------------------------------------
 //  <copyright file="NettyClientBootstrap.cs” project="DotBPE.Rpc.Netty">
 //    文件说明:
@@ -123,7 +123,7 @@ namespace DotBPE.Rpc.Netty
         }
         public void Dispose()
         {
-
+            //do nothing
         }
     }
 }

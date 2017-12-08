@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
@@ -17,6 +17,8 @@ namespace DotBPE.Rpc.DefaultImpls
             = new Dictionary<string, Lazy<ITransport<TMessage>>>();
 
         private static readonly object lockObj = new object();
+
+        private bool disposed = false;
         public DefaultTransportFactory(IClientBootstrap<TMessage> bootstrap)
         {
             this._bootstrap = bootstrap;
@@ -40,6 +42,10 @@ namespace DotBPE.Rpc.DefaultImpls
             return s;
         }
         private Lazy<ITransport<TMessage>> GetOrAdd(EndPoint key,Func<EndPoint,Lazy<ITransport<TMessage>>> createAction){
+            if (disposed)
+            {
+                throw new Rpc.Exceptions.RpcException("all transports are closed");
+            }
             Lazy<ITransport<TMessage>> value = null;
             string addressKey = ParseUtils.ParseEndPointToString(key);
             lock(lockObj){
@@ -100,6 +106,34 @@ namespace DotBPE.Rpc.DefaultImpls
             {
                 Logger.Error($"close connection {serverAddress} ,Exception:" + ex.ToString());
             }
+        }
+
+        public void Dispose()
+        {
+            this.disposed = true;
+            //释放所有链接
+            lock (lockObj)
+            {
+                foreach (var kv in this._clients)
+                {
+                    if (kv.Value.IsValueCreated)
+                    {
+                        try
+                        {
+                            kv.Value.Value.CloseAsync().Wait();
+                        }
+                        catch (Exception ex)
+                        {
+                            Logger.Error($"close connection {kv.Key} ,Exception:" + ex.ToString());
+                        }
+                       
+                    }
+                }
+                this._clients.Clear();
+            }
+            
+            //释放所有链接
+            this._bootstrap?.Dispose();
         }
     }
 

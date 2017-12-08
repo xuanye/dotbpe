@@ -1,10 +1,12 @@
-﻿using System;
+using System;
 using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Protocol.Amp
 {
     public class AmpMessage: InvokeMessage
     {
+        public const int HEAD_LENGTH = 18;
+
         public AmpMessage()
         {
             this.Version = 0;
@@ -13,6 +15,7 @@ namespace DotBPE.Protocol.Amp
         public ushort ServiceId { get; set; }
         public ushort MessageId { get; set; }
         public int Sequence { get; set; }
+        public int Code { get; set; }
         public byte[] Data { get; set; }
 
         /// <summary>
@@ -29,7 +32,7 @@ namespace DotBPE.Protocol.Amp
         {
             get
             {
-               return 14 + (Data != null?Data.Length:0);
+               return HEAD_LENGTH + (Data != null?Data.Length:0);
             }
         }
 
@@ -48,6 +51,18 @@ namespace DotBPE.Protocol.Amp
             return message;
 
         }
+        public static AmpMessage CreateResponseMessage(string requestId)
+        {
+            var data = requestId.Split('|');
+            AmpMessage message = new AmpMessage()
+            {
+                ServiceId = ushort.Parse(data[0]),
+                MessageId = ushort.Parse(data[1]),
+                InvokeMessageType = InvokeMessageType.Response
+            };
+            return message;
+        }
+
         public static AmpMessage CreateResponseMessage(ushort serviceId, ushort messageId)
         {
             AmpMessage message = new AmpMessage()

@@ -46,7 +46,7 @@ namespace DotBPE.Rpc.DefaultImpls
         /// <returns></returns>
         public Task SendAsync(EndPoint serverAddress, TMessage message)
         {
-           throw new NotImplementedException("不存在默认地址，请使用CloseAsync(EndPoint serverAddress)关闭连接");
+           throw new NotImplementedException("不能使用mockClient 发送远端消息");
         }
 
         public Task SendAsync(TMessage message)
@@ -54,6 +54,11 @@ namespace DotBPE.Rpc.DefaultImpls
             var actor= this._actorLocator.LocateServiceActor(message);
             var context = new LocalMockContext<TMessage>(this._handler); //MOCK Context
             return actor.ReceiveAsync(context,message);
+        }
+
+        public void Dispose()
+        {
+            
         }
     }
 }

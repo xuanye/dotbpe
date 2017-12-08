@@ -1,4 +1,4 @@
-﻿#region copyright
+#region copyright
 // -----------------------------------------------------------------------
 //  <copyright file="AmpCodecs.cs” project="DotBPE.Protocol.Amp">
 //    文件说明:
@@ -33,6 +33,9 @@ namespace DotBPE.Protocol.Amp
             writer.WriteByte((byte) message.InvokeMessageType);
             writer.WriteUShort(message.ServiceId);
             writer.WriteUShort(message.MessageId);
+
+            writer.WriteInt(message.Code);
+
             if (message.Data != null)
             {
                 writer.WriteBytes(message.Data);
@@ -47,9 +50,9 @@ namespace DotBPE.Protocol.Amp
                 return null;
             }
             AmpMessage msg = new AmpMessage();
-            if (reader.ReadableBytes < 10)
+            if (reader.ReadableBytes < AmpMessage.HEAD_LENGTH)
             {
-                throw new Rpc.Exceptions.RpcCodecException("消息不正确,小于头长度");
+                throw new Rpc.Exceptions.RpcCodecException($"decode error ,ReadableBytes={reader.ReadableBytes},HEAD_LENGTH={AmpMessage.HEAD_LENGTH}");
             }
             msg.Version = reader.ReadByte();
             int length = reader.ReadInt();
@@ -58,8 +61,9 @@ namespace DotBPE.Protocol.Amp
             msg.InvokeMessageType = InvokeMessageTypeParser.Parse(type);
             msg.ServiceId = reader.ReadUShort();
             msg.MessageId = reader.ReadUShort();
+            msg.Code = reader.ReadInt();
 
-            int left = length - 14;
+            int left = length - AmpMessage.HEAD_LENGTH;
             if (left > 0)
             {
                 if (left > reader.ReadableBytes)

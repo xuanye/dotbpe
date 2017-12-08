@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading.Tasks;
 using DotBPE.Rpc;
 using System.Collections.Concurrent;
@@ -17,6 +17,11 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private int sendSequence = 0 ;
         private static object lockObj = new object();
+
+        public AmpCallInvoker(string serverAddress, int multiplexCount = 1) :base(AmpClient.Create(serverAddress, multiplexCount))
+        {
+
+        }
         public AmpCallInvoker(IRpcClient<AmpMessage> client) : base(client)
         {
         }
@@ -65,36 +70,53 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 Logger.Info("heart beat message Id{0}",e.Message.Id);
                 return ;
             }
-
-            if(e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.NotFound || e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.ERROR ){
-                Logger.Error("server response error msg ,type{0}",e.Message.InvokeMessageType );
-                var message = e.Message;
-                TaskCompletionSource<AmpMessage> task;
-                if (_resultDictionary.ContainsKey(message.Id)
-                    && _resultDictionary.TryGetValue(message.Id, out task))
-                {
-                    task.TrySetException(new RpcRemoteException(string.Format("server response error msg ,type{0}",e.Message.InvokeMessageType)));
-                    // 移除字典
-                    RemoveResultCallback(message.Id);
-                }
-            }
-
-            if(e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.Response) //只处理回复消息
+            
+            if(e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.Response)
             {
-                Logger.Info($"receive message, id:{e.Message.Id}");
-                var message = e.Message;
-                TaskCompletionSource<AmpMessage> task;
-                if (_resultDictionary.ContainsKey(message.Id)
-                    && _resultDictionary.TryGetValue(message.Id, out task))
+                if(e.Message.Code != 0)
                 {
+                    Logger.Error("server response error msg ,type{0}", e.Message.InvokeMessageType);
+                    var message = e.Message;
+                    TaskCompletionSource<AmpMessage> task;
+                    if (_resultDictionary.ContainsKey(message.Id)
+                        && _resultDictionary.TryGetValue(message.Id, out task))
+                    {                        
 
-                    task.TrySetResult(message);
-                    Logger.Info("message {0},set result success",message.Id);
-                    // 移除字典
-                    RemoveResultCallback(message.Id);
+                        task.SetResult(e.Message);                   
+                        Logger.Error(string.Format("server response error msg ,code={0}", e.Message.Code));
+                        // 移除字典
+                        RemoveResultCallback(message.Id);
+                    }
+                    else
+                    {
+                        //TODO:详细的错误日志信息
+                        Logger.Error(string.Format("server response error msg ,code={0},", e.Message.Code));
+                    }
+                }
+                else //正常返回
+                {
+                    Logger.Info($"receive message, id:{e.Message.Id}");
+                    var message = e.Message;
+                    TaskCompletionSource<AmpMessage> task;
+                    if (_resultDictionary.ContainsKey(message.Id)
+                        && _resultDictionary.TryGetValue(message.Id, out task))
+                    {
 
+                        task.TrySetResult(message);
+                        Logger.Info("message {0},set result success", message.Id);
+                        // 移除字典
+                        RemoveResultCallback(message.Id);
+
+                    }
+                    else
+                    {
+                        //TODO:详细的错误日志信息
+                        Logger.Error(string.Format("server response,but no handler  "));
+                    }
                 }
             }
+
+
         }
 
 
@@ -109,8 +131,11 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             TaskCompletionSource<AmpMessage> task;
             if (_resultDictionary.TryGetValue(id, out task))
             {
+                var message = AmpMessage.CreateResponseMessage(id);
+                message.Code = ErrorCodes.CODE_TIMEOUT;
+                task.SetResult(message);
                 Logger.Warning("message {0}, timeout",id);
-                task.TrySetException(new RpcCommunicationException("operation timeout"));
+                //task.TrySetException(new RpcCommunicationException("operation timeout"));
                 // 移除字典
                 RemoveResultCallback(id);
             }
@@ -127,8 +152,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                     // timeout logic
                     TimeOutCallBack(id);
                 }
-            });
-            //设置超时
+            });         
 
             return task;
         }

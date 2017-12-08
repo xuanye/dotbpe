@@ -1,4 +1,4 @@
-﻿#region copyright
+#region copyright
 // -----------------------------------------------------------------------
 //  <copyright file="RpcClient.cs” project="DotBPE.Rpc">
 //    文件说明:
@@ -85,6 +85,12 @@ namespace DotBPE.Rpc.DefaultImpls
         public Task CloseAsync(EndPoint serverAddress)
         {
             return this._factory.CloseTransportAsync(serverAddress);
+        }
+
+        public void Dispose()
+        {
+            // 释放链接
+            this._factory?.Dispose();
         }
     }
 }

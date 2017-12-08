@@ -1,4 +1,4 @@
-﻿using System.Threading.Tasks;
+using System.Threading.Tasks;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
 
@@ -17,7 +17,8 @@ namespace DotBPE.Protocol.Amp
         {
             AmpMessage response = new AmpMessage
             {
-                InvokeMessageType = InvokeMessageType.NotFound,
+                InvokeMessageType = InvokeMessageType.Response,
+                Code  = ErrorCodes.CODE_SERVICE_NOT_FOUND,
                 ServiceId = message.ServiceId,
                 MessageId = message.MessageId
             };

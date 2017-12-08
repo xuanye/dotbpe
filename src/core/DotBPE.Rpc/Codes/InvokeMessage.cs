@@ -1,4 +1,4 @@
-﻿
+
 namespace DotBPE.Rpc.Codes
 {
 
@@ -34,12 +34,9 @@ namespace DotBPE.Rpc.Codes
                     break;
                 case 3:
                     type = InvokeMessageType.Notify;
-                    break;
-                case 4:
-                    type = InvokeMessageType.NotFound;
-                    break;
+                    break;              
                 default:
-                    type = InvokeMessageType.ERROR;
+                    type = InvokeMessageType.Request;
                     break;
             }
             return type;
@@ -50,8 +47,6 @@ namespace DotBPE.Rpc.Codes
     {
         Request = 1,
         Response = 2,
-        Notify = 3,
-        NotFound = 4,
-        ERROR = 5
+        Notify = 3     
     }
 }

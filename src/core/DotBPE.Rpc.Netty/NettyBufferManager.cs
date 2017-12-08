@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Text;
 using DotBPE.Rpc.Codes;
@@ -118,7 +118,7 @@ namespace DotBPE.Rpc.Netty
 
         public IBufferWriter WriteUInt(uint value)
         {
-            this._buffer.WriteUnsignedInt(value);
+            this._buffer.WriteIntLE((int)value);
             return this;
         }
 

@@ -12,7 +12,7 @@ namespace DotBPE.Rpc.DefaultImpls
     /// </summary>
     public class TransforRpcClient<TMessage> : IRpcClient<TMessage> where TMessage:InvokeMessage
     {
-       static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<TransforRpcClient<TMessage>>();
+        static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<TransforRpcClient<TMessage>>();
         private readonly ITransportFactory<TMessage> _transportFactory;
         private readonly IMessageHandler<TMessage> _handler;
 
@@ -76,6 +76,12 @@ namespace DotBPE.Rpc.DefaultImpls
                 return transport.SendAsync(message);
             }
             throw new NotImplementedException("There is no default address,call SendAsync(EndPoint serverAddress,AmpMessage message) to send messages");
+        }
+
+        public void Dispose()
+        {
+            //释放链接
+            this._transportFactory?.Dispose();
         }
     }
 }

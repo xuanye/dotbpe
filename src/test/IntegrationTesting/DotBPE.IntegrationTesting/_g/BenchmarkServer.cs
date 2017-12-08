@@ -12,7 +12,7 @@ namespace DotBPE.IntegrationTesting
 {
 
     //start for class AbstractBenchmarkTest
-    public abstract class BenchmarkTestBase : ServiceActorBase
+    public abstract class BenchmarkTestBase : ServiceActor
     {
         public override string Id => "50000$0";
         //调用委托

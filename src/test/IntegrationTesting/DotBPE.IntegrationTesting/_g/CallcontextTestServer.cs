@@ -12,7 +12,7 @@ namespace DotBPE.IntegrationTesting
 {
 
     //start for class AbstractCallContextTest
-    public abstract class CallContextTestBase : ServiceActorBase
+    public abstract class CallContextTestBase : ServiceActor
     {
         public override string Id => "50001$0";
         //调用委托

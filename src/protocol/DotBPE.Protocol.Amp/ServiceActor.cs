@@ -1,4 +1,4 @@
-﻿using DotBPE.Rpc;
+using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Logging;
 using System;
@@ -6,9 +6,9 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Protocol.Amp
 {
-    public abstract class ServiceActorBase : IServiceActor<AmpMessage>
+    public abstract class ServiceActor : IServiceActor<AmpMessage>
     {
-        static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<ServiceActorBase>();
+        static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<ServiceActor>();
         public abstract string Id {get;}
 
 
@@ -17,6 +17,7 @@ namespace DotBPE.Protocol.Amp
             try
             {
                 var response = await ProcessAsync(message);
+                await context.SendAsync(response);
             }
             catch(Exception ex)
             {
@@ -35,8 +36,9 @@ namespace DotBPE.Protocol.Amp
             try
             {
                 var rsp = AmpMessage.CreateResponseMessage(reqMessage.ServiceId,reqMessage.MessageId);
-                rsp.InvokeMessageType = InvokeMessageType.ERROR;
+                rsp.InvokeMessageType = InvokeMessageType.Response;
                 rsp.Sequence = reqMessage.Sequence;
+                rsp.Code = ErrorCodes.CODE_INTERNAL_ERROR; //内部错误
                 return context.SendAsync(rsp);
             }
             catch(Exception ex)
@@ -53,8 +55,10 @@ namespace DotBPE.Protocol.Amp
         {
             var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
             response.Sequence = req.Sequence;
-            response.InvokeMessageType = InvokeMessageType.NotFound;
-            Logger.Error("recieve message serviceId={0},messageId={1},Length ={2},Actor NotFound",req.ServiceId,req.MessageId,req.Length);
+            response.InvokeMessageType = InvokeMessageType.Response;
+            response.Code = ErrorCodes.CODE_SERVICE_NOT_FOUND; 
+
+            Logger.Warning("recieve message serviceId={0},messageId={1},Actor NotFound",req.ServiceId,req.MessageId);
             return Task.FromResult(response);
         }
 
