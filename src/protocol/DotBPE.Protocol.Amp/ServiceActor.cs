@@ -17,6 +17,7 @@ namespace DotBPE.Protocol.Amp
             try
             {
                 var response = await ProcessAsync(message);
+                response.Sequence = message.Sequence; //通讯请求序列
                 await context.SendAsync(response);
             }
             catch(Exception ex)
