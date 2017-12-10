@@ -14,7 +14,7 @@ namespace DotBPE.IntegrationTesting
     //start for class AbstractCallContextTest
     public abstract class CallContextTestBase : ServiceActor
     {
-        public override string Id => "50001$0";
+        protected override int ServiceId => 50001;
         //调用委托
         private async Task<AmpMessage> ProcessTestAsync(AmpMessage req)
         {

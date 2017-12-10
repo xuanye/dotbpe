@@ -14,7 +14,7 @@ namespace DotBPE.IntegrationTesting
     //start for class AbstractBenchmarkTest
     public abstract class BenchmarkTestBase : ServiceActor
     {
-        public override string Id => "50000$0";
+        protected override int ServiceId => 50000;
         //调用委托
         private async Task<AmpMessage> ProcessEchoAsync(AmpMessage req)
         {

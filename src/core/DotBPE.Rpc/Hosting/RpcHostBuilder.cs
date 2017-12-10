@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Reflection;
@@ -46,6 +46,7 @@ namespace DotBPE.Rpc.Hosting
             }
             _rpcHostBuilt = true;
 
+          
             var hostingServices = BuildCommonServices();
             var applicationServices = hostingServices.Clone();
             var hostingServiceProvider = hostingServices.BuildServiceProvider();

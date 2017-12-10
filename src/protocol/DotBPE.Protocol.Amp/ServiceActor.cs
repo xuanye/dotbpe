@@ -9,7 +9,15 @@ namespace DotBPE.Protocol.Amp
     public abstract class ServiceActor : IServiceActor<AmpMessage>
     {
         static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<ServiceActor>();
-        public abstract string Id {get;}
+
+        protected abstract int ServiceId { get; }
+
+        public string Id {
+            get
+            {
+                return $"{this.ServiceId}$0";
+            }
+        }
 
 
         public virtual async Task ReceiveAsync(IRpcContext<AmpMessage> context, AmpMessage message)
@@ -23,7 +31,7 @@ namespace DotBPE.Protocol.Amp
             catch(Exception ex)
             {
                 Logger.Error(ex,"recieve message occ error:"+ex.Message);
-                await SendErrorResponseTask(context,message);
+                await SendErrorResponseAsync(context,message);
             }
         }
         /// <summary>
@@ -32,7 +40,7 @@ namespace DotBPE.Protocol.Amp
         /// <param name="context"></param>
         /// <param name="reqMessage"></param>
         /// <returns></returns>
-        private Task SendErrorResponseTask(IRpcContext<AmpMessage> context, AmpMessage reqMessage){
+        private Task SendErrorResponseAsync(IRpcContext<AmpMessage> context, AmpMessage reqMessage){
 
             try
             {
@@ -50,7 +58,7 @@ namespace DotBPE.Protocol.Amp
 
         }
 
-        public abstract Task<AmpMessage> ProcessAsync(AmpMessage reqMessage);
+        public abstract Task<AmpMessage> ProcessAsync(AmpMessage req);
 
         protected Task<AmpMessage> ProcessNotFoundAsync(AmpMessage req)
         {

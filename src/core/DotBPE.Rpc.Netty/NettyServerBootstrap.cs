@@ -1,4 +1,4 @@
-﻿using DotNetty.Codecs;
+using DotNetty.Codecs;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
@@ -42,13 +42,19 @@ namespace DotBPE.Rpc.Netty
         }
         public Task ShutdownAsync()
         {
-            return this._channel.CloseAsync();
+            if (this._channel.Open || this._channel.Active)
+            {
+                this._channel.CloseAsync().Wait();
+                this._channel = null;
+            }
+            return Task.CompletedTask;
         }
         public async Task StartAsync(EndPoint endPoint)
         {
             var bossGroup = new MultithreadEventLoopGroup(1);
             var workerGroup = new MultithreadEventLoopGroup();
             var bootstrap = new ServerBootstrap();
+           
             bootstrap
                 .Group(bossGroup, workerGroup)
                 .Channel<TcpServerSocketChannel>()
