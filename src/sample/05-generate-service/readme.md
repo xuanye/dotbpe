@@ -1,0 +1,2 @@
+# 使用protobuf-gen-dotbpe生成服务模板代码
+本示例将演示如何使用protobuf描述文件来定义dotbpe的服务描述,并通过插件来生成服务的模板代码

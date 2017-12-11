@@ -1,4 +1,4 @@
-﻿using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Codes;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public abstract class InvokeClientBase<TMessage> where TMessage:InvokeMessage
+    public abstract class InvokeClientBase<TMessage>:IDisposable where TMessage:InvokeMessage
     {
         private readonly CallInvoker<TMessage> _callInvoke;
       
@@ -27,6 +27,10 @@ namespace DotBPE.Rpc.Client
                 return _callInvoke;
             }
         }
-     
+
+        public void Dispose()
+        {
+            this._callInvoke?.Dispose();
+        }
     }
 }

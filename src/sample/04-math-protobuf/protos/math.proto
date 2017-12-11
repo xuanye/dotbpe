@@ -1,0 +1,16 @@
+
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "MathCommon";
+
+option optimize_for = SPEED;
+
+message AddReq {
+  int32 a = 1 ;
+  int32 b = 2 ;
+}
+
+message AddRes {
+    int32 c = 1 ;
+}

@@ -1,0 +1,27 @@
+
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "MathCommon";
+
+import public "dotbpe_option.proto";
+option optimize_for = SPEED;
+
+message AddReq {
+  int32 a = 1 ;
+  int32 b = 2 ;
+}
+
+message AddRes {
+    int32 c = 1 ;
+}
+
+
+service Math{
+    option (service_id)= 10005 ;//设定服务ID
+
+    rpc Add (AddReq) returns (AddRes){
+        option (message_id)= 1 ;//设定消息ID
+    };//尾部的注释
+
+}

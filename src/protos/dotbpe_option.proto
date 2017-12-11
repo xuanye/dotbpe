@@ -5,7 +5,7 @@ package dotbpe;
 // [END declaration]
 
 // [START csharp_declaration]
-option csharp_namespace = "DotBPE.ProtoBuf";
+option csharp_namespace = "DotBPE.Protobuf";
 // [END csharp_declaration]
 
 import "google/protobuf/descriptor.proto";
