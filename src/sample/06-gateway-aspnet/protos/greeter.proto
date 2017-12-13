@@ -1,0 +1,32 @@
+
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "GatewayForAspNet";
+
+import public "dotbpe_option.proto";
+
+option optimize_for = SPEED;
+option (generic_objectfactory) = true; //生成对象创建工厂
+
+message HelloReq {
+  string name = 1 ;
+}
+
+message HelloRes {
+    string greet_word = 1 ;
+}
+
+
+service Greeter{
+    option (service_id)= 10006 ;//设定服务ID
+
+    rpc SayHello (HelloReq) returns (HelloRes){
+        option (message_id)= 1 ;//设定消息ID
+    };//尾部的注释
+
+    rpc SayHelloAgain (HelloReq) returns (HelloRes){
+        option (message_id)= 2 ;//设定消息ID
+    };//尾部的注释
+
+}
