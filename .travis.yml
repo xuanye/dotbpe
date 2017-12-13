@@ -1,6 +1,6 @@
 language: csharp
 mono: none
-dotnet: 1.0.1
+dotnet: 2.1.2
 dist: trusty
 solution: ./src/DotBPE.sln
 
