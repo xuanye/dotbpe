@@ -1,7 +1,9 @@
 # 待完成
 ----
 
+- [ ] 实现gateway中Session服务
 - [ ] 重新编写readme文件
+
 
 ## 示例程序
 

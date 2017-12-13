@@ -1,4 +1,4 @@
-﻿using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Options;
 using DotBPE.Rpc.Utils;
 using Microsoft.Extensions.Options;
@@ -7,12 +7,12 @@ using System.Net;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
-    public class LocalConfigBridgeRouter<TMessage> :AbstractBridgeRouter<TMessage> where TMessage:InvokeMessage
+    public class LocalBridgeRouter<TMessage> :AbstractBridgeRouter<TMessage> where TMessage:InvokeMessage
     {
         private IOptions<RemoteServicesOption> _options;
         private readonly static Dictionary<string, List<EndPoint>> routerDict = new Dictionary<string, List<EndPoint>>();
 
-        public LocalConfigBridgeRouter(IOptions<RemoteServicesOption> options)
+        public LocalBridgeRouter(IOptions<RemoteServicesOption> options)
         {
             this._options = options;
             InitRouter();

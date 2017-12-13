@@ -121,6 +121,11 @@ namespace DotBPE.Rpc.Netty
                 }
             }
         }
+        /// <summary>
+        /// 要实现特定的轮询算法 ，就要重写这个实现
+        /// TODO：实现特定的客户端负债均衡算法
+        /// </summary>
+        /// <returns></returns>
         private IChannel TryGetOneRandom(){
             IChannel channel = null ;
             lock(_lockObj){

@@ -13,8 +13,8 @@ namespace HelloServer
     {
         static void Main(string[] args)
         {
-          
-            //DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());          
+
+            //DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());
 
             string ip = "127.0.0.1";
             int port = 6201;
@@ -34,11 +34,11 @@ namespace HelloServer
         }
     }
 
-    public class HellService : ServiceActor
+    public class HelloService : ServiceActor
     {
         /// <summary>
         /// 服务的标识,这里的服务号是10000
-        /// </summary>      
+        /// </summary>
         protected override int ServiceId => 10000;
 
         /// <summary>
@@ -49,7 +49,7 @@ namespace HelloServer
         public override Task<AmpMessage> ProcessAsync(AmpMessage req)
         {
             var rsp = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
-           
+
             var name = Encoding.UTF8.GetString(req.Data);
 
             rsp.Data = Encoding.UTF8.GetBytes(string.Format("Hello {0}！", name));
@@ -65,8 +65,8 @@ namespace HelloServer
 
             services.AddServiceActors<AmpMessage>((actors) =>
             {
-                actors.Add<HellService>();               
-            });           
+                actors.Add<HelloService>();
+            });
 
             return services.BuildServiceProvider();
         }
