@@ -87,6 +87,39 @@ namespace GatewayForAspNet
             return new AmpCallInvoker(rpcClient);
         }
 
+        protected override string GetSessionIdFromMessage(AmpMessage message)
+        {
+            if (message.Code == 0)
+            {
+               
+                if (message != null)
+                {
+                    var rspTemp = ProtobufObjectFactory.GetResponseTemplate(message.ServiceId, message.MessageId);
+                    if (rspTemp == null)
+                    {
+                        return base.GetSessionIdFromMessage(message);
+                    }
+
+                    if (message.Data != null)
+                    {
+                        rspTemp.MergeFrom(message.Data);
+                    }
+                    //提取内部的return_code 字段
+                    var field_sessionId = rspTemp.Descriptor.FindFieldByName(Constants.SEESIONID_FIELD_NAME);
+                    if (field_sessionId != null)
+                    {
+                        var ObjV = field_sessionId.Accessor.GetValue(rspTemp);
+                        if (ObjV != null)
+                        {
+                            return ObjV.ToString();
+                        }
+                    }
+                 
+                }               
+            }
+            return base.GetSessionIdFromMessage(message);
+        }
+
         protected override string MessageToJson(AmpMessage message)
         {
             if(message.Code == 0)

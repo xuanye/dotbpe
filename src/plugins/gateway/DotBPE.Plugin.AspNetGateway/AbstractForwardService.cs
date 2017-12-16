@@ -87,6 +87,8 @@ namespace DotBPE.Plugin.AspNetGateway
                 {   
                     result.Data = this.MessageToJson(rsp);
                 }
+
+                
             }
             catch (RpcCommunicationException rpcEx)
             {
@@ -103,6 +105,37 @@ namespace DotBPE.Plugin.AspNetGateway
         }
 
 
+        protected virtual void PreResponse(HttpContext context, TMessage resMessage)
+        {
+            var sessionId = "";
+            var hasValue = context.Request.Cookies.TryGetValue(Constants.DOTBPE_SEESIONID, out sessionId);
+            if (!string.IsNullOrEmpty(sessionId))
+            {
+                return; // 存在sessionId
+            }
+           
+
+            if (this._option.CookieMode == CookieMode.Auto) // 自动添加sessionId
+            {              
+                sessionId = Guid.NewGuid().ToString("D");             
+            }
+            else if( this._option.CookieMode == CookieMode.Manual)
+            {                
+                sessionId = GetSessionIdFromMessage(resMessage);              
+            }
+
+            if (!string.IsNullOrEmpty(sessionId))
+            {
+                CookieOptions option = new CookieOptions();
+                option.HttpOnly = true;
+                context.Response.Cookies.Append(Constants.DOTBPE_SEESIONID, sessionId, option);
+            }
+        }
+
+        protected virtual string GetSessionIdFromMessage(TMessage message)
+        {
+            return "";
+        }
         /// <summary>
         /// 初始化对应协议的CallInvoker
         /// </summary>
@@ -123,12 +156,39 @@ namespace DotBPE.Plugin.AspNetGateway
         protected abstract string MessageToJson(TMessage message);
 
         /// <summary>
-        /// 从Context中自定义提取数据到请求字典中，默认为空实现
+        /// 从Context中自定义提取数据到请求字典中
         /// </summary>
         /// <param name="context"></param>
         /// <param name="collDataDict"></param>
         protected virtual void AddFromContext(HttpContext context, Dictionary<string, string> collDataDict)
         {
+            //从cookie中提取 dotbpe-session-id
+            if(this._option.CookieMode != CookieMode.None)
+            {
+                var sessionId = "";
+                var hasValue =context.Request.Cookies.TryGetValue(Constants.DOTBPE_SEESIONID, out sessionId);
+                if (hasValue && !collDataDict.ContainsKey(Constants.DOTBPE_SEESIONID))
+                {
+                    collDataDict.Add(Constants.SEESIONID_FIELD_NAME, sessionId);
+                }
+            }
+            //从Head中提取 x-request-id
+            var requestId = string.Empty;
+            if (context.Request.Headers.ContainsKey(Constants.X_REQUEST_ID))
+            {
+                Microsoft.Extensions.Primitives.StringValues sv;
+                bool hasSV = context.Request.Headers.TryGetValue(Constants.X_REQUEST_ID, out sv);
+                if(hasSV && sv.Count > 0)
+                {
+                    requestId = sv[0];
+                }
+
+            }
+            if (string.IsNullOrEmpty(requestId))
+            {
+                requestId = Guid.NewGuid().ToString("D");
+            }
+            collDataDict.Add(Constants.REQUESTID_FIELD_NAME, requestId);
 
         }
 
@@ -180,12 +240,12 @@ namespace DotBPE.Plugin.AspNetGateway
                         if (context.User.Identity.IsAuthenticated)
                         {
                             //添加当前用户; 实际的项目中可根据自己的情况去扩展
-                            rd.Data.Add("identity", context.User.Identity.Name);
+                            rd.Data.Add(Constants.IDENTITY_FIELD_NAME, context.User.Identity.Name);
                         }
                         //添加客户端IP 项目中可根据实际情况添加需要的内容
                         var IPAddress = context.Connection.RemoteIpAddress;
                         string ip = IPAddress.IsIPv4MappedToIPv6 ? IPAddress.MapToIPv4().ToString() : IPAddress.ToString();
-                        rd.Data.Add("client_ip", ip);
+                        rd.Data.Add(Constants.CLIENTIP_FIELD_NAME, ip);
 
                         //自定义数据
                         AddFromContext(context, rd.Data);

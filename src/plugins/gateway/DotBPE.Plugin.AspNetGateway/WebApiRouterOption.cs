@@ -9,6 +9,7 @@ namespace DotBPE.Plugin.AspNetGateway
     /// </summary>
     public class HttpRouterOption
     {
+        public CookieMode CookieMode { get; set; }
         public List<HttpRouterOptionItem> Items { get; set; }
     }
 
@@ -21,5 +22,12 @@ namespace DotBPE.Plugin.AspNetGateway
         public string Method { get; set; }
         public int ServiceId { get; set; }
         public int MessageId { get; set; }
+    }
+
+    public enum CookieMode
+    {
+        None = 0,
+        Auto = 1,
+        Manual = 2
     }
 }
