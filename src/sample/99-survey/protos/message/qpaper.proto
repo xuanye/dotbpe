@@ -1,0 +1,133 @@
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "Survey.Core";
+option optimize_for = SPEED;
+
+
+import public "message/common.proto";
+
+//-----------start----------服务请求和响应顶层的消息体定义--------------------------------
+// 什么字段都没有，请求
+message SaveQPaperReq{
+
+    string client_ip = 1; //用户端IP
+    string identity = 2; // 用户标识
+    string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
+
+
+
+    int32 qpaper_id = 10 ; // 问卷ID
+    string subject = 11 ; // 问卷标题
+    string start_time = 12 ; // 问卷开始时间
+    string end_time = 13 ; // 问卷结束时间
+    string description = 14 ; // 注释和说明
+
+    repeated Question questions = 15 ; // 问题列表
+
+}
+
+
+message SaveQPaperRsp{
+
+    int32 return_code =1; // 返回状态码
+    string return_message = 2; //返回错误信息
+
+
+    int32 qpaper_id = 10 ; // 保存后的问卷ID
+}
+
+
+// 查询问卷的请求
+message QueryQPaperReq{
+    string client_ip = 1; //用户端IP
+    string identity = 2; // 用户标识
+    string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
+
+
+    string query_text = 10 ; //过滤标题
+
+}
+
+// 查询问卷的列表
+message QPaperListRsp{
+    int32 return_code =1; // 返回状态码
+    string return_message = 2; //返回错误信息
+
+    repeated QPaper list= 10; //列表
+}
+
+// 获取单个问卷的请求
+message GetQPaperReq{
+
+    string client_ip = 1; //用户端IP
+    string identity = 2; // 用户标识
+    string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
+
+    int32 qpaper_id = 10 ;
+
+}
+
+// 包括单个问卷信息的响应
+message QPaperRsp{
+
+    int32 return_code =1; // 返回状态码
+    string return_message = 2; //返回错误信息
+
+
+    DTOQPaper qpaper = 10; //问卷
+}
+
+//--------------end-------服务请求和响应顶层的消息体定义--------------------------------
+
+//--------------start-------以下是实际的对象----------------------------
+
+//简化的QPaper 消息
+message DTOQPaper{
+    int32 qpaper_id = 1 ; // 问卷ID
+    string subject = 2 ; // 问卷标题
+
+    string start_time = 3 ; // 问卷开始时间
+    string end_time = 4 ; // 问卷结束时间
+
+    string description = 5 ; // 注释和说明
+
+}
+
+message Question{
+    string id = 1 ; //问题ID
+    string topic = 2 ; //标题
+    int32 paper_id = 3 ; //问卷ID
+
+    QuestionType question_type = 4 ;//问题类型
+
+    string item_detail= 5 ; //问题详情
+
+    bool extend_input = 6 ; //是否自定义输入，只有在单选题 有效
+
+}
+
+// 完全版QPaper消息
+
+message QPaper{
+    int32 qpaper_id = 1 ; // 问卷ID
+    string subject = 2 ; // 问卷标题
+
+    string start_time = 3 ; // 问卷开始时间
+    string end_time = 4 ; // 问卷结束时间
+
+    string description = 5 ; // 注释和说明
+
+
+    repeated Question questions = 10 ; // 问题列表
+
+}
+
+
+enum QuestionType {
+    SIGNLE =  0; //单选
+    MULTIPLE = 1; //多选
+    SUBJECTIVE =2 ; //主观题
+}
+
+//--------------end-------实际的对象结束--------------------------

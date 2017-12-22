@@ -12,7 +12,7 @@ namespace GatewayForAspNet
 {
     /// <summary>
     /// 转发服务，需要根据自己的协议 将HTTP请求的数据转码成对应的协议二进制
-    /// 并将协议二进制数据转换成对应的 Http响应数据（一般是json） 
+    /// 并将协议二进制数据转换成对应的 Http响应数据（一般是json）
     /// </summary>
     public class ForwardService : AbstractForwardService<AmpMessage>
     {
@@ -27,6 +27,11 @@ namespace GatewayForAspNet
         {
         }
 
+        /// <summary>
+        ///  将收集的请求数据转换层协议消息
+        /// </summary>
+        /// <param name="reqData">请求数据，从body,form和queryString中获取</param>
+        /// <returns></returns>
         protected override AmpMessage EncodeRequest(RequestData reqData)
         {
             ushort serviceId = (ushort)reqData.ServiceId;
@@ -87,11 +92,16 @@ namespace GatewayForAspNet
             return new AmpCallInvoker(rpcClient);
         }
 
+        /// <summary>
+        /// 从消息中读取SessionId ，只有在配置了需要保持状态的网关上才会执行，并且只有在没有sessionId的时候才读取
+        /// </summary>
+        /// <param name="message">返回到客户端解析前的消息</param>
+        /// <returns></returns>
         protected override string GetSessionIdFromMessage(AmpMessage message)
         {
             if (message.Code == 0)
             {
-               
+
                 if (message != null)
                 {
                     var rspTemp = ProtobufObjectFactory.GetResponseTemplate(message.ServiceId, message.MessageId);
@@ -114,12 +124,18 @@ namespace GatewayForAspNet
                             return ObjV.ToString();
                         }
                     }
-                 
-                }               
+
+                }
             }
             return base.GetSessionIdFromMessage(message);
         }
 
+
+        /// <summary>
+        /// 将消息序列化成JSON，可以使用自己喜欢的序列化组件
+        /// </summary>
+        /// <param name="message"></param>
+        /// <returns></returns>
         protected override string MessageToJson(AmpMessage message)
         {
             if(message.Code == 0)
@@ -128,7 +144,7 @@ namespace GatewayForAspNet
                 var return_message = "";
                 string ret = "";
                 if (message != null)
-                {                  
+                {
                     var rspTemp = ProtobufObjectFactory.GetResponseTemplate(message.ServiceId, message.MessageId);
                     if (rspTemp == null)
                     {
@@ -167,14 +183,14 @@ namespace GatewayForAspNet
                     ret = AmpJsonFormatter.Format(rspTemp);
                 }
 
-                return "{\"return_code\":0,\"return_message\":\"\",data:"+ret+"}";
+                return "{\"return_code\":"+return_code+",\"return_message\":\""+return_message+"\",data:"+ret+"}";
             }
             else
             {
                 return "{\"return_code\":"+message.Code+",\"return_message\":\"\"}";
             }
 
-          
+
         }
     }
 }

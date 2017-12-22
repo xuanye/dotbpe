@@ -40,6 +40,8 @@ namespace GatewayForAspNet
             services.Configure<HttpRouterOption>(
                 (opt) =>
                 {
+                    opt.CookieMode = CookieMode.Manual; //手动
+
                     opt.Items = new System.Collections.Generic.List<HttpRouterOptionItem>();
                     //注册路由信息
                     opt.Items.Add(new HttpRouterOptionItem()

@@ -1,0 +1,16 @@
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "Survey.Core";
+option optimize_for = SPEED;
+
+// 什么字段都没有，请求
+message VoidReq{
+
+}
+
+// 只返回默认的返回
+message VoidRsp{
+    int32 return_code =1; // 返回状态码
+    string return_message = 2; //返回错误信息
+}

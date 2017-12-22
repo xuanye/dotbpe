@@ -1,0 +1,43 @@
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "Survey.Core";
+option optimize_for = SPEED;
+
+
+import public "message/common.proto";
+
+// 什么字段都没有，请求
+message SaveAPaperReq{
+
+}
+
+
+message SaveAPaperRsp{
+    int32 return_code =1; // 返回状态码
+    string return_message = 2; //返回错误信息
+
+
+    int32 apaper_id = 3 ; // 保存后的问卷ID
+}
+
+
+// 查询问卷的请求
+message QueryAPaperReq{
+
+}
+
+// 查询问卷的列表
+message APaperListRsp{
+
+}
+
+// 获取单个问卷的请求
+message GetAPaperReq{
+
+}
+
+// 包括单个问卷信息的响应
+message APaperRsp{
+
+}
