@@ -23,44 +23,51 @@ namespace Survey.Core {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "ChRtZXNzYWdlL3FwYXBlci5wcm90bxIGZG90YnBlGhRtZXNzYWdlL2NvbW1v",
-            "bi5wcm90byLOAQoNU2F2ZVFQYXBlclJlcRIRCgljbGllbnRfaXAYASABKAkS",
+            "bi5wcm90byLRAQoNU2F2ZVFQYXBlclJlcRIRCgljbGllbnRfaXAYASABKAkS",
             "EAoIaWRlbnRpdHkYAiABKAkSFAoMeF9yZXF1ZXN0X2lkGAMgASgJEhEKCXFw",
             "YXBlcl9pZBgKIAEoBRIPCgdzdWJqZWN0GAsgASgJEhIKCnN0YXJ0X3RpbWUY",
             "DCABKAkSEAoIZW5kX3RpbWUYDSABKAkSEwoLZGVzY3JpcHRpb24YDiABKAkS",
-            "IwoJcXVlc3Rpb25zGA8gAygLMhAuZG90YnBlLlF1ZXN0aW9uIk8KDVNhdmVR",
-            "UGFwZXJSc3ASEwoLcmV0dXJuX2NvZGUYASABKAUSFgoOcmV0dXJuX21lc3Nh",
-            "Z2UYAiABKAkSEQoJcXBhcGVyX2lkGAogASgFIl8KDlF1ZXJ5UVBhcGVyUmVx",
-            "EhEKCWNsaWVudF9pcBgBIAEoCRIQCghpZGVudGl0eRgCIAEoCRIUCgx4X3Jl",
-            "cXVlc3RfaWQYAyABKAkSEgoKcXVlcnlfdGV4dBgKIAEoCSJaCg1RUGFwZXJM",
-            "aXN0UnNwEhMKC3JldHVybl9jb2RlGAEgASgFEhYKDnJldHVybl9tZXNzYWdl",
-            "GAIgASgJEhwKBGxpc3QYCiADKAsyDi5kb3RicGUuUVBhcGVyIlwKDEdldFFQ",
-            "YXBlclJlcRIRCgljbGllbnRfaXAYASABKAkSEAoIaWRlbnRpdHkYAiABKAkS",
-            "FAoMeF9yZXF1ZXN0X2lkGAMgASgJEhEKCXFwYXBlcl9pZBgKIAEoBSJbCglR",
-            "UGFwZXJSc3ASEwoLcmV0dXJuX2NvZGUYASABKAUSFgoOcmV0dXJuX21lc3Nh",
-            "Z2UYAiABKAkSIQoGcXBhcGVyGAogASgLMhEuZG90YnBlLkRUT1FQYXBlciJq",
-            "CglEVE9RUGFwZXISEQoJcXBhcGVyX2lkGAEgASgFEg8KB3N1YmplY3QYAiAB",
-            "KAkSEgoKc3RhcnRfdGltZRgDIAEoCRIQCghlbmRfdGltZRgEIAEoCRITCgtk",
-            "ZXNjcmlwdGlvbhgFIAEoCSKPAQoIUXVlc3Rpb24SCgoCaWQYASABKAkSDQoF",
-            "dG9waWMYAiABKAkSEAoIcGFwZXJfaWQYAyABKAUSKwoNcXVlc3Rpb25fdHlw",
-            "ZRgEIAEoDjIULmRvdGJwZS5RdWVzdGlvblR5cGUSEwoLaXRlbV9kZXRhaWwY",
-            "BSABKAkSFAoMZXh0ZW5kX2lucHV0GAYgASgIIowBCgZRUGFwZXISEQoJcXBh",
-            "cGVyX2lkGAEgASgFEg8KB3N1YmplY3QYAiABKAkSEgoKc3RhcnRfdGltZRgD",
-            "IAEoCRIQCghlbmRfdGltZRgEIAEoCRITCgtkZXNjcmlwdGlvbhgFIAEoCRIj",
-            "CglxdWVzdGlvbnMYCiADKAsyEC5kb3RicGUuUXVlc3Rpb24qOAoMUXVlc3Rp",
-            "b25UeXBlEgoKBlNJR05MRRAAEgwKCE1VTFRJUExFEAESDgoKU1VCSkVDVElW",
-            "RRACQhBIAaoCC1N1cnZleS5Db3JlUABiBnByb3RvMw=="));
+            "JgoJcXVlc3Rpb25zGA8gAygLMhMuZG90YnBlLkRUT1F1ZXN0aW9uIjoKDVNh",
+            "dmVRUGFwZXJSc3ASFgoOcmV0dXJuX21lc3NhZ2UYASABKAkSEQoJcXBhcGVy",
+            "X2lkGAogASgFIpoBCg5RdWVyeVFQYXBlclJlcRIRCgljbGllbnRfaXAYASAB",
+            "KAkSEAoIaWRlbnRpdHkYAiABKAkSFAoMeF9yZXF1ZXN0X2lkGAMgASgJEhIK",
+            "CnF1ZXJ5X3RleHQYCiABKAkSEgoKY2hlY2tfcm9sZRgLIAEoCBISCgpwYWdl",
+            "X2luZGV4GAwgASgFEhEKCXBhZ2Vfc2l6ZRgNIAEoBSJXCg1RUGFwZXJMaXN0",
+            "UnNwEhYKDnJldHVybl9tZXNzYWdlGAEgASgJEh8KBGxpc3QYCiADKAsyES5k",
+            "b3RicGUuRFRPUVBhcGVyEg0KBXRvdGFsGAsgASgFInAKDEdldFFQYXBlclJl",
+            "cRIRCgljbGllbnRfaXAYASABKAkSEAoIaWRlbnRpdHkYAiABKAkSFAoMeF9y",
+            "ZXF1ZXN0X2lkGAMgASgJEhEKCXFwYXBlcl9pZBgKIAEoBRISCgpjaGVja19y",
+            "b2xlGAsgASgIIpoBCglRUGFwZXJSc3ASFgoOcmV0dXJuX21lc3NhZ2UYASAB",
+            "KAkSEQoJcXBhcGVyX2lkGAsgASgFEg8KB3N1YmplY3QYDCABKAkSEgoKc3Rh",
+            "cnRfdGltZRgNIAEoCRIQCghlbmRfdGltZRgOIAEoCRITCgtkZXNjcmlwdGlv",
+            "bhgPIAEoCRIWCg5jcmVhdGVfdXNlcl9pZBgQIAEoCSJWCg1RUGFwZXJGdWxs",
+            "UnNwEhYKDnJldHVybl9tZXNzYWdlGAEgASgJEi0KBnFwYXBlchgKIAEoCzId",
+            "LmRvdGJwZS5EVE9RUGFwZXJXaXRoUXVlc3Rpb24iggEKCURUT1FQYXBlchIR",
+            "CglxcGFwZXJfaWQYASABKAUSDwoHc3ViamVjdBgCIAEoCRISCgpzdGFydF90",
+            "aW1lGAMgASgJEhAKCGVuZF90aW1lGAQgASgJEhMKC2Rlc2NyaXB0aW9uGAUg",
+            "ASgJEhYKDmNyZWF0ZV91c2VyX2lkGAYgASgJIpIBCgtEVE9RdWVzdGlvbhIK",
+            "CgJpZBgBIAEoCRINCgV0b3BpYxgCIAEoCRIQCghwYXBlcl9pZBgDIAEoBRIr",
+            "Cg1xdWVzdGlvbl90eXBlGAQgASgOMhQuZG90YnBlLlF1ZXN0aW9uVHlwZRIT",
+            "CgtpdGVtX2RldGFpbBgFIAEoCRIUCgxleHRlbmRfaW5wdXQYBiABKAgingEK",
+            "FURUT1FQYXBlcldpdGhRdWVzdGlvbhIRCglxcGFwZXJfaWQYASABKAUSDwoH",
+            "c3ViamVjdBgCIAEoCRISCgpzdGFydF90aW1lGAMgASgJEhAKCGVuZF90aW1l",
+            "GAQgASgJEhMKC2Rlc2NyaXB0aW9uGAUgASgJEiYKCXF1ZXN0aW9ucxgKIAMo",
+            "CzITLmRvdGJwZS5EVE9RdWVzdGlvbio4CgxRdWVzdGlvblR5cGUSCgoGU0lH",
+            "TkxFEAASDAoITVVMVElQTEUQARIOCgpTVUJKRUNUSVZFEAJCEEgBqgILU3Vy",
+            "dmV5LkNvcmVQAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Survey.Core.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Survey.Core.QuestionType), }, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.SaveQPaperReq), global::Survey.Core.SaveQPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "QpaperId", "Subject", "StartTime", "EndTime", "Description", "Questions" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.SaveQPaperRsp), global::Survey.Core.SaveQPaperRsp.Parser, new[]{ "ReturnCode", "ReturnMessage", "QpaperId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QueryQPaperReq), global::Survey.Core.QueryQPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "QueryText" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QPaperListRsp), global::Survey.Core.QPaperListRsp.Parser, new[]{ "ReturnCode", "ReturnMessage", "List" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.GetQPaperReq), global::Survey.Core.GetQPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "QpaperId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QPaperRsp), global::Survey.Core.QPaperRsp.Parser, new[]{ "ReturnCode", "ReturnMessage", "Qpaper" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.DTOQPaper), global::Survey.Core.DTOQPaper.Parser, new[]{ "QpaperId", "Subject", "StartTime", "EndTime", "Description" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.Question), global::Survey.Core.Question.Parser, new[]{ "Id", "Topic", "PaperId", "QuestionType", "ItemDetail", "ExtendInput" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QPaper), global::Survey.Core.QPaper.Parser, new[]{ "QpaperId", "Subject", "StartTime", "EndTime", "Description", "Questions" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.SaveQPaperRsp), global::Survey.Core.SaveQPaperRsp.Parser, new[]{ "ReturnMessage", "QpaperId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QueryQPaperReq), global::Survey.Core.QueryQPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "QueryText", "CheckRole", "PageIndex", "PageSize" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QPaperListRsp), global::Survey.Core.QPaperListRsp.Parser, new[]{ "ReturnMessage", "List", "Total" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.GetQPaperReq), global::Survey.Core.GetQPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "QpaperId", "CheckRole" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QPaperRsp), global::Survey.Core.QPaperRsp.Parser, new[]{ "ReturnMessage", "QpaperId", "Subject", "StartTime", "EndTime", "Description", "CreateUserId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QPaperFullRsp), global::Survey.Core.QPaperFullRsp.Parser, new[]{ "ReturnMessage", "Qpaper" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.DTOQPaper), global::Survey.Core.DTOQPaper.Parser, new[]{ "QpaperId", "Subject", "StartTime", "EndTime", "Description", "CreateUserId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.DTOQuestion), global::Survey.Core.DTOQuestion.Parser, new[]{ "Id", "Topic", "PaperId", "QuestionType", "ItemDetail", "ExtendInput" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.DTOQPaperWithQuestion), global::Survey.Core.DTOQPaperWithQuestion.Parser, new[]{ "QpaperId", "Subject", "StartTime", "EndTime", "Description", "Questions" }, null, null, null)
           }));
     }
     #endregion
@@ -243,14 +250,14 @@ namespace Survey.Core {
 
     /// <summary>Field number for the "questions" field.</summary>
     public const int QuestionsFieldNumber = 15;
-    private static readonly pb::FieldCodec<global::Survey.Core.Question> _repeated_questions_codec
-        = pb::FieldCodec.ForMessage(122, global::Survey.Core.Question.Parser);
-    private readonly pbc::RepeatedField<global::Survey.Core.Question> questions_ = new pbc::RepeatedField<global::Survey.Core.Question>();
+    private static readonly pb::FieldCodec<global::Survey.Core.DTOQuestion> _repeated_questions_codec
+        = pb::FieldCodec.ForMessage(122, global::Survey.Core.DTOQuestion.Parser);
+    private readonly pbc::RepeatedField<global::Survey.Core.DTOQuestion> questions_ = new pbc::RepeatedField<global::Survey.Core.DTOQuestion>();
     /// <summary>
     ///  问题列表
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Survey.Core.Question> Questions {
+    public pbc::RepeatedField<global::Survey.Core.DTOQuestion> Questions {
       get { return questions_; }
     }
 
@@ -473,7 +480,6 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public SaveQPaperRsp(SaveQPaperRsp other) : this() {
-      returnCode_ = other.returnCode_;
       returnMessage_ = other.returnMessage_;
       qpaperId_ = other.qpaperId_;
     }
@@ -483,22 +489,8 @@ namespace Survey.Core {
       return new SaveQPaperRsp(this);
     }
 
-    /// <summary>Field number for the "return_code" field.</summary>
-    public const int ReturnCodeFieldNumber = 1;
-    private int returnCode_;
-    /// <summary>
-    ///  返回状态码
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int ReturnCode {
-      get { return returnCode_; }
-      set {
-        returnCode_ = value;
-      }
-    }
-
     /// <summary>Field number for the "return_message" field.</summary>
-    public const int ReturnMessageFieldNumber = 2;
+    public const int ReturnMessageFieldNumber = 1;
     private string returnMessage_ = "";
     /// <summary>
     /// 返回错误信息
@@ -538,7 +530,6 @@ namespace Survey.Core {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (ReturnCode != other.ReturnCode) return false;
       if (ReturnMessage != other.ReturnMessage) return false;
       if (QpaperId != other.QpaperId) return false;
       return true;
@@ -547,7 +538,6 @@ namespace Survey.Core {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (ReturnCode != 0) hash ^= ReturnCode.GetHashCode();
       if (ReturnMessage.Length != 0) hash ^= ReturnMessage.GetHashCode();
       if (QpaperId != 0) hash ^= QpaperId.GetHashCode();
       return hash;
@@ -560,12 +550,8 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (ReturnCode != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(ReturnCode);
-      }
       if (ReturnMessage.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(ReturnMessage);
       }
       if (QpaperId != 0) {
@@ -577,9 +563,6 @@ namespace Survey.Core {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (ReturnCode != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ReturnCode);
-      }
       if (ReturnMessage.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ReturnMessage);
       }
@@ -593,9 +576,6 @@ namespace Survey.Core {
     public void MergeFrom(SaveQPaperRsp other) {
       if (other == null) {
         return;
-      }
-      if (other.ReturnCode != 0) {
-        ReturnCode = other.ReturnCode;
       }
       if (other.ReturnMessage.Length != 0) {
         ReturnMessage = other.ReturnMessage;
@@ -613,11 +593,7 @@ namespace Survey.Core {
           default:
             input.SkipLastField();
             break;
-          case 8: {
-            ReturnCode = input.ReadInt32();
-            break;
-          }
-          case 18: {
+          case 10: {
             ReturnMessage = input.ReadString();
             break;
           }
@@ -662,6 +638,9 @@ namespace Survey.Core {
       identity_ = other.identity_;
       xRequestId_ = other.xRequestId_;
       queryText_ = other.queryText_;
+      checkRole_ = other.checkRole_;
+      pageIndex_ = other.pageIndex_;
+      pageSize_ = other.pageSize_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -725,6 +704,48 @@ namespace Survey.Core {
       }
     }
 
+    /// <summary>Field number for the "check_role" field.</summary>
+    public const int CheckRoleFieldNumber = 11;
+    private bool checkRole_;
+    /// <summary>
+    ///  是否判断用户权限
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool CheckRole {
+      get { return checkRole_; }
+      set {
+        checkRole_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "page_index" field.</summary>
+    public const int PageIndexFieldNumber = 12;
+    private int pageIndex_;
+    /// <summary>
+    ///  当前页码
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int PageIndex {
+      get { return pageIndex_; }
+      set {
+        pageIndex_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "page_size" field.</summary>
+    public const int PageSizeFieldNumber = 13;
+    private int pageSize_;
+    /// <summary>
+    /// 每页记录数
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int PageSize {
+      get { return pageSize_; }
+      set {
+        pageSize_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as QueryQPaperReq);
@@ -742,6 +763,9 @@ namespace Survey.Core {
       if (Identity != other.Identity) return false;
       if (XRequestId != other.XRequestId) return false;
       if (QueryText != other.QueryText) return false;
+      if (CheckRole != other.CheckRole) return false;
+      if (PageIndex != other.PageIndex) return false;
+      if (PageSize != other.PageSize) return false;
       return true;
     }
 
@@ -752,6 +776,9 @@ namespace Survey.Core {
       if (Identity.Length != 0) hash ^= Identity.GetHashCode();
       if (XRequestId.Length != 0) hash ^= XRequestId.GetHashCode();
       if (QueryText.Length != 0) hash ^= QueryText.GetHashCode();
+      if (CheckRole != false) hash ^= CheckRole.GetHashCode();
+      if (PageIndex != 0) hash ^= PageIndex.GetHashCode();
+      if (PageSize != 0) hash ^= PageSize.GetHashCode();
       return hash;
     }
 
@@ -778,6 +805,18 @@ namespace Survey.Core {
         output.WriteRawTag(82);
         output.WriteString(QueryText);
       }
+      if (CheckRole != false) {
+        output.WriteRawTag(88);
+        output.WriteBool(CheckRole);
+      }
+      if (PageIndex != 0) {
+        output.WriteRawTag(96);
+        output.WriteInt32(PageIndex);
+      }
+      if (PageSize != 0) {
+        output.WriteRawTag(104);
+        output.WriteInt32(PageSize);
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -794,6 +833,15 @@ namespace Survey.Core {
       }
       if (QueryText.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(QueryText);
+      }
+      if (CheckRole != false) {
+        size += 1 + 1;
+      }
+      if (PageIndex != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PageIndex);
+      }
+      if (PageSize != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PageSize);
       }
       return size;
     }
@@ -814,6 +862,15 @@ namespace Survey.Core {
       }
       if (other.QueryText.Length != 0) {
         QueryText = other.QueryText;
+      }
+      if (other.CheckRole != false) {
+        CheckRole = other.CheckRole;
+      }
+      if (other.PageIndex != 0) {
+        PageIndex = other.PageIndex;
+      }
+      if (other.PageSize != 0) {
+        PageSize = other.PageSize;
       }
     }
 
@@ -839,6 +896,18 @@ namespace Survey.Core {
           }
           case 82: {
             QueryText = input.ReadString();
+            break;
+          }
+          case 88: {
+            CheckRole = input.ReadBool();
+            break;
+          }
+          case 96: {
+            PageIndex = input.ReadInt32();
+            break;
+          }
+          case 104: {
+            PageSize = input.ReadInt32();
             break;
           }
         }
@@ -874,9 +943,9 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public QPaperListRsp(QPaperListRsp other) : this() {
-      returnCode_ = other.returnCode_;
       returnMessage_ = other.returnMessage_;
       list_ = other.list_.Clone();
+      total_ = other.total_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -884,22 +953,8 @@ namespace Survey.Core {
       return new QPaperListRsp(this);
     }
 
-    /// <summary>Field number for the "return_code" field.</summary>
-    public const int ReturnCodeFieldNumber = 1;
-    private int returnCode_;
-    /// <summary>
-    ///  返回状态码
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int ReturnCode {
-      get { return returnCode_; }
-      set {
-        returnCode_ = value;
-      }
-    }
-
     /// <summary>Field number for the "return_message" field.</summary>
-    public const int ReturnMessageFieldNumber = 2;
+    public const int ReturnMessageFieldNumber = 1;
     private string returnMessage_ = "";
     /// <summary>
     /// 返回错误信息
@@ -914,15 +969,29 @@ namespace Survey.Core {
 
     /// <summary>Field number for the "list" field.</summary>
     public const int ListFieldNumber = 10;
-    private static readonly pb::FieldCodec<global::Survey.Core.QPaper> _repeated_list_codec
-        = pb::FieldCodec.ForMessage(82, global::Survey.Core.QPaper.Parser);
-    private readonly pbc::RepeatedField<global::Survey.Core.QPaper> list_ = new pbc::RepeatedField<global::Survey.Core.QPaper>();
+    private static readonly pb::FieldCodec<global::Survey.Core.DTOQPaper> _repeated_list_codec
+        = pb::FieldCodec.ForMessage(82, global::Survey.Core.DTOQPaper.Parser);
+    private readonly pbc::RepeatedField<global::Survey.Core.DTOQPaper> list_ = new pbc::RepeatedField<global::Survey.Core.DTOQPaper>();
     /// <summary>
     /// 列表
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Survey.Core.QPaper> List {
+    public pbc::RepeatedField<global::Survey.Core.DTOQPaper> List {
       get { return list_; }
+    }
+
+    /// <summary>Field number for the "total" field.</summary>
+    public const int TotalFieldNumber = 11;
+    private int total_;
+    /// <summary>
+    ///  记录数，只在page_index = 1 才返回
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int Total {
+      get { return total_; }
+      set {
+        total_ = value;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -938,18 +1007,18 @@ namespace Survey.Core {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (ReturnCode != other.ReturnCode) return false;
       if (ReturnMessage != other.ReturnMessage) return false;
       if(!list_.Equals(other.list_)) return false;
+      if (Total != other.Total) return false;
       return true;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (ReturnCode != 0) hash ^= ReturnCode.GetHashCode();
       if (ReturnMessage.Length != 0) hash ^= ReturnMessage.GetHashCode();
       hash ^= list_.GetHashCode();
+      if (Total != 0) hash ^= Total.GetHashCode();
       return hash;
     }
 
@@ -960,27 +1029,27 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (ReturnCode != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(ReturnCode);
-      }
       if (ReturnMessage.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(ReturnMessage);
       }
       list_.WriteTo(output, _repeated_list_codec);
+      if (Total != 0) {
+        output.WriteRawTag(88);
+        output.WriteInt32(Total);
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (ReturnCode != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ReturnCode);
-      }
       if (ReturnMessage.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ReturnMessage);
       }
       size += list_.CalculateSize(_repeated_list_codec);
+      if (Total != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Total);
+      }
       return size;
     }
 
@@ -989,13 +1058,13 @@ namespace Survey.Core {
       if (other == null) {
         return;
       }
-      if (other.ReturnCode != 0) {
-        ReturnCode = other.ReturnCode;
-      }
       if (other.ReturnMessage.Length != 0) {
         ReturnMessage = other.ReturnMessage;
       }
       list_.Add(other.list_);
+      if (other.Total != 0) {
+        Total = other.Total;
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1006,16 +1075,16 @@ namespace Survey.Core {
           default:
             input.SkipLastField();
             break;
-          case 8: {
-            ReturnCode = input.ReadInt32();
-            break;
-          }
-          case 18: {
+          case 10: {
             ReturnMessage = input.ReadString();
             break;
           }
           case 82: {
             list_.AddEntriesFrom(input, _repeated_list_codec);
+            break;
+          }
+          case 88: {
+            Total = input.ReadInt32();
             break;
           }
         }
@@ -1055,6 +1124,7 @@ namespace Survey.Core {
       identity_ = other.identity_;
       xRequestId_ = other.xRequestId_;
       qpaperId_ = other.qpaperId_;
+      checkRole_ = other.checkRole_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1115,6 +1185,20 @@ namespace Survey.Core {
       }
     }
 
+    /// <summary>Field number for the "check_role" field.</summary>
+    public const int CheckRoleFieldNumber = 11;
+    private bool checkRole_;
+    /// <summary>
+    ///  是否判断用户权限
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool CheckRole {
+      get { return checkRole_; }
+      set {
+        checkRole_ = value;
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as GetQPaperReq);
@@ -1132,6 +1216,7 @@ namespace Survey.Core {
       if (Identity != other.Identity) return false;
       if (XRequestId != other.XRequestId) return false;
       if (QpaperId != other.QpaperId) return false;
+      if (CheckRole != other.CheckRole) return false;
       return true;
     }
 
@@ -1142,6 +1227,7 @@ namespace Survey.Core {
       if (Identity.Length != 0) hash ^= Identity.GetHashCode();
       if (XRequestId.Length != 0) hash ^= XRequestId.GetHashCode();
       if (QpaperId != 0) hash ^= QpaperId.GetHashCode();
+      if (CheckRole != false) hash ^= CheckRole.GetHashCode();
       return hash;
     }
 
@@ -1168,6 +1254,10 @@ namespace Survey.Core {
         output.WriteRawTag(80);
         output.WriteInt32(QpaperId);
       }
+      if (CheckRole != false) {
+        output.WriteRawTag(88);
+        output.WriteBool(CheckRole);
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1184,6 +1274,9 @@ namespace Survey.Core {
       }
       if (QpaperId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(QpaperId);
+      }
+      if (CheckRole != false) {
+        size += 1 + 1;
       }
       return size;
     }
@@ -1204,6 +1297,9 @@ namespace Survey.Core {
       }
       if (other.QpaperId != 0) {
         QpaperId = other.QpaperId;
+      }
+      if (other.CheckRole != false) {
+        CheckRole = other.CheckRole;
       }
     }
 
@@ -1229,6 +1325,10 @@ namespace Survey.Core {
           }
           case 80: {
             QpaperId = input.ReadInt32();
+            break;
+          }
+          case 88: {
+            CheckRole = input.ReadBool();
             break;
           }
         }
@@ -1264,9 +1364,13 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public QPaperRsp(QPaperRsp other) : this() {
-      returnCode_ = other.returnCode_;
       returnMessage_ = other.returnMessage_;
-      Qpaper = other.qpaper_ != null ? other.Qpaper.Clone() : null;
+      qpaperId_ = other.qpaperId_;
+      subject_ = other.subject_;
+      startTime_ = other.startTime_;
+      endTime_ = other.endTime_;
+      description_ = other.description_;
+      createUserId_ = other.createUserId_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1274,22 +1378,8 @@ namespace Survey.Core {
       return new QPaperRsp(this);
     }
 
-    /// <summary>Field number for the "return_code" field.</summary>
-    public const int ReturnCodeFieldNumber = 1;
-    private int returnCode_;
-    /// <summary>
-    ///  返回状态码
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int ReturnCode {
-      get { return returnCode_; }
-      set {
-        returnCode_ = value;
-      }
-    }
-
     /// <summary>Field number for the "return_message" field.</summary>
-    public const int ReturnMessageFieldNumber = 2;
+    public const int ReturnMessageFieldNumber = 1;
     private string returnMessage_ = "";
     /// <summary>
     /// 返回错误信息
@@ -1302,17 +1392,87 @@ namespace Survey.Core {
       }
     }
 
-    /// <summary>Field number for the "qpaper" field.</summary>
-    public const int QpaperFieldNumber = 10;
-    private global::Survey.Core.DTOQPaper qpaper_;
+    /// <summary>Field number for the "qpaper_id" field.</summary>
+    public const int QpaperIdFieldNumber = 11;
+    private int qpaperId_;
     /// <summary>
-    /// 问卷
+    ///  问卷ID
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public global::Survey.Core.DTOQPaper Qpaper {
-      get { return qpaper_; }
+    public int QpaperId {
+      get { return qpaperId_; }
       set {
-        qpaper_ = value;
+        qpaperId_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "subject" field.</summary>
+    public const int SubjectFieldNumber = 12;
+    private string subject_ = "";
+    /// <summary>
+    ///  问卷标题
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Subject {
+      get { return subject_; }
+      set {
+        subject_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "start_time" field.</summary>
+    public const int StartTimeFieldNumber = 13;
+    private string startTime_ = "";
+    /// <summary>
+    ///  问卷开始时间
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string StartTime {
+      get { return startTime_; }
+      set {
+        startTime_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "end_time" field.</summary>
+    public const int EndTimeFieldNumber = 14;
+    private string endTime_ = "";
+    /// <summary>
+    ///  问卷结束时间
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string EndTime {
+      get { return endTime_; }
+      set {
+        endTime_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "description" field.</summary>
+    public const int DescriptionFieldNumber = 15;
+    private string description_ = "";
+    /// <summary>
+    ///  注释和说明
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Description {
+      get { return description_; }
+      set {
+        description_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "create_user_id" field.</summary>
+    public const int CreateUserIdFieldNumber = 16;
+    private string createUserId_ = "";
+    /// <summary>
+    /// 注释
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string CreateUserId {
+      get { return createUserId_; }
+      set {
+        createUserId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -1329,7 +1489,237 @@ namespace Survey.Core {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (ReturnCode != other.ReturnCode) return false;
+      if (ReturnMessage != other.ReturnMessage) return false;
+      if (QpaperId != other.QpaperId) return false;
+      if (Subject != other.Subject) return false;
+      if (StartTime != other.StartTime) return false;
+      if (EndTime != other.EndTime) return false;
+      if (Description != other.Description) return false;
+      if (CreateUserId != other.CreateUserId) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ReturnMessage.Length != 0) hash ^= ReturnMessage.GetHashCode();
+      if (QpaperId != 0) hash ^= QpaperId.GetHashCode();
+      if (Subject.Length != 0) hash ^= Subject.GetHashCode();
+      if (StartTime.Length != 0) hash ^= StartTime.GetHashCode();
+      if (EndTime.Length != 0) hash ^= EndTime.GetHashCode();
+      if (Description.Length != 0) hash ^= Description.GetHashCode();
+      if (CreateUserId.Length != 0) hash ^= CreateUserId.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (ReturnMessage.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ReturnMessage);
+      }
+      if (QpaperId != 0) {
+        output.WriteRawTag(88);
+        output.WriteInt32(QpaperId);
+      }
+      if (Subject.Length != 0) {
+        output.WriteRawTag(98);
+        output.WriteString(Subject);
+      }
+      if (StartTime.Length != 0) {
+        output.WriteRawTag(106);
+        output.WriteString(StartTime);
+      }
+      if (EndTime.Length != 0) {
+        output.WriteRawTag(114);
+        output.WriteString(EndTime);
+      }
+      if (Description.Length != 0) {
+        output.WriteRawTag(122);
+        output.WriteString(Description);
+      }
+      if (CreateUserId.Length != 0) {
+        output.WriteRawTag(130, 1);
+        output.WriteString(CreateUserId);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (ReturnMessage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ReturnMessage);
+      }
+      if (QpaperId != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(QpaperId);
+      }
+      if (Subject.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Subject);
+      }
+      if (StartTime.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(StartTime);
+      }
+      if (EndTime.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(EndTime);
+      }
+      if (Description.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Description);
+      }
+      if (CreateUserId.Length != 0) {
+        size += 2 + pb::CodedOutputStream.ComputeStringSize(CreateUserId);
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(QPaperRsp other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ReturnMessage.Length != 0) {
+        ReturnMessage = other.ReturnMessage;
+      }
+      if (other.QpaperId != 0) {
+        QpaperId = other.QpaperId;
+      }
+      if (other.Subject.Length != 0) {
+        Subject = other.Subject;
+      }
+      if (other.StartTime.Length != 0) {
+        StartTime = other.StartTime;
+      }
+      if (other.EndTime.Length != 0) {
+        EndTime = other.EndTime;
+      }
+      if (other.Description.Length != 0) {
+        Description = other.Description;
+      }
+      if (other.CreateUserId.Length != 0) {
+        CreateUserId = other.CreateUserId;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            ReturnMessage = input.ReadString();
+            break;
+          }
+          case 88: {
+            QpaperId = input.ReadInt32();
+            break;
+          }
+          case 98: {
+            Subject = input.ReadString();
+            break;
+          }
+          case 106: {
+            StartTime = input.ReadString();
+            break;
+          }
+          case 114: {
+            EndTime = input.ReadString();
+            break;
+          }
+          case 122: {
+            Description = input.ReadString();
+            break;
+          }
+          case 130: {
+            CreateUserId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class QPaperFullRsp : pb::IMessage<QPaperFullRsp> {
+    private static readonly pb::MessageParser<QPaperFullRsp> _parser = new pb::MessageParser<QPaperFullRsp>(() => new QPaperFullRsp());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<QPaperFullRsp> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Survey.Core.QpaperReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QPaperFullRsp() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QPaperFullRsp(QPaperFullRsp other) : this() {
+      returnMessage_ = other.returnMessage_;
+      Qpaper = other.qpaper_ != null ? other.Qpaper.Clone() : null;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public QPaperFullRsp Clone() {
+      return new QPaperFullRsp(this);
+    }
+
+    /// <summary>Field number for the "return_message" field.</summary>
+    public const int ReturnMessageFieldNumber = 1;
+    private string returnMessage_ = "";
+    /// <summary>
+    /// 返回错误信息
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ReturnMessage {
+      get { return returnMessage_; }
+      set {
+        returnMessage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "qpaper" field.</summary>
+    public const int QpaperFieldNumber = 10;
+    private global::Survey.Core.DTOQPaperWithQuestion qpaper_;
+    /// <summary>
+    /// 问卷
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public global::Survey.Core.DTOQPaperWithQuestion Qpaper {
+      get { return qpaper_; }
+      set {
+        qpaper_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as QPaperFullRsp);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(QPaperFullRsp other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
       if (ReturnMessage != other.ReturnMessage) return false;
       if (!object.Equals(Qpaper, other.Qpaper)) return false;
       return true;
@@ -1338,7 +1728,6 @@ namespace Survey.Core {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (ReturnCode != 0) hash ^= ReturnCode.GetHashCode();
       if (ReturnMessage.Length != 0) hash ^= ReturnMessage.GetHashCode();
       if (qpaper_ != null) hash ^= Qpaper.GetHashCode();
       return hash;
@@ -1351,12 +1740,8 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (ReturnCode != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(ReturnCode);
-      }
       if (ReturnMessage.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(ReturnMessage);
       }
       if (qpaper_ != null) {
@@ -1368,9 +1753,6 @@ namespace Survey.Core {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (ReturnCode != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ReturnCode);
-      }
       if (ReturnMessage.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ReturnMessage);
       }
@@ -1381,19 +1763,16 @@ namespace Survey.Core {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(QPaperRsp other) {
+    public void MergeFrom(QPaperFullRsp other) {
       if (other == null) {
         return;
-      }
-      if (other.ReturnCode != 0) {
-        ReturnCode = other.ReturnCode;
       }
       if (other.ReturnMessage.Length != 0) {
         ReturnMessage = other.ReturnMessage;
       }
       if (other.qpaper_ != null) {
         if (qpaper_ == null) {
-          qpaper_ = new global::Survey.Core.DTOQPaper();
+          qpaper_ = new global::Survey.Core.DTOQPaperWithQuestion();
         }
         Qpaper.MergeFrom(other.Qpaper);
       }
@@ -1407,17 +1786,13 @@ namespace Survey.Core {
           default:
             input.SkipLastField();
             break;
-          case 8: {
-            ReturnCode = input.ReadInt32();
-            break;
-          }
-          case 18: {
+          case 10: {
             ReturnMessage = input.ReadString();
             break;
           }
           case 82: {
             if (qpaper_ == null) {
-              qpaper_ = new global::Survey.Core.DTOQPaper();
+              qpaper_ = new global::Survey.Core.DTOQPaperWithQuestion();
             }
             input.ReadMessage(qpaper_);
             break;
@@ -1438,7 +1813,7 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Survey.Core.QpaperReflection.Descriptor.MessageTypes[6]; }
+      get { return global::Survey.Core.QpaperReflection.Descriptor.MessageTypes[7]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1460,6 +1835,7 @@ namespace Survey.Core {
       startTime_ = other.startTime_;
       endTime_ = other.endTime_;
       description_ = other.description_;
+      createUserId_ = other.createUserId_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1537,6 +1913,20 @@ namespace Survey.Core {
       }
     }
 
+    /// <summary>Field number for the "create_user_id" field.</summary>
+    public const int CreateUserIdFieldNumber = 6;
+    private string createUserId_ = "";
+    /// <summary>
+    /// 用户
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string CreateUserId {
+      get { return createUserId_; }
+      set {
+        createUserId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
       return Equals(other as DTOQPaper);
@@ -1555,6 +1945,7 @@ namespace Survey.Core {
       if (StartTime != other.StartTime) return false;
       if (EndTime != other.EndTime) return false;
       if (Description != other.Description) return false;
+      if (CreateUserId != other.CreateUserId) return false;
       return true;
     }
 
@@ -1566,6 +1957,7 @@ namespace Survey.Core {
       if (StartTime.Length != 0) hash ^= StartTime.GetHashCode();
       if (EndTime.Length != 0) hash ^= EndTime.GetHashCode();
       if (Description.Length != 0) hash ^= Description.GetHashCode();
+      if (CreateUserId.Length != 0) hash ^= CreateUserId.GetHashCode();
       return hash;
     }
 
@@ -1596,6 +1988,10 @@ namespace Survey.Core {
         output.WriteRawTag(42);
         output.WriteString(Description);
       }
+      if (CreateUserId.Length != 0) {
+        output.WriteRawTag(50);
+        output.WriteString(CreateUserId);
+      }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1615,6 +2011,9 @@ namespace Survey.Core {
       }
       if (Description.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(Description);
+      }
+      if (CreateUserId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(CreateUserId);
       }
       return size;
     }
@@ -1638,6 +2037,9 @@ namespace Survey.Core {
       }
       if (other.Description.Length != 0) {
         Description = other.Description;
+      }
+      if (other.CreateUserId.Length != 0) {
+        CreateUserId = other.CreateUserId;
       }
     }
 
@@ -1669,20 +2071,24 @@ namespace Survey.Core {
             Description = input.ReadString();
             break;
           }
+          case 50: {
+            CreateUserId = input.ReadString();
+            break;
+          }
         }
       }
     }
 
   }
 
-  public sealed partial class Question : pb::IMessage<Question> {
-    private static readonly pb::MessageParser<Question> _parser = new pb::MessageParser<Question>(() => new Question());
+  public sealed partial class DTOQuestion : pb::IMessage<DTOQuestion> {
+    private static readonly pb::MessageParser<DTOQuestion> _parser = new pb::MessageParser<DTOQuestion>(() => new DTOQuestion());
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<Question> Parser { get { return _parser; } }
+    public static pb::MessageParser<DTOQuestion> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Survey.Core.QpaperReflection.Descriptor.MessageTypes[7]; }
+      get { return global::Survey.Core.QpaperReflection.Descriptor.MessageTypes[8]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1691,14 +2097,14 @@ namespace Survey.Core {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Question() {
+    public DTOQuestion() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Question(Question other) : this() {
+    public DTOQuestion(DTOQuestion other) : this() {
       id_ = other.id_;
       topic_ = other.topic_;
       paperId_ = other.paperId_;
@@ -1708,8 +2114,8 @@ namespace Survey.Core {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public Question Clone() {
-      return new Question(this);
+    public DTOQuestion Clone() {
+      return new DTOQuestion(this);
     }
 
     /// <summary>Field number for the "id" field.</summary>
@@ -1798,11 +2204,11 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as Question);
+      return Equals(other as DTOQuestion);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(Question other) {
+    public bool Equals(DTOQuestion other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -1888,7 +2294,7 @@ namespace Survey.Core {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(Question other) {
+    public void MergeFrom(DTOQuestion other) {
       if (other == null) {
         return;
       }
@@ -1950,14 +2356,14 @@ namespace Survey.Core {
 
   }
 
-  public sealed partial class QPaper : pb::IMessage<QPaper> {
-    private static readonly pb::MessageParser<QPaper> _parser = new pb::MessageParser<QPaper>(() => new QPaper());
+  public sealed partial class DTOQPaperWithQuestion : pb::IMessage<DTOQPaperWithQuestion> {
+    private static readonly pb::MessageParser<DTOQPaperWithQuestion> _parser = new pb::MessageParser<DTOQPaperWithQuestion>(() => new DTOQPaperWithQuestion());
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public static pb::MessageParser<QPaper> Parser { get { return _parser; } }
+    public static pb::MessageParser<DTOQPaperWithQuestion> Parser { get { return _parser; } }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public static pbr::MessageDescriptor Descriptor {
-      get { return global::Survey.Core.QpaperReflection.Descriptor.MessageTypes[8]; }
+      get { return global::Survey.Core.QpaperReflection.Descriptor.MessageTypes[9]; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -1966,14 +2372,14 @@ namespace Survey.Core {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public QPaper() {
+    public DTOQPaperWithQuestion() {
       OnConstruction();
     }
 
     partial void OnConstruction();
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public QPaper(QPaper other) : this() {
+    public DTOQPaperWithQuestion(DTOQPaperWithQuestion other) : this() {
       qpaperId_ = other.qpaperId_;
       subject_ = other.subject_;
       startTime_ = other.startTime_;
@@ -1983,8 +2389,8 @@ namespace Survey.Core {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public QPaper Clone() {
-      return new QPaper(this);
+    public DTOQPaperWithQuestion Clone() {
+      return new DTOQPaperWithQuestion(this);
     }
 
     /// <summary>Field number for the "qpaper_id" field.</summary>
@@ -2059,24 +2465,24 @@ namespace Survey.Core {
 
     /// <summary>Field number for the "questions" field.</summary>
     public const int QuestionsFieldNumber = 10;
-    private static readonly pb::FieldCodec<global::Survey.Core.Question> _repeated_questions_codec
-        = pb::FieldCodec.ForMessage(82, global::Survey.Core.Question.Parser);
-    private readonly pbc::RepeatedField<global::Survey.Core.Question> questions_ = new pbc::RepeatedField<global::Survey.Core.Question>();
+    private static readonly pb::FieldCodec<global::Survey.Core.DTOQuestion> _repeated_questions_codec
+        = pb::FieldCodec.ForMessage(82, global::Survey.Core.DTOQuestion.Parser);
+    private readonly pbc::RepeatedField<global::Survey.Core.DTOQuestion> questions_ = new pbc::RepeatedField<global::Survey.Core.DTOQuestion>();
     /// <summary>
     ///  问题列表
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public pbc::RepeatedField<global::Survey.Core.Question> Questions {
+    public pbc::RepeatedField<global::Survey.Core.DTOQuestion> Questions {
       get { return questions_; }
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override bool Equals(object other) {
-      return Equals(other as QPaper);
+      return Equals(other as DTOQPaperWithQuestion);
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public bool Equals(QPaper other) {
+    public bool Equals(DTOQPaperWithQuestion other) {
       if (ReferenceEquals(other, null)) {
         return false;
       }
@@ -2157,7 +2563,7 @@ namespace Survey.Core {
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public void MergeFrom(QPaper other) {
+    public void MergeFrom(DTOQPaperWithQuestion other) {
       if (other == null) {
         return;
       }

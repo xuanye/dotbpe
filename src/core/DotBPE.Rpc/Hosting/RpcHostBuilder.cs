@@ -1,21 +1,15 @@
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Reflection;
-using System.Runtime.ExceptionServices;
-using System.Text;
 using DotBPE.Rpc.DefaultImpls;
 using DotBPE.Rpc.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.ObjectPool;
+using System;
+using System.Collections.Generic;
 
 namespace DotBPE.Rpc.Hosting
 {
-    public class RpcHostBuilder:IRpcHostBuilder
+    public class RpcHostBuilder : IRpcHostBuilder
     {
-
         private readonly IHostingEnvironment _env;
         private RpcHostOption _options;
 
@@ -24,19 +18,17 @@ namespace DotBPE.Rpc.Hosting
         private readonly IConfiguration _config;
 
         private bool _rpcHostBuilt = false;
+
         public RpcHostBuilder()
         {
             _env = new HostingEnvironment();
-
 
             _configureServicesDelegates = new List<Action<IServiceCollection>>();
 
             _config = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "DotRPC_")
                 .Build();
-
         }
-
 
         public IServerHost Build()
         {
@@ -46,20 +38,16 @@ namespace DotBPE.Rpc.Hosting
             }
             _rpcHostBuilt = true;
 
-          
             var hostingServices = BuildCommonServices();
             var applicationServices = hostingServices.Clone();
             var hostingServiceProvider = hostingServices.BuildServiceProvider();
 
-
-            var host = new DefaultServerHost(hostingServiceProvider,applicationServices,this._options);
+            var host = new DefaultServerHost(hostingServiceProvider, applicationServices, this._options);
 
             host.Initialize();
 
             return host;
         }
-
-
 
         public IRpcHostBuilder ConfigureServices(Action<IServiceCollection> configureServices)
         {
@@ -71,8 +59,6 @@ namespace DotBPE.Rpc.Hosting
             _configureServicesDelegates.Add(configureServices);
             return this;
         }
-
-
 
         public IRpcHostBuilder UseSetting(string key, string value)
         {
@@ -89,11 +75,9 @@ namespace DotBPE.Rpc.Hosting
         {
             _options = new RpcHostOption(_config);
 
-
             var applicationName = _options.ApplicationName ?? "DotBPE Application";
 
             _env.Initialize(applicationName, _options);
-
 
             var services = new ServiceCollection();
 
@@ -106,9 +90,7 @@ namespace DotBPE.Rpc.Hosting
 
             services.Configure<Options.RemoteServicesOption>(_config.GetSection("remoteServices"));
 
-
             services.AddTransient<IAppBuilder, AppBuilder>();
-
 
             services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
 
@@ -126,6 +108,5 @@ namespace DotBPE.Rpc.Hosting
 
             return services;
         }
-
     }
 }

@@ -1,16 +1,16 @@
+using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Logging;
+using DotBPE.Rpc.Utils;
 using System;
 using System.Collections.Generic;
 using System.Net;
 using System.Threading.Tasks;
-using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Logging;
-using DotBPE.Rpc.Utils;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
-    public class DefaultTransportFactory<TMessage>:ITransportFactory<TMessage> where TMessage:InvokeMessage
+    public class DefaultTransportFactory<TMessage> : ITransportFactory<TMessage> where TMessage : InvokeMessage
     {
-        static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransportFactory<TMessage>>();
+        private static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransportFactory<TMessage>>();
         private readonly IClientBootstrap<TMessage> _bootstrap;
 
         private readonly Dictionary<string, Lazy<ITransport<TMessage>>> _clients
@@ -19,54 +19,68 @@ namespace DotBPE.Rpc.DefaultImpls
         private static readonly object lockObj = new object();
 
         private bool disposed = false;
+
         public DefaultTransportFactory(IClientBootstrap<TMessage> bootstrap)
         {
             this._bootstrap = bootstrap;
             //this._bootstrap.DisConnected += Bootstrap_Disconnected;
         }
 
-        private bool RemoveTransport(EndPoint key,out Lazy<ITransport<TMessage>> value){
+        private bool RemoveTransport(EndPoint key, out Lazy<ITransport<TMessage>> value)
+        {
             string addressKey = ParseUtils.ParseEndPointToString(key);
             bool s = false;
             value = null;
-            lock(lockObj){
-                if(this._clients.ContainsKey(addressKey)){
+            lock (lockObj)
+            {
+                if (this._clients.ContainsKey(addressKey))
+                {
                     value = this._clients[addressKey];
                     this._clients.Remove(addressKey);
                     s = true;
                 }
-                else{
-                    Logger.Warning("no transprot address{0}",addressKey);
+                else
+                {
+                    Logger.Warning("no transprot address{0}", addressKey);
                 }
             }
             return s;
         }
-        private Lazy<ITransport<TMessage>> GetOrAdd(EndPoint key,Func<EndPoint,Lazy<ITransport<TMessage>>> createAction){
+
+        private Lazy<ITransport<TMessage>> GetOrAdd(EndPoint key, Func<EndPoint, Lazy<ITransport<TMessage>>> createAction)
+        {
             if (disposed)
             {
                 throw new Rpc.Exceptions.RpcException("all transports are closed");
             }
             Lazy<ITransport<TMessage>> value = null;
             string addressKey = ParseUtils.ParseEndPointToString(key);
-            lock(lockObj){
-                if(this._clients.ContainsKey(addressKey)){
+            lock (lockObj)
+            {
+                if (this._clients.ContainsKey(addressKey))
+                {
                     value = this._clients[addressKey];
                 }
             }
-            if(value!=null){
+            if (value != null)
+            {
                 return value;
             }
-            lock(lockObj){
-                if(!this._clients.ContainsKey(addressKey)){
+            lock (lockObj)
+            {
+                if (!this._clients.ContainsKey(addressKey))
+                {
                     value = createAction.Invoke(key);
-                    this._clients.Add(addressKey,value);
+                    this._clients.Add(addressKey, value);
                 }
             }
-            if(value!=null){
+            if (value != null)
+            {
                 return value;
             }
-            return GetOrAdd(key,createAction);
+            return GetOrAdd(key, createAction);
         }
+
         private void Bootstrap_Disconnected(object sender, DisConnectedArgs args)
         {
             var removed = RemoveTransport(args.EndPoint, out var _);
@@ -97,12 +111,12 @@ namespace DotBPE.Rpc.DefaultImpls
             try
             {
                 bool success = RemoveTransport(serverAddress, out var lazyTransport);
-                if (success && lazyTransport !=null && lazyTransport.IsValueCreated)
+                if (success && lazyTransport != null && lazyTransport.IsValueCreated)
                 {
                     await lazyTransport.Value.CloseAsync();
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 Logger.Error($"close connection {serverAddress} ,Exception:" + ex.ToString());
             }
@@ -126,16 +140,13 @@ namespace DotBPE.Rpc.DefaultImpls
                         {
                             Logger.Error($"close connection {kv.Key} ,Exception:" + ex.ToString());
                         }
-                       
                     }
                 }
                 this._clients.Clear();
             }
-            
+
             //释放所有链接
             this._bootstrap?.Dispose();
         }
     }
-
-
 }

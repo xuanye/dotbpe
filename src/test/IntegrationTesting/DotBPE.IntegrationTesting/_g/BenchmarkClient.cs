@@ -12,44 +12,65 @@ using Google.Protobuf;
 namespace DotBPE.IntegrationTesting {
 
 //start for class BenchmarkTestClient
-public sealed class BenchmarkTestClient : AmpInvokeClient 
-{
-public BenchmarkTestClient(IRpcClient<AmpMessage> client) : base(client)
-{
-}
-public async Task<BenchmarkMessage> EchoAsync(BenchmarkMessage request,int timeOut=3000)
-{
-AmpMessage message = AmpMessage.CreateRequestMessage(50000, 1);
-message.Data = request.ToByteArray();
-var response = await base.CallInvoker.AsyncCall(message,timeOut);
-if (response == null)
-{
-throw new RpcException("error,response is null !");
-}
-if (response.Data == null)
-{
-return new BenchmarkMessage();
-}
-return BenchmarkMessage.Parser.ParseFrom(response.Data);
-}
+   public sealed class BenchmarkTestClient : AmpInvokeClient 
+    {
+        public BenchmarkTestClient(IRpcClient<AmpMessage> client) : base(client)
+        {
+        }
+        public BenchmarkTestClient(string remoteAddress) : base(remoteAddress)
+        {
+        }
+        public async Task<RpcResult<BenchmarkMessage>> EchoAsync(BenchmarkMessage request,int timeOut=3000)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(50000, 1);
+            message.Data = request.ToByteArray();
+            var response = await base.CallInvoker.AsyncCall(message,timeOut);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<BenchmarkMessage>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = BenchmarkMessage.Parser.ParseFrom(response.Data);
+            }
+            return result;
+        }
 
-//同步方法
-public BenchmarkMessage Echo(BenchmarkMessage request)
-{
-AmpMessage message = AmpMessage.CreateRequestMessage(50000, 1);
-message.Data = request.ToByteArray();
-var response =  base.CallInvoker.BlockingCall(message);
-if (response == null)
-{
-throw new RpcException("error,response is null !");
-}
-if (response.Data == null)
-{
-return new BenchmarkMessage();
-}
-return BenchmarkMessage.Parser.ParseFrom(response.Data);
-}
-}
+        //同步方法
+        public RpcResult<BenchmarkMessage> Echo(BenchmarkMessage request)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(50000, 1);
+            message.Data = request.ToByteArray();
+            var response =  base.CallInvoker.BlockingCall(message);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<BenchmarkMessage>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = BenchmarkMessage.Parser.ParseFrom(response.Data);
+            }
+            return result;
+         }
+     }
 //end for class BenchmarkTestClient
 }
 #endregion

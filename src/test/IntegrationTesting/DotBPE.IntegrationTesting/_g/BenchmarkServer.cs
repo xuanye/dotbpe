@@ -2,51 +2,52 @@
 // source: benchmark.proto
 #region Designer generated code
 
-using System;
-using System.Threading.Tasks;
-using DotBPE.Rpc;
-using DotBPE.Protocol.Amp;
-using Google.Protobuf;
+using System; 
+using System.Threading.Tasks; 
+using DotBPE.Rpc; 
+using DotBPE.Protocol.Amp; 
+using Google.Protobuf; 
 
-namespace DotBPE.IntegrationTesting
-{
+namespace DotBPE.IntegrationTesting {
 
-    //start for class AbstractBenchmarkTest
-    public abstract class BenchmarkTestBase : ServiceActor
-    {
-        protected override int ServiceId => 50000;
-        //调用委托
-        private async Task<AmpMessage> ProcessEchoAsync(AmpMessage req)
-        {
-            BenchmarkMessage request = null;
-            if (req.Data == null)
-            {
-                request = new BenchmarkMessage();
-            }
-            else
-            {
-                request = BenchmarkMessage.Parser.ParseFrom(req.Data);
-            }
-            var data = await EchoAsync(request);
-            var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
-            response.Sequence = req.Sequence;
-            response.Data = data.ToByteArray();
-            return response;
-        }
+//start for class AbstractBenchmarkTest
+   public abstract class BenchmarkTestBase : ServiceActor 
+   {
+      protected override int ServiceId => 50000;
+      //调用委托
+      private async Task<AmpMessage> ProcessEchoAsync(AmpMessage req)
+      {
+         BenchmarkMessage request = null;
 
-        //抽象方法
-        public abstract Task<BenchmarkMessage> EchoAsync(BenchmarkMessage request);
-        public override Task<AmpMessage> ProcessAsync(AmpMessage req)
-        {
-            switch (req.MessageId)
-            {
-                //方法BenchmarkTest.Echo
-                case 1: return this.ProcessEchoAsync(req);
-                default: return base.ProcessNotFoundAsync(req);
-            }
-        }
-    }
-    //end for class AbstractBenchmarkTest
+         if(req.Data == null ){
+            request = new BenchmarkMessage();
+         }
+         else {
+            request = BenchmarkMessage.Parser.ParseFrom(req.Data);
+         }
+
+         var result = await EchoAsync(request);
+         var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
+         response.Code = result.Code;
+         if( result.Data !=null )
+         {
+             response.Data = result.Data.ToByteArray();
+         }
+         return response;
+      }
+
+      //抽象方法
+      public abstract Task<RpcResult<BenchmarkMessage>> EchoAsync(BenchmarkMessage request);
+      public override Task<AmpMessage> ProcessAsync(AmpMessage req)
+      {
+         switch(req.MessageId){
+            //方法BenchmarkTest.Echo
+            case 1: return this.ProcessEchoAsync(req);
+            default: return base.ProcessNotFoundAsync(req);
+         }
+      }
+   }
+//end for class AbstractBenchmarkTest
 }
 
 #endregion

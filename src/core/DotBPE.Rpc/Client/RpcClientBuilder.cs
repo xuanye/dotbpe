@@ -1,40 +1,30 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Extensions;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.ObjectPool;
+using System;
+using System.Collections.Generic;
 
 namespace DotBPE.Rpc
 {
-    public class RpcClientBuilder:IRpcClientBuilder
+    public class RpcClientBuilder : IRpcClientBuilder
     {
-
         private readonly List<Action<IServiceCollection>> _configureServicesDelegates;
 
-
         private readonly IConfiguration _config;
-
 
         public RpcClientBuilder()
         {
             _configureServicesDelegates = new List<Action<IServiceCollection>>();
 
-
             _config = new ConfigurationBuilder()
                 .AddEnvironmentVariables(prefix: "DotRPC_")
                 .Build();
-
         }
 
-
-        public IRpcClient<TMessage> Build<TMessage>() where TMessage :InvokeMessage
+        public IRpcClient<TMessage> Build<TMessage>() where TMessage : InvokeMessage
         {
-
             var hostingServices = BuildCommonServices();
             var applicationServices = hostingServices.Clone();
             var clientServiceProvider = hostingServices.BuildServiceProvider();
@@ -45,8 +35,6 @@ namespace DotBPE.Rpc
             Environment.SetServiceProvider(clientServiceProvider);
             return client;
         }
-
-
 
         public IRpcClientBuilder ConfigureServices(Action<IServiceCollection> configureServices)
         {
@@ -72,7 +60,6 @@ namespace DotBPE.Rpc
 
         private IServiceCollection BuildCommonServices()
         {
-
             var services = new ServiceCollection();
 
             // The configured ILoggerFactory is added as a singleton here. AddLogging below will not add an additional one.
@@ -80,13 +67,7 @@ namespace DotBPE.Rpc
             services.AddOptions();
             services.Configure<Options.RpcClientOption>(_config);  // 添加作为客户端的配置
 
-
-
-
-
-
             services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
-
 
             services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
 
@@ -100,7 +81,6 @@ namespace DotBPE.Rpc
 
         private void AddApplicationServices(IServiceCollection services, IServiceProvider hostingServiceProvider)
         {
-
         }
     }
 }

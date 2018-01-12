@@ -12,50 +12,48 @@ namespace Survey.Core {
 public class ProtobufObjectFactory {
 public static IMessage GetRequestTemplate(int serviceId,int messageId)
 {
-if(serviceId == 10000 && messageId == 1){ return new SaveAPaperReq() ;
+if(serviceId == 10000 && messageId == 11){ return new SaveQPaperReq() ;
 }
-if(serviceId == 10000 && messageId == 2){ return new QueryAPaperReq() ;
+if(serviceId == 10000 && messageId == 12){ return new QueryQPaperReq() ;
 }
-if(serviceId == 10000 && messageId == 3){ return new GetAPaperReq() ;
+if(serviceId == 10000 && messageId == 13){ return new GetQPaperReq() ;
+}
+if(serviceId == 10000 && messageId == 21){ return new SaveAPaperReq() ;
+}
+if(serviceId == 10000 && messageId == 22){ return new QueryAPaperReq() ;
+}
+if(serviceId == 10000 && messageId == 23){ return new GetAPaperReq() ;
 }
 
-if(serviceId == 20002 && messageId == 1){ return new SaveAPaperReq() ;
+if(serviceId == 10001 && messageId == 31){ return new RegisterReq() ;
 }
-if(serviceId == 20002 && messageId == 2){ return new QueryAPaperReq() ;
+if(serviceId == 10001 && messageId == 32){ return new LoginReq() ;
 }
-if(serviceId == 20002 && messageId == 3){ return new GetAPaperReq() ;
-}
-
-if(serviceId == 20001 && messageId == 1){ return new SaveQPaperReq() ;
-}
-if(serviceId == 20001 && messageId == 2){ return new QueryQPaperReq() ;
-}
-if(serviceId == 20001 && messageId == 3){ return new GetQPaperReq() ;
+if(serviceId == 10001 && messageId == 33){ return new EditUserReq() ;
 }
 
 return null;
 }
 public static IMessage GetResponseTemplate(int serviceId,int messageId)
 {
-if(serviceId == 10000 && messageId == 1){ return new SaveAPaperRsp() ;
+if(serviceId == 10000 && messageId == 11){ return new SaveQPaperRsp() ;
 }
-if(serviceId == 10000 && messageId == 2){ return new APaperListRsp() ;
+if(serviceId == 10000 && messageId == 12){ return new QPaperListRsp() ;
 }
-if(serviceId == 10000 && messageId == 3){ return new APaperRsp() ;
+if(serviceId == 10000 && messageId == 13){ return new QPaperRsp() ;
+}
+if(serviceId == 10000 && messageId == 21){ return new SaveAPaperRsp() ;
+}
+if(serviceId == 10000 && messageId == 22){ return new APaperListRsp() ;
+}
+if(serviceId == 10000 && messageId == 23){ return new APaperRsp() ;
 }
 
-if(serviceId == 20002 && messageId == 1){ return new SaveAPaperRsp() ;
+if(serviceId == 10001 && messageId == 31){ return new RegisterRsp() ;
 }
-if(serviceId == 20002 && messageId == 2){ return new APaperListRsp() ;
+if(serviceId == 10001 && messageId == 32){ return new LoginRsp() ;
 }
-if(serviceId == 20002 && messageId == 3){ return new APaperRsp() ;
-}
-
-if(serviceId == 20001 && messageId == 1){ return new SaveQPaperRsp() ;
-}
-if(serviceId == 20001 && messageId == 2){ return new QPaperListRsp() ;
-}
-if(serviceId == 20001 && messageId == 3){ return new QPaperRsp() ;
+if(serviceId == 10001 && messageId == 33){ return new EditUserRsp() ;
 }
 
 return null;

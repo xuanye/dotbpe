@@ -1,18 +1,16 @@
-
 namespace DotBPE.Rpc.Codes
 {
-
     public abstract class InvokeMessage : IMessage
     {
         public InvokeMessageType InvokeMessageType { get; set; }
 
         public abstract int Length { get; }
 
-
         /// <summary>
         /// 服务识别符,定位到某个服务
         /// </summary>
         public abstract string ServiceIdentifier { get; }
+
         /// <summary>
         /// 方法识别符，定位到某个方法
         /// </summary>
@@ -29,12 +27,15 @@ namespace DotBPE.Rpc.Codes
                 case 1:
                     type = InvokeMessageType.Request;
                     break;
+
                 case 2:
                     type = InvokeMessageType.Response;
                     break;
+
                 case 3:
                     type = InvokeMessageType.Notify;
-                    break;              
+                    break;
+
                 default:
                     type = InvokeMessageType.Request;
                     break;
@@ -47,6 +48,6 @@ namespace DotBPE.Rpc.Codes
     {
         Request = 1,
         Response = 2,
-        Notify = 3     
+        Notify = 3
     }
 }

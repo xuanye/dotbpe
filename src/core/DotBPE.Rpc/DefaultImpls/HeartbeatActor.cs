@@ -1,5 +1,5 @@
-using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.DefaultImpls
 {

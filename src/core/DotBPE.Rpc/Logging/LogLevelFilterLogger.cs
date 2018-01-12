@@ -1,18 +1,13 @@
-
 using DotBPE.Rpc.Utils;
 using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.IO;
-
 
 namespace DotBPE.Rpc.Logging
 {
     /// <summary>Logger that filters out messages below certain log level.</summary>
     public class LogLevelFilterLogger : ILogger
     {
-        readonly ILogger innerLogger;
-        readonly LogLevel logLevel;
+        private readonly ILogger innerLogger;
+        private readonly LogLevel logLevel;
 
         /// <summary>
         /// Creates and instance of <c>LogLevelFilter.</c>

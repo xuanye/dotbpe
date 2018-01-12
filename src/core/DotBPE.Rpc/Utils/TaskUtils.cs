@@ -1,7 +1,6 @@
-
+using DotBPE.Rpc.Logging;
 using System;
 using System.Threading.Tasks;
-using DotBPE.Rpc.Logging;
 
 namespace DotBPE.Rpc.Utils
 {
@@ -25,7 +24,7 @@ namespace DotBPE.Rpc.Utils
             }
         }
 
-        public static void SafeSetResult<TResult>(TaskCompletionSource<TResult> promise,TResult result, ILogger logger)
+        public static void SafeSetResult<TResult>(TaskCompletionSource<TResult> promise, TResult result, ILogger logger)
         {
             if (!promise.TrySetResult(result))
             {
@@ -38,9 +37,9 @@ namespace DotBPE.Rpc.Utils
         /// </summary>
         public static void SafeSetFailure<TResult>(TaskCompletionSource<TResult> promise, Exception cause, ILogger logger)
         {
-            if( !promise.TrySetException(cause))
+            if (!promise.TrySetException(cause))
             {
-                logger.Warning(cause,$"Failed to mark a promise as failure because it's done already: {promise}");
+                logger.Warning(cause, $"Failed to mark a promise as failure because it's done already: {promise}");
             }
         }
     }

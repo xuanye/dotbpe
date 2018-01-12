@@ -1,31 +1,33 @@
 #region copyright
+
 // -----------------------------------------------------------------------
 //  <copyright file="NettyClientBootstrap.cs” project="DotBPE.Rpc.Netty">
 //    文件说明:
 //     copyright@2017 xuanye 2017-04-08 9:32
 //  </copyright>
 // -----------------------------------------------------------------------
-#endregion
 
-using System;
-using System.Net;
-using System.Threading.Tasks;
+#endregion copyright
+
 using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Options;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
+using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
-using DotBPE.Rpc.Logging;
-using DotNetty.Handlers.Timeout;
 using Microsoft.Extensions.Options;
+using System;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Netty
 {
     public class NettyClientBootstrap<TMessage> : IClientBootstrap<TMessage> where TMessage : InvokeMessage
     {
-        static ILogger Logger = Environment.Logger.ForType<NettyClientBootstrap<TMessage>>();
+        private static ILogger Logger = Environment.Logger.ForType<NettyClientBootstrap<TMessage>>();
         private readonly Bootstrap _bootstrap;
         private readonly IMessageHandler<TMessage> _handler;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
@@ -55,7 +57,6 @@ namespace DotBPE.Rpc.Netty
                     pipeline.AddLast(new LoggingHandler("CLT-CONN"));
                     MessageMeta meta = _msgCodecs.GetMessageMeta();
 
-
                     // IdleStateHandler
                     pipeline.AddLast("timeout", new IdleStateHandler(0, 0, meta.HeartbeatInterval / 1000));
                     //消息前处理
@@ -71,7 +72,6 @@ namespace DotBPE.Rpc.Netty
 
                     pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs));
                     pipeline.AddLast(new ClientChannelHandlerAdapter<TMessage>(this));
-
                 }));
             return bootstrap;
         }
@@ -79,20 +79,20 @@ namespace DotBPE.Rpc.Netty
         public async Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint)
         {
             var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs);
-            await context.InitAsync(endpoint,_clientOption?.Value);
+            await context.InitAsync(endpoint, _clientOption?.Value);
             context.BindDisconnect(this);
             return context;
         }
 
         public event EventHandler<DisConnectedArgs> DisConnected;
 
-
         public void OnChannelInactive(IChannelHandlerContext context)
         {
             var args = new DisConnectedArgs();
             args.EndPoint = context.Channel.RemoteAddress;
-            args.ContextId  = context.Channel.Id.AsLongText();
-            this.DisConnected?.Invoke(this,args);
+            args.ContextId = context.Channel.Id.AsLongText();
+         
+            this.DisConnected?.Invoke(this, args);
         }
 
         public void ChannelRead(IChannelHandlerContext ctx, TMessage msg)
@@ -121,6 +121,7 @@ namespace DotBPE.Rpc.Netty
 
             return ctx.WriteAndFlushAsync(heartbeatBuff);
         }
+
         public void Dispose()
         {
             //do nothing

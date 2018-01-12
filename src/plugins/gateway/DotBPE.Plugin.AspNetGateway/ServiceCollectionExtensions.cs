@@ -8,22 +8,20 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DotBPE.Plugin.AspNetGateway
 {
     public static class ServiceCollectionExtensions
-    {       
-
+    {
         /// <summary>
         /// 添加转发器相关的注入服务
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
-        public static IServiceCollection AddTransforClient<TMessage>(this IServiceCollection services) where TMessage:InvokeMessage
+        public static IServiceCollection AddTransforClient<TMessage>(this IServiceCollection services) where TMessage : InvokeMessage
         {
             // .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>() // 编解码
             return services.AddSingleton<ITransportFactory<TMessage>, DefaultTransportFactory<TMessage>>() //通道工厂
-                .AddSingleton<IMessageHandler<TMessage>, ClientMessageHandler<TMessage>>() // 消息处理器               
+                .AddSingleton<IMessageHandler<TMessage>, ClientMessageHandler<TMessage>>() // 消息处理器
                 .AddSingleton<IRpcClient<TMessage>, TransforRpcClient<TMessage>>() //在服务端使用客户端链接 需要使用桥接式的实现
-                .AddSingleton<IBridgeRouter<TMessage>,LocalBridgeRouter<TMessage>>() //桥接路由器
+                .AddSingleton<IBridgeRouter<TMessage>, LocalBridgeRouter<TMessage>>() //桥接路由器
                 .AddSingleton<IClientBootstrap<TMessage>, NettyClientBootstrap<TMessage>>();
-
         }
     }
 }

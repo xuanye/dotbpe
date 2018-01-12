@@ -8,11 +8,11 @@ namespace DotBPE.Protocol.Amp
 {
     public class AmpClient
     {
-        public static IRpcClient<AmpMessage> Create(string remoteAddress,int multiplexCount=1)
+        public static IRpcClient<AmpMessage> Create(string remoteAddress, int multiplexCount = 1)
         {
             var client = new RpcClientBuilder()
                 .AddCore<AmpMessage>()
-                .UseSetting("MultiplexCount",multiplexCount.ToString())
+                .UseSetting("MultiplexCount", multiplexCount.ToString())
                 .UserNettyClient<AmpMessage>()
                 .ConfigureServices((services) =>
                 {

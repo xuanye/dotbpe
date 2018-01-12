@@ -1,15 +1,15 @@
-﻿using System;
 using DotBPE.Rpc.Codes;
-using DotNetty.Transport.Channels;
 using DotBPE.Rpc.Logging;
 using DotNetty.Handlers.Timeout;
+using DotNetty.Transport.Channels;
+using System;
 
 namespace DotBPE.Rpc.Netty
 {
-    public class ClientChannelHandlerAdapter<TMessage> : SimpleChannelInboundHandler<TMessage> where TMessage :InvokeMessage
+    public class ClientChannelHandlerAdapter<TMessage> : SimpleChannelInboundHandler<TMessage> where TMessage : InvokeMessage
     {
         private readonly NettyClientBootstrap<TMessage> _bootstrap;
-        static readonly ILogger Logger = Environment.Logger.ForType<ClientChannelHandlerAdapter<TMessage>>();
+        private static readonly ILogger Logger = Environment.Logger.ForType<ClientChannelHandlerAdapter<TMessage>>();
 
         public ClientChannelHandlerAdapter(NettyClientBootstrap<TMessage> bootstrap)
         {
@@ -21,6 +21,7 @@ namespace DotBPE.Rpc.Netty
             Logger.Info($" Server {context.Channel.RemoteAddress} is connected ");
             base.ChannelActive(context);
         }
+
         /// <summary>
         /// 断开连接
         /// </summary>
@@ -36,17 +37,21 @@ namespace DotBPE.Rpc.Netty
         {
             this._bootstrap.ChannelRead(ctx, msg);
         }
+
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
-            Logger.Error(ex,$"Server:{context.Channel.RemoteAddress},An exception occurs");
+            Logger.Error(ex, $"Server:{context.Channel.RemoteAddress},An exception occurs");
             context.CloseAsync(); //关闭连接
         }
 
-        public override void UserEventTriggered(IChannelHandlerContext context, object evt){
-            if(evt is IdleStateEvent){
+        public override void UserEventTriggered(IChannelHandlerContext context, object evt)
+        {
+            if (evt is IdleStateEvent)
+            {
                 var eventState = evt as IdleStateEvent;
-                if(eventState !=null){
-                    this._bootstrap.SendHeartbeatAsync(context,eventState);
+                if (eventState != null)
+                {
+                    this._bootstrap.SendHeartbeatAsync(context, eventState);
                 }
             }
         }

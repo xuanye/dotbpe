@@ -5,6 +5,8 @@
 - [ ] 重新编写readme文件
 
 
+
+
 ## 示例程序
 
 - [√] 编写Hello程序，使用UTF8字符串编码
@@ -12,14 +14,15 @@
 - [√] 编写数学函数示例 ，使用msgpack编码格式
 - [√] 编写数据函数示例 ，使用Protobuf编码格式
 - [ ] 编写读取配置的示例
-- [ ] 编写Http Gateway示例
+- [√] 编写Http Gateway示例
 - [ ] 编写多服务间调用示例
 - [ ] 编写使用Consul服务发现示例
 - [ ] 编写使用Protobuf-gen-Amp生成完整的项目代码示例
 - [ ] 使用DotBPE实现PiggyMetrics示例
 
 ## 帮助文档
-AppDomain.CurrentDomain.ProcessExit 优雅退出
+
+- AppDomain.CurrentDomain.ProcessExit 优雅退出
 
 ## 程序完善
 - [ ] 服务间调用日志保存
@@ -33,3 +36,5 @@ AppDomain.CurrentDomain.ProcessExit 优雅退出
 - [ ] 负载均衡：支持随机请求，轮询，低并发优先，一致性Hash等（可选）
 - [ ] 扩展点机制
 - [ ] 使用DotBPE实现服务网关管理的功能（包括配置，管理功能）
+- [ ] 解决服务端优雅退出的问题
+- [√] 实现客户端主动断开连接

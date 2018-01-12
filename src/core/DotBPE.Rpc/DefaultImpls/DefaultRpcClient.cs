@@ -1,26 +1,28 @@
 #region copyright
+
 // -----------------------------------------------------------------------
 //  <copyright file="RpcClient.cs” project="DotBPE.Rpc">
 //    文件说明:
 //     copyright@2017 xuanye 2017-04-09 10:50
 //  </copyright>
 // -----------------------------------------------------------------------
-#endregion
 
+#endregion copyright
+
+using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Exceptions;
+using DotBPE.Rpc.Logging;
+using DotBPE.Rpc.Options;
+using Microsoft.Extensions.Options;
 using System;
 using System.Net;
 using System.Threading.Tasks;
-using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Options;
-using DotBPE.Rpc.Exceptions;
-using DotBPE.Rpc.Logging;
-using Microsoft.Extensions.Options;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
-    public class DefaultRpcClient<TMessage>:IRpcClient<TMessage> where TMessage :InvokeMessage
+    public class DefaultRpcClient<TMessage> : IRpcClient<TMessage> where TMessage : InvokeMessage
     {
-        static readonly ILogger Logger = Environment.Logger.ForType<DefaultRpcClient<TMessage>>();
+        private static readonly ILogger Logger = Environment.Logger.ForType<DefaultRpcClient<TMessage>>();
         private readonly ITransportFactory<TMessage> _factory;
 
         private EndPoint _defaultServerAddress = null;
@@ -44,10 +46,11 @@ namespace DotBPE.Rpc.DefaultImpls
         }
 
         public event EventHandler<MessageRecievedEventArgs<TMessage>> Recieved;
+
         public Task SendAsync(EndPoint serverAddress, TMessage message)
         {
             var transport = this._factory.CreateTransport(serverAddress);
-            Logger.Debug("Transport={0} send msg",transport.Id);
+            Logger.Debug("Transport={0} send msg", transport.Id);
             return transport.SendAsync(message);
         }
 
@@ -61,8 +64,8 @@ namespace DotBPE.Rpc.DefaultImpls
         {
             if (_defaultServerAddress == null)
             {
-
-                if(_clientOption ==null){
+                if (_clientOption == null)
+                {
                     throw new RpcException("no default server address");
                 }
                 string serverAddress = _clientOption.Value.DefaultServerAddress;

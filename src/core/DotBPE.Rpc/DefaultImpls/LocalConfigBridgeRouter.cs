@@ -7,7 +7,7 @@ using System.Net;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
-    public class LocalBridgeRouter<TMessage> :AbstractBridgeRouter<TMessage> where TMessage:InvokeMessage
+    public class LocalBridgeRouter<TMessage> : AbstractBridgeRouter<TMessage> where TMessage : InvokeMessage
     {
         private IOptions<RemoteServicesOption> _options;
         private readonly static Dictionary<string, List<EndPoint>> routerDict = new Dictionary<string, List<EndPoint>>();
@@ -17,6 +17,7 @@ namespace DotBPE.Rpc.DefaultImpls
             this._options = options;
             InitRouter();
         }
+
         private void InitRouter()
         {
             if (this._options != null && this._options.Value != null)
@@ -44,6 +45,7 @@ namespace DotBPE.Rpc.DefaultImpls
                 }
             }
         }
+
         private void AddRouter(string key, List<EndPoint> remoteAddress)
         {
             if (routerDict.ContainsKey(key))
@@ -80,6 +82,5 @@ namespace DotBPE.Rpc.DefaultImpls
 
             return point;
         }
-   
     }
 }

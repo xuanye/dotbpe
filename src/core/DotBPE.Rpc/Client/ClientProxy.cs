@@ -1,6 +1,6 @@
-﻿using System.Collections.Generic;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Collections.Generic;
 
 namespace DotBPE.Rpc.Client
 {
@@ -8,7 +8,8 @@ namespace DotBPE.Rpc.Client
     {
         private static readonly Dictionary<Type, object> cache = new Dictionary<Type, object>();
         private static readonly object lockObj = new object();
-        public static T GetClient<T>() where  T: class
+
+        public static T GetClient<T>() where T : class
         {
             Type type = typeof(T);
             if (cache.ContainsKey(type))
@@ -27,7 +28,6 @@ namespace DotBPE.Rpc.Client
                 }
                 return client;
             }
-
         }
     }
 }

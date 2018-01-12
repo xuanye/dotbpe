@@ -4,7 +4,6 @@ namespace DotBPE.Rpc
 {
     public interface IAppBuilder
     {
-        IServiceProvider ServiceProvider{get;set;}
-
+        IServiceProvider ServiceProvider { get; set; }
     }
 }

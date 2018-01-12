@@ -11,6 +11,5 @@ message VoidReq{
 
 // 只返回默认的返回
 message VoidRsp{
-    int32 return_code =1; // 返回状态码
-    string return_message = 2; //返回错误信息
+   string return_message = 1; //返回错误信息
 }

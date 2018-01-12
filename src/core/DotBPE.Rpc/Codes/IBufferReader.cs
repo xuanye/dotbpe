@@ -1,8 +1,9 @@
-﻿namespace DotBPE.Rpc.Codes
+namespace DotBPE.Rpc.Codes
 {
     public interface IBufferReader
     {
         int ReadInt();
+
         byte ReadByte();
 
         long ReadLong();

@@ -1,7 +1,7 @@
-﻿using System.Collections.Generic;
 using DotBPE.Rpc.Codes;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
+using System.Collections.Generic;
 
 namespace DotBPE.Rpc.Netty
 {
@@ -9,11 +9,13 @@ namespace DotBPE.Rpc.Netty
     {
         private readonly IMessageCodecs<TMessage> _codecs;
         private readonly NettyBufferManager _nettyBufferManager;
+
         public ChannelDecodeHandler(IMessageCodecs<TMessage> codecs)
         {
             this._codecs = codecs;
             this._nettyBufferManager = new NettyBufferManager();
         }
+
         protected override void Decode(IChannelHandlerContext context, IByteBuffer input, List<object> output)
         {
             IBufferReader reader = NettyBufferManager.CreateBufferReader(input);

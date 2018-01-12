@@ -1,4 +1,4 @@
-﻿using DotBPE.Rpc.Exceptions;
+using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Utils;
 using System;
@@ -7,9 +7,9 @@ namespace DotBPE.Rpc
 {
     public class Environment
     {
-        static ILogger logger = new NullLogger();
+        private static ILogger logger = new NullLogger();
 
-        static IServiceProvider serviceProvider = null;
+        private static IServiceProvider serviceProvider = null;
 
         /// <summary>
         /// Gets application-wide logger used by gRPC.
@@ -23,18 +23,17 @@ namespace DotBPE.Rpc
             }
         }
 
-        public static IServiceProvider ServiceProvider {
-
+        public static IServiceProvider ServiceProvider
+        {
             get
             {
-                if(serviceProvider == null)
+                if (serviceProvider == null)
                 {
                     throw new RpcException("ServiceProvider 未设置，请检查程序是否正确启动");
                 }
                 return serviceProvider;
             }
         }
-
 
         /// <summary>
         /// Sets the application-wide logger that should be used by gRPC.

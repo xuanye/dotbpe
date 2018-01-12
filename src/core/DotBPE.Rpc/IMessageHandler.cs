@@ -1,6 +1,6 @@
-﻿using System;
-using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
+using System;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc
 {
@@ -9,6 +9,5 @@ namespace DotBPE.Rpc
         Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message);
 
         event EventHandler<MessageRecievedEventArgs<TMessage>> Recieved;
-
     }
 }

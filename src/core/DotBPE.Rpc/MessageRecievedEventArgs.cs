@@ -1,7 +1,4 @@
-﻿using DotBPE.Rpc.Codes;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Rpc
 {
@@ -9,17 +6,15 @@ namespace DotBPE.Rpc
     {
         public MessageRecievedEventArgs()
         {
-
         }
+
         public MessageRecievedEventArgs(IRpcContext<TMessage> context, TMessage message)
         {
-
             this.Context = context;
             this.Message = message;
         }
 
         public IRpcContext<TMessage> Context { get; set; }
         public TMessage Message { get; set; }
-
     }
 }

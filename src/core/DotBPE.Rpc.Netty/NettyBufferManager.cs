@@ -1,6 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
 using DotBPE.Rpc.Codes;
 using DotNetty.Buffers;
 
@@ -22,13 +19,15 @@ namespace DotBPE.Rpc.Netty
     public class NettyByteBufferReader : IBufferReader
     {
         private readonly IByteBuffer _buffer;
+
         public NettyByteBufferReader(IByteBuffer buffer)
         {
             this._buffer = buffer;
         }
+
         public byte ReadByte()
         {
-           return this._buffer.ReadByte();
+            return this._buffer.ReadByte();
         }
 
         public void ReadBytes(byte[] dest)
@@ -40,7 +39,6 @@ namespace DotBPE.Rpc.Netty
         {
             return this._buffer.ReadChar();
         }
-
 
         public double ReadDouble()
         {
@@ -56,6 +54,7 @@ namespace DotBPE.Rpc.Netty
         {
             return this._buffer.ReadLong();
         }
+
         public short ReadShort()
         {
             return this._buffer.ReadShort();
@@ -73,13 +72,16 @@ namespace DotBPE.Rpc.Netty
 
         public int ReadableBytes => _buffer.ReadableBytes;
     }
+
     public class NettyByteBufferWriter : IBufferWriter
     {
         private readonly IByteBuffer _buffer;
+
         public NettyByteBufferWriter(IByteBuffer buffer)
         {
             this._buffer = buffer;
         }
+
         public IBufferWriter WriteByte(byte value)
         {
             this._buffer.WriteByte(value);

@@ -1,21 +1,25 @@
-﻿namespace DotBPE.Rpc.Codes
+namespace DotBPE.Rpc.Codes
 {
     public interface IMessageCodecs<TMessage> where TMessage : IMessage
     {
         void Encode(TMessage message, IBufferWriter writer);
+
         TMessage Decode(IBufferReader reader);
+
         MessageMeta GetMessageMeta();
+
         TMessage HeartbeatMessage();
     }
 
     public interface IMessage
     {
-        int Length{ get; }
+        int Length { get; }
 
         /// <summary>
         /// 服务识别符,定位到某个服务
         /// </summary>
         string ServiceIdentifier { get; }
+
         /// <summary>
         /// 方法识别符，定位到某个方法
         /// </summary>
@@ -53,6 +57,6 @@
         /// 心跳间隔时间，单位毫秒
         /// </summary>
         /// <returns></returns>
-        public int HeartbeatInterval{get;set;}
+        public int HeartbeatInterval { get; set; }
     }
 }

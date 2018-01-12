@@ -1,16 +1,14 @@
-﻿using DotBPE.Rpc.Codes;
+using DotBPE.Rpc.Codes;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public class ClientMessageHandler<TMessage> : IMessageHandler<TMessage> where TMessage:InvokeMessage
-    {    
+    public class ClientMessageHandler<TMessage> : IMessageHandler<TMessage> where TMessage : InvokeMessage
+    {
         public event EventHandler<MessageRecievedEventArgs<TMessage>> Recieved;
 
-        public  Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message)
+        public Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message)
         {
             if (Recieved != null)
             {
@@ -23,8 +21,7 @@ namespace DotBPE.Rpc.Client
             else
             {
                 return Utils.TaskUtils.CompletedTask;
-            }            
+            }
         }
-
     }
 }

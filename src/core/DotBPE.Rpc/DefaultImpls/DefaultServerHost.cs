@@ -1,29 +1,27 @@
-﻿using System;
-using System.Net;
-using System.Collections.Generic;
-using System.Threading.Tasks;
 using DotBPE.Rpc.Hosting;
 using DotBPE.Rpc.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
     public class DefaultServerHost : IServerHost
     {
-
-        static readonly ILogger Logger = Environment.Logger.ForType<DefaultServerHost>();
+        private static readonly ILogger Logger = Environment.Logger.ForType<DefaultServerHost>();
 
         private IServiceProvider _applicationServices;
         private IStartup _startup;
-        private bool _initialized ;
+        private bool _initialized;
 
         private readonly IServiceCollection _applicationServiceCollection;
         private readonly IServiceProvider _hostProvider;
         private readonly RpcHostOption _option;
         private IServerBootstrap _server;
 
-
-        public DefaultServerHost(IServiceProvider hostProvider,IServiceCollection serviceCollection, RpcHostOption option)
+        public DefaultServerHost(IServiceProvider hostProvider, IServiceCollection serviceCollection, RpcHostOption option)
         {
             this._hostProvider = hostProvider;
             this._applicationServiceCollection = serviceCollection;
@@ -46,10 +44,11 @@ namespace DotBPE.Rpc.DefaultImpls
         public Task Preheating()
         {
             var preTasks = this._applicationServices.GetServices<IPreheating>();
-            if(preTasks !=null)
+            if (preTasks != null)
             {
-                var  listT = new List<Task>();
-                foreach(IPreheating task in preTasks){
+                var listT = new List<Task>();
+                foreach (IPreheating task in preTasks)
+                {
                     listT.Add(task.StartAsync());
                 }
                 return Task.WhenAll(listT);
@@ -59,10 +58,12 @@ namespace DotBPE.Rpc.DefaultImpls
 
         public void Initialize()
         {
-            if(!_initialized){
+            if (!_initialized)
+            {
                 BuildApplication();
             }
         }
+
         private void BuildApplication()
         {
             //注册所有的依赖和服务
@@ -74,11 +75,12 @@ namespace DotBPE.Rpc.DefaultImpls
             var env = _applicationServices.GetRequiredService<IHostingEnvironment>();
             appbuilder.ServiceProvider = this._applicationServices;
 
-            _startup.Configure(appbuilder,env);
+            _startup.Configure(appbuilder, env);
 
             Environment.SetServiceProvider(this._applicationServices);
-            _initialized =true;
+            _initialized = true;
         }
+
         private void EnsureApplicationServices()
         {
             if (_applicationServices == null)
@@ -87,9 +89,11 @@ namespace DotBPE.Rpc.DefaultImpls
                 _applicationServices = _startup.ConfigureServices(this._applicationServiceCollection);
             }
         }
+
         private void EnsureServer()
         {
-            if(_server == null){
+            if (_server == null)
+            {
                 _server = _applicationServices.GetRequiredService<IServerBootstrap>();
             }
         }

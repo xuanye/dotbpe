@@ -11,56 +11,68 @@ using Google.Protobuf;
 namespace GatewayForAspNet {
 
 //start for class AbstractGreeter
-public abstract class GreeterBase : ServiceActor 
-{
-protected override int ServiceId => 10006;
-//调用委托
-private async Task<AmpMessage> ProcessSayHelloAsync(AmpMessage req)
-{
-HelloReq request = null;
-if(req.Data == null ){
-   request = new HelloReq();
-}
-else {
-request = HelloReq.Parser.ParseFrom(req.Data);
-}
-var data = await SayHelloAsync(request);
-var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
-response.Data = data.ToByteArray();
-return response;
-}
+   public abstract class GreeterBase : ServiceActor 
+   {
+      protected override int ServiceId => 10006;
+      //调用委托
+      private async Task<AmpMessage> ProcessSayHelloAsync(AmpMessage req)
+      {
+         HelloReq request = null;
 
-//抽象方法
-public abstract Task<HelloRes> SayHelloAsync(HelloReq request);
-//调用委托
-private async Task<AmpMessage> ProcessSayHelloAgainAsync(AmpMessage req)
-{
-HelloReq request = null;
-if(req.Data == null ){
-   request = new HelloReq();
-}
-else {
-request = HelloReq.Parser.ParseFrom(req.Data);
-}
-var data = await SayHelloAgainAsync(request);
-var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
-response.Data = data.ToByteArray();
-return response;
-}
+         if(req.Data == null ){
+            request = new HelloReq();
+         }
+         else {
+            request = HelloReq.Parser.ParseFrom(req.Data);
+         }
 
-//抽象方法
-public abstract Task<HelloRes> SayHelloAgainAsync(HelloReq request);
-public override Task<AmpMessage> ProcessAsync(AmpMessage req)
-{
-switch(req.MessageId){
-//方法Greeter.SayHello
-case 1: return this.ProcessSayHelloAsync(req);
-//方法Greeter.SayHelloAgain
-case 2: return this.ProcessSayHelloAgainAsync(req);
-default: return base.ProcessNotFoundAsync(req);
-}
-}
-}
+         var result = await SayHelloAsync(request);
+         var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
+         response.Code = result.Code;
+         if( result.Data !=null )
+         {
+             response.Data = result.Data.ToByteArray();
+         }
+         return response;
+      }
+
+      //抽象方法
+      public abstract Task<RpcResult<HelloRes>> SayHelloAsync(HelloReq request);
+      //调用委托
+      private async Task<AmpMessage> ProcessSayHelloAgainAsync(AmpMessage req)
+      {
+         HelloReq request = null;
+
+         if(req.Data == null ){
+            request = new HelloReq();
+         }
+         else {
+            request = HelloReq.Parser.ParseFrom(req.Data);
+         }
+
+         var result = await SayHelloAgainAsync(request);
+         var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
+         response.Code = result.Code;
+         if( result.Data !=null )
+         {
+             response.Data = result.Data.ToByteArray();
+         }
+         return response;
+      }
+
+      //抽象方法
+      public abstract Task<RpcResult<HelloRes>> SayHelloAgainAsync(HelloReq request);
+      public override Task<AmpMessage> ProcessAsync(AmpMessage req)
+      {
+         switch(req.MessageId){
+            //方法Greeter.SayHello
+            case 1: return this.ProcessSayHelloAsync(req);
+            //方法Greeter.SayHelloAgain
+            case 2: return this.ProcessSayHelloAgainAsync(req);
+            default: return base.ProcessNotFoundAsync(req);
+         }
+      }
+   }
 //end for class AbstractGreeter
 }
 

@@ -1,4 +1,4 @@
-﻿using DotBPE.Rpc.Exceptions;
+using DotBPE.Rpc.Exceptions;
 
 namespace DotBPE.Rpc.Utils
 {
@@ -12,7 +12,6 @@ namespace DotBPE.Rpc.Utils
             }
         }
 
-
         public static void IsTrue(bool condition, string errorMessage)
         {
             if (!condition)
@@ -21,7 +20,6 @@ namespace DotBPE.Rpc.Utils
             }
         }
 
-
         public static void IsNull<T>(T reference)
         {
             if (reference == null)
@@ -29,7 +27,6 @@ namespace DotBPE.Rpc.Utils
                 throw new RpcBizException();
             }
         }
-
 
         public static void IsNull<T>(T reference, string errorMessage)
         {

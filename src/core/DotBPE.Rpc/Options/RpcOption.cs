@@ -4,10 +4,9 @@ namespace DotBPE.Rpc.Options
     {
     }
 
-
-    public class RpcClientOption:RpcOption
+    public class RpcClientOption : RpcOption
     {
-        public string DefaultServerAddress{get;set;}
-        public int MultiplexCount { get; set;  }
+        public string DefaultServerAddress { get; set; }
+        public int MultiplexCount { get; set; }
     }
 }

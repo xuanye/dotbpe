@@ -1,14 +1,14 @@
-using System.Collections.Generic;
-using System.Net;
-using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Options;
 using DotBPE.Rpc.Utils;
 using Microsoft.Extensions.Options;
+using System.Collections.Generic;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc
 {
-   public class ClientChannelPreheating<TMessage> : IPreheating where TMessage:InvokeMessage
+    public class ClientChannelPreheating<TMessage> : IPreheating where TMessage : InvokeMessage
     {
         private readonly IOptions<RemoteServicesOption> _options;
         private readonly ITransportFactory<TMessage> _factory;
@@ -18,6 +18,7 @@ namespace DotBPE.Rpc
             this._factory = factory;
             this._options = options;
         }
+
         public Task StartAsync()
         {
             //从配置中获取remoteServices的配置，读取address的信息
@@ -28,23 +29,27 @@ namespace DotBPE.Rpc
                 foreach (var option in routeOptions)
                 {
                     string[] arrAdd = option.RemoteAddress.Split(',');
-                    foreach(string address in arrAdd){
-                        if(remoteAddress.IndexOf(address)<0){
+                    foreach (string address in arrAdd)
+                    {
+                        if (remoteAddress.IndexOf(address) < 0)
+                        {
                             remoteAddress.Add(address);
                         }
                     }
                 }
             }
-            if(remoteAddress.Count>0){
-                return Task.Factory.StartNew( ()=>{
-                    for(var i =0 ;i<remoteAddress.Count ; i++){
+            if (remoteAddress.Count > 0)
+            {
+                return Task.Factory.StartNew(() =>
+                {
+                    for (var i = 0; i < remoteAddress.Count; i++)
+                    {
                         EndPoint point = ParseUtils.ParseEndPointFromString(remoteAddress[i]);
                         this._factory.CreateTransport(point);
                     }
                 });
             }
             return TaskUtils.CompletedTask;
-
         }
     }
 }

@@ -1,0 +1,38 @@
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "Survey.Core";
+option optimize_for = SPEED;
+
+
+
+import public "dotbpe_option.proto";
+import "message/qpaper.proto"; //引入消息，因为部分消息和InnerService共用，所有单独一个文件，如果不共用，可直接定义在这里
+
+
+
+//-------------这里是服务定义----------------------start-----
+
+// 问卷前置服务
+service QPaperInnerService {
+
+    option (service_id)= 20001 ;//设定服务ID
+
+    rpc SaveQPaper (SaveQPaperReq) returns (SaveQPaperRsp){
+        option (message_id)= 1 ;//设定消息ID
+    };
+
+    rpc QueryQPaperList (QueryQPaperReq) returns (QPaperListRsp){
+        option (message_id)= 2 ; //设定消息ID
+    };
+
+    rpc GetQPaper (GetQPaperReq) returns (QPaperRsp){
+        option (message_id)= 3 ; //设定消息ID
+    };
+
+    rpc GetQPaperFull (GetQPaperReq) returns (QPaperFullRsp){
+        option (message_id)= 4 ; //设定消息ID
+    };
+}
+
+//-------------这里是服务定义----------------------end-----

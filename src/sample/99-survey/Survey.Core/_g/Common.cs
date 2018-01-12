@@ -22,14 +22,14 @@ namespace Survey.Core {
     static CommonReflection() {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
-            "ChRtZXNzYWdlL2NvbW1vbi5wcm90bxIGZG90YnBlIgkKB1ZvaWRSZXEiNgoH",
-            "Vm9pZFJzcBITCgtyZXR1cm5fY29kZRgBIAEoBRIWCg5yZXR1cm5fbWVzc2Fn",
-            "ZRgCIAEoCUIQSAGqAgtTdXJ2ZXkuQ29yZWIGcHJvdG8z"));
+            "ChRtZXNzYWdlL2NvbW1vbi5wcm90bxIGZG90YnBlIgkKB1ZvaWRSZXEiIQoH",
+            "Vm9pZFJzcBIWCg5yZXR1cm5fbWVzc2FnZRgBIAEoCUIQSAGqAgtTdXJ2ZXku",
+            "Q29yZWIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.VoidReq), global::Survey.Core.VoidReq.Parser, null, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.VoidRsp), global::Survey.Core.VoidRsp.Parser, new[]{ "ReturnCode", "ReturnMessage" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.VoidRsp), global::Survey.Core.VoidRsp.Parser, new[]{ "ReturnMessage" }, null, null, null)
           }));
     }
     #endregion
@@ -155,7 +155,6 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public VoidRsp(VoidRsp other) : this() {
-      returnCode_ = other.returnCode_;
       returnMessage_ = other.returnMessage_;
     }
 
@@ -164,22 +163,8 @@ namespace Survey.Core {
       return new VoidRsp(this);
     }
 
-    /// <summary>Field number for the "return_code" field.</summary>
-    public const int ReturnCodeFieldNumber = 1;
-    private int returnCode_;
-    /// <summary>
-    ///  返回状态码
-    /// </summary>
-    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int ReturnCode {
-      get { return returnCode_; }
-      set {
-        returnCode_ = value;
-      }
-    }
-
     /// <summary>Field number for the "return_message" field.</summary>
-    public const int ReturnMessageFieldNumber = 2;
+    public const int ReturnMessageFieldNumber = 1;
     private string returnMessage_ = "";
     /// <summary>
     /// 返回错误信息
@@ -205,7 +190,6 @@ namespace Survey.Core {
       if (ReferenceEquals(other, this)) {
         return true;
       }
-      if (ReturnCode != other.ReturnCode) return false;
       if (ReturnMessage != other.ReturnMessage) return false;
       return true;
     }
@@ -213,7 +197,6 @@ namespace Survey.Core {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public override int GetHashCode() {
       int hash = 1;
-      if (ReturnCode != 0) hash ^= ReturnCode.GetHashCode();
       if (ReturnMessage.Length != 0) hash ^= ReturnMessage.GetHashCode();
       return hash;
     }
@@ -225,12 +208,8 @@ namespace Survey.Core {
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public void WriteTo(pb::CodedOutputStream output) {
-      if (ReturnCode != 0) {
-        output.WriteRawTag(8);
-        output.WriteInt32(ReturnCode);
-      }
       if (ReturnMessage.Length != 0) {
-        output.WriteRawTag(18);
+        output.WriteRawTag(10);
         output.WriteString(ReturnMessage);
       }
     }
@@ -238,9 +217,6 @@ namespace Survey.Core {
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
     public int CalculateSize() {
       int size = 0;
-      if (ReturnCode != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(ReturnCode);
-      }
       if (ReturnMessage.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(ReturnMessage);
       }
@@ -251,9 +227,6 @@ namespace Survey.Core {
     public void MergeFrom(VoidRsp other) {
       if (other == null) {
         return;
-      }
-      if (other.ReturnCode != 0) {
-        ReturnCode = other.ReturnCode;
       }
       if (other.ReturnMessage.Length != 0) {
         ReturnMessage = other.ReturnMessage;
@@ -268,11 +241,7 @@ namespace Survey.Core {
           default:
             input.SkipLastField();
             break;
-          case 8: {
-            ReturnCode = input.ReadInt32();
-            break;
-          }
-          case 18: {
+          case 10: {
             ReturnMessage = input.ReadString();
             break;
           }

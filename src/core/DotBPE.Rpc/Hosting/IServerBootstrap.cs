@@ -1,4 +1,3 @@
-﻿using System;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -12,6 +11,7 @@ namespace DotBPE.Rpc.Hosting
         /// <param name="endpoint">需要绑定的IP</param>
         /// <returns></returns>
         Task StartAsync(EndPoint endpoint);
+
         Task ShutdownAsync();
     }
 }

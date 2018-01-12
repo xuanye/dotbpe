@@ -29,7 +29,7 @@ namespace DotBPE.IntegrationTesting {
             "BsjzGNGGA0IeSAGqAhlEb3RCUEUuSW50ZWdyYXRpb25UZXN0aW5nUABiBnBy",
             "b3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::DotBPE.ProtoBuf.DotbpeOptionReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::DotBPE.Protobuf.DotbpeOptionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DotBPE.IntegrationTesting.VoidReq), global::DotBPE.IntegrationTesting.VoidReq.Parser, null, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::DotBPE.IntegrationTesting.CommonRsp), global::DotBPE.IntegrationTesting.CommonRsp.Parser, new[]{ "Status", "Message" }, null, null, null)

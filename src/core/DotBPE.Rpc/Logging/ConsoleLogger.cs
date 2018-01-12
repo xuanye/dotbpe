@@ -1,7 +1,4 @@
-
 using System;
-using System.Collections.Generic;
-using System.Globalization;
 
 namespace DotBPE.Rpc.Logging
 {
@@ -17,7 +14,7 @@ namespace DotBPE.Rpc.Logging
         private ConsoleLogger(Type forType) : base(() => Console.Error, forType)
         {
         }
- 
+
         /// <summary>
         /// Returns a logger associated with the specified type.
         /// </summary>

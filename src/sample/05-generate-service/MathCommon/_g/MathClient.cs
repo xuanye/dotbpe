@@ -2,18 +2,17 @@
 // source: math.proto
 #region Designer generated code
 
-using System;
-using System.Threading.Tasks;
-using DotBPE.Rpc;
-using DotBPE.Protocol.Amp;
-using DotBPE.Rpc.Exceptions;
-using Google.Protobuf;
+using System; 
+using System.Threading.Tasks; 
+using DotBPE.Rpc; 
+using DotBPE.Protocol.Amp; 
+using DotBPE.Rpc.Exceptions; 
+using Google.Protobuf; 
 
-namespace MathCommon
-{
+namespace MathCommon {
 
-    //start for class MathClient
-    public sealed class MathClient : AmpInvokeClient
+//start for class MathClient
+   public sealed class MathClient : AmpInvokeClient 
     {
         public MathClient(IRpcClient<AmpMessage> client) : base(client)
         {
@@ -21,39 +20,57 @@ namespace MathCommon
         public MathClient(string remoteAddress) : base(remoteAddress)
         {
         }
-        public async Task<AddRes> AddAsync(AddReq request, int timeOut = 3000)
+        public async Task<RpcResult<AddRes>> AddAsync(AddReq request,int timeOut=3000)
         {
             AmpMessage message = AmpMessage.CreateRequestMessage(10005, 1);
             message.Data = request.ToByteArray();
-            var response = await base.CallInvoker.AsyncCall(message, timeOut);
+            var response = await base.CallInvoker.AsyncCall(message,timeOut);
             if (response == null)
             {
                 throw new RpcException("error,response is null !");
             }
-            if (response.Data == null)
+            var result = new RpcResult<AddRes>();
+            if (response.Code != 0)
             {
-                return new AddRes();
+                result.Code = response.Code;
             }
-            return AddRes.Parser.ParseFrom(response.Data);
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = AddRes.Parser.ParseFrom(response.Data);
+            }
+            return result;
         }
 
         //同步方法
-        public AddRes Add(AddReq request)
+        public RpcResult<AddRes> Add(AddReq request)
         {
             AmpMessage message = AmpMessage.CreateRequestMessage(10005, 1);
             message.Data = request.ToByteArray();
-            var response = base.CallInvoker.BlockingCall(message);
+            var response =  base.CallInvoker.BlockingCall(message);
             if (response == null)
             {
                 throw new RpcException("error,response is null !");
             }
-            if (response.Data == null)
+            var result = new RpcResult<AddRes>();
+            if (response.Code != 0)
             {
-                return new AddRes();
+                result.Code = response.Code;
             }
-            return AddRes.Parser.ParseFrom(response.Data);
-        }
-    }
-    //end for class MathClient
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = AddRes.Parser.ParseFrom(response.Data);
+            }
+            return result;
+         }
+     }
+//end for class MathClient
 }
 #endregion

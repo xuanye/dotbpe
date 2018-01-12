@@ -5,8 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="_g\" />
-    <Folder Include="InnerImpl\Repository\" />
+    <Folder Include="Properties\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -14,6 +13,20 @@
     <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
     <ProjectReference Include="..\..\..\protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj" />
     <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Reference Include="Dapper">
+      <HintPath>..\refdll\Dapper.dll</HintPath>
+    </Reference>
+    <Reference Include="Vulcan.DataAccess">
+      <HintPath>..\refdll\Vulcan.DataAccess.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+
+  <ItemGroup>
+    <Service Include="{508349b6-6b84-4df5-91f0-309beebad82d}" />
   </ItemGroup>
 
 </Project>

@@ -12,44 +12,65 @@ using Google.Protobuf;
 namespace DotBPE.IntegrationTesting {
 
 //start for class CallContextTestClient
-public sealed class CallContextTestClient : AmpInvokeClient 
-{
-public CallContextTestClient(IRpcClient<AmpMessage> client) : base(client)
-{
-}
-public async Task<CommonRsp> TestAsync(VoidReq request,int timeOut=3000)
-{
-AmpMessage message = AmpMessage.CreateRequestMessage(50001, 1);
-message.Data = request.ToByteArray();
-var response = await base.CallInvoker.AsyncCall(message,timeOut);
-if (response == null)
-{
-throw new RpcException("error,response is null !");
-}
-if (response.Data == null)
-{
-return new CommonRsp();
-}
-return CommonRsp.Parser.ParseFrom(response.Data);
-}
+   public sealed class CallContextTestClient : AmpInvokeClient 
+    {
+        public CallContextTestClient(IRpcClient<AmpMessage> client) : base(client)
+        {
+        }
+        public CallContextTestClient(string remoteAddress) : base(remoteAddress)
+        {
+        }
+        public async Task<RpcResult<CommonRsp>> TestAsync(VoidReq request,int timeOut=3000)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(50001, 1);
+            message.Data = request.ToByteArray();
+            var response = await base.CallInvoker.AsyncCall(message,timeOut);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<CommonRsp>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = CommonRsp.Parser.ParseFrom(response.Data);
+            }
+            return result;
+        }
 
-//同步方法
-public CommonRsp Test(VoidReq request)
-{
-AmpMessage message = AmpMessage.CreateRequestMessage(50001, 1);
-message.Data = request.ToByteArray();
-var response =  base.CallInvoker.BlockingCall(message);
-if (response == null)
-{
-throw new RpcException("error,response is null !");
-}
-if (response.Data == null)
-{
-return new CommonRsp();
-}
-return CommonRsp.Parser.ParseFrom(response.Data);
-}
-}
+        //同步方法
+        public RpcResult<CommonRsp> Test(VoidReq request)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(50001, 1);
+            message.Data = request.ToByteArray();
+            var response =  base.CallInvoker.BlockingCall(message);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<CommonRsp>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = CommonRsp.Parser.ParseFrom(response.Data);
+            }
+            return result;
+         }
+     }
 //end for class CallContextTestClient
 }
 #endregion

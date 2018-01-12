@@ -1,5 +1,5 @@
-using System;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
@@ -7,7 +7,6 @@ namespace DotBPE.Rpc.DefaultImpls
     {
         public virtual void Configure(IAppBuilder app, IHostingEnvironment env)
         {
-
         }
 
         public virtual IServiceProvider ConfigureServices(IServiceCollection services)

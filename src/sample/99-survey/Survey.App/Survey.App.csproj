@@ -6,12 +6,26 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="Vulcan.DataAccess" Version="0.1.10-alpha" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
     <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
     <ProjectReference Include="..\..\..\plugins\gateway\DotBPE.Plugin.AspNetGateway\DotBPE.Plugin.AspNetGateway.csproj" />
     <ProjectReference Include="..\..\..\protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj" />
     <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
     <ProjectReference Include="..\Survey.Core\Survey.Core.csproj" />
+    <ProjectReference Include="..\Survey.Service\Survey.Service.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="dotbpe.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="hosting.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

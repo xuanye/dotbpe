@@ -1,4 +1,3 @@
-
 using System;
 using System.Diagnostics;
 
@@ -31,7 +30,7 @@ namespace DotBPE.Rpc.Utils
             }
             stopwatch.Stop();
             logger.Info("Elapsed time: {0}ms", stopwatch.ElapsedMilliseconds);
-            logger.Info("Ops per second: {0}", (int)((double)benchmarkIterations  * 1000 / stopwatch.ElapsedMilliseconds));
+            logger.Info("Ops per second: {0}", (int)((double)benchmarkIterations * 1000 / stopwatch.ElapsedMilliseconds));
         }
     }
 }

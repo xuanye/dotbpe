@@ -1,12 +1,12 @@
-using System.Threading.Tasks;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
+using System.Threading.Tasks;
 
 namespace DotBPE.Protocol.Amp
 {
-    public class NotFoundServiceActor: IServiceActor<AmpMessage>
+    public class NotFoundServiceActor : IServiceActor<AmpMessage>
     {
-        public static NotFoundServiceActor Default  = new NotFoundServiceActor();
+        public static NotFoundServiceActor Default = new NotFoundServiceActor();
 
         public string Id
         {
@@ -18,7 +18,7 @@ namespace DotBPE.Protocol.Amp
             AmpMessage response = new AmpMessage
             {
                 InvokeMessageType = InvokeMessageType.Response,
-                Code  = ErrorCodes.CODE_SERVICE_NOT_FOUND,
+                Code = ErrorCodes.CODE_SERVICE_NOT_FOUND,
                 ServiceId = message.ServiceId,
                 MessageId = message.MessageId
             };

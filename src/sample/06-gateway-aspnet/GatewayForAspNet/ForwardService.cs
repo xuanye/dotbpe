@@ -42,6 +42,7 @@ namespace GatewayForAspNet
             IMessage reqTemp = ProtobufObjectFactory.GetRequestTemplate(serviceId, messageId);
             if (reqTemp == null)
             {
+                Logger.Error("serviceId={0},messageId={1}的消息不存在", serviceId, messageId);
                 return null;
             }
 
@@ -138,7 +139,7 @@ namespace GatewayForAspNet
         /// <returns></returns>
         protected override string MessageToJson(AmpMessage message)
         {
-            if(message.Code == 0)
+            if (message.Code == 0)
             {
                 var return_code = 0;
                 var return_message = "";
@@ -155,19 +156,7 @@ namespace GatewayForAspNet
                     {
                         rspTemp.MergeFrom(message.Data);
                     }
-                    //提取内部的return_code 字段
-                    var field_code = rspTemp.Descriptor.FindFieldByName("return_code");
-                    if(field_code != null)
-                    {
-                        var retObjV = field_code.Accessor.GetValue(rspTemp);
-                        if(retObjV != null)
-                        {
-                            if(!int.TryParse(retObjV.ToString(), out return_code))
-                            {
-                                return_code = 0;
-                            }
-                        }
-                    }
+
                     //提取return_message
                     var field_msg = rspTemp.Descriptor.FindFieldByName("return_message");
                     if (field_msg != null)
@@ -181,13 +170,15 @@ namespace GatewayForAspNet
 
 
                     ret = AmpJsonFormatter.Format(rspTemp);
+
+                    //TODO:清理内部的return_message ;
                 }
 
-                return "{\"return_code\":"+return_code+",\"return_message\":\""+return_message+"\",data:"+ret+"}";
+                return "{\"return_code\":" + return_code + ",\"return_message\":\"" + return_message + "\",data:" + ret + "}";
             }
             else
             {
-                return "{\"return_code\":"+message.Code+",\"return_message\":\"\"}";
+                return "{\"return_code\":" + message.Code + ",\"return_message\":\"\"}";
             }
 
 

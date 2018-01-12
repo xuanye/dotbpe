@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
@@ -41,10 +41,10 @@ namespace MathServer
 
     public class MathService : MathBase
     {
-        public override Task<AddRes> AddAsync(AddReq req){
+        public override Task<RpcResult<AddRes>> AddAsync(AddReq req){
             var res = new AddRes();
             res.C  = req.A + req.B ;
-            return Task.FromResult(res);
+            return Task.FromResult(new RpcResult<AddRes>() { Data = res });
         }
     }
 

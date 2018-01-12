@@ -1,7 +1,5 @@
-
 using DotBPE.Rpc.Utils;
 using System;
-using System.Collections.Generic;
 using System.Globalization;
 using System.IO;
 
@@ -11,11 +9,11 @@ namespace DotBPE.Rpc.Logging
     public class TextWriterLogger : ILogger
     {
         // Format similar enough to C core log format except nanosecond precision is not supported.
-        const string DateTimeFormatString = "MMdd HH:mm:ss.fff";
+        private const string DateTimeFormatString = "MMdd HH:mm:ss.fff";
 
-        readonly Func<TextWriter> textWriterProvider;
-        readonly Type forType;
-        readonly string forTypeString;
+        private readonly Func<TextWriter> textWriterProvider;
+        private readonly Type forType;
+        private readonly string forTypeString;
 
         /// <summary>
         /// Creates a console logger not associated to any specific type and writes to given <c>System.IO.TextWriter</c>.
@@ -44,7 +42,7 @@ namespace DotBPE.Rpc.Logging
                 var namespaceStr = forType.Namespace ?? "";
                 if (namespaceStr.Length > 0)
                 {
-                     namespaceStr += ".";
+                    namespaceStr += ".";
                 }
                 this.forTypeString = namespaceStr + forType.Name + " ";
             }

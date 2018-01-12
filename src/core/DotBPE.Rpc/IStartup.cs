@@ -1,6 +1,5 @@
-using System;
-using DotBPE.Rpc.Hosting;
 using Microsoft.Extensions.DependencyInjection;
+using System;
 
 namespace DotBPE.Rpc
 {
@@ -18,6 +17,6 @@ namespace DotBPE.Rpc
         /// <param name="app">host builder</param>
         /// <param name="env"></param>
         /// <returns>return null will use default IServiceProvider</returns>
-        void Configure(IAppBuilder app,IHostingEnvironment env);
+        void Configure(IAppBuilder app, IHostingEnvironment env);
     }
 }

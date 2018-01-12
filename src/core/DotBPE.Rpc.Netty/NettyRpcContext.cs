@@ -1,7 +1,7 @@
-﻿using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotNetty.Buffers;
 using DotNetty.Transport.Channels;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Netty
 {
@@ -19,10 +19,9 @@ namespace DotBPE.Rpc.Netty
             this._codecs = codecs;
         }
 
+        public string RemoteAddress { get; set; }
 
-        public string RemoteAddress{get;set;}
-
-        public string LocalAddress {get;set;}
+        public string LocalAddress { get; set; }
 
         public Task CloseAsync()
         {
@@ -34,6 +33,7 @@ namespace DotBPE.Rpc.Netty
             IByteBuffer buf = GetBuffer(message);
             return this._channel.WriteAndFlushAsync(buf);
         }
+
         private IByteBuffer GetBuffer(TMessage message)
         {
             var buff = this._channel.Allocator.Buffer(message.Length);

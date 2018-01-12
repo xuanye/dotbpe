@@ -1,8 +1,9 @@
-﻿namespace DotBPE.Rpc.Codes
+namespace DotBPE.Rpc.Codes
 {
     public interface IBufferWriter
     {
         IBufferWriter WriteInt(int value);
+
         IBufferWriter WriteByte(byte value);
 
         IBufferWriter WriteLong(long value);

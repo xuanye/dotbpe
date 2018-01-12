@@ -34,7 +34,7 @@ namespace MathClient
                 try
                 {
                     var res = await client.AddAsync(req);
-                    Console.WriteLine("server repsonse:<-----{0}+{1}={2}", req.A, req.B, res.C);
+                    Console.WriteLine("server repsonse:<-----{0}+{1}={2}", req.A, req.B, res.Data.C);
                 }
                 catch (Exception ex)
                 {

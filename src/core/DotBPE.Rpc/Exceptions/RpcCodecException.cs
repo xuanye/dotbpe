@@ -1,23 +1,19 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
+using System;
 
 namespace DotBPE.Rpc.Exceptions
 {
-    public class RpcCodecException: Exception
+    public class RpcCodecException : Exception
     {
         public RpcCodecException()
         {
-            
         }
 
-        public RpcCodecException(string message):base(message)
+        public RpcCodecException(string message) : base(message)
         {
-
         }
-        public RpcCodecException(string message,Exception inner) : base(message, inner)
-        {
 
+        public RpcCodecException(string message, Exception inner) : base(message, inner)
+        {
         }
     }
 }

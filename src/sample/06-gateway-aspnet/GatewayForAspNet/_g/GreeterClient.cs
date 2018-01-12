@@ -12,79 +12,115 @@ using Google.Protobuf;
 namespace GatewayForAspNet {
 
 //start for class GreeterClient
-public sealed class GreeterClient : AmpInvokeClient 
-{
-public GreeterClient(IRpcClient<AmpMessage> client) : base(client)
-{
-}
-public GreeterClient(string remoteAddress) : base(remoteAddress)
-{
-}
-public async Task<HelloRes> SayHelloAsync(HelloReq request,int timeOut=3000)
-{
-AmpMessage message = AmpMessage.CreateRequestMessage(10006, 1);
-message.Data = request.ToByteArray();
-var response = await base.CallInvoker.AsyncCall(message,timeOut);
-if (response == null)
-{
-throw new RpcException("error,response is null !");
-}
-if (response.Data == null)
-{
-return new HelloRes();
-}
-return HelloRes.Parser.ParseFrom(response.Data);
-}
+   public sealed class GreeterClient : AmpInvokeClient 
+    {
+        public GreeterClient(IRpcClient<AmpMessage> client) : base(client)
+        {
+        }
+        public GreeterClient(string remoteAddress) : base(remoteAddress)
+        {
+        }
+        public async Task<RpcResult<HelloRes>> SayHelloAsync(HelloReq request,int timeOut=3000)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(10006, 1);
+            message.Data = request.ToByteArray();
+            var response = await base.CallInvoker.AsyncCall(message,timeOut);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<HelloRes>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = HelloRes.Parser.ParseFrom(response.Data);
+            }
+            return result;
+        }
 
-//同步方法
-public HelloRes SayHello(HelloReq request)
-{
-AmpMessage message = AmpMessage.CreateRequestMessage(10006, 1);
-message.Data = request.ToByteArray();
-var response =  base.CallInvoker.BlockingCall(message);
-if (response == null)
-{
-throw new RpcException("error,response is null !");
-}
-if (response.Data == null)
-{
-return new HelloRes();
-}
-return HelloRes.Parser.ParseFrom(response.Data);
-}
-public async Task<HelloRes> SayHelloAgainAsync(HelloReq request,int timeOut=3000)
-{
-AmpMessage message = AmpMessage.CreateRequestMessage(10006, 2);
-message.Data = request.ToByteArray();
-var response = await base.CallInvoker.AsyncCall(message,timeOut);
-if (response == null)
-{
-throw new RpcException("error,response is null !");
-}
-if (response.Data == null)
-{
-return new HelloRes();
-}
-return HelloRes.Parser.ParseFrom(response.Data);
-}
+        //同步方法
+        public RpcResult<HelloRes> SayHello(HelloReq request)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(10006, 1);
+            message.Data = request.ToByteArray();
+            var response =  base.CallInvoker.BlockingCall(message);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<HelloRes>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = HelloRes.Parser.ParseFrom(response.Data);
+            }
+            return result;
+         }
+        public async Task<RpcResult<HelloRes>> SayHelloAgainAsync(HelloReq request,int timeOut=3000)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(10006, 2);
+            message.Data = request.ToByteArray();
+            var response = await base.CallInvoker.AsyncCall(message,timeOut);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<HelloRes>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = HelloRes.Parser.ParseFrom(response.Data);
+            }
+            return result;
+        }
 
-//同步方法
-public HelloRes SayHelloAgain(HelloReq request)
-{
-AmpMessage message = AmpMessage.CreateRequestMessage(10006, 2);
-message.Data = request.ToByteArray();
-var response =  base.CallInvoker.BlockingCall(message);
-if (response == null)
-{
-throw new RpcException("error,response is null !");
-}
-if (response.Data == null)
-{
-return new HelloRes();
-}
-return HelloRes.Parser.ParseFrom(response.Data);
-}
-}
+        //同步方法
+        public RpcResult<HelloRes> SayHelloAgain(HelloReq request)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(10006, 2);
+            message.Data = request.ToByteArray();
+            var response =  base.CallInvoker.BlockingCall(message);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<HelloRes>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = HelloRes.Parser.ParseFrom(response.Data);
+            }
+            return result;
+         }
+     }
 //end for class GreeterClient
 }
 #endregion

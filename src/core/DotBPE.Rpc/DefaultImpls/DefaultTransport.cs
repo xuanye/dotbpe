@@ -1,9 +1,9 @@
-﻿using System;
-using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Utils;
+using System;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
@@ -11,9 +11,7 @@ namespace DotBPE.Rpc.DefaultImpls
         where TMessage : InvokeMessage
     {
         private readonly IRpcContext<TMessage> _context;
-        static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransport<TMessage>>();
-
-
+        private static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransport<TMessage>>();
 
         public DefaultTransport(IRpcContext<TMessage> context)
         {
@@ -26,18 +24,17 @@ namespace DotBPE.Rpc.DefaultImpls
             await this._context.CloseAsync();
             this.Dispose();
         }
-        public string Id{get;private set;}
+
+        public string Id { get; private set; }
+
         public void Dispose()
         {
-
         }
 
         public async Task SendAsync(TMessage message)
         {
             try
             {
-
-
                 try
                 {
                     //发送
@@ -47,7 +44,6 @@ namespace DotBPE.Rpc.DefaultImpls
                 {
                     throw new RpcCommunicationException("send message error", exception);
                 }
-
             }
             catch (Exception exception)
             {

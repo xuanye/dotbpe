@@ -1,18 +1,19 @@
 #region copyright
+
 // -----------------------------------------------------------------------
 //  <copyright file="AmpCodecs.cs” project="DotBPE.Protocol.Amp">
 //    文件说明:
 //     copyright@2017 xuanye 2017-04-08 16:47
 //  </copyright>
 // -----------------------------------------------------------------------
-#endregion
 
-using System;
+#endregion copyright
+
 using DotBPE.Rpc.Codes;
 
 namespace DotBPE.Protocol.Amp
 {
-    public class AmpCodecs:IMessageCodecs<AmpMessage>
+    public class AmpCodecs : IMessageCodecs<AmpMessage>
     {
         private static readonly MessageMeta AmpMeta = new MessageMeta
         {
@@ -21,16 +22,15 @@ namespace DotBPE.Protocol.Amp
             LengthFieldLength = 4, //长度字段的字节数 整型为4个字节
             LengthFieldOffset = 1, //长度属性的起始（偏移）位
             MaxFrameLength = int.MaxValue,
-            HeartbeatInterval = 60*1000 // 30秒没消息发一个心跳包
+            HeartbeatInterval = 60 * 1000 // 30秒没消息发一个心跳包
         };
-
 
         public void Encode(AmpMessage message, IBufferWriter writer)
         {
             writer.WriteByte(message.Version);
             writer.WriteInt(message.Length);
             writer.WriteInt(message.Sequence);
-            writer.WriteByte((byte) message.InvokeMessageType);
+            writer.WriteByte((byte)message.InvokeMessageType);
             writer.WriteUShort(message.ServiceId);
             writer.WriteUShort(message.MessageId);
 
@@ -40,12 +40,11 @@ namespace DotBPE.Protocol.Amp
             {
                 writer.WriteBytes(message.Data);
             }
-
         }
 
         public AmpMessage Decode(IBufferReader reader)
         {
-            if(reader.ReadableBytes == 0)
+            if (reader.ReadableBytes == 0)
             {
                 return null;
             }
@@ -74,7 +73,6 @@ namespace DotBPE.Protocol.Amp
                 reader.ReadBytes(msg.Data);
             }
             return msg;
-
         }
 
         public MessageMeta GetMessageMeta()
@@ -84,9 +82,8 @@ namespace DotBPE.Protocol.Amp
 
         public AmpMessage HeartbeatMessage()
         {
-            AmpMessage message  = AmpMessage.CreateRequestMessage(0,0);
+            AmpMessage message = AmpMessage.CreateRequestMessage(0, 0);
             return message;
-
         }
     }
 }

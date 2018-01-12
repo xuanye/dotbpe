@@ -1,0 +1,40 @@
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "Survey.Core";
+option optimize_for = SPEED;
+
+
+
+import public "dotbpe_option.proto";
+
+import "message/user.proto"; //引入消息，因为部分消息和InnerService共用，所有单独一个文件，如果不共用，可直接定义在这里
+
+
+//-------------这里是服务定义----------------------start-----
+
+// 问卷前置服务
+service UserInnerService {
+
+    option (service_id)= 20003 ;//设定服务ID
+
+    // 注册
+    rpc Register (RegisterReq) returns (RegisterRsp){
+        option (message_id)= 1 ;//设定消息ID
+    };
+
+    // 登录
+    rpc Login (LoginReq) returns (LoginRsp){
+        option (message_id)= 2 ; //设定消息ID
+    };
+
+    // 修改用户信息
+    rpc Edit (EditUserReq) returns (EditUserRsp){
+        option (message_id)= 3 ; //设定消息ID
+    };
+
+}
+
+//-------------这里是服务定义----------------------end-----
+
+

@@ -1,3 +1,4 @@
+using DotBPE.Rpc;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -7,18 +8,22 @@ namespace GatewayForAspNet
 {
     public class GreeterService : GreeterBase
     {
-        public override Task<HelloRes> SayHelloAgainAsync(HelloReq request)
+        public override Task<RpcResult<HelloRes>> SayHelloAgainAsync(HelloReq request)
         {
-            var res = new HelloRes()
+            var res = new RpcResult<HelloRes>();
+
+            res.Data = new HelloRes()
             {
                 GreetWord = $"Hello {request.Name} Again!"
             };
+          
             return Task.FromResult(res);
         }
 
-        public override Task<HelloRes> SayHelloAsync(HelloReq request)
+        public override Task<RpcResult<HelloRes>> SayHelloAsync(HelloReq request)
         {
-            var res = new HelloRes()
+            var res = new RpcResult<HelloRes>();
+            res.Data = new HelloRes()
             {
                 GreetWord = $"Hello {request.Name} !"
             };

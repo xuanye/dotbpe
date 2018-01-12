@@ -7,22 +7,20 @@ using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 using System.IO;
-using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Environment = DotBPE.Rpc.Environment;
 
 namespace DotBPE.Plugin.AspNetGateway
 {
-    public abstract class AbstractForwardService<TMessage> : IForwardService where TMessage :InvokeMessage
+    public abstract class AbstractForwardService<TMessage> : IForwardService where TMessage : InvokeMessage
     {
-        static ILogger Logger = Environment.Logger.ForType<AbstractForwardService<TMessage>>();
-
-
+        private static ILogger Logger = Environment.Logger.ForType<AbstractForwardService<TMessage>>();
 
         private readonly HttpRouterOption _option;
         private readonly IRpcClient<TMessage> _client;
 
         private readonly CallInvoker<TMessage> _invoker;
+
         /// <summary>
         /// 构造函数
         /// </summary>
@@ -37,18 +35,17 @@ namespace DotBPE.Plugin.AspNetGateway
 
             _invoker = this.GetProtocolCallInvoker(rpcClient);
         }
-        
+
         /// <summary>
         /// 讲Http请求转成RPC调用，发送到服务端，并接受其响应，并回复给Http请求调用方
         /// </summary>
         /// <param name="context">上下文</param>
         /// <returns></returns>
-        public async Task<CallContentResult> ForwardAysnc(HttpContext context)
-        {            
-
+        public async Task<RpcContentResult> ForwardAysnc(HttpContext context)
+        {
             //TODO:添加日志服务
 
-            CallContentResult result = new CallContentResult();
+            RpcContentResult result = new RpcContentResult();
             //1. 根据HttpContext 获取路由信息，
             RequestData rd = null;
             try
@@ -57,53 +54,46 @@ namespace DotBPE.Plugin.AspNetGateway
             }
             catch (Exception ex)
             {
-
-                result.Status = 500;
+                result.Code = 500;
                 result.Message = "Error Request" + ex.Message;
-                
+
                 return result;
             }
             //2. 根据路由配置 获取到 相应的ServiceId和MessageId
             //3. 如果ServiceId和MessageId 不存在则直接返回404 错误
             if (rd == null)
             {
-
-                result.Status = 404;
-                result.Message = "service not found!";             
+                result.Code = 404;
+                result.Message = "service not found!";
 
                 return result;
-
             }
 
-           
             //4. 如果存在则 从路由 Form, QueryString, Body 中获取请求数据, 转换成TMessage，通过rpcClient转发
             TMessage message = this.EncodeRequest(rd);
-            
+
             try
             {
                 TMessage rsp = await _invoker.AsyncCall(message, 3000);
-               
+
                 if (rsp != null)
-                {   
+                {
                     result.Data = this.MessageToJson(rsp);
                 }
-
-                
             }
             catch (RpcCommunicationException rpcEx)
             {
-                result.Status = 500;
-                result.Message = "timeout" + rpcEx.Message + "\n" + rpcEx.StackTrace;
+                result.Code = 500;
+                result.Message = "timeout error:" + rpcEx.Message;
             }
             catch (Exception ex)
             {
-                result.Status = 500;
+                result.Code = 500;
                 result.Message = "call error:" + ex.Message;
             }
 
             return result;
         }
-
 
         protected virtual void PreResponse(HttpContext context, TMessage resMessage)
         {
@@ -113,15 +103,14 @@ namespace DotBPE.Plugin.AspNetGateway
             {
                 return; // 存在sessionId
             }
-           
 
             if (this._option.CookieMode == CookieMode.Auto) // 自动添加sessionId
-            {              
-                sessionId = Guid.NewGuid().ToString("D");             
+            {
+                sessionId = Guid.NewGuid().ToString("N");
             }
-            else if( this._option.CookieMode == CookieMode.Manual)
-            {                
-                sessionId = GetSessionIdFromMessage(resMessage);              
+            else if (this._option.CookieMode == CookieMode.Manual)
+            {
+                sessionId = GetSessionIdFromMessage(resMessage);
             }
 
             if (!string.IsNullOrEmpty(sessionId))
@@ -136,18 +125,21 @@ namespace DotBPE.Plugin.AspNetGateway
         {
             return "";
         }
+
         /// <summary>
         /// 初始化对应协议的CallInvoker
         /// </summary>
         /// <param name="rpcClient">RPC链接</param>
         /// <returns></returns>
         protected abstract CallInvoker<TMessage> GetProtocolCallInvoker(IRpcClient<TMessage> rpcClient);
+
         /// <summary>
         /// 将请求信息转换成RPC请求的消息
         /// </summary>
         /// <param name="reqData">请求数据</param>
         /// <returns></returns>
         protected abstract TMessage EncodeRequest(RequestData reqData);
+
         /// <summary>
         /// 将Response Message 序列化成Json字符串
         /// </summary>
@@ -163,10 +155,10 @@ namespace DotBPE.Plugin.AspNetGateway
         protected virtual void AddFromContext(HttpContext context, Dictionary<string, string> collDataDict)
         {
             //从cookie中提取 dotbpe-session-id
-            if(this._option.CookieMode != CookieMode.None)
+            if (this._option.CookieMode != CookieMode.None)
             {
                 var sessionId = "";
-                var hasValue =context.Request.Cookies.TryGetValue(Constants.DOTBPE_SEESIONID, out sessionId);
+                var hasValue = context.Request.Cookies.TryGetValue(Constants.DOTBPE_SEESIONID, out sessionId);
                 if (hasValue && !collDataDict.ContainsKey(Constants.DOTBPE_SEESIONID))
                 {
                     collDataDict.Add(Constants.SEESIONID_FIELD_NAME, sessionId);
@@ -178,18 +170,16 @@ namespace DotBPE.Plugin.AspNetGateway
             {
                 Microsoft.Extensions.Primitives.StringValues sv;
                 bool hasSV = context.Request.Headers.TryGetValue(Constants.X_REQUEST_ID, out sv);
-                if(hasSV && sv.Count > 0)
+                if (hasSV && sv.Count > 0)
                 {
                     requestId = sv[0];
                 }
-
             }
             if (string.IsNullOrEmpty(requestId))
             {
                 requestId = Guid.NewGuid().ToString("D");
             }
             collDataDict.Add(Constants.REQUESTID_FIELD_NAME, requestId);
-
         }
 
         /// <summary>
@@ -205,19 +195,18 @@ namespace DotBPE.Plugin.AspNetGateway
             {
                 var router = _option.Items[i];
                 // 没有配置Method标识匹配所有请求，否则必须匹配对应的Method
-                if (string.IsNullOrEmpty(router.Method) 
+                if (string.IsNullOrEmpty(router.Method) || router.Method.Equals("all", StringComparison.OrdinalIgnoreCase)
                     || router.Method.Equals(method, StringComparison.OrdinalIgnoreCase))
                 {
-                   
                     var match = Match(router.Path, path);
                     if (match)
                     {
                         RequestData rd = new RequestData();
                         rd.ServiceId = router.ServiceId;
                         rd.MessageId = router.MessageId;
-                  
+
                         rd.Data = new Dictionary<string, string>();
-                       
+
                         CollectQuery(context.Request.Query, rd.Data);
                         string contentType = "";
                         if (method == "post" || method == "put")
@@ -263,7 +252,6 @@ namespace DotBPE.Plugin.AspNetGateway
             return string.Equals(except, value, StringComparison.OrdinalIgnoreCase);
         }
 
-
         private string CollectBody(Stream body)
         {
             string bodyText = null;
@@ -294,11 +282,6 @@ namespace DotBPE.Plugin.AspNetGateway
                 else
                     routeData.Add(key, query[key]);
             }
-
         }
-
-       
-     
-       
     }
 }

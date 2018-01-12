@@ -43,7 +43,7 @@ namespace DotBPE.IntegrationTesting {
             "ZRoYLmRvdGJwZS5CZW5jaG1hcmtNZXNzYWdlIgTQ8xgBGgbI8xjQhgNCHkgB",
             "qgIZRG90QlBFLkludGVncmF0aW9uVGVzdGluZ1AAYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
-          new pbr::FileDescriptor[] { global::DotBPE.ProtoBuf.DotbpeOptionReflection.Descriptor, },
+          new pbr::FileDescriptor[] { global::DotBPE.Protobuf.DotbpeOptionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::DotBPE.IntegrationTesting.BenchmarkMessage), global::DotBPE.IntegrationTesting.BenchmarkMessage.Parser, new[]{ "Field1", "Field2", "Field3", "Field4", "Field5", "Field9", "Field18", "Field80", "Field81", "Field280", "Field6", "Field22", "Field59", "Field7", "Field16", "Field130", "Field12", "Field17", "Field13", "Field14", "Field104", "Field100", "Field101", "Field102", "Field103", "Field29", "Field30", "Field60", "Field271", "Field272", "Field150", "Field23", "Field24", "Field25", "Field78", "Field67", "Field68", "Field128", "Field129", "Field131" }, null, null, null)
           }));

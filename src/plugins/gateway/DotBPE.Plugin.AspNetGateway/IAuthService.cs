@@ -7,11 +7,12 @@ namespace DotBPE.Plugin.AspNetGateway
     public interface IAuthService
     {
         Task<LoginResult> LoginAsync(HttpContext context, AuthenticateOption option);
+
         Task<LogoutResult> LogoutAsync(HttpContext context);
     }
 
-    public class LoginResult: CallCommonResult<UserInfo>
-    {  
+    public class LoginResult : RpcResult<UserInfo>
+    {
     }
 
     public class UserInfo
@@ -19,8 +20,7 @@ namespace DotBPE.Plugin.AspNetGateway
         public string Account { get; set; }
     }
 
-    public class LogoutResult: CallCommonResult
+    public class LogoutResult : RpcResult
     {
-        
     }
 }

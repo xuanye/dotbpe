@@ -13,7 +13,6 @@ namespace DotBPE.Plugin.AspNetGateway
         /// </summary>
         public const string REQUESTID_FIELD_NAME = "x_request_id";
 
-
         /// <summary>
         /// 用户标识字段
         /// </summary>
@@ -24,7 +23,6 @@ namespace DotBPE.Plugin.AspNetGateway
         /// </summary>
         public const string CLIENTIP_FIELD_NAME = "client_ip";
 
-
         /// <summary>
         /// 消息中可以提取的返回码字段
         /// </summary>
@@ -34,6 +32,5 @@ namespace DotBPE.Plugin.AspNetGateway
         /// 消息中可以提取的返回说明字段
         /// </summary>
         public const string MESSAGE_FIELD_NAME = "return_msg";
-
     }
 }

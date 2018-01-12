@@ -6,12 +6,11 @@ namespace DotBPE.Rpc
         ///  应用名称
         /// </summary>
         /// <returns></returns>
-        string ApplicationName{ get;set;}
+        string ApplicationName { get; set; }
 
-        string AppRoot{get;}
+        string AppRoot { get; }
 
-        string EnvironmentName {get;set;}
-
+        string EnvironmentName { get; set; }
 
         bool IsDevelopment();
     }

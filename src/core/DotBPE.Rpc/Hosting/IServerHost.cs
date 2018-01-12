@@ -1,4 +1,3 @@
-﻿using System;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Hosting
@@ -12,7 +11,9 @@ namespace DotBPE.Rpc.Hosting
         /// </summary>
         /// <returns></returns>
         Task Preheating();
+
         Task ShutdownAsync();
+
         void Initialize();
     }
 }

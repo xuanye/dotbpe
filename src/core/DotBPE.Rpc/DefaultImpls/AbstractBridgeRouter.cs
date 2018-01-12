@@ -1,19 +1,15 @@
-﻿using DotBPE.Rpc.Codes;
-using System;
+using DotBPE.Rpc.Codes;
 using System.Collections.Generic;
 using System.Net;
-using System.Text;
 
 namespace DotBPE.Rpc.DefaultImpls
 {
-    public abstract class AbstractBridgeRouter<TMessage>:IBridgeRouter<TMessage> where TMessage:InvokeMessage
+    public abstract class AbstractBridgeRouter<TMessage> : IBridgeRouter<TMessage> where TMessage : InvokeMessage
     {
         private readonly static Dictionary<string, int> chooseRandom = new Dictionary<string, int>();
         private readonly object lockObject = new object();
 
         public abstract RouterPoint GetRouterPoint(TMessage message);
-        
-
 
         /// <summary>
         /// 轮询选择一个远端节点
@@ -33,7 +29,7 @@ namespace DotBPE.Rpc.DefaultImpls
                 }
                 else
                 {
-                    chooseIndex = chooseRandom[key]+1;
+                    chooseIndex = chooseRandom[key] + 1;
                     if (chooseIndex >= list.Count)
                     {
                         chooseIndex = 0;

@@ -1,6 +1,6 @@
 namespace DotBPE.Rpc.Hosting
 {
-   /// <summary>
+    /// <summary>
     /// Commonly used environment names.
     /// </summary>
     public static class EnvironmentName

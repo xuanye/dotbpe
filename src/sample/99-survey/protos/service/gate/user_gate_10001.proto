@@ -1,0 +1,54 @@
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "Survey.Core";
+option optimize_for = SPEED;
+
+
+
+import public "dotbpe_option.proto";
+import "message/user.proto"; //引入消息，因为部分消息和InnerService共用，所有单独一个文件，如果不共用，可直接定义在这里
+
+option (generic_objectfactory) = true;
+option (generic_http_api_routes) = true; //生成路由配置信息
+
+
+service UserGateService{
+
+    option (service_id)= 10001 ;//设定服务ID
+
+    // 注册
+    rpc Register (RegisterReq) returns (RegisterRsp){
+        option (message_id)= 31 ;//设定消息ID
+
+        option (http_api_option) = {
+            path : "/api/user/register",
+            method : "post",
+            description : "注册用户"
+        };
+    };
+
+    // 登录
+    rpc Login (LoginReq) returns (LoginRsp){
+        option (message_id)= 32 ; //设定消息ID
+
+        option (http_api_option) = {
+            path :"/api/user/login",
+            method : "post",
+            description : "用户登录"
+        };
+    };
+
+    // 修改用户信息
+    rpc EditUser (EditUserReq) returns (EditUserRsp){
+        option (message_id)= 33 ; //设定消息ID
+
+        option (http_api_option) = {
+            path : "/api/user/save",
+            method : "post",
+            description : "保存修改的用户信息"
+        };
+    };
+
+
+}
