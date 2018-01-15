@@ -3,6 +3,7 @@ using System;
 using System.IO;
 using System.Text;
 using System.Threading.Tasks;
+using DotBPE.Hosting;
 using DotBPE.Plugin.AspNetGateway;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
@@ -36,22 +37,40 @@ namespace GatewayForAspNet
             // RPC Server
             string ip = "127.0.0.1";
             int port = 6201;
-            
-            var rpcHost = new RpcHostBuilder()
-                .UseServer(ip, 6201)
-                .UseStartup<DotBPEStartup>()
-                .Build();
 
+
+            var rpcHost = new HostBuilder()
+                .UseServer(ip, port)
+                .ConfigureServices(services =>
+                {
+                    //添加协议支持
+                    services.AddDotBPE();
+
+                    //注册服务
+                    services.AddServiceActors<AmpMessage>((actors) =>
+                    {
+                        actors.Add<GreeterService>();
+                    });
+
+                    //添加挂载的宿主服务
+                    services.AddScoped<IHostedService, RpcHostedService>();
+            }).Build();
+          
             rpcHost.StartAsync().Wait();
             Console.WriteLine("running server on {0}:{1}", ip, port);
             Console.WriteLine("press any key to shutdown");
             Console.ReadKey();
 
+          
             webHost.StopAsync().Wait();
             Console.WriteLine("http server is shutdown");
 
-            rpcHost.ShutdownAsync().Wait();
+            rpcHost.StopAsync().Wait();
             Console.WriteLine("dotbpe server is shutdown");
+
+            //释放资源
+            webHost.Dispose();
+            rpcHost.Dispose();
 
         }
 

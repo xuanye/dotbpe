@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using CommandLine;
@@ -109,8 +109,8 @@ namespace DotBPE.IntegrationTesting
             var req = new VoidReq();
             for (int i = 0; i < this._options.RunCount; i++)
             {
-                var rsp = cctClient.TestAsync(req).Result;
-                if (rsp.Status != 0)
+                var res = cctClient.TestAsync(req).Result;
+                if (res.Code !=0 || res.Data.Status != 0)
                 {
                     TOTAL_ERROR++;
                     errorCount++;
@@ -135,8 +135,8 @@ namespace DotBPE.IntegrationTesting
             BenchmarkTestClient btc = new BenchmarkTestClient(proxy);
             stopwatch.Start();
             for(int i =0;i<this._options.RunCount ; i++){
-                var rsp = btc.EchoAsync(msg,6000000).Result;
-                if(rsp.Field2 !=100){
+                var res = btc.EchoAsync(msg,6000000).Result;
+                if( res.Code !=0 || res.Data.Field2 !=100){
                     TOTAL_ERROR++;
                     errorCount ++;
                 }

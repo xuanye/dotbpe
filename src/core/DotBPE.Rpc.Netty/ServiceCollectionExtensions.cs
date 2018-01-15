@@ -1,5 +1,4 @@
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.Rpc.Netty

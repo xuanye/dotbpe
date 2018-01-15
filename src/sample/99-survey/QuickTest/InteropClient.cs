@@ -55,7 +55,7 @@ namespace QuickTest
                 swTotal.Start();
                 interopClient.Run();
                 swTotal.Stop();
-                Console.WriteLine("---------------------SUMMY:--------------------------");
+                Console.WriteLine("---------------------Summary:--------------------------");
                 Console.WriteLine("Error times: {0}", TOTAL_ERROR);
                 Console.WriteLine("Elapsed time: {0}ms", swTotal.ElapsedMilliseconds);
             });

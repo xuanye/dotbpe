@@ -1,5 +1,4 @@
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Hosting;
 using DotBPE.Rpc.Logging;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;

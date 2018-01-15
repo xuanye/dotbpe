@@ -1,12 +1,13 @@
-﻿using CommandLine;
+using CommandLine;
 using System;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc.Netty;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Extensions;
-using DotBPE.Rpc.Hosting;
 using DotBPE.Rpc;
 using Microsoft.Extensions.DependencyInjection;
+using DotBPE.Hosting;
+using DotBPE.Rpc.Hosting;
 
 namespace DotBPE.IntegrationTesting
 {
@@ -37,41 +38,41 @@ namespace DotBPE.IntegrationTesting
             string ip = "0.0.0.0";
             int port = this._option.Port;
 
-            var host = new RpcHostBuilder()
+            var host = new HostBuilder()
                 .UseServer(ip,port)
-                .UseStartup<QpsServerStartup>()
+                .ConfigureServices( services =>
+                {
+                    services.AddDotBPE(); // 使用AMP协议
+                    // 添加业务服务的代码
+                    services.AddServiceActors<AmpMessage>((actors) =>
+                    {
+                        actors.Add<BenchmarkServerImpl>()
+                              .Add<CallContextTestImpl>();
+                    });
+
+                    // 上下文获取器
+                    services.AddSingleton<IContextAccessor<AmpMessage>, DefaultContextAccessor<AmpMessage>>();
+                })
                 .Build();
-            await host.StartAsync();
-            Console.WriteLine("Running qps worker server on " + string.Format("{0}:{1}", ip, port));
-            Console.ReadKey();
-            await host.ShutdownAsync();
-            Console.WriteLine("server is Shutdown");
-        }
-    }
 
-
-    public class QpsServerStartup : IStartup
-    {
-        public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            services.AddDotBPE(); // 使用AMP协议
-
-            services.AddServiceActors<AmpMessage>( (actors) =>
+            using (host)
             {
-                actors.Add<BenchmarkServerImpl>()
-                      .Add<CallContextTestImpl>();
-            });
-            // 上下文获取器
-            services.AddSingleton<IContextAccessor<AmpMessage>, DefaultContextAccessor<AmpMessage>>();
+                Console.WriteLine("Running qps worker server on " + string.Format("{0}:{1}", ip, port));
 
-            return services.BuildServiceProvider();
+                await host.StartAsync();
+
+                Console.WriteLine("Started! Press <enter> to stop.");
+
+                Console.ReadLine();
+
+                Console.WriteLine("Stopping!");
+
+                await host.StopAsync();
+
+                Console.WriteLine("server is Shutdown");
+            }
+          
         }
-
-        public void Configure(IAppBuilder app, IHostingEnvironment env)
-        {
-
-        }
-
-
     }
+    
 }

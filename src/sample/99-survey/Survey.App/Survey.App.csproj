@@ -10,6 +10,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\core\DotBPE.Hosting.Abstractions\DotBPE.Hosting.Abstractions.csproj" />
+    <ProjectReference Include="..\..\..\core\DotBPE.Hosting\DotBPE.Hosting.csproj" />
+    <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Hosting\DotBPE.Rpc.Hosting.csproj" />
     <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
     <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
     <ProjectReference Include="..\..\..\plugins\gateway\DotBPE.Plugin.AspNetGateway\DotBPE.Plugin.AspNetGateway.csproj" />

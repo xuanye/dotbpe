@@ -1,5 +1,7 @@
+using DotBPE.Hosting;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
+using DotBPE.Rpc.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Survey.Service;
@@ -12,31 +14,15 @@ using Vulcan.DataAccess.Context;
 
 namespace Survey.App
 {
-    public class ServerStartup : IStartup
-    {
-
-        public ServerStartup(IHostingEnvironment env)
-        {           
-
-            var builder = new ConfigurationBuilder()
-            .SetBasePath(env.AppRoot)
-            .AddJsonFile("dotbpe.json", optional: true, reloadOnChange: true)
-            .AddJsonFile($"dotbpe.{env.EnvironmentName}.json", optional: true)
-            .AddEnvironmentVariables();
-                       
-            Configuration = builder.Build();
-        }
-
-
-     
-        public IConfigurationRoot Configuration { get; }
+    public static class ServerStartup
+    { 
 
         /// <summary>
         /// 配置注入的服务信息
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public IServiceProvider ConfigureServices(IServiceCollection services)
+        public static void ConfigureServices(HostBuilderContext context, IServiceCollection services)
         {
             // 使用AMP协议
             services.AddDotBPE(); 
@@ -44,9 +30,8 @@ namespace Survey.App
             //注册服务接收器
             AddServiceActors(services);
 
-            //注入数据库连接信息
-            services.Configure<DBOption>(Configuration.GetSection("connectionStrings"));
-
+            //获取数据库连接
+            services.Configure<DBOption>(context.Configuration.GetSection("connectionStrings"));
 
             //添加注入数据库的部分，当然不用注入，也可以直接new的方式，看自己喜欢了
             AddRepository(services);
@@ -58,34 +43,21 @@ namespace Survey.App
             services.AddSingleton<IRuntimeContextStorage, DotBPECallContextStorage<AmpMessage>>();
             //使用MySQL
             services.AddSingleton<IConnectionFactory, MySqlConnectionFactory>();
-         
 
-            return services.BuildServiceProvider();
+            //添加服务启动和关闭时需要注册的对象
+            services.AddSingleton<IHostLifetime, ServiceBaseLifetime>();
+
+            //添加挂载的宿主服务
+            services.AddScoped<IHostedService, RpcHostedService>();
+
         }
 
        
         /// <summary>
-        /// 配置APP启动时的信息
-        /// </summary>
-        /// <param name="app"></param>
-        /// <param name="env"></param>
-        public void Configure(IAppBuilder app, IHostingEnvironment env)
-        {
-            //使用上下文存储数据库连接
-            AppRuntimeContext.Configure(app.ServiceProvider.GetRequiredService<IRuntimeContextStorage>());
-            //设置使用哪种类型的数据库
-            ConnectionFactoryHelper.Configure(app.ServiceProvider.GetRequiredService<IConnectionFactory>());
-
-            //设置dapper在查询映射字符串时支持user_id -> UserId
-            Dapper.DefaultTypeMap.MatchNamesWithUnderscores = true;
-        }
-
-
-        /// <summary>
         /// 注册其他需要注入的类
         /// </summary>
         /// <param name="services"></param>
-        private void AddRepository(IServiceCollection services)
+        private static void AddRepository(IServiceCollection services)
         {
             //添加数据库
             services.AddSingleton<APaperRepository>()
@@ -97,7 +69,7 @@ namespace Survey.App
         /// 注册服务接收器
         /// </summary>
         /// <param name="services"></param>
-        private void AddServiceActors(IServiceCollection services)
+        private static void AddServiceActors(IServiceCollection services)
         {
 
             // TODO:自动扫描所有服务

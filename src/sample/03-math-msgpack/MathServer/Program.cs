@@ -10,6 +10,7 @@ using DotBPE.Rpc.Logging;
 using MessagePack;
 using MathCommon;
 using Microsoft.Extensions.DependencyInjection;
+using DotBPE.Hosting;
 
 namespace MathServer
 {
@@ -18,23 +19,32 @@ namespace MathServer
         static void Main(string[] args)
         {
 
-            //DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());
+            DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());
 
             string ip = "127.0.0.1";
             int port = 6201;
 
-            var host = new RpcHostBuilder()
-                .UseServer(ip, 6201)
-                .UseStartup<ServerStartup>()
-                .Build();
+            var builder = new HostBuilder()
+               .UseServer(ip, port)
+               .ConfigureServices(services =>
+               {
+                    //添加协议支持
+                    services.AddDotBPE();
 
-            host.StartAsync().Wait();
-            Console.WriteLine("running server on {0}:{1}" , ip, port);
-            Console.WriteLine("press any key to shutdown");
-            Console.ReadKey();
+                    //注册服务
+                    services.AddServiceActors<AmpMessage>((actors) =>
+                   {
+                       actors.Add<MathService>();
+                   });
 
-            host.ShutdownAsync().Wait();
-            Console.WriteLine("server is shutdown");
+                    //添加挂载的宿主服务
+                    services.AddScoped<IHostedService, RpcHostedService>();
+               });
+
+
+
+            builder.RunConsoleAsync().Wait();
+
         }
     }
 
@@ -84,25 +94,5 @@ namespace MathServer
             return Task.FromResult(rsp);
         }
     }
-
-    public class ServerStartup : IStartup
-    {
-        public IServiceProvider ConfigureServices(IServiceCollection services)
-        {
-            services.AddDotBPE(); // 使用AMP协议
-
-            services.AddServiceActors<AmpMessage>((actors) =>
-            {
-                actors.Add<MathService>();
-            });
-
-            return services.BuildServiceProvider();
-        }
-
-        public void Configure(IAppBuilder app, IHostingEnvironment env)
-        {
-
-        }
-
-    }
+    
 }

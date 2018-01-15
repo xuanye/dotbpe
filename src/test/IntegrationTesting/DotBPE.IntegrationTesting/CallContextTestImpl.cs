@@ -1,4 +1,4 @@
-﻿using DotBPE.Protocol.Amp;
+using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Logging;
 using System;
@@ -19,9 +19,12 @@ namespace DotBPE.IntegrationTesting
             _contextAccessor = contextAccessor;
         }
 
-        public override async Task<CommonRsp> TestAsync(VoidReq request)
+        public override async Task<RpcResult<CommonRsp>> TestAsync(VoidReq request)
         {
-            var rsp = new CommonRsp();
+            var res = new RpcResult<CommonRsp>();
+
+            res.Data = new CommonRsp();
+
             string randomId = Guid.NewGuid().ToString("D");
             _contextAccessor.CallContext.Set(contextKey, randomId);
 
@@ -30,7 +33,7 @@ namespace DotBPE.IntegrationTesting
                 if(objSet == null)
                 {
                     Logger.Warning("get value from context failed");
-                    rsp.Status = -1;
+                    res.Data.Status = -1;
                 }
                 else
                 {
@@ -39,18 +42,18 @@ namespace DotBPE.IntegrationTesting
                     {
                         Logger.Warning("get value from context ,but value changed, in new Task");
                     }
-                    rsp.Status = v == randomId ? 0 : -1;
+                    res.Data.Status = v == randomId ? 0 : -1;
                 }
             }
             );
-            if(rsp.Status !=0)
+            if(res.Data.Status != 0)
             {
-                return rsp;
+                return res;
             }
             var objSetOut = _contextAccessor.CallContext.Get(contextKey);
             if (objSetOut == null)
             {
-                rsp.Status = -1;
+                res.Data.Status = -1;
             }
             else
             {
@@ -59,11 +62,11 @@ namespace DotBPE.IntegrationTesting
                 {
                     Logger.Warning("get value from context ,but value changed");
                 }
-                rsp.Status = v == randomId ? 0 : -1;
+                res.Data.Status = v == randomId ? 0 : -1;
                 Logger.Debug("{0}={1}", v, randomId);
             }
 
-            return rsp;
+            return res;
         }
     }
 }
