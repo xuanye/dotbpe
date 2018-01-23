@@ -13,5 +13,13 @@
             "messageId": "0",
             "remoteAddress": "127.0.0.1:5501"
         }
-    ]   
+    ],
+    "redis": {
+        "configuration": "10.240.225.136"
+    },
+    "Logging": {
+        "LogLevel": {
+            "Default": "Warning"
+        }
+    }
 }

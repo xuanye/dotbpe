@@ -13,10 +13,12 @@ namespace Survey.Service.InnerImpl
     public class APaperInnerService : APaperInnerServiceBase
     {
         private readonly Repository.APaperRepository _apaperRepo;
+        private readonly ClientProxy _proxy;
 
-        public APaperInnerService(Repository.APaperRepository apaperRepo)
+        public APaperInnerService(Repository.APaperRepository apaperRepo,ClientProxy proxy)
         {
             _apaperRepo = apaperRepo;
+            _proxy = proxy;
         }
 
         /// <summary>
@@ -39,7 +41,7 @@ namespace Survey.Service.InnerImpl
 
             var answers = await this._apaperRepo.GetAnswersByPaperId(request.PaperId);
 
-            var qpaperService = ClientProxy.GetClient<QPaperInnerServiceClient>();
+            var qpaperService = _proxy.GetClient<QPaperInnerServiceClient>();
             GetQPaperReq getQPRep = new GetQPaperReq();
             getQPRep.XRequestId = request.XRequestId;
             getQPRep.Identity = request.Identity;
@@ -100,12 +102,12 @@ namespace Survey.Service.InnerImpl
             res.Data = new APaperListRsp();
 
             var pageView = new PageView();
-            pageView.PageIndex = request.PageIndex;
-            pageView.PageSize = request.PageSize;
+            pageView.PageIndex = request.Page;
+            pageView.PageSize = request.Rp;
 
-            var plist = await this._apaperRepo.QueryAPaperList(request.Subject, request.QpaperId, request.CheckRole ? request.Identity : "", pageView);
+            var plist = await this._apaperRepo.QueryAPaperList(request.Query, request.QpaperId, request.CheckRole ? request.Identity : "", pageView);
 
-            res.Data.Total = pageView.PageIndex == 1 ? plist.Total : -1;
+            res.Data.Total = pageView.PageIndex == 0 ? plist.Total : -1;
 
             if (plist != null && plist.DataList != null && plist.DataList.Count > 0)
             {
@@ -141,7 +143,7 @@ namespace Survey.Service.InnerImpl
                 res.Data.ReturnMessage = "答案不能为空";
                 return res;
             }
-            var qpaperService = ClientProxy.GetClient<QPaperInnerServiceClient>();
+            var qpaperService = _proxy.GetClient<QPaperInnerServiceClient>();
             GetQPaperReq getQPRep = new GetQPaperReq();
             getQPRep.XRequestId = req.XRequestId;
             getQPRep.Identity = req.Identity;
@@ -168,7 +170,7 @@ namespace Survey.Service.InnerImpl
                 return res;
             }
 
-            using (TransScope scope = this._apaperRepo.GetTransScope())
+            using (TransScope scope = this._apaperRepo.BeginTransScope())
             {
                 var apaper = new APaper();
                 apaper.CreateTime = DateTime.Now;

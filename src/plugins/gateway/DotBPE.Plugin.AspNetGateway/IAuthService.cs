@@ -4,12 +4,7 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Plugin.AspNetGateway
 {
-    public interface IAuthService
-    {
-        Task<LoginResult> LoginAsync(HttpContext context, AuthenticateOption option);
-
-        Task<LogoutResult> LogoutAsync(HttpContext context);
-    }
+   
 
     public class LoginResult : RpcResult<UserInfo>
     {

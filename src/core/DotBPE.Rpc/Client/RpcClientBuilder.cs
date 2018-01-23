@@ -32,7 +32,7 @@ namespace DotBPE.Rpc
             AddApplicationServices(applicationServices, clientServiceProvider);
 
             var client = clientServiceProvider.GetRequiredService<IRpcClient<TMessage>>();
-            Environment.SetServiceProvider(clientServiceProvider);
+           
             return client;
         }
 

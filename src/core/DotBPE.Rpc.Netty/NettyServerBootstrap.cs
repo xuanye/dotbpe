@@ -1,11 +1,11 @@
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Logging;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Microsoft.Extensions.Logging;
 using System.Net;
 using System.Threading.Tasks;
 
@@ -13,22 +13,25 @@ namespace DotBPE.Rpc.Netty
 {
     public class NettyServerBootstrap<TMessage> : IServerBootstrap where TMessage : InvokeMessage
     {
-        private static readonly ILogger Logger = Environment.Logger.ForType<NettyServerBootstrap<TMessage>>();
+        private readonly ILogger Logger;
+        private readonly ILoggerFactory _factory;
         private IChannel _channel;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
         private readonly IMessageHandler<TMessage> _handler;
 
         private readonly IContextAccessor<TMessage> _contextAccessor;
 
-        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs) : this(handler, msgCodecs, null)
+        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs,ILoggerFactory factory) : this(handler, msgCodecs, factory, null)
         {
         }
 
-        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, IContextAccessor<TMessage> contextAccessor)
+        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, ILoggerFactory factory, IContextAccessor<TMessage> contextAccessor)
         {
             this._msgCodecs = msgCodecs;
             this._handler = handler;
             this._contextAccessor = contextAccessor;
+            this.Logger = factory.CreateLogger(this.GetType());
+            this._factory = factory;
         }
 
         public void Dispose()
@@ -83,7 +86,7 @@ namespace DotBPE.Rpc.Netty
                     );
 
                     pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs));
-                    pipeline.AddLast(new ServerChannelHandlerAdapter<TMessage>(this));
+                    pipeline.AddLast(new ServerChannelHandlerAdapter<TMessage>(this,this._factory));
                 }));
 
             this._channel = await bootstrap.BindAsync(endPoint);

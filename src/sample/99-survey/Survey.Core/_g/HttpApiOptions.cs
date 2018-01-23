@@ -30,9 +30,17 @@ namespace Survey.Core {
             {
                 ServiceId = 10000,
                 MessageId = 13,
-                Path = "/api/qpaper/get",
+                Path = "/api/qpaper/simple",
                 Method = "get",
                 Description = "获取问卷信息"
+            });
+            list.Add(new HttpApiOption()
+            {
+                ServiceId = 10000,
+                MessageId = 14,
+                Path = "/api/qpaper/get",
+                Method = "get",
+                Description = "获取问卷详情信息"
             });
             list.Add(new HttpApiOption()
             {
@@ -70,7 +78,7 @@ namespace Survey.Core {
             {
                 ServiceId = 10001,
                 MessageId = 32,
-                Path = "/api/user/login",
+                Path = "/api/gate/login",
                 Method = "post",
                 Description = "用户登录"
             });
@@ -81,6 +89,14 @@ namespace Survey.Core {
                 Path = "/api/user/save",
                 Method = "post",
                 Description = "保存修改的用户信息"
+            });
+            list.Add(new HttpApiOption()
+            {
+                ServiceId = 10001,
+                MessageId = 34,
+                Path = "/api/gate/check",
+                Method = "get",
+                Description = "获取用户信息"
             });
             return list;
         }

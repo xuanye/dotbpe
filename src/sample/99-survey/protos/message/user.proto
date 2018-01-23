@@ -49,7 +49,7 @@ message LoginRsp {
     string full_name = 11 ; //姓名
     bool is_admin = 12 ; //是否管理员
 
-    string session_id= 13; //登录成功后的sessionId
+    string bpe_session_id= 13; //登录成功后的sessionId
 }
 
 message EditUserReq {
@@ -72,6 +72,33 @@ message EditUserRsp {
 
     string return_message = 1; //返回错误信息
 
+}
+
+
+message GetUserReq {
+
+    string client_ip = 1; //用户端IP
+    string identity = 2; // 用户标识
+    string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
+
+    string user_id = 10 ; //需要获取的用户信息
+}
+
+message GetUserRsp {
+
+    string return_message = 1; //返回错误信息
+
+    string account = 10 ; //账号
+    string full_name = 11 ; //姓名
+    bool is_admin = 12 ; //是否管理员
+
+}
+
+message SessionUser{
+
+    string identity = 1; //登录账号
+    int32 login_timestamp = 2 ; //登录的时间戳
+    string bpe_session_id= 13; //登录成功后的sessionId
 }
 
 //-----------end---------服务请求和响应顶层的消息体定义--------------------------------

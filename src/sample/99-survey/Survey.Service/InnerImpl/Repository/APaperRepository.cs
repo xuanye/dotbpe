@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Survey.Service.InnerImpl.Domain;
 using System.Collections.Generic;
@@ -9,8 +10,8 @@ namespace Survey.Service.InnerImpl.Repository
     public class APaperRepository : BaseRepository
     {
         //本示例使用同一个数据库
-        public APaperRepository(IOptions<DBOption> Option)
-           : base(Option.Value.Master)
+        public APaperRepository(IConnectionManagerFactory factory, IOptions<DBOption> Option,ILoggerFactory loggerFactory)
+           : base(factory,Option.Value.Master, loggerFactory)
         {
         }
                 

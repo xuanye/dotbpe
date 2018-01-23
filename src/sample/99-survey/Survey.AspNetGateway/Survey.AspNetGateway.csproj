@@ -6,8 +6,15 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <Compile Remove="wwwroot\assert\img\**" />
+      <EmbeddedResource Remove="wwwroot\assert\img\**" />
+      <None Remove="wwwroot\assert\img\**" />
+    </ItemGroup>
+
+    <ItemGroup>
       <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
       <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
+      <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.0.0" />
     </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
@@ -18,6 +25,9 @@
         <ProjectReference Include="..\Survey.Core\Survey.Core.csproj" />
     </ItemGroup>
     <ItemGroup>
+      <None Update="dotbpe.Development.json">
+        <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      </None>
       <None Update="dotbpe.json">
         <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
       </None>
@@ -28,6 +38,5 @@
     <ItemGroup>
       <Folder Include="wwwroot\assert\css\" />
       <Folder Include="wwwroot\assert\js\" />
-      <Folder Include="wwwroot\assert\img\" />
     </ItemGroup>
 </Project>

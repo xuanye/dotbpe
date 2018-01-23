@@ -1,5 +1,6 @@
 using DotBPE.Rpc;
 using Google.Protobuf.Collections;
+using Microsoft.Extensions.Logging;
 using Survey.Core;
 using Survey.Service.InnerImpl.Domain;
 using Survey.Service.InnerImpl.Repository;
@@ -14,10 +15,12 @@ namespace Survey.Service.InnerImpl
     public class QPaperInnerService : QPaperInnerServiceBase
     {
         private readonly QPaperRepository _qpaperRepo;
+        private readonly ILogger<QPaperInnerService> _logger;
 
-        public QPaperInnerService(QPaperRepository qpaperRepo)
+        public QPaperInnerService(QPaperRepository qpaperRepo,ILogger<QPaperInnerService> logger)
         {
             this._qpaperRepo = qpaperRepo;
+            this._logger = logger;
         }
 
         /// <summary>
@@ -127,11 +130,11 @@ namespace Survey.Service.InnerImpl
             res.Data = new QPaperListRsp();
 
             var userId = request.CheckRole ? request.Identity : String.Empty;
-            var view = new PageView(request.PageIndex, request.PageSize);
-
-            var plist = await this._qpaperRepo.QueryQPaperList(Utility.ClearSafeStringParma(request.QueryText), userId, view);
-
-            res.Data.Total = view.PageIndex == 1 ? plist.Total : -1;
+            var view = new PageView(request.Page, request.Rp);
+        
+            var plist = await this._qpaperRepo.QueryQPaperList(Utility.ClearSafeStringParma(request.Query), userId, view);
+           
+            res.Data.Total = view.PageIndex == 0 ? plist.Total : -1;
 
             if (plist != null && plist.DataList != null && plist.DataList.Count > 0)
             {
@@ -166,7 +169,7 @@ namespace Survey.Service.InnerImpl
             }
             res.Data = new SaveQPaperRsp();
 
-            using (TransScope scope = this._qpaperRepo.GetTransScope())
+            using (TransScope scope = this._qpaperRepo.BeginTransScope())
             {
                 int paperId = 0;
 
@@ -218,12 +221,14 @@ namespace Survey.Service.InnerImpl
                     res.Data.ReturnMessage = "操作失败，请稍后重试";
                     return res;
                 }
+                res.Data.QpaperId = paperId;
                 //重新保存问题
                 int i = 0;
                 var qlist = new List<Question>();
                 foreach (var q in req.Questions)
                 {
                     var question = new Question();
+                    question.Id = q.Id;
                     question.PaperId = paperId;
                     question.Sequence = ++i;
                     question.ExtendInput = q.ExtendInput;

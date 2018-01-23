@@ -1,0 +1,121 @@
+﻿html
+{
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	width: 100%;
+}
+body
+{
+    margin: 0px;
+	padding: 0px;
+	height: 100%;
+	width: 100%;
+    background:#fff;
+}
+.mainpanel
+{
+    padding:10px;
+}
+.topic
+{   
+    font-size:19px;
+    display:block;   
+    font-weight:bolder;       
+}
+
+.container
+{
+    padding:0px 5px;
+    border:1px solid #fff;
+    zoom:1;
+    _zoom:1;    
+   
+    background:#fff;
+    margin:2px 0px;
+}
+.qitemlist
+{
+    padding:5px;
+}
+.additembtnp
+{
+   padding:5px;
+}
+.desc
+{
+   line-height:26px; 
+   color:#aaa;
+}
+
+.topic_p
+{
+    width:95%;
+}
+.center { MARGIN-RIGHT: auto; MARGIN-LEFT: auto;  width:90%;}
+
+.line
+{
+    padding:3px 0px;
+}
+.line em {
+  color: red;
+  padding: 2px 4px;
+}
+.line input[type="text"]
+{
+    border: solid 1px #c0c0c0;
+}
+.qitemlist
+{
+  
+}
+.qitem
+{
+  padding:5px 5px ;
+}
+.qitem .atomctl {
+	margin-right:10px;
+}
+.qitem input.nic {
+    border: solid 1px #c0c0c0;
+}
+.error
+{ 
+  background-color:#F4DDE8;
+}
+.qitem h6
+{
+    margin:7px 45px 5px 5px;
+}
+.qitem .atomctl {
+	margin-right:10px;
+}
+/*
+.qitem label
+{
+    display:block;
+    float:left;
+    height:25px;
+    line-height:25px;
+    padding:2px 10px;
+}
+*/
+.qitem textarea,.line textarea
+{
+    background-color:#fff;
+    border: solid 1px #ccc;
+    width:400px;
+    height:50px;
+    margin:0 15px 0 10px;
+}
+.mainpanel hr
+{
+    height:1px;
+    border-top:1px solid #ccc;
+    visibility:visible;
+}
+.btn_p
+{
+    padding:4px;
+}

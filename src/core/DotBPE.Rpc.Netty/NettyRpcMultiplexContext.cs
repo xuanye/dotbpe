@@ -1,9 +1,10 @@
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Logging;
+
 using DotBPE.Rpc.Options;
 using DotNetty.Buffers;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -14,7 +15,7 @@ namespace DotBPE.Rpc.Netty
 {
     public class NettyRpcMultiplexContext<TMessage> : IRpcContext<TMessage> where TMessage : IMessage
     {
-        private ILogger Logger = Environment.Logger.ForType<NettyRpcMultiplexContext<TMessage>>();
+        private readonly ILogger Logger;
         private readonly IMessageCodecs<TMessage> _codecs;
         private readonly Bootstrap _bootstrap;
         private EndPoint _remoteAddress;
@@ -30,16 +31,17 @@ namespace DotBPE.Rpc.Netty
 
         public string LocalAddress { get; set; }
 
-        public NettyRpcMultiplexContext(Bootstrap bootstrap, IMessageCodecs<TMessage> codecs)
+        public NettyRpcMultiplexContext(Bootstrap bootstrap, IMessageCodecs<TMessage> codecs,ILogger logger)
         {
             this._bootstrap = bootstrap;
             this._codecs = codecs;
+            this.Logger = logger;
         }
 
         public Task CloseAsync()
         {
             this._autoReConnect = false; //禁止自动重连
-            Logger.Debug("开始主动关闭连接");
+            Logger.LogDebug("开始主动关闭连接");
             _channels.ForEach(async (channel) =>
             {
                 if (channel.Open && channel.Active)
@@ -47,9 +49,9 @@ namespace DotBPE.Rpc.Netty
                     await channel.CloseAsync();
                 }
             });
-            Logger.Debug("主动关闭连接结束");
+            Logger.LogDebug("主动关闭连接结束");
             _channels.Clear();
-            Logger.Debug("清理内在连接");
+            Logger.LogDebug("清理内在连接");
             return Task.CompletedTask;
         }
 
@@ -63,12 +65,12 @@ namespace DotBPE.Rpc.Netty
             if (channel.Open)
             {
                 var buff = GetBuffer(channel, data);
-                Logger.Debug("ChannelId={0} WriteAndFlushAsync", channel.Id.AsLongText());
+                Logger.LogDebug("ChannelId={0} WriteAndFlushAsync", channel.Id.AsLongText());
                 return channel.WriteAndFlushAsync(buff);
             }
             else
             {
-                Logger.Debug("ChannelId={0} is invalid,ready to remove it", channel.Id.AsLongText());
+                Logger.LogDebug("ChannelId={0} is invalid,ready to remove it", channel.Id.AsLongText());
                 TryRemove(channel); // 移除无用的Channel
                 // StartConnect(channel.RemoteAddress); //启动自动重连
                 return SendAsync(data); // 重新调用一次 ，直到链接被移除完
@@ -176,8 +178,14 @@ namespace DotBPE.Rpc.Netty
                 while (_autoReConnect)
                 {
                     tryCount++;
-                    Logger.Debug("will reconnect after{0} second, try {2} times", tryCount * 5000, endpoint, tryCount);
-                    Thread.Sleep(tryCount * 5000);
+                    if (tryCount >= 100000)
+                    {
+                        tryCount = 1;
+                        Logger.LogDebug("reconnect to {0} 100000 times, but fail, restart !", endpoint);
+                        break;
+                    }
+                    Logger.LogDebug("will reconnect to {0} after {1} ms, try {2} times", endpoint, tryCount * 1000, tryCount);
+                    Thread.Sleep(tryCount * 1000);
                     try
                     {
                         CreateConnection(endpoint, 1).Wait();
@@ -185,7 +193,7 @@ namespace DotBPE.Rpc.Netty
                     }
                     catch
                     {
-                        Logger.Error("reconnect {0} failed，try {1} times", endpoint, tryCount);
+                        Logger.LogWarning("reconnect {0} failed，try {1} times", endpoint, tryCount);
                     }
                 }
             }));

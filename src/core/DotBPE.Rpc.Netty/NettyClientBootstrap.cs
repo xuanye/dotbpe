@@ -10,7 +10,6 @@
 #endregion copyright
 
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Options;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
@@ -18,6 +17,7 @@ using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net;
@@ -27,20 +27,24 @@ namespace DotBPE.Rpc.Netty
 {
     public class NettyClientBootstrap<TMessage> : IClientBootstrap<TMessage> where TMessage : InvokeMessage
     {
-        private static ILogger Logger = Environment.Logger.ForType<NettyClientBootstrap<TMessage>>();
+        private readonly ILogger Logger;
+        private readonly ILoggerFactory _factory;
         private readonly Bootstrap _bootstrap;
         private readonly IMessageHandler<TMessage> _handler;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
 
         private readonly IOptions<RpcClientOption> _clientOption;
 
-        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, IOptions<RpcClientOption> option)
+        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, IOptions<RpcClientOption> option, ILoggerFactory factory)
         {
             this._clientOption = option;
 
             _bootstrap = InitBootstrap();
             _handler = handler;
             _msgCodecs = msgCodecs;
+
+            this.Logger = factory.CreateLogger(this.GetType());
+            this._factory = factory;
         }
 
         private Bootstrap InitBootstrap()
@@ -71,14 +75,14 @@ namespace DotBPE.Rpc.Netty
                     );
 
                     pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs));
-                    pipeline.AddLast(new ClientChannelHandlerAdapter<TMessage>(this));
+                    pipeline.AddLast(new ClientChannelHandlerAdapter<TMessage>(this, this._factory));
                 }));
             return bootstrap;
         }
 
         public async Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint)
         {
-            var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs);
+            var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs,this.Logger);
             await context.InitAsync(endpoint, _clientOption?.Value);
             context.BindDisconnect(this);
             return context;

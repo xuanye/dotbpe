@@ -9,19 +9,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.0.0" />
+    <PackageReference Include="Vulcan.DataAccess" Version="0.1.12-alpha" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
     <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
     <ProjectReference Include="..\..\..\protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj" />
     <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Reference Include="Dapper">
-      <HintPath>..\refdll\Dapper.dll</HintPath>
-    </Reference>
-    <Reference Include="Vulcan.DataAccess">
-      <HintPath>..\refdll\Vulcan.DataAccess.dll</HintPath>
-    </Reference>
   </ItemGroup>
 
 

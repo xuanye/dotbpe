@@ -6,7 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Vulcan.DataAccess" Version="0.1.10-alpha" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.0.0" />
+    <PackageReference Include="Vulcan.DataAccess" Version="0.1.12-alpha" />
   </ItemGroup>
 
   <ItemGroup>
@@ -23,6 +27,9 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Update="dotbpe.Development.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
     <None Update="dotbpe.json">
       <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
     </None>

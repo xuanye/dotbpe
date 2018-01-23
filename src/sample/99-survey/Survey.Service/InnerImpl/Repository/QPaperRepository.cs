@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Survey.Service.InnerImpl.Domain;
 using System.Collections.Generic;
@@ -9,8 +10,8 @@ namespace Survey.Service.InnerImpl.Repository
     public class QPaperRepository : BaseRepository
     {
         //本示例默认使用同一个数据库，实际情况下，可以分多个库，比如用户是一个库
-        public QPaperRepository(IOptions<DBOption> Option)
-           : base(Option.Value.Master)
+        public QPaperRepository(IConnectionManagerFactory factory, IOptions<DBOption> Option, ILoggerFactory loggerFactory)
+           : base(factory,Option.Value.Master, loggerFactory)
         {
         }
 
@@ -39,7 +40,7 @@ namespace Survey.Service.InnerImpl.Repository
             return base.PagedQueryAsync<QPaper>(view,
                 "`qpaper_id`,`subject`,`start_time`,`end_time`,`description`,`apaper_count`,`create_user_id`,`update_time`",
                 "qpaper",
-                where, null, "qpaper_id", " ORDER BY q.update_time DESC");
+                where, null, "qpaper_id", " ORDER BY update_time DESC");
         }
 
         internal Task<List<Question>> GetQuestionsByPaperID(int paperId)

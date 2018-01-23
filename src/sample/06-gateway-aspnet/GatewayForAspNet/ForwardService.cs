@@ -4,8 +4,8 @@ using System.Text;
 using DotBPE.Plugin.AspNetGateway;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
-using DotBPE.Rpc.Logging;
 using Google.Protobuf;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 
 namespace GatewayForAspNet
@@ -19,12 +19,16 @@ namespace GatewayForAspNet
 
         static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(true));
 
-        static ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<ForwardService>();
 
+
+        readonly ILogger<ForwardService> Logger;
+        private static AmpCallInvoker _invoker;
+        private static object _lockObj = new object();
 
         public ForwardService(IRpcClient<AmpMessage> rpcClient,
-           IOptionsSnapshot<HttpRouterOption> optionsAccessor) : base(rpcClient, optionsAccessor)
+           IOptions<HttpRouterOption> optionsAccessor,ILogger<ForwardService> logger) : base(rpcClient, optionsAccessor, logger)
         {
+            this.Logger = logger;
         }
 
         /// <summary>
@@ -42,7 +46,7 @@ namespace GatewayForAspNet
             IMessage reqTemp = ProtobufObjectFactory.GetRequestTemplate(serviceId, messageId);
             if (reqTemp == null)
             {
-                Logger.Error("serviceId={0},messageId={1}的消息不存在", serviceId, messageId);
+                Logger.LogError("serviceId={0},messageId={1}的消息不存在", serviceId, messageId);
                 return null;
             }
 
@@ -76,7 +80,7 @@ namespace GatewayForAspNet
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "从HTTP请求中解析数据错误:" + ex.Message);
+                Logger.LogError(ex, "从HTTP请求中解析数据错误:" + ex.Message);
                 message = null;
             }
 
@@ -90,7 +94,21 @@ namespace GatewayForAspNet
         /// <returns></returns>
         protected override CallInvoker<AmpMessage> GetProtocolCallInvoker(IRpcClient<AmpMessage> rpcClient)
         {
-            return new AmpCallInvoker(rpcClient);
+            if(_invoker != null)
+            {
+                return _invoker;
+            }
+            else
+            {
+                lock (_lockObj)
+                {
+                    if(_invoker == null)
+                    {
+                        _invoker = new AmpCallInvoker(rpcClient);
+                    }
+                    return _invoker;
+                }
+            }            
         }
 
         /// <summary>

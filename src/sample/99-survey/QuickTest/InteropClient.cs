@@ -58,6 +58,7 @@ namespace QuickTest
                 Console.WriteLine("---------------------Summary:--------------------------");
                 Console.WriteLine("Error times: {0}", TOTAL_ERROR);
                 Console.WriteLine("Elapsed time: {0}ms", swTotal.ElapsedMilliseconds);
+                Console.ReadKey();
             });
         }
 
@@ -103,7 +104,7 @@ namespace QuickTest
             {
                 RunTestCase(caller, kvtc.Value);
             }
-            client.CloseAsync().Wait();
+            client.CloseAsync().Wait();          
         }
         /// <summary>
         /// 

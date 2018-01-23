@@ -1,6 +1,7 @@
 using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Threading.Tasks;
 
@@ -8,9 +9,30 @@ namespace DotBPE.Protocol.Amp
 {
     public abstract class ServiceActor : IServiceActor<AmpMessage>
     {
-        private static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<ServiceActor>();
-
+        private ILogger _Logger;
+        
+       
         protected abstract int ServiceId { get; }
+
+        protected ILogger Logger
+        {
+            get
+            {
+                if (this._Logger == null)
+                {
+                    if (Rpc.Environment.LoggerFactory != null)
+                    {
+                        this._Logger = Rpc.Environment.LoggerFactory.CreateLogger<ServiceActor>();
+                    }
+                    else
+                    {
+                        this._Logger = NullLogger.Instance;
+                    }
+
+                }
+                return this._Logger;
+            }
+        }
 
         public string Id
         {
@@ -24,6 +46,7 @@ namespace DotBPE.Protocol.Amp
         {
             try
             {
+                Logger.LogDebug("recieve message,Id={0}", message.Id);
                 //TODO:这里可以写CSOS_AUDIT日志
                 var response = await ProcessAsync(message);
                 response.Sequence = message.Sequence; //通讯请求序列
@@ -31,7 +54,7 @@ namespace DotBPE.Protocol.Amp
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "recieve message occ error:" + ex.Message);
+                Logger.LogError(ex, "recieve message occ error:" + ex.Message);
                 await SendErrorResponseAsync(context, message);
             }
         }
@@ -54,7 +77,7 @@ namespace DotBPE.Protocol.Amp
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "send error response fail:" + ex.Message);
+                Logger.LogError(ex, "send error response fail:" + ex.Message);
                 return Rpc.Utils.TaskUtils.CompletedTask;
             }
         }
@@ -68,7 +91,7 @@ namespace DotBPE.Protocol.Amp
             response.InvokeMessageType = InvokeMessageType.Response;
             response.Code = ErrorCodes.CODE_SERVICE_NOT_FOUND;
 
-            Logger.Warning("recieve message serviceId={0},messageId={1},Actor NotFound", req.ServiceId, req.MessageId);
+            Logger.LogWarning("recieve message serviceId={0},messageId={1},Actor NotFound", req.ServiceId, req.MessageId);
             return Task.FromResult(response);
         }
     }

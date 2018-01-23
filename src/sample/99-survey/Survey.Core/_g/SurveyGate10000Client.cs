@@ -170,6 +170,56 @@ namespace Survey.Core {
             }
             return result;
          }
+        public async Task<RpcResult<QPaperFullRsp>> GetQPaperFullAsync(GetQPaperReq request,int timeOut=3000)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(10000, 14);
+            message.Data = request.ToByteArray();
+            var response = await base.CallInvoker.AsyncCall(message,timeOut);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<QPaperFullRsp>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = QPaperFullRsp.Parser.ParseFrom(response.Data);
+            }
+            return result;
+        }
+
+        //同步方法
+        public RpcResult<QPaperFullRsp> GetQPaperFull(GetQPaperReq request)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(10000, 14);
+            message.Data = request.ToByteArray();
+            var response =  base.CallInvoker.BlockingCall(message);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<QPaperFullRsp>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = QPaperFullRsp.Parser.ParseFrom(response.Data);
+            }
+            return result;
+         }
         public async Task<RpcResult<SaveAPaperRsp>> SaveAPaperAsync(SaveAPaperReq request,int timeOut=3000)
         {
             AmpMessage message = AmpMessage.CreateRequestMessage(10000, 21);

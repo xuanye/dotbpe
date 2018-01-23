@@ -1,7 +1,7 @@
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Logging;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Channels;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace DotBPE.Rpc.Netty
@@ -10,32 +10,33 @@ namespace DotBPE.Rpc.Netty
     {
         private readonly NettyServerBootstrap<TMessage> _bootstrap;
 
-        private static readonly ILogger Logger = Environment.Logger.ForType<ServerChannelHandlerAdapter<TMessage>>();
+        private readonly ILogger Logger;
 
-        public ServerChannelHandlerAdapter(NettyServerBootstrap<TMessage> bootstrap) : base(true)
+        public ServerChannelHandlerAdapter(NettyServerBootstrap<TMessage> bootstrap,ILoggerFactory factory) : base(true)
         {
             this._bootstrap = bootstrap;
+            this.Logger = factory.CreateLogger(this.GetType());
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            Logger.Debug($"client {context.Channel.RemoteAddress} connected");
+            Logger.LogDebug($"client {context.Channel.RemoteAddress} connected");
             base.ChannelActive(context);
         }
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            Logger.Debug($"client {context.Channel.RemoteAddress} disconnected");
+            Logger.LogDebug($"client {context.Channel.RemoteAddress} disconnected");
             base.ChannelInactive(context);
         }
 
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
-            Logger.Debug("ready to read message");
+            Logger.LogDebug("ready to read message");
 
             this._bootstrap.ChannelRead(context, msg).ContinueWith((task) =>
             {
-                Logger.Debug("read message completed");
+                Logger.LogDebug("read message completed");
             });
         }
 
@@ -46,7 +47,7 @@ namespace DotBPE.Rpc.Netty
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
-            Logger.Error(ex, $"client：{context.Channel.RemoteAddress} occur an exception ");
+            Logger.LogError(ex, $"client：{context.Channel.RemoteAddress} occur an exception ");
             context.CloseAsync(); //关闭连接
         }
 
@@ -58,7 +59,7 @@ namespace DotBPE.Rpc.Netty
                 var eventState = evt as IdleStateEvent;
                 if (eventState != null)
                 {
-                    Logger.Error($"client {context.Channel.Id},{context.Channel.RemoteAddress} is timeout，close it!");
+                    Logger.LogError($"client {context.Channel.Id},{context.Channel.RemoteAddress} is timeout，close it!");
                     context.CloseAsync(); //关闭连接
                 }
             }

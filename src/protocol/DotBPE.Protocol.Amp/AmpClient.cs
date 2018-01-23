@@ -16,6 +16,7 @@ namespace DotBPE.Protocol.Amp
                 .UserNettyClient<AmpMessage>()
                 .ConfigureServices((services) =>
                 {
+                    services.AddLogging();
                     services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
                 })
                 .UseServer(remoteAddress)

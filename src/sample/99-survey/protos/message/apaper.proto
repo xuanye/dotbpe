@@ -39,10 +39,10 @@ message QueryAPaperReq{
     string identity = 2; // 用户标识
     string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
 
-    string subject = 11; //主题 模糊搜索
+    string query = 11; //主题 模糊搜索
     int32 qpaper_id = 12; //问卷ID
-    int32 page_index = 13 ; //分页索引
-    int32 page_size = 14 ; //每页记录数
+    int32 page = 13 ; //分页索引
+    int32 rp = 14 ; //每页记录数
     bool check_role = 15; //检查角色
 }
 

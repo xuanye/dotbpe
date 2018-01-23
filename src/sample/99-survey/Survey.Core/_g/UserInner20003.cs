@@ -23,12 +23,14 @@ namespace Survey.Core {
       byte[] descriptorData = global::System.Convert.FromBase64String(
           string.Concat(
             "CiRzZXJ2aWNlL2lubmVyL3VzZXJfaW5uZXJfMjAwMDMucHJvdG8SBmRvdGJw",
-            "ZRoTZG90YnBlX29wdGlvbi5wcm90bxoSbWVzc2FnZS91c2VyLnByb3RvMsEB",
+            "ZRoTZG90YnBlX29wdGlvbi5wcm90bxoSbWVzc2FnZS91c2VyLnByb3RvMv4B",
             "ChBVc2VySW5uZXJTZXJ2aWNlEjoKCFJlZ2lzdGVyEhMuZG90YnBlLlJlZ2lz",
             "dGVyUmVxGhMuZG90YnBlLlJlZ2lzdGVyUnNwIgTQ8xgBEjEKBUxvZ2luEhAu",
             "ZG90YnBlLkxvZ2luUmVxGhAuZG90YnBlLkxvZ2luUnNwIgTQ8xgCEjYKBEVk",
             "aXQSEy5kb3RicGUuRWRpdFVzZXJSZXEaEy5kb3RicGUuRWRpdFVzZXJSc3Ai",
-            "BNDzGAMaBsjzGKOcAUIQSAGqAgtTdXJ2ZXkuQ29yZVAAYgZwcm90bzM="));
+            "BNDzGAMSOwoLR2V0VXNlckluZm8SEi5kb3RicGUuR2V0VXNlclJlcRoSLmRv",
+            "dGJwZS5HZXRVc2VyUnNwIgTQ8xgEGgbI8xijnAFCEEgBqgILU3VydmV5LkNv",
+            "cmVQAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::DotBPE.Protobuf.DotbpeOptionReflection.Descriptor, global::Survey.Core.UserReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null));

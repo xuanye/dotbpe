@@ -29,24 +29,33 @@ namespace Survey.Core {
             "CgtSZWdpc3RlclJzcBIWCg5yZXR1cm5fbWVzc2FnZRgBIAEoCRIPCgd1c2Vy",
             "X2lkGAogASgFImgKCExvZ2luUmVxEhEKCWNsaWVudF9pcBgBIAEoCRIQCghp",
             "ZGVudGl0eRgCIAEoCRIUCgx4X3JlcXVlc3RfaWQYAyABKAkSDwoHYWNjb3Vu",
-            "dBgKIAEoCRIQCghwYXNzd29yZBgMIAEoCSJsCghMb2dpblJzcBIWCg5yZXR1",
+            "dBgKIAEoCRIQCghwYXNzd29yZBgMIAEoCSJwCghMb2dpblJzcBIWCg5yZXR1",
             "cm5fbWVzc2FnZRgBIAEoCRIPCgdhY2NvdW50GAogASgJEhEKCWZ1bGxfbmFt",
-            "ZRgLIAEoCRIQCghpc19hZG1pbhgMIAEoCBISCgpzZXNzaW9uX2lkGA0gASgJ",
-            "IqwBCgtFZGl0VXNlclJlcRIRCgljbGllbnRfaXAYASABKAkSEAoIaWRlbnRp",
-            "dHkYAiABKAkSFAoMeF9yZXF1ZXN0X2lkGAMgASgJEg8KB2FjY291bnQYCiAB",
-            "KAkSEQoJZnVsbF9uYW1lGAsgASgJEhQKDG9sZF9wYXNzd29yZBgMIAEoCRIU",
-            "CgxuZXdfcGFzc3dvcmQYDSABKAkSEgoKY2hlY2tfcm9sZRgOIAEoCCIlCgtF",
-            "ZGl0VXNlclJzcBIWCg5yZXR1cm5fbWVzc2FnZRgBIAEoCUIQSAGqAgtTdXJ2",
-            "ZXkuQ29yZVAAYgZwcm90bzM="));
+            "ZRgLIAEoCRIQCghpc19hZG1pbhgMIAEoCBIWCg5icGVfc2Vzc2lvbl9pZBgN",
+            "IAEoCSKsAQoLRWRpdFVzZXJSZXESEQoJY2xpZW50X2lwGAEgASgJEhAKCGlk",
+            "ZW50aXR5GAIgASgJEhQKDHhfcmVxdWVzdF9pZBgDIAEoCRIPCgdhY2NvdW50",
+            "GAogASgJEhEKCWZ1bGxfbmFtZRgLIAEoCRIUCgxvbGRfcGFzc3dvcmQYDCAB",
+            "KAkSFAoMbmV3X3Bhc3N3b3JkGA0gASgJEhIKCmNoZWNrX3JvbGUYDiABKAgi",
+            "JQoLRWRpdFVzZXJSc3ASFgoOcmV0dXJuX21lc3NhZ2UYASABKAkiWAoKR2V0",
+            "VXNlclJlcRIRCgljbGllbnRfaXAYASABKAkSEAoIaWRlbnRpdHkYAiABKAkS",
+            "FAoMeF9yZXF1ZXN0X2lkGAMgASgJEg8KB3VzZXJfaWQYCiABKAkiWgoKR2V0",
+            "VXNlclJzcBIWCg5yZXR1cm5fbWVzc2FnZRgBIAEoCRIPCgdhY2NvdW50GAog",
+            "ASgJEhEKCWZ1bGxfbmFtZRgLIAEoCRIQCghpc19hZG1pbhgMIAEoCCJQCgtT",
+            "ZXNzaW9uVXNlchIQCghpZGVudGl0eRgBIAEoCRIXCg9sb2dpbl90aW1lc3Rh",
+            "bXAYAiABKAUSFgoOYnBlX3Nlc3Npb25faWQYDSABKAlCEEgBqgILU3VydmV5",
+            "LkNvcmVQAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Survey.Core.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.RegisterReq), global::Survey.Core.RegisterReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "Account", "FullName", "Password" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.RegisterRsp), global::Survey.Core.RegisterRsp.Parser, new[]{ "ReturnMessage", "UserId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.LoginReq), global::Survey.Core.LoginReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "Account", "Password" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.LoginRsp), global::Survey.Core.LoginRsp.Parser, new[]{ "ReturnMessage", "Account", "FullName", "IsAdmin", "SessionId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.LoginRsp), global::Survey.Core.LoginRsp.Parser, new[]{ "ReturnMessage", "Account", "FullName", "IsAdmin", "BpeSessionId" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.EditUserReq), global::Survey.Core.EditUserReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "Account", "FullName", "OldPassword", "NewPassword", "CheckRole" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.EditUserRsp), global::Survey.Core.EditUserRsp.Parser, new[]{ "ReturnMessage" }, null, null, null)
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.EditUserRsp), global::Survey.Core.EditUserRsp.Parser, new[]{ "ReturnMessage" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.GetUserReq), global::Survey.Core.GetUserReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "UserId" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.GetUserRsp), global::Survey.Core.GetUserRsp.Parser, new[]{ "ReturnMessage", "Account", "FullName", "IsAdmin" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.SessionUser), global::Survey.Core.SessionUser.Parser, new[]{ "Identity", "LoginTimestamp", "BpeSessionId" }, null, null, null)
           }));
     }
     #endregion
@@ -751,7 +760,7 @@ namespace Survey.Core {
       account_ = other.account_;
       fullName_ = other.fullName_;
       isAdmin_ = other.isAdmin_;
-      sessionId_ = other.sessionId_;
+      bpeSessionId_ = other.bpeSessionId_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -815,17 +824,17 @@ namespace Survey.Core {
       }
     }
 
-    /// <summary>Field number for the "session_id" field.</summary>
-    public const int SessionIdFieldNumber = 13;
-    private string sessionId_ = "";
+    /// <summary>Field number for the "bpe_session_id" field.</summary>
+    public const int BpeSessionIdFieldNumber = 13;
+    private string bpeSessionId_ = "";
     /// <summary>
     /// 登录成功后的sessionId
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string SessionId {
-      get { return sessionId_; }
+    public string BpeSessionId {
+      get { return bpeSessionId_; }
       set {
-        sessionId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        bpeSessionId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -846,7 +855,7 @@ namespace Survey.Core {
       if (Account != other.Account) return false;
       if (FullName != other.FullName) return false;
       if (IsAdmin != other.IsAdmin) return false;
-      if (SessionId != other.SessionId) return false;
+      if (BpeSessionId != other.BpeSessionId) return false;
       return true;
     }
 
@@ -857,7 +866,7 @@ namespace Survey.Core {
       if (Account.Length != 0) hash ^= Account.GetHashCode();
       if (FullName.Length != 0) hash ^= FullName.GetHashCode();
       if (IsAdmin != false) hash ^= IsAdmin.GetHashCode();
-      if (SessionId.Length != 0) hash ^= SessionId.GetHashCode();
+      if (BpeSessionId.Length != 0) hash ^= BpeSessionId.GetHashCode();
       return hash;
     }
 
@@ -884,9 +893,9 @@ namespace Survey.Core {
         output.WriteRawTag(96);
         output.WriteBool(IsAdmin);
       }
-      if (SessionId.Length != 0) {
+      if (BpeSessionId.Length != 0) {
         output.WriteRawTag(106);
-        output.WriteString(SessionId);
+        output.WriteString(BpeSessionId);
       }
     }
 
@@ -905,8 +914,8 @@ namespace Survey.Core {
       if (IsAdmin != false) {
         size += 1 + 1;
       }
-      if (SessionId.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(SessionId);
+      if (BpeSessionId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(BpeSessionId);
       }
       return size;
     }
@@ -928,8 +937,8 @@ namespace Survey.Core {
       if (other.IsAdmin != false) {
         IsAdmin = other.IsAdmin;
       }
-      if (other.SessionId.Length != 0) {
-        SessionId = other.SessionId;
+      if (other.BpeSessionId.Length != 0) {
+        BpeSessionId = other.BpeSessionId;
       }
     }
 
@@ -958,7 +967,7 @@ namespace Survey.Core {
             break;
           }
           case 106: {
-            SessionId = input.ReadString();
+            BpeSessionId = input.ReadString();
             break;
           }
         }
@@ -1416,6 +1425,614 @@ namespace Survey.Core {
             break;
           case 10: {
             ReturnMessage = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class GetUserReq : pb::IMessage<GetUserReq> {
+    private static readonly pb::MessageParser<GetUserReq> _parser = new pb::MessageParser<GetUserReq>(() => new GetUserReq());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<GetUserReq> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Survey.Core.UserReflection.Descriptor.MessageTypes[6]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetUserReq() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetUserReq(GetUserReq other) : this() {
+      clientIp_ = other.clientIp_;
+      identity_ = other.identity_;
+      xRequestId_ = other.xRequestId_;
+      userId_ = other.userId_;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetUserReq Clone() {
+      return new GetUserReq(this);
+    }
+
+    /// <summary>Field number for the "client_ip" field.</summary>
+    public const int ClientIpFieldNumber = 1;
+    private string clientIp_ = "";
+    /// <summary>
+    /// 用户端IP
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ClientIp {
+      get { return clientIp_; }
+      set {
+        clientIp_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "identity" field.</summary>
+    public const int IdentityFieldNumber = 2;
+    private string identity_ = "";
+    /// <summary>
+    ///  用户标识
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Identity {
+      get { return identity_; }
+      set {
+        identity_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "x_request_id" field.</summary>
+    public const int XRequestIdFieldNumber = 3;
+    private string xRequestId_ = "";
+    /// <summary>
+    /// 请求的唯一标识，用于服务间传递
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string XRequestId {
+      get { return xRequestId_; }
+      set {
+        xRequestId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "user_id" field.</summary>
+    public const int UserIdFieldNumber = 10;
+    private string userId_ = "";
+    /// <summary>
+    /// 需要获取的用户信息
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string UserId {
+      get { return userId_; }
+      set {
+        userId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as GetUserReq);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(GetUserReq other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (ClientIp != other.ClientIp) return false;
+      if (Identity != other.Identity) return false;
+      if (XRequestId != other.XRequestId) return false;
+      if (UserId != other.UserId) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ClientIp.Length != 0) hash ^= ClientIp.GetHashCode();
+      if (Identity.Length != 0) hash ^= Identity.GetHashCode();
+      if (XRequestId.Length != 0) hash ^= XRequestId.GetHashCode();
+      if (UserId.Length != 0) hash ^= UserId.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (ClientIp.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ClientIp);
+      }
+      if (Identity.Length != 0) {
+        output.WriteRawTag(18);
+        output.WriteString(Identity);
+      }
+      if (XRequestId.Length != 0) {
+        output.WriteRawTag(26);
+        output.WriteString(XRequestId);
+      }
+      if (UserId.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(UserId);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (ClientIp.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ClientIp);
+      }
+      if (Identity.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Identity);
+      }
+      if (XRequestId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(XRequestId);
+      }
+      if (UserId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(UserId);
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(GetUserReq other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ClientIp.Length != 0) {
+        ClientIp = other.ClientIp;
+      }
+      if (other.Identity.Length != 0) {
+        Identity = other.Identity;
+      }
+      if (other.XRequestId.Length != 0) {
+        XRequestId = other.XRequestId;
+      }
+      if (other.UserId.Length != 0) {
+        UserId = other.UserId;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            ClientIp = input.ReadString();
+            break;
+          }
+          case 18: {
+            Identity = input.ReadString();
+            break;
+          }
+          case 26: {
+            XRequestId = input.ReadString();
+            break;
+          }
+          case 82: {
+            UserId = input.ReadString();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class GetUserRsp : pb::IMessage<GetUserRsp> {
+    private static readonly pb::MessageParser<GetUserRsp> _parser = new pb::MessageParser<GetUserRsp>(() => new GetUserRsp());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<GetUserRsp> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Survey.Core.UserReflection.Descriptor.MessageTypes[7]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetUserRsp() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetUserRsp(GetUserRsp other) : this() {
+      returnMessage_ = other.returnMessage_;
+      account_ = other.account_;
+      fullName_ = other.fullName_;
+      isAdmin_ = other.isAdmin_;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public GetUserRsp Clone() {
+      return new GetUserRsp(this);
+    }
+
+    /// <summary>Field number for the "return_message" field.</summary>
+    public const int ReturnMessageFieldNumber = 1;
+    private string returnMessage_ = "";
+    /// <summary>
+    /// 返回错误信息
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string ReturnMessage {
+      get { return returnMessage_; }
+      set {
+        returnMessage_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "account" field.</summary>
+    public const int AccountFieldNumber = 10;
+    private string account_ = "";
+    /// <summary>
+    /// 账号
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Account {
+      get { return account_; }
+      set {
+        account_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "full_name" field.</summary>
+    public const int FullNameFieldNumber = 11;
+    private string fullName_ = "";
+    /// <summary>
+    /// 姓名
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string FullName {
+      get { return fullName_; }
+      set {
+        fullName_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "is_admin" field.</summary>
+    public const int IsAdminFieldNumber = 12;
+    private bool isAdmin_;
+    /// <summary>
+    /// 是否管理员
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool IsAdmin {
+      get { return isAdmin_; }
+      set {
+        isAdmin_ = value;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as GetUserRsp);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(GetUserRsp other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (ReturnMessage != other.ReturnMessage) return false;
+      if (Account != other.Account) return false;
+      if (FullName != other.FullName) return false;
+      if (IsAdmin != other.IsAdmin) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (ReturnMessage.Length != 0) hash ^= ReturnMessage.GetHashCode();
+      if (Account.Length != 0) hash ^= Account.GetHashCode();
+      if (FullName.Length != 0) hash ^= FullName.GetHashCode();
+      if (IsAdmin != false) hash ^= IsAdmin.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (ReturnMessage.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(ReturnMessage);
+      }
+      if (Account.Length != 0) {
+        output.WriteRawTag(82);
+        output.WriteString(Account);
+      }
+      if (FullName.Length != 0) {
+        output.WriteRawTag(90);
+        output.WriteString(FullName);
+      }
+      if (IsAdmin != false) {
+        output.WriteRawTag(96);
+        output.WriteBool(IsAdmin);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (ReturnMessage.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(ReturnMessage);
+      }
+      if (Account.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Account);
+      }
+      if (FullName.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(FullName);
+      }
+      if (IsAdmin != false) {
+        size += 1 + 1;
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(GetUserRsp other) {
+      if (other == null) {
+        return;
+      }
+      if (other.ReturnMessage.Length != 0) {
+        ReturnMessage = other.ReturnMessage;
+      }
+      if (other.Account.Length != 0) {
+        Account = other.Account;
+      }
+      if (other.FullName.Length != 0) {
+        FullName = other.FullName;
+      }
+      if (other.IsAdmin != false) {
+        IsAdmin = other.IsAdmin;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            ReturnMessage = input.ReadString();
+            break;
+          }
+          case 82: {
+            Account = input.ReadString();
+            break;
+          }
+          case 90: {
+            FullName = input.ReadString();
+            break;
+          }
+          case 96: {
+            IsAdmin = input.ReadBool();
+            break;
+          }
+        }
+      }
+    }
+
+  }
+
+  public sealed partial class SessionUser : pb::IMessage<SessionUser> {
+    private static readonly pb::MessageParser<SessionUser> _parser = new pb::MessageParser<SessionUser>(() => new SessionUser());
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pb::MessageParser<SessionUser> Parser { get { return _parser; } }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public static pbr::MessageDescriptor Descriptor {
+      get { return global::Survey.Core.UserReflection.Descriptor.MessageTypes[8]; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    pbr::MessageDescriptor pb::IMessage.Descriptor {
+      get { return Descriptor; }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SessionUser() {
+      OnConstruction();
+    }
+
+    partial void OnConstruction();
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SessionUser(SessionUser other) : this() {
+      identity_ = other.identity_;
+      loginTimestamp_ = other.loginTimestamp_;
+      bpeSessionId_ = other.bpeSessionId_;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public SessionUser Clone() {
+      return new SessionUser(this);
+    }
+
+    /// <summary>Field number for the "identity" field.</summary>
+    public const int IdentityFieldNumber = 1;
+    private string identity_ = "";
+    /// <summary>
+    /// 登录账号
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string Identity {
+      get { return identity_; }
+      set {
+        identity_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    /// <summary>Field number for the "login_timestamp" field.</summary>
+    public const int LoginTimestampFieldNumber = 2;
+    private int loginTimestamp_;
+    /// <summary>
+    /// 登录的时间戳
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int LoginTimestamp {
+      get { return loginTimestamp_; }
+      set {
+        loginTimestamp_ = value;
+      }
+    }
+
+    /// <summary>Field number for the "bpe_session_id" field.</summary>
+    public const int BpeSessionIdFieldNumber = 13;
+    private string bpeSessionId_ = "";
+    /// <summary>
+    /// 登录成功后的sessionId
+    /// </summary>
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public string BpeSessionId {
+      get { return bpeSessionId_; }
+      set {
+        bpeSessionId_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override bool Equals(object other) {
+      return Equals(other as SessionUser);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public bool Equals(SessionUser other) {
+      if (ReferenceEquals(other, null)) {
+        return false;
+      }
+      if (ReferenceEquals(other, this)) {
+        return true;
+      }
+      if (Identity != other.Identity) return false;
+      if (LoginTimestamp != other.LoginTimestamp) return false;
+      if (BpeSessionId != other.BpeSessionId) return false;
+      return true;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override int GetHashCode() {
+      int hash = 1;
+      if (Identity.Length != 0) hash ^= Identity.GetHashCode();
+      if (LoginTimestamp != 0) hash ^= LoginTimestamp.GetHashCode();
+      if (BpeSessionId.Length != 0) hash ^= BpeSessionId.GetHashCode();
+      return hash;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public override string ToString() {
+      return pb::JsonFormatter.ToDiagnosticString(this);
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void WriteTo(pb::CodedOutputStream output) {
+      if (Identity.Length != 0) {
+        output.WriteRawTag(10);
+        output.WriteString(Identity);
+      }
+      if (LoginTimestamp != 0) {
+        output.WriteRawTag(16);
+        output.WriteInt32(LoginTimestamp);
+      }
+      if (BpeSessionId.Length != 0) {
+        output.WriteRawTag(106);
+        output.WriteString(BpeSessionId);
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public int CalculateSize() {
+      int size = 0;
+      if (Identity.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Identity);
+      }
+      if (LoginTimestamp != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(LoginTimestamp);
+      }
+      if (BpeSessionId.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(BpeSessionId);
+      }
+      return size;
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(SessionUser other) {
+      if (other == null) {
+        return;
+      }
+      if (other.Identity.Length != 0) {
+        Identity = other.Identity;
+      }
+      if (other.LoginTimestamp != 0) {
+        LoginTimestamp = other.LoginTimestamp;
+      }
+      if (other.BpeSessionId.Length != 0) {
+        BpeSessionId = other.BpeSessionId;
+      }
+    }
+
+    [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
+    public void MergeFrom(pb::CodedInputStream input) {
+      uint tag;
+      while ((tag = input.ReadTag()) != 0) {
+        switch(tag) {
+          default:
+            input.SkipLastField();
+            break;
+          case 10: {
+            Identity = input.ReadString();
+            break;
+          }
+          case 16: {
+            LoginTimestamp = input.ReadInt32();
+            break;
+          }
+          case 106: {
+            BpeSessionId = input.ReadString();
             break;
           }
         }

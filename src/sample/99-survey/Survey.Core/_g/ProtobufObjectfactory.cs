@@ -18,6 +18,8 @@ if(serviceId == 10000 && messageId == 12){ return new QueryQPaperReq() ;
 }
 if(serviceId == 10000 && messageId == 13){ return new GetQPaperReq() ;
 }
+if(serviceId == 10000 && messageId == 14){ return new GetQPaperReq() ;
+}
 if(serviceId == 10000 && messageId == 21){ return new SaveAPaperReq() ;
 }
 if(serviceId == 10000 && messageId == 22){ return new QueryAPaperReq() ;
@@ -31,6 +33,8 @@ if(serviceId == 10001 && messageId == 32){ return new LoginReq() ;
 }
 if(serviceId == 10001 && messageId == 33){ return new EditUserReq() ;
 }
+if(serviceId == 10001 && messageId == 34){ return new CheckLoginReq() ;
+}
 
 return null;
 }
@@ -41,6 +45,8 @@ if(serviceId == 10000 && messageId == 11){ return new SaveQPaperRsp() ;
 if(serviceId == 10000 && messageId == 12){ return new QPaperListRsp() ;
 }
 if(serviceId == 10000 && messageId == 13){ return new QPaperRsp() ;
+}
+if(serviceId == 10000 && messageId == 14){ return new QPaperFullRsp() ;
 }
 if(serviceId == 10000 && messageId == 21){ return new SaveAPaperRsp() ;
 }
@@ -54,6 +60,8 @@ if(serviceId == 10001 && messageId == 31){ return new RegisterRsp() ;
 if(serviceId == 10001 && messageId == 32){ return new LoginRsp() ;
 }
 if(serviceId == 10001 && messageId == 33){ return new EditUserRsp() ;
+}
+if(serviceId == 10001 && messageId == 34){ return new GetUserRsp() ;
 }
 
 return null;

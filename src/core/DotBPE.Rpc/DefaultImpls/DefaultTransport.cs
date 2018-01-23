@@ -1,7 +1,7 @@
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
-using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Utils;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -11,12 +11,13 @@ namespace DotBPE.Rpc.DefaultImpls
         where TMessage : InvokeMessage
     {
         private readonly IRpcContext<TMessage> _context;
-        private static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransport<TMessage>>();
+        private readonly ILogger Logger;
 
-        public DefaultTransport(IRpcContext<TMessage> context)
+        public DefaultTransport(IRpcContext<TMessage> context, ILoggerFactory factory)
         {
             this._context = context;
             this.Id = IdUtils.NewId();
+            this.Logger = factory.CreateLogger(this.GetType());
         }
 
         public async Task CloseAsync()
@@ -47,7 +48,7 @@ namespace DotBPE.Rpc.DefaultImpls
             }
             catch (Exception exception)
             {
-                Logger.Error("send message error", exception);
+                Logger.LogError("send message error", exception);
                 throw;
             }
         }

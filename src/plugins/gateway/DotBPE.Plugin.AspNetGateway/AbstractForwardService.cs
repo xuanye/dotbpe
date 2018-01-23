@@ -1,8 +1,8 @@
 using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
-using DotBPE.Rpc.Logging;
 using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
@@ -14,7 +14,7 @@ namespace DotBPE.Plugin.AspNetGateway
 {
     public abstract class AbstractForwardService<TMessage> : IForwardService where TMessage : InvokeMessage
     {
-        private static ILogger Logger = Environment.Logger.ForType<AbstractForwardService<TMessage>>();
+        private readonly ILogger _logger;
 
         private readonly HttpRouterOption _option;
         private readonly IRpcClient<TMessage> _client;
@@ -25,7 +25,7 @@ namespace DotBPE.Plugin.AspNetGateway
         /// 构造函数
         /// </summary>
         /// <param name="rpcClient"></param>
-        public AbstractForwardService(IRpcClient<TMessage> rpcClient, IOptionsSnapshot<HttpRouterOption> optionsAccessor)
+        public AbstractForwardService(IRpcClient<TMessage> rpcClient, IOptions<HttpRouterOption> optionsAccessor,ILogger logger)
         {
             Rpc.Utils.Preconditions.CheckNotNull(optionsAccessor.Value, "WebApiRouterOption");
 
@@ -34,6 +34,8 @@ namespace DotBPE.Plugin.AspNetGateway
             _client = rpcClient;
 
             _invoker = this.GetProtocolCallInvoker(rpcClient);
+
+            this._logger = logger;
         }
 
         /// <summary>
@@ -68,6 +70,7 @@ namespace DotBPE.Plugin.AspNetGateway
 
                 return result;
             }
+            await AddCusRequestData(context, rd);
 
             //4. 如果存在则 从路由 Form, QueryString, Body 中获取请求数据, 转换成TMessage，通过rpcClient转发
             TMessage message = this.EncodeRequest(rd);
@@ -78,46 +81,61 @@ namespace DotBPE.Plugin.AspNetGateway
 
                 if (rsp != null)
                 {
+                    //预处理响应数据
+                    PreResponse(context, rsp);
+
                     result.Data = this.MessageToJson(rsp);
+                }
+                else
+                {
+                    this._logger.LogWarning("req serviceId={0},messageId={1} rsp is null", rd.ServiceId, rd.MessageId);
                 }
             }
             catch (RpcCommunicationException rpcEx)
             {
                 result.Code = 500;
                 result.Message = "timeout error:" + rpcEx.Message;
+                this._logger.LogError(rpcEx, "timeout error:" + rpcEx.Message);
             }
             catch (Exception ex)
             {
                 result.Code = 500;
                 result.Message = "call error:" + ex.Message;
+                this._logger.LogError(ex, "call error:" + ex.Message);
             }
 
             return result;
         }
 
+        protected virtual Task AddCusRequestData(HttpContext context, RequestData rd)
+        {
+            return Task.CompletedTask;
+        }
+        
         protected virtual void PreResponse(HttpContext context, TMessage resMessage)
         {
-            var sessionId = "";
-            var hasValue = context.Request.Cookies.TryGetValue(Constants.DOTBPE_SEESIONID, out sessionId);
-            if (!string.IsNullOrEmpty(sessionId))
-            {
-                return; // 存在sessionId
-            }
-
+            var newSessionId = "";
             if (this._option.CookieMode == CookieMode.Auto) // 自动添加sessionId
             {
-                sessionId = Guid.NewGuid().ToString("N");
+                var sessionId = "";
+                var hasValue = context.Request.Cookies.TryGetValue(Constants.DOTBPE_SEESIONID, out sessionId);
+                if (!string.IsNullOrEmpty(sessionId))
+                {
+                    return; // 存在sessionId
+                }
+
+                newSessionId = Guid.NewGuid().ToString("N");
             }
             else if (this._option.CookieMode == CookieMode.Manual)
             {
-                sessionId = GetSessionIdFromMessage(resMessage);
+                newSessionId = GetSessionIdFromMessage(resMessage);               
             }
 
-            if (!string.IsNullOrEmpty(sessionId))
+            if (!string.IsNullOrEmpty(newSessionId))
             {
                 CookieOptions option = new CookieOptions();
                 option.HttpOnly = true;
-                context.Response.Cookies.Append(Constants.DOTBPE_SEESIONID, sessionId, option);
+                context.Response.Cookies.Append(Constants.DOTBPE_SEESIONID, newSessionId, option);
             }
         }
 
@@ -177,7 +195,7 @@ namespace DotBPE.Plugin.AspNetGateway
             }
             if (string.IsNullOrEmpty(requestId))
             {
-                requestId = Guid.NewGuid().ToString("D");
+                requestId = Guid.NewGuid().ToString("N");
             }
             collDataDict.Add(Constants.REQUESTID_FIELD_NAME, requestId);
         }
@@ -225,12 +243,7 @@ namespace DotBPE.Plugin.AspNetGateway
                         {
                             rd.RawBody = CollectBody(context.Request.Body);
                         }
-
-                        if (context.User.Identity.IsAuthenticated)
-                        {
-                            //添加当前用户; 实际的项目中可根据自己的情况去扩展
-                            rd.Data.Add(Constants.IDENTITY_FIELD_NAME, context.User.Identity.Name);
-                        }
+                                                
                         //添加客户端IP 项目中可根据实际情况添加需要的内容
                         var IPAddress = context.Connection.RemoteIpAddress;
                         string ip = IPAddress.IsIPv4MappedToIPv6 ? IPAddress.MapToIPv4().ToString() : IPAddress.ToString();
@@ -238,6 +251,7 @@ namespace DotBPE.Plugin.AspNetGateway
 
                         //自定义数据
                         AddFromContext(context, rd.Data);
+
 
                         return rd;
                     }

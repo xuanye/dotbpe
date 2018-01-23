@@ -29,38 +29,37 @@ namespace Survey.Core {
             "DCABKAkSEAoIZW5kX3RpbWUYDSABKAkSEwoLZGVzY3JpcHRpb24YDiABKAkS",
             "JgoJcXVlc3Rpb25zGA8gAygLMhMuZG90YnBlLkRUT1F1ZXN0aW9uIjoKDVNh",
             "dmVRUGFwZXJSc3ASFgoOcmV0dXJuX21lc3NhZ2UYASABKAkSEQoJcXBhcGVy",
-            "X2lkGAogASgFIpoBCg5RdWVyeVFQYXBlclJlcRIRCgljbGllbnRfaXAYASAB",
-            "KAkSEAoIaWRlbnRpdHkYAiABKAkSFAoMeF9yZXF1ZXN0X2lkGAMgASgJEhIK",
-            "CnF1ZXJ5X3RleHQYCiABKAkSEgoKY2hlY2tfcm9sZRgLIAEoCBISCgpwYWdl",
-            "X2luZGV4GAwgASgFEhEKCXBhZ2Vfc2l6ZRgNIAEoBSJXCg1RUGFwZXJMaXN0",
-            "UnNwEhYKDnJldHVybl9tZXNzYWdlGAEgASgJEh8KBGxpc3QYCiADKAsyES5k",
-            "b3RicGUuRFRPUVBhcGVyEg0KBXRvdGFsGAsgASgFInAKDEdldFFQYXBlclJl",
-            "cRIRCgljbGllbnRfaXAYASABKAkSEAoIaWRlbnRpdHkYAiABKAkSFAoMeF9y",
-            "ZXF1ZXN0X2lkGAMgASgJEhEKCXFwYXBlcl9pZBgKIAEoBRISCgpjaGVja19y",
-            "b2xlGAsgASgIIpoBCglRUGFwZXJSc3ASFgoOcmV0dXJuX21lc3NhZ2UYASAB",
-            "KAkSEQoJcXBhcGVyX2lkGAsgASgFEg8KB3N1YmplY3QYDCABKAkSEgoKc3Rh",
-            "cnRfdGltZRgNIAEoCRIQCghlbmRfdGltZRgOIAEoCRITCgtkZXNjcmlwdGlv",
-            "bhgPIAEoCRIWCg5jcmVhdGVfdXNlcl9pZBgQIAEoCSJWCg1RUGFwZXJGdWxs",
-            "UnNwEhYKDnJldHVybl9tZXNzYWdlGAEgASgJEi0KBnFwYXBlchgKIAEoCzId",
-            "LmRvdGJwZS5EVE9RUGFwZXJXaXRoUXVlc3Rpb24iggEKCURUT1FQYXBlchIR",
-            "CglxcGFwZXJfaWQYASABKAUSDwoHc3ViamVjdBgCIAEoCRISCgpzdGFydF90",
-            "aW1lGAMgASgJEhAKCGVuZF90aW1lGAQgASgJEhMKC2Rlc2NyaXB0aW9uGAUg",
-            "ASgJEhYKDmNyZWF0ZV91c2VyX2lkGAYgASgJIpIBCgtEVE9RdWVzdGlvbhIK",
-            "CgJpZBgBIAEoCRINCgV0b3BpYxgCIAEoCRIQCghwYXBlcl9pZBgDIAEoBRIr",
-            "Cg1xdWVzdGlvbl90eXBlGAQgASgOMhQuZG90YnBlLlF1ZXN0aW9uVHlwZRIT",
-            "CgtpdGVtX2RldGFpbBgFIAEoCRIUCgxleHRlbmRfaW5wdXQYBiABKAgingEK",
-            "FURUT1FQYXBlcldpdGhRdWVzdGlvbhIRCglxcGFwZXJfaWQYASABKAUSDwoH",
-            "c3ViamVjdBgCIAEoCRISCgpzdGFydF90aW1lGAMgASgJEhAKCGVuZF90aW1l",
-            "GAQgASgJEhMKC2Rlc2NyaXB0aW9uGAUgASgJEiYKCXF1ZXN0aW9ucxgKIAMo",
-            "CzITLmRvdGJwZS5EVE9RdWVzdGlvbio4CgxRdWVzdGlvblR5cGUSCgoGU0lH",
-            "TkxFEAASDAoITVVMVElQTEUQARIOCgpTVUJKRUNUSVZFEAJCEEgBqgILU3Vy",
-            "dmV5LkNvcmVQAGIGcHJvdG8z"));
+            "X2lkGAogASgFIogBCg5RdWVyeVFQYXBlclJlcRIRCgljbGllbnRfaXAYASAB",
+            "KAkSEAoIaWRlbnRpdHkYAiABKAkSFAoMeF9yZXF1ZXN0X2lkGAMgASgJEg0K",
+            "BXF1ZXJ5GAogASgJEhIKCmNoZWNrX3JvbGUYCyABKAgSDAoEcGFnZRgMIAEo",
+            "BRIKCgJycBgNIAEoBSJXCg1RUGFwZXJMaXN0UnNwEhYKDnJldHVybl9tZXNz",
+            "YWdlGAEgASgJEh8KBGxpc3QYCiADKAsyES5kb3RicGUuRFRPUVBhcGVyEg0K",
+            "BXRvdGFsGAsgASgFInAKDEdldFFQYXBlclJlcRIRCgljbGllbnRfaXAYASAB",
+            "KAkSEAoIaWRlbnRpdHkYAiABKAkSFAoMeF9yZXF1ZXN0X2lkGAMgASgJEhEK",
+            "CXFwYXBlcl9pZBgKIAEoBRISCgpjaGVja19yb2xlGAsgASgIIpoBCglRUGFw",
+            "ZXJSc3ASFgoOcmV0dXJuX21lc3NhZ2UYASABKAkSEQoJcXBhcGVyX2lkGAsg",
+            "ASgFEg8KB3N1YmplY3QYDCABKAkSEgoKc3RhcnRfdGltZRgNIAEoCRIQCghl",
+            "bmRfdGltZRgOIAEoCRITCgtkZXNjcmlwdGlvbhgPIAEoCRIWCg5jcmVhdGVf",
+            "dXNlcl9pZBgQIAEoCSJWCg1RUGFwZXJGdWxsUnNwEhYKDnJldHVybl9tZXNz",
+            "YWdlGAEgASgJEi0KBnFwYXBlchgKIAEoCzIdLmRvdGJwZS5EVE9RUGFwZXJX",
+            "aXRoUXVlc3Rpb24iggEKCURUT1FQYXBlchIRCglxcGFwZXJfaWQYASABKAUS",
+            "DwoHc3ViamVjdBgCIAEoCRISCgpzdGFydF90aW1lGAMgASgJEhAKCGVuZF90",
+            "aW1lGAQgASgJEhMKC2Rlc2NyaXB0aW9uGAUgASgJEhYKDmNyZWF0ZV91c2Vy",
+            "X2lkGAYgASgJIpIBCgtEVE9RdWVzdGlvbhIKCgJpZBgBIAEoCRINCgV0b3Bp",
+            "YxgCIAEoCRIQCghwYXBlcl9pZBgDIAEoBRIrCg1xdWVzdGlvbl90eXBlGAQg",
+            "ASgOMhQuZG90YnBlLlF1ZXN0aW9uVHlwZRITCgtpdGVtX2RldGFpbBgFIAEo",
+            "CRIUCgxleHRlbmRfaW5wdXQYBiABKAgingEKFURUT1FQYXBlcldpdGhRdWVz",
+            "dGlvbhIRCglxcGFwZXJfaWQYASABKAUSDwoHc3ViamVjdBgCIAEoCRISCgpz",
+            "dGFydF90aW1lGAMgASgJEhAKCGVuZF90aW1lGAQgASgJEhMKC2Rlc2NyaXB0",
+            "aW9uGAUgASgJEiYKCXF1ZXN0aW9ucxgKIAMoCzITLmRvdGJwZS5EVE9RdWVz",
+            "dGlvbio4CgxRdWVzdGlvblR5cGUSCgoGU0lHTkxFEAASDAoITVVMVElQTEUQ",
+            "ARIOCgpTVUJKRUNUSVZFEAJCEEgBqgILU3VydmV5LkNvcmVQAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Survey.Core.CommonReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(new[] {typeof(global::Survey.Core.QuestionType), }, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.SaveQPaperReq), global::Survey.Core.SaveQPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "QpaperId", "Subject", "StartTime", "EndTime", "Description", "Questions" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.SaveQPaperRsp), global::Survey.Core.SaveQPaperRsp.Parser, new[]{ "ReturnMessage", "QpaperId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QueryQPaperReq), global::Survey.Core.QueryQPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "QueryText", "CheckRole", "PageIndex", "PageSize" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QueryQPaperReq), global::Survey.Core.QueryQPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "Query", "CheckRole", "Page", "Rp" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QPaperListRsp), global::Survey.Core.QPaperListRsp.Parser, new[]{ "ReturnMessage", "List", "Total" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.GetQPaperReq), global::Survey.Core.GetQPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "QpaperId", "CheckRole" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QPaperRsp), global::Survey.Core.QPaperRsp.Parser, new[]{ "ReturnMessage", "QpaperId", "Subject", "StartTime", "EndTime", "Description", "CreateUserId" }, null, null, null),
@@ -637,10 +636,10 @@ namespace Survey.Core {
       clientIp_ = other.clientIp_;
       identity_ = other.identity_;
       xRequestId_ = other.xRequestId_;
-      queryText_ = other.queryText_;
+      query_ = other.query_;
       checkRole_ = other.checkRole_;
-      pageIndex_ = other.pageIndex_;
-      pageSize_ = other.pageSize_;
+      page_ = other.page_;
+      rp_ = other.rp_;
     }
 
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
@@ -690,17 +689,17 @@ namespace Survey.Core {
       }
     }
 
-    /// <summary>Field number for the "query_text" field.</summary>
-    public const int QueryTextFieldNumber = 10;
-    private string queryText_ = "";
+    /// <summary>Field number for the "query" field.</summary>
+    public const int QueryFieldNumber = 10;
+    private string query_ = "";
     /// <summary>
     /// 过滤标题
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string QueryText {
-      get { return queryText_; }
+    public string Query {
+      get { return query_; }
       set {
-        queryText_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        query_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -718,31 +717,31 @@ namespace Survey.Core {
       }
     }
 
-    /// <summary>Field number for the "page_index" field.</summary>
-    public const int PageIndexFieldNumber = 12;
-    private int pageIndex_;
+    /// <summary>Field number for the "page" field.</summary>
+    public const int PageFieldNumber = 12;
+    private int page_;
     /// <summary>
     ///  当前页码
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int PageIndex {
-      get { return pageIndex_; }
+    public int Page {
+      get { return page_; }
       set {
-        pageIndex_ = value;
+        page_ = value;
       }
     }
 
-    /// <summary>Field number for the "page_size" field.</summary>
-    public const int PageSizeFieldNumber = 13;
-    private int pageSize_;
+    /// <summary>Field number for the "rp" field.</summary>
+    public const int RpFieldNumber = 13;
+    private int rp_;
     /// <summary>
     /// 每页记录数
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int PageSize {
-      get { return pageSize_; }
+    public int Rp {
+      get { return rp_; }
       set {
-        pageSize_ = value;
+        rp_ = value;
       }
     }
 
@@ -762,10 +761,10 @@ namespace Survey.Core {
       if (ClientIp != other.ClientIp) return false;
       if (Identity != other.Identity) return false;
       if (XRequestId != other.XRequestId) return false;
-      if (QueryText != other.QueryText) return false;
+      if (Query != other.Query) return false;
       if (CheckRole != other.CheckRole) return false;
-      if (PageIndex != other.PageIndex) return false;
-      if (PageSize != other.PageSize) return false;
+      if (Page != other.Page) return false;
+      if (Rp != other.Rp) return false;
       return true;
     }
 
@@ -775,10 +774,10 @@ namespace Survey.Core {
       if (ClientIp.Length != 0) hash ^= ClientIp.GetHashCode();
       if (Identity.Length != 0) hash ^= Identity.GetHashCode();
       if (XRequestId.Length != 0) hash ^= XRequestId.GetHashCode();
-      if (QueryText.Length != 0) hash ^= QueryText.GetHashCode();
+      if (Query.Length != 0) hash ^= Query.GetHashCode();
       if (CheckRole != false) hash ^= CheckRole.GetHashCode();
-      if (PageIndex != 0) hash ^= PageIndex.GetHashCode();
-      if (PageSize != 0) hash ^= PageSize.GetHashCode();
+      if (Page != 0) hash ^= Page.GetHashCode();
+      if (Rp != 0) hash ^= Rp.GetHashCode();
       return hash;
     }
 
@@ -801,21 +800,21 @@ namespace Survey.Core {
         output.WriteRawTag(26);
         output.WriteString(XRequestId);
       }
-      if (QueryText.Length != 0) {
+      if (Query.Length != 0) {
         output.WriteRawTag(82);
-        output.WriteString(QueryText);
+        output.WriteString(Query);
       }
       if (CheckRole != false) {
         output.WriteRawTag(88);
         output.WriteBool(CheckRole);
       }
-      if (PageIndex != 0) {
+      if (Page != 0) {
         output.WriteRawTag(96);
-        output.WriteInt32(PageIndex);
+        output.WriteInt32(Page);
       }
-      if (PageSize != 0) {
+      if (Rp != 0) {
         output.WriteRawTag(104);
-        output.WriteInt32(PageSize);
+        output.WriteInt32(Rp);
       }
     }
 
@@ -831,17 +830,17 @@ namespace Survey.Core {
       if (XRequestId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(XRequestId);
       }
-      if (QueryText.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(QueryText);
+      if (Query.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Query);
       }
       if (CheckRole != false) {
         size += 1 + 1;
       }
-      if (PageIndex != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PageIndex);
+      if (Page != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Page);
       }
-      if (PageSize != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PageSize);
+      if (Rp != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Rp);
       }
       return size;
     }
@@ -860,17 +859,17 @@ namespace Survey.Core {
       if (other.XRequestId.Length != 0) {
         XRequestId = other.XRequestId;
       }
-      if (other.QueryText.Length != 0) {
-        QueryText = other.QueryText;
+      if (other.Query.Length != 0) {
+        Query = other.Query;
       }
       if (other.CheckRole != false) {
         CheckRole = other.CheckRole;
       }
-      if (other.PageIndex != 0) {
-        PageIndex = other.PageIndex;
+      if (other.Page != 0) {
+        Page = other.Page;
       }
-      if (other.PageSize != 0) {
-        PageSize = other.PageSize;
+      if (other.Rp != 0) {
+        Rp = other.Rp;
       }
     }
 
@@ -895,7 +894,7 @@ namespace Survey.Core {
             break;
           }
           case 82: {
-            QueryText = input.ReadString();
+            Query = input.ReadString();
             break;
           }
           case 88: {
@@ -903,11 +902,11 @@ namespace Survey.Core {
             break;
           }
           case 96: {
-            PageIndex = input.ReadInt32();
+            Page = input.ReadInt32();
             break;
           }
           case 104: {
-            PageSize = input.ReadInt32();
+            Rp = input.ReadInt32();
             break;
           }
         }

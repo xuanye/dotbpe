@@ -1,6 +1,6 @@
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
-using DotBPE.Rpc.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Threading.Tasks;
@@ -12,21 +12,24 @@ namespace DotBPE.Rpc.DefaultImpls
     /// </summary>
     public class TransforRpcClient<TMessage> : IRpcClient<TMessage> where TMessage : InvokeMessage
     {
-        private static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<TransforRpcClient<TMessage>>();
+        private readonly ILogger<TransforRpcClient<TMessage>> Logger;
         private readonly ITransportFactory<TMessage> _transportFactory;
         private readonly IMessageHandler<TMessage> _handler;
 
         private readonly IBridgeRouter<TMessage> _router;
 
-        public TransforRpcClient(ITransportFactory<TMessage> factory,
-        IMessageHandler<TMessage> handler,
-        IBridgeRouter<TMessage> router
+        public TransforRpcClient(
+            ITransportFactory<TMessage> factory,
+            IMessageHandler<TMessage> handler,
+            IBridgeRouter<TMessage> router,
+            ILogger<TransforRpcClient<TMessage>> logger
         )
         {
             this._transportFactory = factory;
             this._handler = handler;
             this._handler.Recieved += Message_Recieved;
             this._router = router;
+            this.Logger = logger;
         }
 
         private void Message_Recieved(object sender, MessageRecievedEventArgs<TMessage> args)
@@ -68,7 +71,7 @@ namespace DotBPE.Rpc.DefaultImpls
             var point = _router.GetRouterPoint(message);
             if (point == null)
             {
-                Logger.Error("Get routing error");
+                Logger.LogError("Get routing error");
                 throw new RpcException("Get routing information error, please check the configuration");
             }
             if (point.RoutePointType == RoutePointType.Local)
@@ -77,7 +80,7 @@ namespace DotBPE.Rpc.DefaultImpls
             }
             else
             {
-                Logger.Debug("Call  remote  service{0}", point.RemoteAddress);
+                Logger.LogDebug("Call  remote  service{0}", point.RemoteAddress);
                 var transport = this._transportFactory.CreateTransport(point.RemoteAddress);
                 return transport.SendAsync(message);
             }

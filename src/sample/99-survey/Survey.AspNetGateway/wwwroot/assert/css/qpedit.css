@@ -1,0 +1,211 @@
+﻿
+html
+{
+	margin: 0px;
+	padding: 0px;
+	height: 100%;
+	width: 100%;
+}
+body
+{
+    margin: 0px;
+	padding: 0px;
+	height: 100%;
+	width: 100%;
+    background:#fff;
+}
+.mainpanel
+{
+    padding:10px;
+}
+.topic
+{   
+    font-size:19px;
+    display:block;   
+    font-weight:bolder;       
+}
+.topic input
+{
+    width:90%;
+}
+.container
+{
+    padding:5px;
+    border:1px solid #fff;
+    zoom:1;
+    _zoom:1;    
+    width:90%;
+    background:#fff;
+    margin:10px 0px;
+}
+.qitemlist
+{
+    padding:5px;
+}
+.additembtnp
+{
+   padding:5px;
+}
+.desc
+{
+   line-height:26px; 
+   color:#aaa;
+}
+.desc input
+{
+     color:#aaa;
+     width:90%;
+}
+.topic_p
+{
+    width:95%;
+}
+.center { MARGIN-RIGHT: auto; MARGIN-LEFT: auto; }
+
+.container a.remove,.container a.edit
+{
+    display:block;
+    float:right;
+    margin:5px 5px -10px 0 ;
+    width:30px;
+    height:22px;
+    border:1px solid #ccc;   
+    opacity:.5;
+    -moz-opacity:.5;
+    filter:alpha(opacity=50);
+    display:none;
+}
+.container a.remove:hover,.container a.edit:hover
+{
+    opacity:1;
+    -moz-opacity:1;
+    filter:alpha(opacity=100);
+}
+.container a.remove
+{
+   background:#fff url("../image/icons/trash.png") no-repeat 7px 2px;
+}
+.container a.edit
+{   
+    background:#fff url("../image/icons/edit.png") no-repeat 7px 2px; 
+}
+.line_hover a.remove,.line_hover a.edit
+{
+    display:block;
+}
+
+.line
+{
+    padding:3px 0px;
+}
+
+.line_hover
+{
+  background-color:#f5f5f5;
+}
+.line_hover input[type="text"]
+{
+    border: solid 1px #c0c0c0;
+}
+.qitemedit
+{
+    display:none;
+    background-color:#f9f9f9;
+    padding:2px;
+    margin:5px;
+}
+.qitemedit label.iname
+{
+    display:block;
+    font-size:13px;
+    font-weight:normal;
+    letter-spacing:1px;   
+    width:80px;
+    float:left;
+    height:28px;
+	line-height:28px;	
+	padding:2px 8px;
+}
+
+.qitemedit input[type="text"]
+{
+     border: solid 1px #ccc;
+     width:400px;
+     line-height:26px;
+     height:24px;
+     padding:2px 6px;
+}
+.qitemedit textarea
+{
+    border: solid 1px #ccc;
+    width:255px;
+    margin:0 15px 0 100px;
+}
+.qtypecheck
+{
+     line-height:26px;
+     height:24px;
+     width:45px;
+     border: solid 1px #ccc;
+     background:#f5f5f5;
+     padding:0 4px;
+     text-align:center;
+     margin:0 0 0 -1px;
+     float:left;
+     cursor:pointer;
+}
+.qtypecheck.checked
+{
+   background:#e1e1e1;
+}
+.qitemedit a.remove
+{
+    display:block;
+}
+.qitemedit .rowctl
+{
+    margin:8px 0;
+}
+.qitemedit .btn_p
+{
+    margin-left:5px;
+}
+.qitemedit .btn_p .btn
+{
+  
+}
+.qitemlist
+{
+  
+}
+.qitem
+{
+    padding:5px;
+}
+.qitem .atomctl {
+	margin-right:10px;
+}
+.qitem input.nic {
+    border: solid 1px #c0c0c0;
+}
+.qitem h6
+{
+    margin:12px 45px 5px 5px;
+}
+/*
+.qitem label
+{
+    display:block;
+    float:left;
+    height:25px;
+    line-height:25px;
+    padding:2px 10px;
+}
+*/
+.qitem textarea
+{
+    border: solid 1px #ccc;
+    width:400px;
+    height:50px;
+    margin:0 15px 0 10px;
+}

@@ -33,6 +33,11 @@ service UserInnerService {
         option (message_id)= 3 ; //设定消息ID
     };
 
+    // 检查用户登录情况
+    rpc GetUserInfo(GetUserReq) returns (GetUserRsp){
+        option (message_id)= 4 ; //设定消息ID
+    };
+
 }
 
 //-------------这里是服务定义----------------------end-----

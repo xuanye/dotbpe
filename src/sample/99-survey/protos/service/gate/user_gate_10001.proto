@@ -33,7 +33,7 @@ service UserGateService{
         option (message_id)= 32 ; //设定消息ID
 
         option (http_api_option) = {
-            path :"/api/user/login",
+            path :"/api/gate/login",
             method : "post",
             description : "用户登录"
         };
@@ -50,5 +50,20 @@ service UserGateService{
         };
     };
 
+    // 获取用户信息
+    rpc CheckLogin (CheckLoginReq) returns (GetUserRsp){
+        option (message_id)= 34 ; //设定消息ID
 
+        option (http_api_option) = {
+            path : "/api/gate/check",
+            method : "get",
+            description : "获取用户信息"
+        };
+    };
+}
+
+message CheckLoginReq{
+    string client_ip = 1; //用户端IP
+    string identity = 2; // 用户标识
+    string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
 }

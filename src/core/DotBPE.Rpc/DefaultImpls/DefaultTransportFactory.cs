@@ -1,6 +1,6 @@
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Utils;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -10,8 +10,10 @@ namespace DotBPE.Rpc.DefaultImpls
 {
     public class DefaultTransportFactory<TMessage> : ITransportFactory<TMessage> where TMessage : InvokeMessage
     {
-        private static readonly ILogger Logger = Environment.Logger.ForType<DefaultTransportFactory<TMessage>>();
+        private readonly ILogger Logger;
+        private readonly ILoggerFactory _factory;
         private readonly IClientBootstrap<TMessage> _bootstrap;
+      
 
         private readonly Dictionary<string, Lazy<ITransport<TMessage>>> _clients
             = new Dictionary<string, Lazy<ITransport<TMessage>>>();
@@ -20,9 +22,11 @@ namespace DotBPE.Rpc.DefaultImpls
 
         private bool disposed = false;
 
-        public DefaultTransportFactory(IClientBootstrap<TMessage> bootstrap)
+        public DefaultTransportFactory(IClientBootstrap<TMessage> bootstrap,ILoggerFactory factory)
         {
             this._bootstrap = bootstrap;
+            this.Logger = factory.CreateLogger(this.GetType());
+            this._factory = factory;
             //this._bootstrap.DisConnected += Bootstrap_Disconnected;
         }
 
@@ -41,7 +45,7 @@ namespace DotBPE.Rpc.DefaultImpls
                 }
                 else
                 {
-                    Logger.Warning("no transprot address{0}", addressKey);
+                    Logger.LogWarning("no transprot address{0}", addressKey);
                 }
             }
             return s;
@@ -94,7 +98,7 @@ namespace DotBPE.Rpc.DefaultImpls
                     , k => new Lazy<ITransport<TMessage>>(() =>
                         {
                             var context = _bootstrap.ConnectAsync(k).Result;
-                            var transportans = new DefaultTransport<TMessage>(context);
+                            var transportans = new DefaultTransport<TMessage>(context,_factory);
                             return transportans;
                         }
                     )).Value;
@@ -118,7 +122,7 @@ namespace DotBPE.Rpc.DefaultImpls
             }
             catch (Exception ex)
             {
-                Logger.Error($"close connection {serverAddress} ,Exception:" + ex.ToString());
+                Logger.LogError($"close connection {serverAddress} ,Exception:" + ex.ToString());
             }
         }
 
@@ -138,7 +142,7 @@ namespace DotBPE.Rpc.DefaultImpls
                         }
                         catch (Exception ex)
                         {
-                            Logger.Error($"close connection {kv.Key} ,Exception:" + ex.ToString());
+                            Logger.LogError($"close connection {kv.Key} ,Exception:" + ex.ToString());
                         }
                     }
                 }

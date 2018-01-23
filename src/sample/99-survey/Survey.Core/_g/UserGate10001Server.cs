@@ -86,6 +86,30 @@ namespace Survey.Core {
 
       //抽象方法
       public abstract Task<RpcResult<EditUserRsp>> EditUserAsync(EditUserReq request);
+      //调用委托
+      private async Task<AmpMessage> ProcessCheckLoginAsync(AmpMessage req)
+      {
+         CheckLoginReq request = null;
+
+         if(req.Data == null ){
+            request = new CheckLoginReq();
+         }
+         else {
+            request = CheckLoginReq.Parser.ParseFrom(req.Data);
+         }
+
+         var result = await CheckLoginAsync(request);
+         var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
+         response.Code = result.Code;
+         if( result.Data !=null )
+         {
+             response.Data = result.Data.ToByteArray();
+         }
+         return response;
+      }
+
+      //抽象方法
+      public abstract Task<RpcResult<GetUserRsp>> CheckLoginAsync(CheckLoginReq request);
       public override Task<AmpMessage> ProcessAsync(AmpMessage req)
       {
          switch(req.MessageId){
@@ -95,6 +119,8 @@ namespace Survey.Core {
             case 32: return this.ProcessLoginAsync(req);
             //方法UserGateService.EditUser
             case 33: return this.ProcessEditUserAsync(req);
+            //方法UserGateService.CheckLogin
+            case 34: return this.ProcessCheckLoginAsync(req);
             default: return base.ProcessNotFoundAsync(req);
          }
       }

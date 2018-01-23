@@ -64,6 +64,32 @@ namespace Survey.Service.InnerImpl
             return res;
         }
 
+        public override async Task<RpcResult<GetUserRsp>> GetUserInfoAsync(GetUserReq request)
+        {
+            var res = new RpcResult<GetUserRsp>();
+            res.Data = new GetUserRsp();
+
+            if (string.IsNullOrEmpty(request.UserId))
+            {
+                res.Code = ErrorCodes.PARAMS_VALIDATION_FAIL;
+                res.Data.ReturnMessage = "账号不能为空";
+                return res;
+            }
+            var user = await this._userRepo.GetUser(request.UserId);
+
+            if (user == null)
+            {
+                res.Code = ErrorCodes.DATA_NOT_FOUND;
+                res.Data.ReturnMessage = "用户不存在";
+                return res;
+            }
+
+            res.Data.Account = user.Account;
+            res.Data.FullName = user.FullName;
+            res.Data.IsAdmin = user.IsAdmin;
+            return res;
+        }
+
         /// <summary>
         /// 登录请求
         /// </summary>

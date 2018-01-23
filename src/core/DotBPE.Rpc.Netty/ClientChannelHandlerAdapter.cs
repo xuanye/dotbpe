@@ -1,7 +1,7 @@
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Logging;
 using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Channels;
+using Microsoft.Extensions.Logging;
 using System;
 
 namespace DotBPE.Rpc.Netty
@@ -9,16 +9,17 @@ namespace DotBPE.Rpc.Netty
     public class ClientChannelHandlerAdapter<TMessage> : SimpleChannelInboundHandler<TMessage> where TMessage : InvokeMessage
     {
         private readonly NettyClientBootstrap<TMessage> _bootstrap;
-        private static readonly ILogger Logger = Environment.Logger.ForType<ClientChannelHandlerAdapter<TMessage>>();
+        private readonly ILogger Logger;
 
-        public ClientChannelHandlerAdapter(NettyClientBootstrap<TMessage> bootstrap)
+        public ClientChannelHandlerAdapter(NettyClientBootstrap<TMessage> bootstrap,ILoggerFactory factory)
         {
             this._bootstrap = bootstrap;
+            Logger = factory.CreateLogger(this.GetType());
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            Logger.Info($" Server {context.Channel.RemoteAddress} is connected ");
+            Logger.LogInformation($" Server {context.Channel.RemoteAddress} is connected ");
             base.ChannelActive(context);
         }
 
@@ -29,7 +30,7 @@ namespace DotBPE.Rpc.Netty
         public override void ChannelInactive(IChannelHandlerContext context)
         {
             // 这里应该移除之前ITransprotFactory中的缓存 或者通知对方
-            Logger.Info($"Server {context.Channel.RemoteAddress} Inactive");
+            Logger.LogInformation($"Server {context.Channel.RemoteAddress} Inactive");
             this._bootstrap.OnChannelInactive(context);
         }
 
@@ -40,7 +41,7 @@ namespace DotBPE.Rpc.Netty
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
-            Logger.Error(ex, $"Server:{context.Channel.RemoteAddress},An exception occurs");
+            Logger.LogError(ex, $"Server:{context.Channel.RemoteAddress},An exception occurs");
             context.CloseAsync(); //关闭连接
         }
 

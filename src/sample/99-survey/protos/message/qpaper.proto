@@ -44,10 +44,10 @@ message QueryQPaperReq{
     string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
 
 
-    string query_text = 10 ; //过滤标题
+    string query = 10 ; //过滤标题
     bool check_role = 11 ; // 是否判断用户权限
-    int32 page_index = 12 ; // 当前页码
-    int32 page_size = 13 ; //每页记录数
+    int32 page = 12 ; // 当前页码
+    int32 rp = 13 ; //每页记录数
 }
 
 // 查询问卷的列表

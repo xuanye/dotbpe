@@ -1,11 +1,16 @@
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Text.RegularExpressions;
+using System.Threading.Tasks;
 using DotBPE.Plugin.AspNetGateway;
+using DotBPE.Protobuf;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
-using DotBPE.Rpc.Logging;
 using Google.Protobuf;
+using Google.Protobuf.Reflection;
+using Microsoft.AspNetCore.Http;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Survey.Core;
 
@@ -21,12 +26,17 @@ namespace Survey.AspNetGateway
 
         static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(true).WithFormatEnumsAsIntegers(true));
 
-        static ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<ForwardService>();
-
+        readonly ILogger<ForwardService> Logger;
+        readonly ILoginService _loginService;
 
         public ForwardService(IRpcClient<AmpMessage> rpcClient,
-           IOptionsSnapshot<HttpRouterOption> optionsAccessor) : base(rpcClient, optionsAccessor)
+           IOptionsSnapshot<HttpRouterOption> optionsAccessor,
+           ILoginService loginService,
+           ILogger<ForwardService> logger
+           ) : base(rpcClient, optionsAccessor, logger)
         {
+            this.Logger = logger;
+            this._loginService = loginService;
         }
 
         /// <summary>
@@ -44,7 +54,7 @@ namespace Survey.AspNetGateway
             IMessage reqTemp = ProtobufObjectFactory.GetRequestTemplate(serviceId, messageId);
             if (reqTemp == null)
             {
-                Logger.Error("serviceId={0},messageId={1}的消息不存在", serviceId, messageId);
+                Logger.LogError("serviceId={0},messageId={1}的消息不存在", serviceId, messageId);
                 return null;
             }
 
@@ -60,31 +70,80 @@ namespace Survey.AspNetGateway
                 {
                     foreach (var field in descriptor.Fields.InDeclarationOrder())
                     {
-                        if (reqData.Data.ContainsKey(field.Name))
-                        {
-                            field.Accessor.SetValue(reqTemp, reqData.Data[field.Name]);
-                        }
-                        else if (reqData.Data.ContainsKey(field.JsonName))
-                        {
-                            field.Accessor.SetValue(reqTemp, reqData.Data[field.JsonName]);
-                        }
-
+                        SetFieldValue(field, reqTemp, reqData.Data);
                     }
                 }
 
-
+                Logger.LogDebug("serviceId={0},messageId={1},request JSON:{2}", serviceId, messageId, AmpJsonFormatter.Format(reqTemp));
                 message.Data = reqTemp.ToByteArray();
 
             }
             catch (Exception ex)
             {
-                Logger.Error(ex, "从HTTP请求中解析数据错误:" + ex.Message);
+                Logger.LogError(ex, "从HTTP请求中解析数据错误:" + ex.Message);
                 message = null;
             }
 
             return message;
 
         }
+
+        private bool SetFieldValue(FieldDescriptor field, IMessage message,Dictionary<string,string> kv)
+        {
+            string value = "";
+            bool hasValue =false ;
+            try
+            {
+                
+                if (kv.ContainsKey(field.Name))
+                {
+                    value = kv[field.Name];
+                    hasValue = true;
+                }
+                else if (kv.ContainsKey(field.JsonName))
+                {
+                    value = kv[field.JsonName];
+                    hasValue = true;
+                }
+                if (hasValue)
+                {
+                    bool s = ProtobufHelper.SetValue(field.Accessor, message, value);
+                    if (!s)
+                    {
+                        Logger.LogError("设置字段{0},值错误{1}，类型，{2}:", field.Name, value, field.FieldType);
+                    }
+                }                
+            }
+            catch(Exception ex)
+            {
+                Logger.LogError(ex, "设置字段{0},值错误{1}，类型，{2}:" ,field.Name, value,field.FieldType);
+                return false;
+            }
+            return true;
+        }
+        /// <summary>
+        /// 获取Session信息
+        /// </summary>
+        /// <param name="context"></param>
+        /// <param name="rd"></param>
+        /// <returns></returns>
+        protected override async Task AddCusRequestData(HttpContext context, RequestData rd)
+        {
+            if (rd.Data.ContainsKey(Constants.SEESIONID_FIELD_NAME)) //存在SessionID
+            {
+                var sessionId = rd.Data[Constants.SEESIONID_FIELD_NAME];
+                if (!rd.Data.ContainsKey(Constants.IDENTITY_FIELD_NAME))
+                {
+                    var user = await this._loginService.GetSessionUserAsync(sessionId);
+                    if(user != null)
+                    {
+                        rd.Data.Add(Constants.IDENTITY_FIELD_NAME, user.Identity);                      
+                    }                   
+                }
+                           
+            }           
+        }
+
         /// <summary>
         /// 返回协议调用者
         /// </summary>
@@ -141,6 +200,7 @@ namespace Survey.AspNetGateway
         /// <returns></returns>
         protected override string MessageToJson(AmpMessage message)
         {
+            string json = "";
             if (message.Code == 0)
             {
                 var return_code = 0;
@@ -175,14 +235,25 @@ namespace Survey.AspNetGateway
                     //TODO:清理内部的return_message ;
                 }
 
-                return "{\"return_code\":" + return_code + ",\"return_message\":\"" + return_message + "\",data:" + ret + "}";
+                json = "{\"return_code\":" + return_code + ",\"return_message\":\"" + return_message + "\",\"data\":" + ClearMetaFields(ret) + "}";
             }
             else
             {
-                return "{\"return_code\":" + message.Code + ",\"return_message\":\"\"}";
+                json =  "{\"return_code\":" + message.Code + ",\"return_message\":\"\"}";
             }
 
-
+            Logger.LogDebug("serviceId={0},messageId={1},response JSON:{2}", message.ServiceId, message.MessageId, json);
+            return json ;
         }
+
+        private string ClearMetaFields(string jsonData)
+        {
+            jsonData = Regex.Replace(jsonData, " \"returnMessage\"[\\040]*:[\\040]*\"[^\"]*\",", "");
+            jsonData = Regex.Replace(jsonData, " ,\"bpeSessionId\"[\\040]*:[\\040]*\"[\\w]*\"", "");
+            return jsonData;
+        }
+
+
+       
     }
 }

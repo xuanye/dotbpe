@@ -13,15 +13,15 @@ namespace DotBPE.Rpc.Utils
         /// </summary>
         public static void RunBenchmark(int warmupIterations, int benchmarkIterations, Action action)
         {
-            var logger = Environment.Logger;
+          
 
-            logger.Info("Warmup iterations: {0}", warmupIterations);
+            Console.WriteLine("Warmup iterations: {0}", warmupIterations);
             for (int i = 0; i < warmupIterations; i++)
             {
                 action();
             }
 
-            logger.Info("Benchmark iterations: {0}", benchmarkIterations);
+            Console.WriteLine("Benchmark iterations: {0}", benchmarkIterations);
             var stopwatch = new Stopwatch();
             stopwatch.Start();
             for (int i = 0; i < benchmarkIterations; i++)
@@ -29,8 +29,8 @@ namespace DotBPE.Rpc.Utils
                 action();
             }
             stopwatch.Stop();
-            logger.Info("Elapsed time: {0}ms", stopwatch.ElapsedMilliseconds);
-            logger.Info("Ops per second: {0}", (int)((double)benchmarkIterations * 1000 / stopwatch.ElapsedMilliseconds));
+            Console.WriteLine("Elapsed time: {0}ms", stopwatch.ElapsedMilliseconds);
+            Console.WriteLine("Ops per second: {0}", (int)((double)benchmarkIterations * 1000 / stopwatch.ElapsedMilliseconds));
         }
     }
 }

@@ -1,6 +1,7 @@
 using DotBPE.Rpc;
 using DotBPE.Rpc.Exceptions;
-using DotBPE.Rpc.Logging;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using System;
 using System.Collections.Concurrent;
 using System.Threading;
@@ -10,7 +11,7 @@ namespace DotBPE.Protocol.Amp
 {
     public class AmpCallInvoker : CallInvoker<AmpMessage>
     {
-        private static readonly ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<AmpCallInvoker>();
+        private ILogger _Logger;
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>> _resultDictionary =
 new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
@@ -18,12 +19,33 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         private int sendSequence = 0;
         private static object lockObj = new object();
 
-        public AmpCallInvoker(string serverAddress, int multiplexCount = 1) : base(AmpClient.Create(serverAddress, multiplexCount))
+        public AmpCallInvoker(string serverAddress, int multiplexCount = 1) : this(AmpClient.Create(serverAddress, multiplexCount))
         {
         }
 
         public AmpCallInvoker(IRpcClient<AmpMessage> client) : base(client)
         {
+           
+        }
+
+        protected ILogger Logger
+        {
+            get
+            {
+                if (this._Logger == null )
+                {
+                    if(Rpc.Environment.LoggerFactory != null)
+                    {
+                        this._Logger = Rpc.Environment.LoggerFactory.CreateLogger<AmpCallInvoker>();
+                    }
+                    else
+                    {
+                        this._Logger = NullLogger.Instance;
+                    }
+                   
+                }
+                return this._Logger;
+            }
         }
 
         public async override Task<AmpMessage> AsyncCall(AmpMessage request, int timeOut = 5000)
@@ -31,6 +53,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             try
             {
                 AutoSetSequence(request);
+                Logger.LogDebug("new request id={0}", request.Id);
                 var callbackTask = RegisterResultCallbackAsync(request.Id, timeOut);
 
                 try
@@ -48,7 +71,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             }
             catch (Exception exception)
             {
-                Logger.Error(exception, "error occor:");
+                Logger.LogError(exception, "error occor:");
                 throw exception;
             }
         }
@@ -68,7 +91,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             if (e.Message.ServiceId == 0 && e.Message.MessageId == 0)
             {
                 //心跳消息
-                Logger.Info("heart beat message Id{0}", e.Message.Id);
+                Logger.LogInformation("heart beat message Id{0}", e.Message.Id);
                 return;
             }
 
@@ -76,40 +99,41 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             {
                 if (e.Message.Code != 0)
                 {
-                    Logger.Error("server response error msg ,type{0}", e.Message.InvokeMessageType);
+                    Logger.LogError("server response error msg ,type{0}", e.Message.InvokeMessageType);
                     var message = e.Message;
                     TaskCompletionSource<AmpMessage> task;
                     if (_resultDictionary.ContainsKey(message.Id)
                         && _resultDictionary.TryGetValue(message.Id, out task))
                     {
                         task.SetResult(e.Message);
-                        Logger.Error(string.Format("server response error msg ,code={0}", e.Message.Code));
+                        Logger.LogError(string.Format("server response error msg ,code={0}", e.Message.Code));
                         // 移除字典
                         RemoveResultCallback(message.Id);
                     }
                     else
                     {
                         //TODO:详细的错误日志信息
-                        Logger.Error(string.Format("server response error msg ,code={0},", e.Message.Code));
+                        Logger.LogError(string.Format("server response error msg ,code={0},", e.Message.Code));
                     }
                 }
                 else //正常返回
                 {
-                    Logger.Info($"receive message, id:{e.Message.Id}");
+                    Logger.LogDebug($"receive message, id:{e.Message.Id}");
                     var message = e.Message;
                     TaskCompletionSource<AmpMessage> task;
                     if (_resultDictionary.ContainsKey(message.Id)
                         && _resultDictionary.TryGetValue(message.Id, out task))
                     {
                         task.TrySetResult(message);
-                        Logger.Info("message {0},set result success", message.Id);
+                        Logger.LogDebug("message {0},set result success", message.Id);
                         // 移除字典
                         RemoveResultCallback(message.Id);
                     }
                     else
                     {
                         //TODO:详细的错误日志信息
-                        Logger.Error(string.Format("server response,but no handler  "));
+                        Logger.LogError("server response,but no handler,Id={0}"
+                            ,e.Message.Id);
                     }
                 }
             }
@@ -118,7 +142,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         private void RemoveResultCallback(string id)
         {
             var removed = _resultDictionary.TryRemove(id, out var _);
-            Logger.Info("message {0},remove from queue {1}", id, removed ? "success" : "fail");
+            Logger.LogDebug("message {0},remove from queue {1}", id, removed ? "success" : "fail");
         }
 
         private void TimeOutCallBack(string id)
@@ -129,7 +153,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 var message = AmpMessage.CreateResponseMessage(id);
                 message.Code = ErrorCodes.CODE_TIMEOUT;
                 task.SetResult(message);
-                Logger.Warning("message {0}, timeout", id);
+                Logger.LogWarning("message {0}, timeout", id);
                 //task.TrySetException(new RpcCommunicationException("operation timeout"));
                 // 移除字典
                 RemoveResultCallback(id);
@@ -156,11 +180,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private void AutoSetSequence(AmpMessage request)
         {
-            if (request.Sequence > 0)
-            {
-                return;
-            }
-
+            
             int id = Interlocked.Increment(ref this.sendSequence);
             request.Sequence = id;
         }

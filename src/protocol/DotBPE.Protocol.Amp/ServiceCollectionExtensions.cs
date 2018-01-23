@@ -1,4 +1,5 @@
 using DotBPE.Rpc;
+using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.DefaultImpls;
 using DotBPE.Rpc.Extensions;
@@ -18,7 +19,8 @@ namespace DotBPE.Protocol.Amp
         {
             return services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>()
                     .AddSingleton<IServiceActorLocator<AmpMessage>, ServiceActorLocator>()
-                    .AddSingleton<IRpcClient<AmpMessage>, MockRpcClient<AmpMessage>>();
+                    .AddSingleton<ClientProxy>() //注入客户端代理类
+                    .AddSingleton<IRpcClient<AmpMessage>, AgentRpcClient<AmpMessage>>();
         }
 
         /// <summary>
@@ -47,6 +49,7 @@ namespace DotBPE.Protocol.Amp
             return services.AddRpcCore<AmpMessage>() //添加核心依赖
                     .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
                     .AddAmp(); // 使用AMP协议
+
         }
     }
 }

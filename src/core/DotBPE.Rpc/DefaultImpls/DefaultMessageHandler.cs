@@ -1,5 +1,5 @@
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -10,13 +10,14 @@ namespace DotBPE.Rpc.DefaultImpls
     /// </summary>
     public class DefaultMessageHandler<TMessage> : IMessageHandler<TMessage> where TMessage : InvokeMessage
     {
-        private static readonly ILogger Logger = Environment.Logger.ForType<DefaultMessageHandler<TMessage>>();
+        private readonly ILogger<DefaultMessageHandler<TMessage>> Logger;
 
         private readonly IServiceActorLocator<TMessage> _actorLocator;
 
-        public DefaultMessageHandler(IServiceActorLocator<TMessage> actorLocator)
+        public DefaultMessageHandler(IServiceActorLocator<TMessage> actorLocator,ILogger<DefaultMessageHandler<TMessage>> logger)
         {
             this._actorLocator = actorLocator;
+            this.Logger = logger;
         }
 
         /// <summary>
@@ -42,7 +43,7 @@ namespace DotBPE.Rpc.DefaultImpls
             var actor = this._actorLocator.LocateServiceActor(message);
             if (actor == null) // 找不到对应的执行程序
             {
-                Logger.Error("IServiceActor NOT FOUND");
+                Logger.LogError("IServiceActor NOT FOUND");
                 return Utils.TaskUtils.CompletedTask;
             }
             else

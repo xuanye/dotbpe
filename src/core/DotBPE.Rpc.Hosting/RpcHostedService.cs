@@ -19,6 +19,7 @@ namespace DotBPE.Rpc.Hosting
         private bool _initializing; 
       
         private readonly ILogger<RpcHostedService>  _logger;
+        private readonly ILoggerFactory _loggerFactory;  
         private string _hostIP;
         private int _hostPort;
 
@@ -29,12 +30,13 @@ namespace DotBPE.Rpc.Hosting
         private Task _executingTask;
         private CancellationTokenSource _cts;
 
-        public RpcHostedService(IServiceProvider hostProvider,  IConfiguration config,ILogger<RpcHostedService> logger)
+        public RpcHostedService(IServiceProvider hostProvider,  IConfiguration config,ILogger<RpcHostedService> logger,ILoggerFactory loggerFactory)
         {
             this._hostProvider = hostProvider;
 
             this._logger = logger;
 
+            this._loggerFactory = loggerFactory;
             ParseHostAddress(config);
         }
 
@@ -98,7 +100,7 @@ namespace DotBPE.Rpc.Hosting
         /// <returns></returns>
         private Task StartServerAsync(CancellationToken token)
         {
-            this._logger.LogDebug("服务开始启动--->");
+            this._logger.LogDebug("服务开始启动:{0}:{1}",this._hostIP,this._hostPort);
             Initialize();
             var endpoint = new IPEndPoint(IPAddress.Parse(this._hostIP), this._hostPort);
             return this._server.StartAsync(endpoint);
@@ -139,8 +141,8 @@ namespace DotBPE.Rpc.Hosting
           
             EnsureServer();
 
-            //TODO:这里的实现不太优雅， 需要改进
-            Environment.SetServiceProvider(this._hostProvider);
+            //设置日志工厂类
+            Rpc.Environment.SetLoggerFactory(this._loggerFactory);
 
             _initialized = true;
         }

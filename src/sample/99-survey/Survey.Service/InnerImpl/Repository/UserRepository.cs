@@ -1,14 +1,16 @@
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Survey.Service.InnerImpl.Domain;
 using System.Threading.Tasks;
+using Vulcan.DataAccess;
 
 namespace Survey.Service.InnerImpl.Repository
 {
     public class UserRepository : BaseRepository
     {
       
-        public UserRepository(IOptions<DBOption> Option)
-          : base(Option.Value.Master)
+        public UserRepository(IConnectionManagerFactory factory,IOptions<DBOption> Option, ILoggerFactory loggerFactory)
+          : base(factory,Option.Value.Master, loggerFactory)
         {
         }
         /// <summary>

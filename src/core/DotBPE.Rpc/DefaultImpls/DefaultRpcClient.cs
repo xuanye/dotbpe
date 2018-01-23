@@ -11,8 +11,8 @@
 
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Exceptions;
-using DotBPE.Rpc.Logging;
 using DotBPE.Rpc.Options;
+using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using System;
 using System.Net;
@@ -22,7 +22,7 @@ namespace DotBPE.Rpc.DefaultImpls
 {
     public class DefaultRpcClient<TMessage> : IRpcClient<TMessage> where TMessage : InvokeMessage
     {
-        private static readonly ILogger Logger = Environment.Logger.ForType<DefaultRpcClient<TMessage>>();
+        private readonly ILogger<DefaultRpcClient<TMessage>> Logger;
         private readonly ITransportFactory<TMessage> _factory;
 
         private EndPoint _defaultServerAddress = null;
@@ -31,9 +31,11 @@ namespace DotBPE.Rpc.DefaultImpls
 
         public DefaultRpcClient(ITransportFactory<TMessage> factory,
             IOptions<RpcClientOption> clientOption,
-            IMessageHandler<TMessage> handler
+            IMessageHandler<TMessage> handler,
+            ILogger<DefaultRpcClient<TMessage>> logger
            )
         {
+            this.Logger = logger;
             this._clientOption = clientOption;
             this._factory = factory;
             this._handler = handler;
@@ -50,7 +52,7 @@ namespace DotBPE.Rpc.DefaultImpls
         public Task SendAsync(EndPoint serverAddress, TMessage message)
         {
             var transport = this._factory.CreateTransport(serverAddress);
-            Logger.Debug("Transport={0} send msg", transport.Id);
+            Logger.LogDebug("Transport={0} send msg", transport.Id);
             return transport.SendAsync(message);
         }
 

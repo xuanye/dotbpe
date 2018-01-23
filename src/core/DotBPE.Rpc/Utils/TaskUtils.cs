@@ -1,4 +1,4 @@
-using DotBPE.Rpc.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Threading.Tasks;
 
@@ -28,7 +28,7 @@ namespace DotBPE.Rpc.Utils
         {
             if (!promise.TrySetResult(result))
             {
-                logger.Warning($"Failed to set a promise's result  because it is done already: {promise}");
+                logger.LogWarning($"Failed to set a promise's result  because it is done already: {promise}");
             }
         }
 
@@ -39,7 +39,7 @@ namespace DotBPE.Rpc.Utils
         {
             if (!promise.TrySetException(cause))
             {
-                logger.Warning(cause, $"Failed to mark a promise as failure because it's done already: {promise}");
+                logger.LogWarning(cause, $"Failed to mark a promise as failure because it's done already: {promise}");
             }
         }
     }

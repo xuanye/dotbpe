@@ -28,36 +28,35 @@ namespace Survey.Core {
             "cmVxdWVzdF9pZBgDIAEoCRIRCglxcGFwZXJfaWQYDCABKAUSDwoHdXNlcl9p",
             "ZBgNIAEoCRIOCgZyZW1hcmsYDyABKAkSIgoHYW5zd2VycxgQIAMoCzIRLmRv",
             "dGJwZS5EVE9BbnN3ZXIiOgoNU2F2ZUFQYXBlclJzcBIWCg5yZXR1cm5fbWVz",
-            "c2FnZRgBIAEoCRIRCglhcGFwZXJfaWQYAyABKAUiqgEKDlF1ZXJ5QVBhcGVy",
+            "c2FnZRgBIAEoCRIRCglhcGFwZXJfaWQYAyABKAUimwEKDlF1ZXJ5QVBhcGVy",
             "UmVxEhEKCWNsaWVudF9pcBgBIAEoCRIQCghpZGVudGl0eRgCIAEoCRIUCgx4",
-            "X3JlcXVlc3RfaWQYAyABKAkSDwoHc3ViamVjdBgLIAEoCRIRCglxcGFwZXJf",
-            "aWQYDCABKAUSEgoKcGFnZV9pbmRleBgNIAEoBRIRCglwYWdlX3NpemUYDiAB",
-            "KAUSEgoKY2hlY2tfcm9sZRgPIAEoCCJXCg1BUGFwZXJMaXN0UnNwEhYKDnJl",
-            "dHVybl9tZXNzYWdlGAEgASgJEh8KBGxpc3QYCyADKAsyES5kb3RicGUuRFRP",
-            "QVBhcGVyEg0KBXRvdGFsGA8gASgFIm8KDEdldEFQYXBlclJlcRIRCgljbGll",
-            "bnRfaXAYASABKAkSEAoIaWRlbnRpdHkYAiABKAkSFAoMeF9yZXF1ZXN0X2lk",
-            "GAMgASgJEhAKCHBhcGVyX2lkGAsgASgFEhIKCmNoZWNrX3JvbGUYDCABKAgi",
-            "gAEKCUFQYXBlclJzcBIWCg5yZXR1cm5fbWVzc2FnZRgBIAEoCRIsCgZhcGFw",
-            "ZXIYCyABKAsyHC5kb3RicGUuRFRPQVBhcGVyV2l0aEFuc3dlcnMSLQoGcXBh",
-            "cGVyGAwgASgLMh0uZG90YnBlLkRUT1FQYXBlcldpdGhRdWVzdGlvbiKXAQoJ",
-            "RFRPQVBhcGVyEhEKCWFwYXBlcl9pZBgBIAEoBRIRCglxcGFwZXJfaWQYAiAB",
-            "KAUSFgoOcXBhcGVyX3N1YmplY3QYAyABKAkSFgoOcXBhcGVyX3VzZXJfaWQY",
-            "BCABKAkSDwoHdXNlcl9pZBgFIAEoCRITCgtjcmVhdGVfdGltZRgGIAEoCRIO",
-            "CgZyZW1hcmsYByABKAkixgEKFERUT0FQYXBlcldpdGhBbnN3ZXJzEhEKCWFw",
+            "X3JlcXVlc3RfaWQYAyABKAkSDQoFcXVlcnkYCyABKAkSEQoJcXBhcGVyX2lk",
+            "GAwgASgFEgwKBHBhZ2UYDSABKAUSCgoCcnAYDiABKAUSEgoKY2hlY2tfcm9s",
+            "ZRgPIAEoCCJXCg1BUGFwZXJMaXN0UnNwEhYKDnJldHVybl9tZXNzYWdlGAEg",
+            "ASgJEh8KBGxpc3QYCyADKAsyES5kb3RicGUuRFRPQVBhcGVyEg0KBXRvdGFs",
+            "GA8gASgFIm8KDEdldEFQYXBlclJlcRIRCgljbGllbnRfaXAYASABKAkSEAoI",
+            "aWRlbnRpdHkYAiABKAkSFAoMeF9yZXF1ZXN0X2lkGAMgASgJEhAKCHBhcGVy",
+            "X2lkGAsgASgFEhIKCmNoZWNrX3JvbGUYDCABKAgigAEKCUFQYXBlclJzcBIW",
+            "Cg5yZXR1cm5fbWVzc2FnZRgBIAEoCRIsCgZhcGFwZXIYCyABKAsyHC5kb3Ri",
+            "cGUuRFRPQVBhcGVyV2l0aEFuc3dlcnMSLQoGcXBhcGVyGAwgASgLMh0uZG90",
+            "YnBlLkRUT1FQYXBlcldpdGhRdWVzdGlvbiKXAQoJRFRPQVBhcGVyEhEKCWFw",
             "YXBlcl9pZBgBIAEoBRIRCglxcGFwZXJfaWQYAiABKAUSFgoOcXBhcGVyX3N1",
             "YmplY3QYAyABKAkSFgoOcXBhcGVyX3VzZXJfaWQYBCABKAkSDwoHdXNlcl9p",
-            "ZBgFIAEoCRITCgtjcmVhdGVfdGltZRgGIAEoCRIOCgZyZW1hcmsYByABKAkS",
-            "IgoHYW5zd2VycxgKIAMoCzIRLmRvdGJwZS5EVE9BbnN3ZXIiewoJRFRPQW5z",
-            "d2VyEhEKCWFuc3dlcl9pZBgBIAEoCRIRCglhcGFwZXJfaWQYAiABKAUSEwoL",
-            "cXVlc3Rpb25faWQYAyABKAkSGAoQb2JqZWN0aXZlX2Fuc3dlchgEIAEoBRIZ",
-            "ChFzdWJqZWN0aXZlX2Fuc3dlchgFIAEoCUIQSAGqAgtTdXJ2ZXkuQ29yZVAA",
-            "UAFiBnByb3RvMw=="));
+            "ZBgFIAEoCRITCgtjcmVhdGVfdGltZRgGIAEoCRIOCgZyZW1hcmsYByABKAki",
+            "xgEKFERUT0FQYXBlcldpdGhBbnN3ZXJzEhEKCWFwYXBlcl9pZBgBIAEoBRIR",
+            "CglxcGFwZXJfaWQYAiABKAUSFgoOcXBhcGVyX3N1YmplY3QYAyABKAkSFgoO",
+            "cXBhcGVyX3VzZXJfaWQYBCABKAkSDwoHdXNlcl9pZBgFIAEoCRITCgtjcmVh",
+            "dGVfdGltZRgGIAEoCRIOCgZyZW1hcmsYByABKAkSIgoHYW5zd2VycxgKIAMo",
+            "CzIRLmRvdGJwZS5EVE9BbnN3ZXIiewoJRFRPQW5zd2VyEhEKCWFuc3dlcl9p",
+            "ZBgBIAEoCRIRCglhcGFwZXJfaWQYAiABKAUSEwoLcXVlc3Rpb25faWQYAyAB",
+            "KAkSGAoQb2JqZWN0aXZlX2Fuc3dlchgEIAEoBRIZChFzdWJqZWN0aXZlX2Fu",
+            "c3dlchgFIAEoCUIQSAGqAgtTdXJ2ZXkuQ29yZVAAUAFiBnByb3RvMw=="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::Survey.Core.CommonReflection.Descriptor, global::Survey.Core.QpaperReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.SaveAPaperReq), global::Survey.Core.SaveAPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "QpaperId", "UserId", "Remark", "Answers" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.SaveAPaperRsp), global::Survey.Core.SaveAPaperRsp.Parser, new[]{ "ReturnMessage", "ApaperId" }, null, null, null),
-            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QueryAPaperReq), global::Survey.Core.QueryAPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "Subject", "QpaperId", "PageIndex", "PageSize", "CheckRole" }, null, null, null),
+            new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.QueryAPaperReq), global::Survey.Core.QueryAPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "Query", "QpaperId", "Page", "Rp", "CheckRole" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.APaperListRsp), global::Survey.Core.APaperListRsp.Parser, new[]{ "ReturnMessage", "List", "Total" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.GetAPaperReq), global::Survey.Core.GetAPaperReq.Parser, new[]{ "ClientIp", "Identity", "XRequestId", "PaperId", "CheckRole" }, null, null, null),
             new pbr::GeneratedClrTypeInfo(typeof(global::Survey.Core.APaperRsp), global::Survey.Core.APaperRsp.Parser, new[]{ "ReturnMessage", "Apaper", "Qpaper" }, null, null, null),
@@ -546,10 +545,10 @@ namespace Survey.Core {
       clientIp_ = other.clientIp_;
       identity_ = other.identity_;
       xRequestId_ = other.xRequestId_;
-      subject_ = other.subject_;
+      query_ = other.query_;
       qpaperId_ = other.qpaperId_;
-      pageIndex_ = other.pageIndex_;
-      pageSize_ = other.pageSize_;
+      page_ = other.page_;
+      rp_ = other.rp_;
       checkRole_ = other.checkRole_;
     }
 
@@ -600,17 +599,17 @@ namespace Survey.Core {
       }
     }
 
-    /// <summary>Field number for the "subject" field.</summary>
-    public const int SubjectFieldNumber = 11;
-    private string subject_ = "";
+    /// <summary>Field number for the "query" field.</summary>
+    public const int QueryFieldNumber = 11;
+    private string query_ = "";
     /// <summary>
     /// 主题 模糊搜索
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public string Subject {
-      get { return subject_; }
+    public string Query {
+      get { return query_; }
       set {
-        subject_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
+        query_ = pb::ProtoPreconditions.CheckNotNull(value, "value");
       }
     }
 
@@ -628,31 +627,31 @@ namespace Survey.Core {
       }
     }
 
-    /// <summary>Field number for the "page_index" field.</summary>
-    public const int PageIndexFieldNumber = 13;
-    private int pageIndex_;
+    /// <summary>Field number for the "page" field.</summary>
+    public const int PageFieldNumber = 13;
+    private int page_;
     /// <summary>
     /// 分页索引
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int PageIndex {
-      get { return pageIndex_; }
+    public int Page {
+      get { return page_; }
       set {
-        pageIndex_ = value;
+        page_ = value;
       }
     }
 
-    /// <summary>Field number for the "page_size" field.</summary>
-    public const int PageSizeFieldNumber = 14;
-    private int pageSize_;
+    /// <summary>Field number for the "rp" field.</summary>
+    public const int RpFieldNumber = 14;
+    private int rp_;
     /// <summary>
     /// 每页记录数
     /// </summary>
     [global::System.Diagnostics.DebuggerNonUserCodeAttribute]
-    public int PageSize {
-      get { return pageSize_; }
+    public int Rp {
+      get { return rp_; }
       set {
-        pageSize_ = value;
+        rp_ = value;
       }
     }
 
@@ -686,10 +685,10 @@ namespace Survey.Core {
       if (ClientIp != other.ClientIp) return false;
       if (Identity != other.Identity) return false;
       if (XRequestId != other.XRequestId) return false;
-      if (Subject != other.Subject) return false;
+      if (Query != other.Query) return false;
       if (QpaperId != other.QpaperId) return false;
-      if (PageIndex != other.PageIndex) return false;
-      if (PageSize != other.PageSize) return false;
+      if (Page != other.Page) return false;
+      if (Rp != other.Rp) return false;
       if (CheckRole != other.CheckRole) return false;
       return true;
     }
@@ -700,10 +699,10 @@ namespace Survey.Core {
       if (ClientIp.Length != 0) hash ^= ClientIp.GetHashCode();
       if (Identity.Length != 0) hash ^= Identity.GetHashCode();
       if (XRequestId.Length != 0) hash ^= XRequestId.GetHashCode();
-      if (Subject.Length != 0) hash ^= Subject.GetHashCode();
+      if (Query.Length != 0) hash ^= Query.GetHashCode();
       if (QpaperId != 0) hash ^= QpaperId.GetHashCode();
-      if (PageIndex != 0) hash ^= PageIndex.GetHashCode();
-      if (PageSize != 0) hash ^= PageSize.GetHashCode();
+      if (Page != 0) hash ^= Page.GetHashCode();
+      if (Rp != 0) hash ^= Rp.GetHashCode();
       if (CheckRole != false) hash ^= CheckRole.GetHashCode();
       return hash;
     }
@@ -727,21 +726,21 @@ namespace Survey.Core {
         output.WriteRawTag(26);
         output.WriteString(XRequestId);
       }
-      if (Subject.Length != 0) {
+      if (Query.Length != 0) {
         output.WriteRawTag(90);
-        output.WriteString(Subject);
+        output.WriteString(Query);
       }
       if (QpaperId != 0) {
         output.WriteRawTag(96);
         output.WriteInt32(QpaperId);
       }
-      if (PageIndex != 0) {
+      if (Page != 0) {
         output.WriteRawTag(104);
-        output.WriteInt32(PageIndex);
+        output.WriteInt32(Page);
       }
-      if (PageSize != 0) {
+      if (Rp != 0) {
         output.WriteRawTag(112);
-        output.WriteInt32(PageSize);
+        output.WriteInt32(Rp);
       }
       if (CheckRole != false) {
         output.WriteRawTag(120);
@@ -761,17 +760,17 @@ namespace Survey.Core {
       if (XRequestId.Length != 0) {
         size += 1 + pb::CodedOutputStream.ComputeStringSize(XRequestId);
       }
-      if (Subject.Length != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeStringSize(Subject);
+      if (Query.Length != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeStringSize(Query);
       }
       if (QpaperId != 0) {
         size += 1 + pb::CodedOutputStream.ComputeInt32Size(QpaperId);
       }
-      if (PageIndex != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PageIndex);
+      if (Page != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Page);
       }
-      if (PageSize != 0) {
-        size += 1 + pb::CodedOutputStream.ComputeInt32Size(PageSize);
+      if (Rp != 0) {
+        size += 1 + pb::CodedOutputStream.ComputeInt32Size(Rp);
       }
       if (CheckRole != false) {
         size += 1 + 1;
@@ -793,17 +792,17 @@ namespace Survey.Core {
       if (other.XRequestId.Length != 0) {
         XRequestId = other.XRequestId;
       }
-      if (other.Subject.Length != 0) {
-        Subject = other.Subject;
+      if (other.Query.Length != 0) {
+        Query = other.Query;
       }
       if (other.QpaperId != 0) {
         QpaperId = other.QpaperId;
       }
-      if (other.PageIndex != 0) {
-        PageIndex = other.PageIndex;
+      if (other.Page != 0) {
+        Page = other.Page;
       }
-      if (other.PageSize != 0) {
-        PageSize = other.PageSize;
+      if (other.Rp != 0) {
+        Rp = other.Rp;
       }
       if (other.CheckRole != false) {
         CheckRole = other.CheckRole;
@@ -831,7 +830,7 @@ namespace Survey.Core {
             break;
           }
           case 90: {
-            Subject = input.ReadString();
+            Query = input.ReadString();
             break;
           }
           case 96: {
@@ -839,11 +838,11 @@ namespace Survey.Core {
             break;
           }
           case 104: {
-            PageIndex = input.ReadInt32();
+            Page = input.ReadInt32();
             break;
           }
           case 112: {
-            PageSize = input.ReadInt32();
+            Rp = input.ReadInt32();
             break;
           }
           case 120: {

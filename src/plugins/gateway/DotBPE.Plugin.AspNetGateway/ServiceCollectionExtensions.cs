@@ -23,5 +23,18 @@ namespace DotBPE.Plugin.AspNetGateway
                 .AddSingleton<IBridgeRouter<TMessage>, LocalBridgeRouter<TMessage>>() //桥接路由器
                 .AddSingleton<IClientBootstrap<TMessage>, NettyClientBootstrap<TMessage>>();
         }
+
+        /// <summary>
+        /// 添加本地代理模式客户端
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddAgentClient<TMessage>(this IServiceCollection services) where TMessage : InvokeMessage
+        {
+            // .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>() // 编解码
+            return services.AddSingleton<IMessageHandler<TMessage>, ClientMessageHandler<TMessage>>() // 消息处理器
+                .AddSingleton<IRpcClient<TMessage>, AgentRpcClient<TMessage>>(); //在服务本地启动 HTTP Gateway时需要添加该实现        
+            
+        }
     }
 }

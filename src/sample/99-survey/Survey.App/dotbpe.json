@@ -18,5 +18,13 @@
     /*配置数据库连接*/
     "connectionStrings": {
         "master": "server=10.240.225.136;port=3306;database=survey;uid=root;pwd=Welcome@456;charset=utf8;Connection Timeout=18000;"
+    },
+    "redis": {
+        "configuration": "10.240.225.136"        
+    },
+    "Logging": {       
+        "LogLevel": {
+            "Default": "Warning"
+        }
     }
 }

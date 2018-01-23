@@ -45,12 +45,20 @@ service SurveyGateService{
         option (message_id)= 13 ; //设定消息ID
 
         option (http_api_option) = {
-            path : "/api/qpaper/get",
+            path : "/api/qpaper/simple",
             method : "get",
             description : "获取问卷信息"
         };
     };
+    rpc GetQPaperFull (GetQPaperReq) returns (QPaperFullRsp){
+        option (message_id)= 14 ; //设定消息ID
 
+        option (http_api_option) = {
+            path : "/api/qpaper/get",
+            method : "get",
+            description : "获取问卷详情信息"
+        };
+    };
 
     rpc SaveAPaper (SaveAPaperReq) returns (SaveAPaperRsp){
         option (message_id)= 21 ;//设定消息ID

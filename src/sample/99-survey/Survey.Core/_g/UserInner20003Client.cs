@@ -170,6 +170,56 @@ namespace Survey.Core {
             }
             return result;
          }
+        public async Task<RpcResult<GetUserRsp>> GetUserInfoAsync(GetUserReq request,int timeOut=3000)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(20003, 4);
+            message.Data = request.ToByteArray();
+            var response = await base.CallInvoker.AsyncCall(message,timeOut);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<GetUserRsp>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = GetUserRsp.Parser.ParseFrom(response.Data);
+            }
+            return result;
+        }
+
+        //同步方法
+        public RpcResult<GetUserRsp> GetUserInfo(GetUserReq request)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(20003, 4);
+            message.Data = request.ToByteArray();
+            var response =  base.CallInvoker.BlockingCall(message);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<GetUserRsp>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = GetUserRsp.Parser.ParseFrom(response.Data);
+            }
+            return result;
+         }
      }
 //end for class UserInnerServiceClient
 }
