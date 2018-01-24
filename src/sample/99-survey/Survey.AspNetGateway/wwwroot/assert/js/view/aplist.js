@@ -11,13 +11,14 @@
             width: mainWidth,
             url: opt.gridUrl,
             colModel: [
-                    { display: '答卷ID', name: 'PaperId', width: 50, sortable: false, align: 'left', iskey: true },
-                    { display: '问卷ID', name: 'QPaperId', width: 50, sortable: false, align: 'left',hide:true },
-                    { display: '问卷', name: 'QPaperSubject', width: 150, sortable: false, align: 'left' },
-                    { display: '用户标识', name: 'UserId', width: 100, sortable: false, align: 'left' },
-                    { display: '答卷时间', name: 'CreateTime', width: 150, sortable: false, align: 'left' },
-                    { display: '操作', name: 'PaperId', width: 120, sortable: false, align: 'center', process: formatOp, toggle: false }
-			],
+                    { display: '答卷ID', name: 'apaperId', width: 50, sortable: false, align: 'left', iskey: true },
+                    { display: '问卷ID', name: 'qpaperId', width: 50, sortable: false, align: 'left',hide:true },
+                    { display: '问卷', name: 'qpaperSubject', width: 150, sortable: false, align: 'left' },
+                    { display: '用户标识', name: 'userId', width: 100, sortable: false, align: 'left' },
+                    { display: '答卷时间', name: 'createTime', width: 150, sortable: false, align: 'left' },
+                    { display: '操作', name: 'apaperId', width: 120, sortable: false, align: 'center', process: formatOp, toggle: false }
+            ],
+            preProcess:processGridJson,
             sortname: "",
             sortorder: "",
             title: false,
@@ -47,19 +48,19 @@
         $("#abtnQuery").click(Query);
         function Query() {
             var v = $("#qtext").val();
-            var p = { extParam: [{ name: "subject", value: v}] };
+            var p = { extParam: [{ name: "qtext", value: v}] };
             $("#gridList").flexOptions(p).flexReload();
-        }       
-       
+        }
+
         _utils.view = function (id) {
-            var url = opt.viewUrl + "/" + id;
+            var url = opt.viewUrl + "?id=" + id;
             window.open(url);
         }
         _utils.veiwapaper = function (id) {
-            var url = opt.viewPaperUrl + "/" + id;
+            var url = opt.viewPaperUrl + "?id=" + id;
             window.open(url);
         }
-        
+
     }
 
 });

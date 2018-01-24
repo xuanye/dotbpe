@@ -22,9 +22,11 @@
     "redis": {
         "configuration": "10.240.225.136"        
     },
-    "Logging": {       
+    "Logging": {
         "LogLevel": {
-            "Default": "Warning"
+            "Default":"Information",
+            "System": "Warning",
+            "Microsoft": "Warning"
         }
     }
 }

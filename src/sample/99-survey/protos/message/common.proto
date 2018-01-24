@@ -13,3 +13,12 @@ message VoidReq{
 message VoidRsp{
    string return_message = 1; //返回错误信息
 }
+
+
+
+message APaperStaDetail {
+
+    string question_id = 10 ; //问题
+
+    repeated int32 oa = 11 ;  //答案统计信息
+}

@@ -33,7 +33,6 @@
             var a = [];
             a.push("<a class='imgbtn' href=\"javascript:void(0);\" onclick=\"javascript:_utils.edit('", value, "',", cell[3], ")\" title='修改'><span class='edit'>修改</span></a>");
             a.push("<a class='imgbtn' href=\"javascript:void(0);\" onclick=\"javascript:_utils.viewstatistic('", value, "')\" title='统计'><span class='statistic'>统计</span></a>");
-            a.push("<a class='imgbtn' href=\"javascript:void(0);\" onclick=\"javascript:_utils.viewadetaillist('", value, "')\" title='统计'><span class='list'>明细列表</span></a>");
             return a.join("");
         }
 
@@ -43,7 +42,7 @@
             return a.join("");
         }
         function formatAPC(value, id, cell) {
-            var url = opt.alistUrl + "/" + id;
+            var url = opt.alistUrl + "?id=" + id;
             var a = [];
             a.push("<a href=\"", url, "\" title='查看答卷列表'>", value, "</a>");
             return a.join("");
@@ -80,17 +79,17 @@
             });
         }
         _utils.view = function (id) {
-            var url = opt.viewUrl + "/" + id;
+            var url = opt.viewUrl + "?id=" + id;
             window.open(url);
         }
         _utils.viewstatistic = function (id) {
-            var url = opt.statisticUrl + "/" + id;
+            var url = opt.statisticUrl + "?id=" + id;
             OpenModalDialog(url, { caption: "答卷统计", type: 2, width: 700, height: maiheight - 50, onclose: function () {
             }
             });
         }
         _utils.viewadetaillist = function (id) {
-            var url = opt.answerListUrl + "/" + id;
+            var url = opt.answerListUrl + "?id=" + id;
             window.open(url);
         }
     }

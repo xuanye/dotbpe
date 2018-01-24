@@ -99,6 +99,33 @@ message QPaperFullRsp{
 }
 
 
+message AddAPaperReq {
+    string client_ip = 1; //用户端IP
+    string identity = 2; // 用户标识
+    string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
+
+    int32 qpaper_id = 10 ;
+    int32 count = 11 ;
+}
+
+
+
+message GetQPaperStaReq {
+    string client_ip = 1; //用户端IP
+    string identity = 2; // 用户标识
+    string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
+
+    int32 qpaper_id = 10 ;
+}
+
+message QPaperStaRsp {
+    string return_message = 1; //返回错误信息
+
+    DTOQPaperWithQuestion qpaper = 10;
+
+    repeated APaperStaDetail sta_detail = 11 ;
+}
+
 //--------------end-------服务请求和响应顶层的消息体定义--------------------------------
 
 //--------------start-------以下是实际的对象----------------------------
@@ -114,6 +141,8 @@ message DTOQPaper{
     string description = 5 ; // 注释和说明
 
     string create_user_id = 6 ; //用户
+
+    int32 apaper_count = 7 ; //答卷数
 }
 
 message DTOQuestion{
@@ -141,6 +170,7 @@ message DTOQPaperWithQuestion{
 
     string description = 5 ; // 注释和说明
 
+    int32 apaper_count = 7 ; //答卷数
 
     repeated DTOQuestion questions = 10 ; // 问题列表
 

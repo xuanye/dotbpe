@@ -11,6 +11,7 @@ namespace DotBPE.Rpc
         public CallInvoker(IRpcClient<TMessage> client)
         {
             this._client = client;
+            this._client.Recieved -= MessageRecieved;
             this._client.Recieved += MessageRecieved;
         }
 

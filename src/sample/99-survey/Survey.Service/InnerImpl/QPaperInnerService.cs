@@ -23,6 +23,19 @@ namespace Survey.Service.InnerImpl
             this._logger = logger;
         }
 
+
+
+        public override async Task<RpcResult<VoidRsp>> AddAPaperCountAsync(AddAPaperReq request)
+        {
+            var res = new RpcResult<VoidRsp>();
+            res.Data = new VoidRsp();
+
+            await this._qpaperRepo.UpdateAPaperCountAsync(request.QpaperId, request.Count);
+
+            return res;
+
+        }
+
         /// <summary>
         /// 获取问卷本身信息，不包括问题
         /// </summary>
@@ -102,7 +115,7 @@ namespace Survey.Service.InnerImpl
                     res.Data.Qpaper.EndTime = qpaper.EndTime.Value.ToString("yyyy-MM-dd HH:mm:ss");
                 }
                 res.Data.Qpaper.Description = qpaper.Description;
-
+                res.Data.Qpaper.ApaperCount = qpaper.ApaperCount;
                 //查询列表数据
                 var qlist = await this._qpaperRepo.GetQuestionsByPaperID(qpaper.QpaperId);
 
@@ -145,6 +158,7 @@ namespace Survey.Service.InnerImpl
                         QpaperId = qpaper.QpaperId,
                         Subject = qpaper.Subject,
                         Description = qpaper.Description,
+                        ApaperCount = qpaper.ApaperCount,
                         StartTime = qpaper.StartTime.HasValue ? qpaper.StartTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : "",
                         EndTime = qpaper.EndTime.HasValue ? qpaper.EndTime.Value.ToString("yyyy-MM-dd HH:mm:ss") : ""
                     });

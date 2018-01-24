@@ -26,6 +26,8 @@ if(serviceId == 10000 && messageId == 22){ return new QueryAPaperReq() ;
 }
 if(serviceId == 10000 && messageId == 23){ return new GetAPaperReq() ;
 }
+if(serviceId == 10000 && messageId == 24){ return new GetQPaperStaReq() ;
+}
 
 if(serviceId == 10001 && messageId == 31){ return new RegisterReq() ;
 }
@@ -53,6 +55,8 @@ if(serviceId == 10000 && messageId == 21){ return new SaveAPaperRsp() ;
 if(serviceId == 10000 && messageId == 22){ return new APaperListRsp() ;
 }
 if(serviceId == 10000 && messageId == 23){ return new APaperRsp() ;
+}
+if(serviceId == 10000 && messageId == 24){ return new QPaperStaRsp() ;
 }
 
 if(serviceId == 10001 && messageId == 31){ return new RegisterRsp() ;

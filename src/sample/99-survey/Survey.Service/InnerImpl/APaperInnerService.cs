@@ -66,9 +66,8 @@ namespace Survey.Service.InnerImpl
             res.Data.Apaper.ApaperId = apaper.PaperId;
             res.Data.Apaper.CreateTime = apaper.CreateTime.ToString("yyyy-MM-dd HH:mm:ss");
             res.Data.Apaper.QpaperId = apaper.QpaperId;
-            res.Data.Apaper.QpaperSubject = apaper.QpaperSubject;
-            res.Data.Apaper.QpaperUserId = apaper.QpaperUserId;
-            res.Data.Apaper.Remark = apaper.Remark;
+            res.Data.Apaper.UserId = apaper.UserId;          
+            res.Data.Apaper.Remark = apaper.Remark??"";
             //rsp.Apaper.Answers
             if (answers != null && answers.Count > 0)
             {
@@ -91,6 +90,31 @@ namespace Survey.Service.InnerImpl
             return res;
         }
 
+        public override async Task<RpcResult<APaperStaDetailRsp>> GetAPaperStaAsync(GetAPaperStaDetailReq request)
+        {
+            var res = new RpcResult<APaperStaDetailRsp>();
+            res.Data = new APaperStaDetailRsp();
+
+
+            var staList = await this._apaperRepo.QueryQPaperStaDetailAsync(request.QpaperId);
+
+
+            foreach(var item in staList)
+            {
+                var stad = new APaperStaDetail()
+                {
+                    QuestionId = item.QuestionId
+                };
+                stad.Oa.AddRange(new int[]
+                {
+                    item.OA1, item.OA2,item.OA3,item.OA4,item.OA5,item.OA6,item.OA7,item.OA8,item.OA9,item.OA10
+                });
+                res.Data.StaDetail.Add(stad);
+            }
+
+            return res;
+        }
+
         /// <summary>
         /// 获取答卷列表
         /// </summary>
@@ -101,13 +125,11 @@ namespace Survey.Service.InnerImpl
             var res = new RpcResult<APaperListRsp>();
             res.Data = new APaperListRsp();
 
-            var pageView = new PageView();
-            pageView.PageIndex = request.Page;
-            pageView.PageSize = request.Rp;
+            var view = new PageView(request.Page, request.Rp);
 
-            var plist = await this._apaperRepo.QueryAPaperList(request.Query, request.QpaperId, request.CheckRole ? request.Identity : "", pageView);
+            var plist = await this._apaperRepo.QueryAPaperList(request.Qtext, request.QpaperId, request.CheckRole ? request.Identity : "", view);
 
-            res.Data.Total = pageView.PageIndex == 0 ? plist.Total : -1;
+            res.Data.Total = view.PageIndex == 0 ? plist.Total : -1;
 
             if (plist != null && plist.DataList != null && plist.DataList.Count > 0)
             {
@@ -118,8 +140,9 @@ namespace Survey.Service.InnerImpl
                         ApaperId = apaper.PaperId,
                         CreateTime = apaper.CreateTime.ToString("yyyy-MM-dd HH:mm:ss"),
                         QpaperId = apaper.QpaperId,
-                        QpaperSubject = apaper.QpaperSubject,
-                        QpaperUserId = apaper.QpaperUserId,
+                        UserId = apaper.UserId,
+                        QpaperSubject = apaper.QpaperSubject??"",
+                        QpaperUserId = apaper.QpaperUserId??"",
                         Remark = apaper.Remark
                     });
                 }
@@ -172,6 +195,9 @@ namespace Survey.Service.InnerImpl
 
             using (TransScope scope = this._apaperRepo.BeginTransScope())
             {
+
+               
+
                 var apaper = new APaper();
                 apaper.CreateTime = DateTime.Now;
                 apaper.QpaperId = req.QpaperId;
@@ -179,6 +205,16 @@ namespace Survey.Service.InnerImpl
                 apaper.QpaperUserId = getQPRes.Data.CreateUserId;
                 apaper.Remark = req.Remark;
                 apaper.UserId = string.IsNullOrEmpty(req.UserId) ? req.Identity : req.UserId;
+
+                bool hasA = await this._apaperRepo.CheckAPaperAsync(apaper.QpaperId, apaper.UserId);
+
+                if (hasA)
+                {
+                    res.Code = ErrorCodes.BIZ_RULE_FAIL;
+                    res.Data.ReturnMessage = "该用户已经回答过该问卷了";
+                    return res;
+                }
+
                 var newId = await this._apaperRepo.InsertAsync(apaper);
 
                 if (newId < 0)
@@ -193,6 +229,7 @@ namespace Survey.Service.InnerImpl
                 foreach (var a in req.Answers)
                 {
                     var answer = new Answer();
+                    answer.AnswerId = Guid.NewGuid().ToString("N");
                     answer.ApaperId = apaperId;
                     answer.ObjectiveAnswer = a.ObjectiveAnswer;
                     answer.SubjectiveAnswer = a.SubjectiveAnswer;
@@ -205,6 +242,19 @@ namespace Survey.Service.InnerImpl
 
                 scope.Complete();// 提交事务
             }
+
+
+            // 异步执行不管是否成功
+            var addReq = new AddAPaperReq();
+            addReq.ClientIp = req.ClientIp;
+            addReq.Identity = req.Identity;
+            addReq.XRequestId = req.XRequestId;
+            addReq.QpaperId = req.QpaperId;
+            addReq.Count = 1;
+#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+            qpaperService.AddAPaperCountAsync(addReq);
+#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+
             return res;
         }
     }

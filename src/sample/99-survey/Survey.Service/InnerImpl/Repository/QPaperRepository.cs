@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using Survey.Service.InnerImpl.Domain;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 using Vulcan.DataAccess;
@@ -41,6 +42,13 @@ namespace Survey.Service.InnerImpl.Repository
                 "`qpaper_id`,`subject`,`start_time`,`end_time`,`description`,`apaper_count`,`create_user_id`,`update_time`",
                 "qpaper",
                 where, null, "qpaper_id", " ORDER BY update_time DESC");
+        }
+
+        internal Task<int> UpdateAPaperCountAsync(int qpaperId, int count)
+        {
+            string sql = "update qpaper set  `apaper_count`=`apaper_count`+@Count where qpaper_id = @PaperId";
+
+            return base.ExcuteAsync(sql, new { PaperId = qpaperId, Count = count });
         }
 
         internal Task<List<Question>> GetQuestionsByPaperID(int paperId)

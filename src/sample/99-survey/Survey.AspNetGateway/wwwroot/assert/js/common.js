@@ -132,7 +132,7 @@ function processGridJson(res,option){
                 var row = {cell:[]};
                 row.id = item[keyFiled] || "";
                 for(var j=0,k=fields.length ;j<k;j++){
-                    row.cell.push(item[fields[j]] || "") //字段名
+                    row.cell.push(item[fields[j]] ) //字段名
                 }
                 data.rows.push(row);
             }
@@ -142,7 +142,6 @@ function processGridJson(res,option){
     else{
         data.error = res.return_message|| "意外错误";
     }
-    console.log(data);
     return data;
 }
 

@@ -110,6 +110,30 @@ namespace Survey.Core {
 
       //抽象方法
       public abstract Task<RpcResult<QPaperFullRsp>> GetQPaperFullAsync(GetQPaperReq request);
+      //调用委托
+      private async Task<AmpMessage> ProcessAddAPaperCountAsync(AmpMessage req)
+      {
+         AddAPaperReq request = null;
+
+         if(req.Data == null ){
+            request = new AddAPaperReq();
+         }
+         else {
+            request = AddAPaperReq.Parser.ParseFrom(req.Data);
+         }
+
+         var result = await AddAPaperCountAsync(request);
+         var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
+         response.Code = result.Code;
+         if( result.Data !=null )
+         {
+             response.Data = result.Data.ToByteArray();
+         }
+         return response;
+      }
+
+      //抽象方法
+      public abstract Task<RpcResult<VoidRsp>> AddAPaperCountAsync(AddAPaperReq request);
       public override Task<AmpMessage> ProcessAsync(AmpMessage req)
       {
          switch(req.MessageId){
@@ -121,6 +145,8 @@ namespace Survey.Core {
             case 3: return this.ProcessGetQPaperAsync(req);
             //方法QPaperInnerService.GetQPaperFull
             case 4: return this.ProcessGetQPaperFullAsync(req);
+            //方法QPaperInnerService.AddAPaperCount
+            case 5: return this.ProcessAddAPaperCountAsync(req);
             default: return base.ProcessNotFoundAsync(req);
          }
       }

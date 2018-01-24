@@ -91,6 +91,7 @@ namespace DotBPE.Rpc.DefaultImpls
 
         public void Dispose()
         {
+            this._handler.Recieved -= Message_Recieved;
             //释放所有链接
             this._transportFactory.Dispose();
         }

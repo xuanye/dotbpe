@@ -25,6 +25,10 @@ service APaperInnerService{
     rpc GetAPaper (GetAPaperReq) returns (APaperRsp){
         option (message_id)= 3 ; //设定消息ID
     };
+
+    rpc GetAPaperSta (GetAPaperStaDetailReq) returns (APaperStaDetailRsp){
+        option (message_id)= 4 ; //设定消息ID
+    };
 }
 
 

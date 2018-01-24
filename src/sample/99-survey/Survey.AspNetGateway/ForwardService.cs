@@ -29,8 +29,11 @@ namespace Survey.AspNetGateway
         readonly ILogger<ForwardService> Logger;
         readonly ILoginService _loginService;
 
+        private static AmpCallInvoker _invoker;
+        private static object _lockObj = new object();
+
         public ForwardService(IRpcClient<AmpMessage> rpcClient,
-           IOptionsSnapshot<HttpRouterOption> optionsAccessor,
+           IOptions<HttpRouterOption> optionsAccessor,
            ILoginService loginService,
            ILogger<ForwardService> logger
            ) : base(rpcClient, optionsAccessor, logger)
@@ -151,7 +154,21 @@ namespace Survey.AspNetGateway
         /// <returns></returns>
         protected override CallInvoker<AmpMessage> GetProtocolCallInvoker(IRpcClient<AmpMessage> rpcClient)
         {
-            return new AmpCallInvoker(rpcClient);
+            if (_invoker != null)
+            {
+                return _invoker;
+            }
+            else
+            {
+                lock (_lockObj)
+                {
+                    if (_invoker == null)
+                    {
+                        _invoker = new AmpCallInvoker(rpcClient);
+                    }
+                    return _invoker;
+                }
+            }
         }
 
         /// <summary>

@@ -68,6 +68,14 @@ namespace Survey.Core {
             });
             list.Add(new HttpApiOption()
             {
+                ServiceId = 10000,
+                MessageId = 24,
+                Path = "/api/qpaper/sta",
+                Method = "get",
+                Description = "获取问卷统计信息"
+            });
+            list.Add(new HttpApiOption()
+            {
                 ServiceId = 10001,
                 MessageId = 31,
                 Path = "/api/user/register",

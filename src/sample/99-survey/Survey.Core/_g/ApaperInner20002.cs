@@ -24,12 +24,14 @@ namespace Survey.Core {
           string.Concat(
             "CiZzZXJ2aWNlL2lubmVyL2FwYXBlcl9pbm5lcl8yMDAwMi5wcm90bxIGZG90",
             "YnBlGhNkb3RicGVfb3B0aW9uLnByb3RvGhRtZXNzYWdlL2FwYXBlci5wcm90",
-            "bzLiAQoSQVBhcGVySW5uZXJTZXJ2aWNlEkAKClNhdmVBUGFwZXISFS5kb3Ri",
+            "bzKzAgoSQVBhcGVySW5uZXJTZXJ2aWNlEkAKClNhdmVBUGFwZXISFS5kb3Ri",
             "cGUuU2F2ZUFQYXBlclJlcRoVLmRvdGJwZS5TYXZlQVBhcGVyUnNwIgTQ8xgB",
             "EkYKD1F1ZXJ5QVBhcGVyTGlzdBIWLmRvdGJwZS5RdWVyeUFQYXBlclJlcRoV",
             "LmRvdGJwZS5BUGFwZXJMaXN0UnNwIgTQ8xgCEjoKCUdldEFQYXBlchIULmRv",
-            "dGJwZS5HZXRBUGFwZXJSZXEaES5kb3RicGUuQVBhcGVyUnNwIgTQ8xgDGgbI",
-            "8xiinAFCEEgBqgILU3VydmV5LkNvcmVQAGIGcHJvdG8z"));
+            "dGJwZS5HZXRBUGFwZXJSZXEaES5kb3RicGUuQVBhcGVyUnNwIgTQ8xgDEk8K",
+            "DEdldEFQYXBlclN0YRIdLmRvdGJwZS5HZXRBUGFwZXJTdGFEZXRhaWxSZXEa",
+            "Gi5kb3RicGUuQVBhcGVyU3RhRGV0YWlsUnNwIgTQ8xgEGgbI8xiinAFCEEgB",
+            "qgILU3VydmV5LkNvcmVQAGIGcHJvdG8z"));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::DotBPE.Protobuf.DotbpeOptionReflection.Descriptor, global::Survey.Core.ApaperReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null));

@@ -246,9 +246,7 @@
                         var cache = [] ;
                         for(var i =0,l=data.questions.length; i<l ;i++){
                             var q = data.questions[i];
-                            console.log(q);
                             var lpd = displayQuestionDetail(q.questionType,q.itemDetail,q.id,q.extendInput);
-
                             cache.push(StrFormatNoEncode(__itemtmp, [q.topic, lpd, q.id, q.questionType, q.extendInput]));
                         }
                         $("#qitemlist").html(cache.join(""))
@@ -279,7 +277,6 @@
             var tmp = [];
             for (var i = 0, l = arrDetail.length; i < l;i++)
             {
-                console.log(1111)
                 tmp.push("<div class='atomctl'><label class='checkbox'>");
                 if (type == 0)
                 {

@@ -91,8 +91,15 @@ service SurveyGateService{
     };
 
 
+    rpc GetAPaperSta (GetQPaperStaReq) returns (QPaperStaRsp){
+        option (message_id)= 24 ; //设定消息ID
 
-
+        option (http_api_option) = {
+            path : "/api/qpaper/sta",
+            method : "get",
+            description : "获取问卷统计信息"
+        };
+    };
 
 
 }

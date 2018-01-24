@@ -42,16 +42,19 @@ namespace DotBPE.Rpc.Netty
         {
             this._autoReConnect = false; //禁止自动重连
             Logger.LogDebug("开始主动关闭连接");
-            _channels.ForEach(async (channel) =>
+            lock (_lockObj)
             {
-                if (channel.Open && channel.Active)
+                _channels.ForEach(async (channel) =>
                 {
-                    await channel.CloseAsync();
-                }
-            });
-            Logger.LogDebug("主动关闭连接结束");
-            _channels.Clear();
-            Logger.LogDebug("清理内在连接");
+                    if (channel.Open && channel.Active)
+                    {
+                        await channel.CloseAsync();
+                    }
+                });
+                Logger.LogDebug("主动关闭连接结束");
+                _channels.Clear();
+                Logger.LogDebug("清理内在连接");
+            }
             return Task.CompletedTask;
         }
 

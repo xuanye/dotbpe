@@ -39,7 +39,7 @@ message QueryAPaperReq{
     string identity = 2; // 用户标识
     string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
 
-    string query = 11; //主题 模糊搜索
+    string qtext = 11; //主题 模糊搜索
     int32 qpaper_id = 12; //问卷ID
     int32 page = 13 ; //分页索引
     int32 rp = 14 ; //每页记录数
@@ -80,12 +80,32 @@ message APaperRsp{
     DTOQPaperWithQuestion qpaper = 12;
 }
 
+
+message GetAPaperStaDetailReq{
+    string client_ip = 1; //用户端IP
+    string identity = 2; // 用户标识
+    string x_request_id = 3 ; //请求的唯一标识，用于服务间传递
+
+    int32 qpaper_id = 11;// 问卷ID
+}
+
+
+message APaperStaDetailRsp{
+
+    string return_message = 1; //返回错误信息
+
+    repeated APaperStaDetail sta_detail = 10 ; //统计信息
+}
+
+//---------------------------------请求信息---------------------------------
+
 message DTOAPaper{
     int32 apaper_id = 1 ;
     int32 qpaper_id = 2 ;
 
     string qpaper_subject = 3 ;
     string qpaper_user_id = 4 ;
+
     string user_id = 5 ;
     string create_time = 6 ;
 
@@ -98,8 +118,6 @@ message DTOAPaperWithAnswers{
     int32 apaper_id = 1 ;
     int32 qpaper_id = 2 ;
 
-    string qpaper_subject = 3 ;
-    string qpaper_user_id = 4 ;
     string user_id = 5 ;
     string create_time = 6 ;
 

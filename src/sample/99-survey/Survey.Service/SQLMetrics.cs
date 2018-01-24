@@ -28,10 +28,10 @@ namespace Survey.Service
         {
             _sw.Stop();
             var es = _sw.ElapsedMilliseconds;
-            this._logger.LogDebug("SQL EXECUTE Finished in {0},SQL={1},params = {_param}", es, _sql, _param ?? "");
+            this._logger.LogDebug("SQL EXECUTE Finished in {0} ms,SQL={1},params = {_param}", es, _sql, _param ?? "");
             if(es > 500)
             {
-                this._logger.LogWarning("SQL EXECUTE Finished in {0},SQL={1},params = {_param}", es, _sql, _param ?? "");
+                this._logger.LogWarning("SQL EXECUTE Finished in {0} ms,SQL={1},params = {_param}", es, _sql, _param ?? "");
             }
             _sw = null;
             _sql = null;

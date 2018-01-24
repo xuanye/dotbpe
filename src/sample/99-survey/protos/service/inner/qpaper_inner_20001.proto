@@ -33,6 +33,10 @@ service QPaperInnerService {
     rpc GetQPaperFull (GetQPaperReq) returns (QPaperFullRsp){
         option (message_id)= 4 ; //设定消息ID
     };
+
+    rpc AddAPaperCount (AddAPaperReq) returns (VoidRsp){
+        option (message_id)= 5 ; //设定消息ID
+    };
 }
 
 //-------------这里是服务定义----------------------end-----

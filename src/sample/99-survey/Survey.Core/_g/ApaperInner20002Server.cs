@@ -86,6 +86,30 @@ namespace Survey.Core {
 
       //抽象方法
       public abstract Task<RpcResult<APaperRsp>> GetAPaperAsync(GetAPaperReq request);
+      //调用委托
+      private async Task<AmpMessage> ProcessGetAPaperStaAsync(AmpMessage req)
+      {
+         GetAPaperStaDetailReq request = null;
+
+         if(req.Data == null ){
+            request = new GetAPaperStaDetailReq();
+         }
+         else {
+            request = GetAPaperStaDetailReq.Parser.ParseFrom(req.Data);
+         }
+
+         var result = await GetAPaperStaAsync(request);
+         var response = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
+         response.Code = result.Code;
+         if( result.Data !=null )
+         {
+             response.Data = result.Data.ToByteArray();
+         }
+         return response;
+      }
+
+      //抽象方法
+      public abstract Task<RpcResult<APaperStaDetailRsp>> GetAPaperStaAsync(GetAPaperStaDetailReq request);
       public override Task<AmpMessage> ProcessAsync(AmpMessage req)
       {
          switch(req.MessageId){
@@ -95,6 +119,8 @@ namespace Survey.Core {
             case 2: return this.ProcessQueryAPaperListAsync(req);
             //方法APaperInnerService.GetAPaper
             case 3: return this.ProcessGetAPaperAsync(req);
+            //方法APaperInnerService.GetAPaperSta
+            case 4: return this.ProcessGetAPaperStaAsync(req);
             default: return base.ProcessNotFoundAsync(req);
          }
       }

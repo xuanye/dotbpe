@@ -2,9 +2,9 @@
   "Logging": {
     "IncludeScopes": false,
     "LogLevel": {
-      "Default": "Trace",
-      "System": "Information",
-      "Microsoft": "Information"
+        "Default": "Information",
+        "System": "Information",
+        "Microsoft": "Information"
     }
   }
 }

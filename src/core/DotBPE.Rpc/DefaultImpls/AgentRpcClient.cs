@@ -19,6 +19,7 @@ namespace DotBPE.Rpc.DefaultImpls
         )
         {
             this._handler = handler;
+            this._handler.Recieved -= Message_Recieved;
             this._handler.Recieved += Message_Recieved;
             this._actorLocator = actorLocator;
             this.Logger = logger;
@@ -66,6 +67,7 @@ namespace DotBPE.Rpc.DefaultImpls
 
         public void Dispose()
         {
+            this._handler.Recieved -= Message_Recieved;
         }
     }
 }

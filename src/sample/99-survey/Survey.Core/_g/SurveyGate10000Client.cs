@@ -370,6 +370,56 @@ namespace Survey.Core {
             }
             return result;
          }
+        public async Task<RpcResult<QPaperStaRsp>> GetAPaperStaAsync(GetQPaperStaReq request,int timeOut=3000)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(10000, 24);
+            message.Data = request.ToByteArray();
+            var response = await base.CallInvoker.AsyncCall(message,timeOut);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<QPaperStaRsp>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = QPaperStaRsp.Parser.ParseFrom(response.Data);
+            }
+            return result;
+        }
+
+        //同步方法
+        public RpcResult<QPaperStaRsp> GetAPaperSta(GetQPaperStaReq request)
+        {
+            AmpMessage message = AmpMessage.CreateRequestMessage(10000, 24);
+            message.Data = request.ToByteArray();
+            var response =  base.CallInvoker.BlockingCall(message);
+            if (response == null)
+            {
+                throw new RpcException("error,response is null !");
+            }
+            var result = new RpcResult<QPaperStaRsp>();
+            if (response.Code != 0)
+            {
+                result.Code = response.Code;
+            }
+            else if (response.Data == null)
+            {
+                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            else
+            {
+                result.Data = QPaperStaRsp.Parser.ParseFrom(response.Data);
+            }
+            return result;
+         }
      }
 //end for class SurveyGateServiceClient
 }

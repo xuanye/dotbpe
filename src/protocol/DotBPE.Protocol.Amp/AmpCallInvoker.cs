@@ -16,7 +16,7 @@ namespace DotBPE.Protocol.Amp
         private readonly ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>> _resultDictionary =
 new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
-        private int sendSequence = 0;
+        private static int INVOKER_SEQ = 0;
         private static object lockObj = new object();
 
         public AmpCallInvoker(string serverAddress, int multiplexCount = 1) : this(AmpClient.Create(serverAddress, multiplexCount))
@@ -129,12 +129,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                         // 移除字典
                         RemoveResultCallback(message.Id);
                     }
-                    else
-                    {
-                        //TODO:详细的错误日志信息
-                        Logger.LogError("server response,but no handler,Id={0}"
-                            ,e.Message.Id);
-                    }
+                    //消息通传到每个AmpCallInvoker，如果这里没有，那就再其他示例中
                 }
             }
         }
@@ -181,7 +176,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         private void AutoSetSequence(AmpMessage request)
         {
             
-            int id = Interlocked.Increment(ref this.sendSequence);
+            int id = Interlocked.Increment(ref INVOKER_SEQ);
             request.Sequence = id;
         }
     }

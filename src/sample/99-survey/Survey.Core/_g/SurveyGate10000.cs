@@ -24,7 +24,7 @@ namespace Survey.Core {
           string.Concat(
             "CiRzZXJ2aWNlL2dhdGUvc3VydmV5X2dhdGVfMTAwMDAucHJvdG8SBmRvdGJw",
             "ZRoTZG90YnBlX29wdGlvbi5wcm90bxoUbWVzc2FnZS9hcGFwZXIucHJvdG8a",
-            "FG1lc3NhZ2UvcXBhcGVyLnByb3RvMrcGChFTdXJ2ZXlHYXRlU2VydmljZRJw",
+            "FG1lc3NhZ2UvcXBhcGVyLnByb3RvMrAHChFTdXJ2ZXlHYXRlU2VydmljZRJw",
             "CgpTYXZlUVBhcGVyEhUuZG90YnBlLlNhdmVRUGFwZXJSZXEaFS5kb3RicGUu",
             "U2F2ZVFQYXBlclJzcCI00PMYC9rzGCwKEC9hcGkvcXBhcGVyL3NhdmUSBHBv",
             "c3QaEuS/neWtmOmXruWNt+S/oeaBrxJwCg9RdWVyeVFQYXBlckxpc3QSFi5k",
@@ -42,8 +42,11 @@ namespace Survey.Core {
             "c3RSc3AiNNDzGBba8xgsChEvYXBpL2FwYXBlci9xdWVyeRIDYWxsGhLmn6Xo",
             "r6LnrZTljbfkv6Hmga8SaAoJR2V0QVBhcGVyEhQuZG90YnBlLkdldEFQYXBl",
             "clJlcRoRLmRvdGJwZS5BUGFwZXJSc3AiMtDzGBfa8xgqCg8vYXBpL2FwYXBl",
-            "ci9nZXQSA2dldBoS6I635Y+W562U5Y235L+h5oGvGgXI8xiQTkIYSAGqAgtT",
-            "dXJ2ZXkuQ29yZfDzGAH48xgBUABiBnByb3RvMw=="));
+            "ci9nZXQSA2dldBoS6I635Y+W562U5Y235L+h5oGvEncKDEdldEFQYXBlclN0",
+            "YRIXLmRvdGJwZS5HZXRRUGFwZXJTdGFSZXEaFC5kb3RicGUuUVBhcGVyU3Rh",
+            "UnNwIjjQ8xgY2vMYMAoPL2FwaS9xcGFwZXIvc3RhEgNnZXQaGOiOt+WPlumX",
+            "ruWNt+e7n+iuoeS/oeaBrxoFyPMYkE5CGEgBqgILU3VydmV5LkNvcmXw8xgB",
+            "+PMYAVAAYgZwcm90bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::DotBPE.Protobuf.DotbpeOptionReflection.Descriptor, global::Survey.Core.ApaperReflection.Descriptor, global::Survey.Core.QpaperReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, null));

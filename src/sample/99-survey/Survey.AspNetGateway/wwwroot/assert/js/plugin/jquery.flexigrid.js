@@ -418,7 +418,7 @@
                                     }
                                 }
                                 else {
-                                    var divInner = row.cell[idx] || "&nbsp;";
+                                    var divInner = row.cell[idx] ;
                                     if (this.process) {
                                         divInner = this.process(divInner, trid, row.cell);
                                     }
