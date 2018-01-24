@@ -19,7 +19,8 @@
     },
     "Logging": {
         "LogLevel": {
-            "Default": "Warning"
+            "Default": "Warning",
+            "Survey": "Information"
         }
     }
 }
