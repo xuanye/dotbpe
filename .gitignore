@@ -64,3 +64,4 @@ node_modules
 cache/
 .vs/
 *.lnk
+*.Production.json
