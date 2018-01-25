@@ -11,14 +11,14 @@ namespace DotBPE.IntegrationTesting
 {
     public class CallContextTestImpl : CallContextTestBase
     {
-        readonly ILogger<CallContextTestImpl> Logger;
+        readonly ILogger<CallContextTestImpl> _logger;
 
         private IContextAccessor<AmpMessage> _contextAccessor;
         private readonly string contextKey = "CallContextTestImpl";
         public CallContextTestImpl(IContextAccessor<AmpMessage> contextAccessor,ILogger<CallContextTestImpl> logger)
         {
             _contextAccessor = contextAccessor;
-            this.Logger = logger;
+            this._logger = logger;
         }
 
         public override async Task<RpcResult<CommonRsp>> TestAsync(VoidReq request)
@@ -34,7 +34,7 @@ namespace DotBPE.IntegrationTesting
                 var objSet = _contextAccessor.CallContext.Get(contextKey);
                 if(objSet == null)
                 {
-                    Logger.LogWarning("get value from context failed");
+                    _logger.LogWarning("get value from context failed");
                     res.Data.Status = -1;
                 }
                 else
@@ -42,7 +42,7 @@ namespace DotBPE.IntegrationTesting
                     string v = objSet.ToString();
                     if(v != randomId)
                     {
-                        Logger.LogWarning("get value from context ,but value changed, in new Task");
+                        _logger.LogWarning("get value from context ,but value changed, in new Task");
                     }
                     res.Data.Status = v == randomId ? 0 : -1;
                 }
@@ -62,7 +62,7 @@ namespace DotBPE.IntegrationTesting
                 string v = objSetOut.ToString();
                 if (v != randomId)
                 {
-                    Logger.LogWarning("get value from context ,but value changed");
+                    _logger.LogWarning("get value from context ,but value changed");
                 }
                 res.Data.Status = v == randomId ? 0 : -1;
                 Logger.LogDebug("{0}={1}", v, randomId);
