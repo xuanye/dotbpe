@@ -1,6 +1,6 @@
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
-using DotBPE.Rpc.Logging;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -11,12 +11,14 @@ namespace DotBPE.IntegrationTesting
 {
     public class CallContextTestImpl : CallContextTestBase
     {
-        static ILogger Logger = Rpc.Environment.Logger.ForType<CallContextTestImpl>();
+        readonly ILogger<CallContextTestImpl> Logger;
+
         private IContextAccessor<AmpMessage> _contextAccessor;
         private readonly string contextKey = "CallContextTestImpl";
-        public CallContextTestImpl(IContextAccessor<AmpMessage> contextAccessor)
+        public CallContextTestImpl(IContextAccessor<AmpMessage> contextAccessor,ILogger<CallContextTestImpl> logger)
         {
             _contextAccessor = contextAccessor;
+            this.Logger = logger;
         }
 
         public override async Task<RpcResult<CommonRsp>> TestAsync(VoidReq request)
@@ -32,7 +34,7 @@ namespace DotBPE.IntegrationTesting
                 var objSet = _contextAccessor.CallContext.Get(contextKey);
                 if(objSet == null)
                 {
-                    Logger.Warning("get value from context failed");
+                    Logger.LogWarning("get value from context failed");
                     res.Data.Status = -1;
                 }
                 else
@@ -40,7 +42,7 @@ namespace DotBPE.IntegrationTesting
                     string v = objSet.ToString();
                     if(v != randomId)
                     {
-                        Logger.Warning("get value from context ,but value changed, in new Task");
+                        Logger.LogWarning("get value from context ,but value changed, in new Task");
                     }
                     res.Data.Status = v == randomId ? 0 : -1;
                 }
@@ -60,10 +62,10 @@ namespace DotBPE.IntegrationTesting
                 string v = objSetOut.ToString();
                 if (v != randomId)
                 {
-                    Logger.Warning("get value from context ,but value changed");
+                    Logger.LogWarning("get value from context ,but value changed");
                 }
                 res.Data.Status = v == randomId ? 0 : -1;
-                Logger.Debug("{0}={1}", v, randomId);
+                Logger.LogDebug("{0}={1}", v, randomId);
             }
 
             return res;
