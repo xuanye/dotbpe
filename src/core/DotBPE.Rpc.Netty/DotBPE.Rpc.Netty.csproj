@@ -9,7 +9,7 @@
     <AssemblyTitle>C# RPC Lib</AssemblyTitle>
     <AssemblyName>DotBPE.Rpc.Netty</AssemblyName>
     <PackageId>DotBPE.Rpc.Netty</PackageId>
-    <Version>1.1.0</Version>
+    <Version>$(VersionSuffix)</Version>
     <PackageTags>rpc,dotnetty</PackageTags>
     <PackageReleaseNotes>C# RPC Lib</PackageReleaseNotes>
     <PackageProjectUrl>https://github.com/dotbpe/dotbpe</PackageProjectUrl>
