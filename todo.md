@@ -1,7 +1,7 @@
 # 待完成
 ----
 
-- [ ] 实现gateway中Session服务
+- [x] 实现gateway中Session服务
 - [ ] 重新编写readme文件
 
 
@@ -17,7 +17,7 @@
 - [x] 编写Http Gateway示例
 - [x] 编写多服务间调用示例
 - [ ] 编写使用Consul服务发现示例
-- [ ] 编写使用Protobuf-gen-Amp生成完整的项目代码示例
+- [x] 编写使用Protobuf-gen-Amp生成完整的项目代码示例
 - [ ] 使用DotBPE实现PiggyMetrics示例
 - [ ] 整理各种场景的build情况，如单客户端，单服务端，既是服务端又是客户端
 - [ ] 替换启动时的提示文字

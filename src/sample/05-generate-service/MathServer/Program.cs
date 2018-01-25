@@ -6,7 +6,6 @@ using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
-using DotBPE.Rpc.Logging;
 using MathCommon;
 using Microsoft.Extensions.DependencyInjection;
 using Google.Protobuf;
@@ -18,8 +17,6 @@ namespace MathServer
     {
         static void Main(string[] args)
         {
-
-            //DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());
 
             string ip = "127.0.0.1";
             int port = 6201;
@@ -55,5 +52,5 @@ namespace MathServer
             return Task.FromResult(new RpcResult<AddRes>() { Data = res });
         }
     }
-    
+
 }

@@ -2,7 +2,6 @@ using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.ObjectPool;
 using System;
 using System.Collections.Generic;
 
@@ -18,9 +17,10 @@ namespace DotBPE.Rpc
         {
             _configureServicesDelegates = new List<Action<IServiceCollection>>();
 
-            _config = new ConfigurationBuilder()
-                .AddEnvironmentVariables(prefix: "DotRPC_")
-                .Build();
+            _config = new ConfigurationBuilder().AddInMemoryCollection(new[]
+            {
+                new KeyValuePair<string, string>("ApplicationName","dotbpe")
+            }).Build();
         }
 
         public IRpcClient<TMessage> Build<TMessage>() where TMessage : InvokeMessage
@@ -32,7 +32,7 @@ namespace DotBPE.Rpc
             AddApplicationServices(applicationServices, clientServiceProvider);
 
             var client = clientServiceProvider.GetRequiredService<IRpcClient<TMessage>>();
-           
+
             return client;
         }
 
@@ -65,11 +65,12 @@ namespace DotBPE.Rpc
             // The configured ILoggerFactory is added as a singleton here. AddLogging below will not add an additional one.
 
             services.AddOptions();
+
             services.Configure<Options.RpcClientOption>(_config);  // 添加作为客户端的配置
 
             services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
 
-            services.AddSingleton<ObjectPoolProvider, DefaultObjectPoolProvider>();
+           
 
             foreach (var configureServices in _configureServicesDelegates)
             {

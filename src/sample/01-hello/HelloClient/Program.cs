@@ -10,7 +10,6 @@ namespace HelloClient
     {
         static void Main(string[] args)
         {
-            //DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());        
 
             using (var caller = new AmpCallInvoker("127.0.0.1:6201"))
             {
@@ -39,7 +38,7 @@ namespace HelloClient
                 {
                     Console.WriteLine("error occ {0}", ex.Message);
                 }
-              
+
             }
             Console.WriteLine("channel is closed!");
 

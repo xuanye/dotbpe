@@ -24,11 +24,13 @@ namespace GatewayForAspNet {
           string.Concat(
             "Cg1ncmVldGVyLnByb3RvEgZkb3RicGUaE2RvdGJwZV9vcHRpb24ucHJvdG8i",
             "GAoISGVsbG9SZXESDAoEbmFtZRgBIAEoCSIeCghIZWxsb1JlcxISCgpncmVl",
-            "dF93b3JkGAEgASgJMoEBCgdHcmVldGVyEjQKCFNheUhlbGxvEhAuZG90YnBl",
-            "LkhlbGxvUmVxGhAuZG90YnBlLkhlbGxvUmVzIgTQ8xgBEjkKDVNheUhlbGxv",
-            "QWdhaW4SEC5kb3RicGUuSGVsbG9SZXEaEC5kb3RicGUuSGVsbG9SZXMiBNDz",
-            "GAIaBcjzGJZOQhlIAaoCEEdhdGV3YXlGb3JBc3BOZXTw8xgBUABiBnByb3Rv",
-            "Mw=="));
+            "dF93b3JkGAEgASgJMtgBCgdHcmVldGVyEl0KCFNheUhlbGxvEhAuZG90YnBl",
+            "LkhlbGxvUmVxGhAuZG90YnBlLkhlbGxvUmVzIi3Q8xgB2vMYJQoVL2FwaS9n",
+            "cmVldGVyL3NheWhlbGxvEgNnZXQaB+aOpeWPozESZwoNU2F5SGVsbG9BZ2Fp",
+            "bhIQLmRvdGJwZS5IZWxsb1JlcRoQLmRvdGJwZS5IZWxsb1JlcyIy0PMYAtrz",
+            "GCoKGi9hcGkvZ3JlZXRlci9zYXloZWxsb2FnYWluEgNnZXQaB+aOpeWPozIa",
+            "BcjzGJZOQh1IAaoCEEdhdGV3YXlGb3JBc3BOZXTw8xgB+PMYAVAAYgZwcm90",
+            "bzM="));
       descriptor = pbr::FileDescriptor.FromGeneratedCode(descriptorData,
           new pbr::FileDescriptor[] { global::DotBPE.Protobuf.DotbpeOptionReflection.Descriptor, },
           new pbr::GeneratedClrTypeInfo(null, new pbr::GeneratedClrTypeInfo[] {

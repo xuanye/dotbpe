@@ -15,7 +15,7 @@ dotnet build ./DotBPE.sln -c Release
 
 
 revision="${TRAVIS_BUILD_NUMBER:=1}"
-versionNumber="1.0.${revision}-alpha"
+versionNumber="1.0.${revision}"
 
 
 

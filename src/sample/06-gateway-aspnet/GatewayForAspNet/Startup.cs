@@ -21,22 +21,8 @@ namespace GatewayForAspNet
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //路由配置,也可以使用配置文件哦
-            services.Configure<HttpRouterOption>(
-                (opt) =>
-                {
-                    opt.CookieMode = CookieMode.Manual; //手动
-
-                    opt.Items = new System.Collections.Generic.List<HttpRouterOptionItem>();
-                    //注册路由信息
-                    opt.Items.Add(new HttpRouterOptionItem()
-                    {
-                        ServiceId = 10006,
-                        MessageId = 1,
-                        Path = "/api/greet"
-                    });
-                }
-            );
+            //添加路由信息
+            services.AddRoutes();
 
             // 自动转发服务
             services.AddScoped<IForwardService, ForwardService>();
@@ -59,7 +45,7 @@ namespace GatewayForAspNet
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
         {
-            
+
             //使用网关
             app.UseGateWay();
         }

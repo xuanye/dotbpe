@@ -11,7 +11,7 @@ namespace MathClient
     {
         static void Main(string[] args)
         {
-            Task.Run(RunClient).Wait();     
+            Task.Run(RunClient).Wait();
         }
 
         public async static Task RunClient()
@@ -27,7 +27,6 @@ namespace MathClient
                     A = random.Next(1, 10000),
                     B = random.Next(1, 10000)
                 };
-
 
                 Console.WriteLine("call sever MathService.Add  --> {0}+{1} ", req.A, req.B);
 
