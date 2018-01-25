@@ -24,7 +24,7 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.IntegrationTesting.C
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{7F845CED-EED9-4044-A826-E2409CDD8F49}"
 EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.Protobuf", "protocol\DotBPE.ProtoBuf\DotBPE.Protobuf.csproj", "{C1222F7A-2462-46C2-88E6-F1DCFAE64B0F}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.Protobuf", "protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj", "{C1222F7A-2462-46C2-88E6-F1DCFAE64B0F}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{251A196C-3B5F-4856-9E0D-2B9DCC5B9191}"
 EndProject
