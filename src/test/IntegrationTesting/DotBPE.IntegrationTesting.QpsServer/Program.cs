@@ -1,4 +1,4 @@
-﻿
+
 namespace DotBPE.IntegrationTesting.QpsServer
 {
     public class Program
@@ -9,7 +9,7 @@ namespace DotBPE.IntegrationTesting.QpsServer
             {
                 args = new string[] { "--port","6201" };
             }
-            DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());
+         
             QpsServerWorker.Run(args);
         }
     }
