@@ -6,17 +6,11 @@
     </PropertyGroup>
 
     <ItemGroup>
+      <PackageReference Include="DotBPE.Plugin.AspNetGateway" Version="1.1.10" />
+      <PackageReference Include="DotBPE.Protobuf" Version="1.1.10" />
+      <PackageReference Include="DotBPE.Protocol.Amp" Version="1.1.10" />
+      <PackageReference Include="DotBPE.Rpc.Hosting" Version="1.1.10" />
       <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
-    </ItemGroup>
-    <ItemGroup>
-        <ProjectReference Include="..\..\..\core\DotBPE.Hosting.Abstractions\DotBPE.Hosting.Abstractions.csproj" />
-        <ProjectReference Include="..\..\..\core\DotBPE.Hosting\DotBPE.Hosting.csproj" />
-        <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Hosting\DotBPE.Rpc.Hosting.csproj" />
-        <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
-        <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-        <ProjectReference Include="..\..\..\plugins\gateway\DotBPE.Plugin.AspNetGateway\DotBPE.Plugin.AspNetGateway.csproj" />
-        <ProjectReference Include="..\..\..\protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj" />
-        <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
     </ItemGroup>
     <ItemGroup>
       <Folder Include="_g\" />

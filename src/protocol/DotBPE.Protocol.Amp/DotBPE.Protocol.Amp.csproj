@@ -27,9 +27,4 @@
     <PackageReference Include="Microsoft.Extensions.Options" Version="2.0.0" />
   </ItemGroup>
 
-  <ItemGroup>
-    <ProjectReference Include="..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
-    <ProjectReference Include="..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-  </ItemGroup>
-
 </Project>

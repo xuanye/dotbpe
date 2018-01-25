@@ -30,8 +30,7 @@ namespace Survey.App
                 .ConfigureLogging((context, factory) =>
                 {
                     factory.AddConfiguration(context.Configuration.GetSection("Logging"));
-                    factory.AddConsole();
-                    factory.AddDebug();
+                    factory.AddConsole();                  
                 })
                 .ConfigureServices(ServerStartup.ConfigureServices);
 

@@ -6,12 +6,8 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\core\DotBPE.Hosting.Abstractions\DotBPE.Hosting.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Hosting\DotBPE.Hosting.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Hosting\DotBPE.Rpc.Hosting.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-    <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
+    <PackageReference Include="DotBPE.Protocol.Amp" Version="1.1.10" />
+    <PackageReference Include="DotBPE.Rpc.Hosting" Version="1.1.10" />
   </ItemGroup>
 
 </Project>

@@ -6,22 +6,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotBPE.Rpc.Hosting" Version="1.1.10" />
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.CommandLine" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.EnvironmentVariables" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Configuration.Json" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging" Version="2.0.0" />
     <PackageReference Include="Microsoft.Extensions.Logging.Configuration" Version="2.0.0" />
+    <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.0.0" />
     <PackageReference Include="Vulcan.DataAccess" Version="0.1.12-alpha" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\core\DotBPE.Hosting.Abstractions\DotBPE.Hosting.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Hosting\DotBPE.Hosting.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Hosting\DotBPE.Rpc.Hosting.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-    <ProjectReference Include="..\..\..\plugins\gateway\DotBPE.Plugin.AspNetGateway\DotBPE.Plugin.AspNetGateway.csproj" />
-    <ProjectReference Include="..\..\..\protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj" />
-    <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
     <ProjectReference Include="..\Survey.Core\Survey.Core.csproj" />
     <ProjectReference Include="..\Survey.Service\Survey.Service.csproj" />
   </ItemGroup>
