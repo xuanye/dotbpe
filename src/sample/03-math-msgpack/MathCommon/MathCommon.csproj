@@ -5,6 +5,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotBPE.Protocol.Amp" Version="1.1.10" />
     <PackageReference Include="MessagePack" Version="1.7.2" />
   </ItemGroup>
 

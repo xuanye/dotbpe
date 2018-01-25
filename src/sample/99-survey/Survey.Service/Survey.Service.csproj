@@ -5,17 +5,13 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <PackageReference Include="DotBPE.Protocol.Amp" Version="1.1.10" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.0.0" />
     <PackageReference Include="MySql.Data" Version="6.10.5" />
     <PackageReference Include="Vulcan.DataAccess" Version="0.1.12-alpha" />
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\..\core\DotBPE.Hosting.Abstractions\DotBPE.Hosting.Abstractions.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
-    <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-    <ProjectReference Include="..\..\..\protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj" />
-    <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
     <ProjectReference Include="..\Survey.Core\Survey.Core.csproj" />
   </ItemGroup>
 

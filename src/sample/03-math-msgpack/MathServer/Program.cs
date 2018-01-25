@@ -6,7 +6,7 @@ using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Hosting;
-using DotBPE.Rpc.Logging;
+using Microsoft.Extensions.Logging;
 using MessagePack;
 using MathCommon;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,9 +18,7 @@ namespace MathServer
     {
         static void Main(string[] args)
         {
-
-            DotBPE.Rpc.Environment.SetLogger(new DotBPE.Rpc.Logging.ConsoleLogger());
-
+            
             string ip = "127.0.0.1";
             int port = 6201;
 
@@ -50,8 +48,7 @@ namespace MathServer
 
     public class MathService : ServiceActor
     {
-        static ILogger Logger = DotBPE.Rpc.Environment.Logger.ForType<MathService>();
-
+      
         /// <summary>
         /// 服务的标识,这里的服务号是10001
         /// </summary>
@@ -64,7 +61,7 @@ namespace MathServer
         /// <returns>返回消息</returns>
         public override Task<AmpMessage> ProcessAsync(AmpMessage req)
         {
-            Logger.Debug("receive message:ServiceId={0},MessageId = {1},Sequence={2}",req.ServiceId,req.MessageId,req.Sequence) ;
+            Logger.LogDebug("receive message:ServiceId={0},MessageId = {1},Sequence={2}",req.ServiceId,req.MessageId,req.Sequence) ;
             switch(req.MessageId){
                 case 1: //  1 = Add
                     return  AddAsync(req);
@@ -85,11 +82,11 @@ namespace MathServer
 
                 rsp.Data = MessagePackSerializer.Serialize(res);
 
-                Logger.Debug("{0}${1}${2}  ,code=0  ,req={3}  ,res={4}",reqMsg.ServiceId,reqMsg.MessageId,reqMsg.Sequence, MessagePackSerializer.ToJson(req), MessagePackSerializer.ToJson(res));
+                Logger.LogDebug("{0}${1}${2}  ,code=0  ,req={3}  ,res={4}",reqMsg.ServiceId,reqMsg.MessageId,reqMsg.Sequence, MessagePackSerializer.ToJson(req), MessagePackSerializer.ToJson(res));
             }
             else{
                 rsp.Code = ErrorCodes.CODE_INTERNAL_ERROR;
-                Logger.Error("{0}${1}${2}  ,code={3}  ,req={4}  ,res=null",reqMsg.ServiceId,reqMsg.MessageId,reqMsg.Sequence,rsp.Code, MessagePackSerializer.ToJson(req));
+                Logger.LogError("{0}${1}${2}  ,code={3}  ,req={4}  ,res=null",reqMsg.ServiceId,reqMsg.MessageId,reqMsg.Sequence,rsp.Code, MessagePackSerializer.ToJson(req));
             }
             return Task.FromResult(rsp);
         }

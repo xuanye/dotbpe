@@ -12,16 +12,12 @@
     </ItemGroup>
 
     <ItemGroup>
+      <PackageReference Include="DotBPE.Plugin.AspNetGateway" Version="1.1.10" />
       <PackageReference Include="Microsoft.AspNetCore" Version="2.0.1" />
       <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.0.1" />
       <PackageReference Include="Microsoft.Extensions.Caching.Redis" Version="2.0.0" />
     </ItemGroup>
     <ItemGroup>
-        <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
-        <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-        <ProjectReference Include="..\..\..\plugins\gateway\DotBPE.Plugin.AspNetGateway\DotBPE.Plugin.AspNetGateway.csproj" />
-        <ProjectReference Include="..\..\..\protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj" />
-        <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
         <ProjectReference Include="..\Survey.Core\Survey.Core.csproj" />
     </ItemGroup>
     <ItemGroup>

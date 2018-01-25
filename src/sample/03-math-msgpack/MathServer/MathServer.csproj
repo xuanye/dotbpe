@@ -5,16 +5,12 @@
     </PropertyGroup>
 
     <ItemGroup>
-        <ProjectReference Include="..\..\..\core\DotBPE.Hosting.Abstractions\DotBPE.Hosting.Abstractions.csproj" />
-        <ProjectReference Include="..\..\..\core\DotBPE.Hosting\DotBPE.Hosting.csproj" />
-        <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Hosting\DotBPE.Rpc.Hosting.csproj" />
-        <ProjectReference Include="..\..\..\core\DotBPE.Rpc.Netty\DotBPE.Rpc.Netty.csproj" />
-        <ProjectReference Include="..\..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-        <ProjectReference Include="..\..\..\protocol\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
         <ProjectReference Include="..\MathCommon\MathCommon.csproj" />
     </ItemGroup>
 
     <ItemGroup>
       <PackageReference Include="MessagePack" Version="1.7.2" />
+	  <PackageReference Include="DotBPE.Rpc.Hosting" Version="1.1.10" />
+	  
     </ItemGroup>
 </Project>
