@@ -9,8 +9,6 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\DotBPE.Hosting.Abstractions\DotBPE.Hosting.Abstractions.csproj" />
-    <ProjectReference Include="..\DotBPE.Hosting\DotBPE.Hosting.csproj" />
     <ProjectReference Include="..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
   </ItemGroup>
 
