@@ -18,10 +18,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "core", "core", "{7F845CED-E
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.Protobuf", "protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj", "{C1222F7A-2462-46C2-88E6-F1DCFAE64B0F}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "plugins", "plugins", "{251A196C-3B5F-4856-9E0D-2B9DCC5B9191}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "DotBPE.Plugin.AspNetGateway", "plugins\gateway\DotBPE.Plugin.AspNetGateway\DotBPE.Plugin.AspNetGateway.csproj", "{A1C0F836-2E28-431E-B93F-3D32691ADF34}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -92,18 +88,6 @@ Global
 		{C1222F7A-2462-46C2-88E6-F1DCFAE64B0F}.Release|x64.Build.0 = Release|Any CPU
 		{C1222F7A-2462-46C2-88E6-F1DCFAE64B0F}.Release|x86.ActiveCfg = Release|Any CPU
 		{C1222F7A-2462-46C2-88E6-F1DCFAE64B0F}.Release|x86.Build.0 = Release|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Debug|x64.ActiveCfg = Debug|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Debug|x64.Build.0 = Debug|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Debug|x86.ActiveCfg = Debug|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Debug|x86.Build.0 = Debug|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Release|Any CPU.Build.0 = Release|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Release|x64.ActiveCfg = Release|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Release|x64.Build.0 = Release|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Release|x86.ActiveCfg = Release|Any CPU
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34}.Release|x86.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -114,7 +98,6 @@ Global
 		{61F8DDEF-0FFB-42A1-ACAF-453D5AFC4A48} = {7F845CED-EED9-4044-A826-E2409CDD8F49}
 		{CFBEED14-1FB5-4C57-BF2E-A260F3D9EBE7} = {24F11944-A046-4398-BE33-3CD7BF870237}
 		{C1222F7A-2462-46C2-88E6-F1DCFAE64B0F} = {24F11944-A046-4398-BE33-3CD7BF870237}
-		{A1C0F836-2E28-431E-B93F-3D32691ADF34} = {251A196C-3B5F-4856-9E0D-2B9DCC5B9191}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96FD52AC-7DCC-41EB-87E6-C84D43E8CD1A}
