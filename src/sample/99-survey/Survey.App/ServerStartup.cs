@@ -10,7 +10,6 @@ using Survey.Service;
 using Survey.Service.GateImpl;
 using Survey.Service.InnerImpl;
 using Survey.Service.InnerImpl.Repository;
-using System;
 using Vulcan.DataAccess;
 
 namespace Survey.App
@@ -55,11 +54,11 @@ namespace Survey.App
 
             //链接管理器
             services.AddSingleton<IConnectionManagerFactory, ConnectionManagerFactory>();
-         
+
             //添加挂载的宿主服务
             services.AddScoped<IHostedService, RpcHostedService>();
         }
-        
+
         /// <summary>
         /// 注册其他需要注入的类
         /// </summary>
@@ -77,8 +76,7 @@ namespace Survey.App
         /// </summary>
         /// <param name="services"></param>
         private static void AddServiceActors(IServiceCollection services)
-        {
-            // TODO:自动扫描所有服务
+        {           
             // 添加本地加载的服务项
             services.AddServiceActors<AmpMessage>((actors) =>
             {

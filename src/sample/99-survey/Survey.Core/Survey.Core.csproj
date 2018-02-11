@@ -12,7 +12,6 @@
     <PackageReference Include="DotBPE.Protobuf" Version="1.1.10" />
     <PackageReference Include="DotBPE.Protocol.Amp" Version="1.1.10" />
     <PackageReference Include="Microsoft.Extensions.Caching.Abstractions" Version="2.0.0" />
-    <PackageReference Include="Vulcan.DataAccess" Version="0.1.12-alpha" />
   </ItemGroup>
 
 

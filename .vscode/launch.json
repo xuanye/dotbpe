@@ -1,57 +1,28 @@
 {
-    "version": "0.2.0",
-    "configurations": [
-         {
-            "name": "HelloRpcServer",
+   // Use IntelliSense to find out which attributes exist for C# debugging
+   // Use hover for the description of the existing attributes
+   // For further information visit https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md
+   "version": "0.2.0",
+   "configurations": [
+        {
+            "name": ".NET Core Launch (console)",
             "type": "coreclr",
             "request": "launch",
-            "preLaunchTask": "build_server",
-            "program": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server\\bin\\Debug\\netcoreapp1.1\\HelloRpc.Server.dll",
+            "preLaunchTask": "build",
+            // If you have changed target frameworks, make sure to update the program path.
+            "program": "${workspaceFolder}/src/sample/06-gateway-aspnet/GatewayForAspNet/bin/Debug/netcoreapp2.0/GatewayForAspNet.dll",
             "args": [],
-            "cwd": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Server",
-            "externalConsole": true,
+            "cwd": "${workspaceFolder}/src/sample/06-gateway-aspnet/GatewayForAspNet",
+            // For more information about the 'console' field, see https://github.com/OmniSharp/omnisharp-vscode/blob/master/debugger-launchjson.md#console-terminal-window
+            "console": "internalConsole",
             "stopAtEntry": false,
             "internalConsoleOptions": "openOnSessionStart"
         },
         {
-            "name": "HelloRpcClient",
+            "name": ".NET Core Attach",
             "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build_client",
-            "program": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client\\bin\\Debug\\netcoreapp1.1\\HelloRpc.Client.dll",
-            "args": ["--port",6201],
-            "cwd": "${workspaceRoot}\\src\\sample\\HelloRpc\\HelloRpc.Client",
-            "externalConsole": true,
-            "stopAtEntry": false,
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "name": "BenchmarkClient",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build_benchmark_client",
-            "program": "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.Client\\bin\\Debug\\netcoreapp1.1\\DotBPE.IntegrationTesting.Client.dll",
-            "args": ["--server","10.240.225.113:6201","--testcase","benchmark" ,"--rtc", "2" , "--rc","1" ,"--mpc", "8"],
-            "cwd": "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.Client",
-            "externalConsole": true,
-            "stopAtEntry": false,
-            "internalConsoleOptions": "openOnSessionStart"
-        },
-        {
-            "name": "BenchmarkQpsServer",
-            "type": "coreclr",
-            "request": "launch",
-            "preLaunchTask": "build_benchmark_qpsserver",
-            "program": "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.QpsServer\\bin\\Debug\\netcoreapp1.1\\DotBPE.IntegrationTesting.QpsServer.dll",
-            "args": [],
-            "cwd": "${workspaceRoot}\\src\\test\\IntegrationTesting\\DotBPE.IntegrationTesting.QpsServer",
-            "externalConsole": true,
-            "stopAtEntry": false,
-            "internalConsoleOptions": "openOnSessionStart"
+            "request": "attach",
+            "processId": "${command:pickProcess}"
         }
     ]
-    "compounds": [{
-        "name": "Server/Client",
-        "configurations": ["HelloRpcServer", "HelloRpcClient"]
-    }]
 }
