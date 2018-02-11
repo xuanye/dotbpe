@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 15
-VisualStudioVersion = 15.0.27130.2024
+VisualStudioVersion = 15.0.27130.2026
 MinimumVisualStudioVersion = 15.0.26124.0
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Survey.Core", "Survey.Core\Survey.Core.csproj", "{41E4B41C-E115-4E31-92B9-1AA87A4AF427}"
 EndProject
@@ -12,6 +12,11 @@ EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "QuickTest", "QuickTest\QuickTest.csproj", "{AC42340F-0A10-4104-A2FA-1879ECCE64D8}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Survey.AspNetGateway", "Survey.AspNetGateway\Survey.AspNetGateway.csproj", "{7056C318-BE6D-47E0-BA79-94D979AA81A6}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Ref", "Ref", "{ECF153E3-C7AF-4302-9D0C-21C950D0D92B}"
+	ProjectSection(SolutionItems) = preProject
+		Ref\startup.json = Ref\startup.json
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution

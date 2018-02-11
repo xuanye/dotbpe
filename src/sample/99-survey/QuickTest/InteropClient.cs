@@ -1,6 +1,5 @@
 using CommandLine;
 using DotBPE.Protocol.Amp;
-using DotBPE.Rpc;
 using DotBPE.Rpc.Utils;
 using Google.Protobuf;
 using Survey.Core;
@@ -8,18 +7,15 @@ using System;
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.IO;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace QuickTest
 {
     public class InteropClient
     {
-        static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(true));
+        private static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(true));
 
         private class ClientOption
         {
-
             [Option("server", Default = "127.0.0.1:5501")]
             public string Server { get; set; }
 
@@ -28,7 +24,6 @@ namespace QuickTest
 
             [Option("mpc", Default = 1)]
             public int MultiplexCount { get; set; }
-
         }
 
         private readonly ClientOption _options;
@@ -37,7 +32,9 @@ namespace QuickTest
         {
             this._options = options;
         }
+
         private static int TOTAL_ERROR = 0;
+
         public static void Run(string[] args)
         {
             var parserResult = Parser.Default.ParseArguments<ClientOption>(args)
@@ -65,9 +62,9 @@ namespace QuickTest
         private void Run()
         {
             //读取测试的文件
-            var tcFilePath = Path.Combine(CommonUtils.GetAppRootPath(), "testcase", this._options.TestCase+".txt") ;
-            
-            if( !File.Exists(tcFilePath))
+            var tcFilePath = Path.Combine(CommonUtils.GetAppRootPath(), "testcase", this._options.TestCase + ".txt");
+
+            if (!File.Exists(tcFilePath))
             {
                 Console.WriteLine(tcFilePath);
                 Console.WriteLine("对应的测试文件不存在");
@@ -92,7 +89,7 @@ namespace QuickTest
 
                     var tc = ParseFromLine(line);
                     tcCache.Add(tc.Id, tc);
-                }              
+                }
             }
 
             //创建链接
@@ -104,10 +101,11 @@ namespace QuickTest
             {
                 RunTestCase(caller, kvtc.Value);
             }
-            client.CloseAsync().Wait();          
+            client.CloseAsync().Wait();
         }
+
         /// <summary>
-        /// 
+        ///
         /// </summary>
         /// <param name="tc"></param>
         private void RunTestCase(AmpCallInvoker caller, TestCase tc)
@@ -121,19 +119,17 @@ namespace QuickTest
                 AmpMessage message = AmpMessage.CreateRequestMessage(tc.ServiceId, tc.MessageId);
                 tc.Request = ProtobufObjectFactory.GetRequestTemplate(tc.ServiceId, tc.MessageId);
 
-
                 if (tc.Request == null)
                 {
                     TOTAL_ERROR++;
                     Console.WriteLine("执行测试出错:不存在对应的服务，请检查后重试");
                     System.Environment.Exit(1);
                     return;
-                }               
+                }
                 var descriptor = tc.Request.Descriptor;
-                tc.Request = descriptor.Parser.ParseJson(tc.Json);  
+                tc.Request = descriptor.Parser.ParseJson(tc.Json);
                 message.Data = tc.Request.ToByteArray();
                 //请求消息构造完毕
-
 
                 AmpMessage rsp = caller.BlockingCall(message);
 
@@ -157,16 +153,14 @@ namespace QuickTest
                         Console.WriteLine(">>response:{0}", jsonRsp);
                     }
                 }
-
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                Console.WriteLine("执行测试出错:"+ex.Message);
+                Console.WriteLine("执行测试出错:" + ex.Message);
                 System.Environment.Exit(1);
-            }          
-
-
+            }
         }
+
         private TestCase ParseFromLine(string line)
         {
             TestCase tc = new TestCase();
@@ -187,11 +181,11 @@ namespace QuickTest
                 tc.MessageId = ushort.Parse(tcData[1]);
                 tc.Json = tcData[2];
             }
-            
+
             return tc;
         }
 
-        private string MessageToJson(TestCase tc,AmpMessage message)
+        private string MessageToJson(TestCase tc, AmpMessage message)
         {
             if (message.Code == 0)
             {
@@ -234,7 +228,6 @@ namespace QuickTest
                         }
                     }
 
-
                     ret = AmpJsonFormatter.Format(tc.Response);
                 }
 
@@ -244,9 +237,6 @@ namespace QuickTest
             {
                 return "{\"return_code\":" + message.Code + ",\"return_message\":\"\"}";
             }
-
-
         }
-
     }
 }

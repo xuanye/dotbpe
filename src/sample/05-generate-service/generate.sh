@@ -3,7 +3,7 @@ set -ex
 cd $(dirname $0)
 
 PROTOC=protoc
-PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/Protobuf.Gen.exe
+PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/Protobuf.Gen.exe,1
 OUT_DIR=./MathCommon/_g
 PROTO_DIR=./protos
 PROTO_BASE_DIR=../../protos

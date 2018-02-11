@@ -1,0 +1,33 @@
+{
+    "apps": [
+        {
+            // Survey-App #1
+            "name": "survey-app",
+            "script": "./service.sh",
+            "exec_interpreter": "bash",
+            "cwd": "./survey-app",
+            "args": null, //入参
+            "error_file": "/home/dotnet/logs/survey-app/console-error.log",
+            "out_file": "/home/dotnet/logs/survey-app/console.log",
+            "max_memory_restart": "500M",
+            "env": {
+                "DOTBPE_ENVIRONMENT": "production"
+            }
+        },
+
+        {
+            // Survey-Gateway #1
+            "name": "survey-gateway",
+            "script": "./service.sh",
+            "exec_interpreter": "bash",
+            "cwd": "./survey-gateway",
+            "args": null, //入参
+            "error_file": "/home/dotnet/logs/survey-gateway/console-error.log",
+            "out_file": "/home/dotnet/logs/survey-gateway/console.log",
+            "max_memory_restart": "500M",
+            "env": {
+                "DOTBPE_ENVIRONMENT": "production"
+            }
+        }
+    ]
+}
