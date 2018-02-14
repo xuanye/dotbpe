@@ -147,7 +147,11 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             {
                 var message = AmpMessage.CreateResponseMessage(id);
                 message.Code = ErrorCodes.CODE_TIMEOUT;
-                task.SetResult(message);
+                if (!task.TrySetResult(message))
+                {
+                    Logger.LogWarning("set timeout result fail,maybe task is completed");
+                }
+               
                 Logger.LogWarning("message {0}, timeout", id);
                 //task.TrySetException(new RpcCommunicationException("operation timeout"));
                 // 移除字典
