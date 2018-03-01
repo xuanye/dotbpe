@@ -10,8 +10,8 @@ namespace DotBPE.Protocol.Amp
     public abstract class ServiceActor : IServiceActor<AmpMessage>
     {
         private ILogger _Logger;
-        
-       
+      
+
         protected abstract int ServiceId { get; }
 
         protected ILogger Logger
@@ -33,6 +33,7 @@ namespace DotBPE.Protocol.Amp
                 return this._Logger;
             }
         }
+       
 
         public string Id
         {
@@ -44,18 +45,29 @@ namespace DotBPE.Protocol.Amp
 
         public virtual async Task ReceiveAsync(IRpcContext<AmpMessage> context, AmpMessage message)
         {
-            try
+            using(var audit = new RequestAuditLogger())
             {
-                Logger.LogDebug("recieve message,Id={0}", message.Id);
-                //TODO:这里可以写CSOS_AUDIT日志
-                var response = await ProcessAsync(message);
-                response.Sequence = message.Sequence; //通讯请求序列
-                await context.SendAsync(response);
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "recieve message occ error:" + ex.Message);
-                await SendErrorResponseAsync(context, message);
+                AmpMessage rsp;
+                try
+                {
+                    audit.PushRequest(message);
+                    Logger.LogDebug("recieve message,Id={0}", message.Id);
+                    rsp = await ProcessAsync(message);
+                    rsp.Sequence = message.Sequence; //通讯请求序列
+
+                    audit.PushResponse(rsp);
+                    audit.PushContext(context);
+
+                    await context.SendAsync(rsp);
+
+                   
+                }
+                catch (Exception ex)
+                {
+                    Logger.LogError(ex, "recieve message occ error" );
+                    rsp =  await SendErrorResponseAsync(context, message);
+                    audit.PushResponse(rsp);
+                }
             }
         }
 
@@ -65,21 +77,22 @@ namespace DotBPE.Protocol.Amp
         /// <param name="context"></param>
         /// <param name="reqMessage"></param>
         /// <returns></returns>
-        private Task SendErrorResponseAsync(IRpcContext<AmpMessage> context, AmpMessage reqMessage)
+        private async Task<AmpMessage> SendErrorResponseAsync(IRpcContext<AmpMessage> context, AmpMessage reqMessage)
         {
+            var rsp = AmpMessage.CreateResponseMessage(reqMessage.ServiceId, reqMessage.MessageId);
+            rsp.InvokeMessageType = InvokeMessageType.Response;
+            rsp.Sequence = reqMessage.Sequence;
+            rsp.Code = ErrorCodes.CODE_INTERNAL_ERROR; //内部错误
             try
-            {
-                var rsp = AmpMessage.CreateResponseMessage(reqMessage.ServiceId, reqMessage.MessageId);
-                rsp.InvokeMessageType = InvokeMessageType.Response;
-                rsp.Sequence = reqMessage.Sequence;
-                rsp.Code = ErrorCodes.CODE_INTERNAL_ERROR; //内部错误
-                return context.SendAsync(rsp);
+            {               
+                await context.SendAsync(rsp);
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, "send error response fail:" + ex.Message);
-                return Rpc.Utils.TaskUtils.CompletedTask;
+                Logger.LogError(ex, "send error response fail:" + ex.Message);             
             }
+
+            return rsp;
         }
 
         public abstract Task<AmpMessage> ProcessAsync(AmpMessage req);

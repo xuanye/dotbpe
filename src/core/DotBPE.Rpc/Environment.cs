@@ -21,7 +21,27 @@ namespace DotBPE.Rpc
             }
         }
 
-      
+        private static IServiceProvider _Provider;
+        public static IServiceProvider ServiceProvider
+        {
+            get
+            {
+                return _Provider;
+            }
+        }
+
+
+        /// <summary>
+        /// Sets the service provider.
+        /// </summary>
+        /// <param name="serviceProvider">The service provider.</param>
+        public static void SetServiceProvider(IServiceProvider serviceProvider)
+        {
+            Preconditions.CheckNotNull(serviceProvider, "serviceProvider");
+            if (_Provider == null)
+                _Provider = serviceProvider;
+        }
+
 
         /// <summary>
         /// Sets the application-wide logger that should be used by gRPC.

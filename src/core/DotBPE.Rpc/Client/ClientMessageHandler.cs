@@ -4,7 +4,7 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public class ClientMessageHandler<TMessage> : IMessageHandler<TMessage> where TMessage : InvokeMessage
+    public class ClientMessageHandler<TMessage> : IClientMessageHandler<TMessage> where TMessage : InvokeMessage
     {
         public event EventHandler<MessageRecievedEventArgs<TMessage>> Recieved;
 

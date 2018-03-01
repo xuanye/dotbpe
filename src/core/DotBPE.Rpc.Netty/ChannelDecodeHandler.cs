@@ -5,7 +5,7 @@ using System.Collections.Generic;
 
 namespace DotBPE.Rpc.Netty
 {
-    public class ChannelDecodeHandler<TMessage> : DotNetty.Codecs.ByteToMessageDecoder where TMessage : IMessage
+    public class ChannelDecodeHandler<TMessage> : DotNetty.Codecs.ByteToMessageDecoder where TMessage : InvokeMessage
     {
         private readonly IMessageCodecs<TMessage> _codecs;
         private readonly NettyBufferManager _nettyBufferManager;
@@ -19,7 +19,7 @@ namespace DotBPE.Rpc.Netty
         protected override void Decode(IChannelHandlerContext context, IByteBuffer input, List<object> output)
         {
             IBufferReader reader = NettyBufferManager.CreateBufferReader(input);
-            IMessage message = this._codecs.Decode(reader);
+            InvokeMessage message = this._codecs.Decode(reader);
             if (message != null)
             {
                 output.Add(message);

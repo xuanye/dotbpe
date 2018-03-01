@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Netty
 {
-    public class NettyRpcMultiplexContext<TMessage> : IRpcContext<TMessage> where TMessage : IMessage
+    public class NettyRpcMultiplexContext<TMessage> : IRpcContext<TMessage> where TMessage : InvokeMessage
     {
         private readonly ILogger Logger;
         private readonly IMessageCodecs<TMessage> _codecs;
@@ -27,9 +27,10 @@ namespace DotBPE.Rpc.Netty
 
         private int seq = 0;
 
-        public string RemoteAddress { get; set; }
+        public EndPoint RemoteAddress { get; set; }
+        public EndPoint LocalAddress { get; set; }
 
-        public string LocalAddress { get; set; }
+
 
         public NettyRpcMultiplexContext(Bootstrap bootstrap, IMessageCodecs<TMessage> codecs,ILogger logger)
         {
@@ -119,12 +120,12 @@ namespace DotBPE.Rpc.Netty
             clientBoot.DisConnected += Channel_DisConnected;
         }
 
-        private void Channel_DisConnected(object sender, DisConnectedArgs args)
+        private void Channel_DisConnected(object sender, ConnectionEventArgs args)
         {
-            TryRemoveById(args.ContextId);
+            TryRemoveById(args.ChannelId);
             if (this._autoReConnect)
             {
-                StartConnect(args.EndPoint);
+                StartConnect(args.RemotePoint);
             }            
         }
 
@@ -152,8 +153,7 @@ namespace DotBPE.Rpc.Netty
         }
 
         /// <summary>
-        /// 要实现特定的轮询算法 ，就要重写这个实现
-        /// TODO：实现特定的客户端负债均衡算法
+        /// 要实现特定的轮询算法 ，就要重写这个实现    
         /// </summary>
         /// <returns></returns>
         private IChannel TryGetOneRandom()

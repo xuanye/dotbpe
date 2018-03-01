@@ -1,4 +1,5 @@
 using DotBPE.Rpc;
+using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Exceptions;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -48,11 +49,22 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             }
         }
 
+        /// <summary>
+        /// 异步调用，可以设置调用超时
+        /// </summary>
+        /// <param name="request">请求的消息</param>
+        /// <param name="timeOut">设置超时，默认5000 ，单位为毫秒</param>
+        /// <returns>返回消息</returns>
+        /// <exception cref="RpcCommunicationException">rpc communication error</exception>
         public async override Task<AmpMessage> AsyncCall(AmpMessage request, int timeOut = 5000)
         {
-            try
+            using (CACAuditLogger auditLogger = new CACAuditLogger())
             {
+
                 AutoSetSequence(request);
+
+                auditLogger.PushRequest(request); //记录请求参数
+
                 Logger.LogDebug("new request id={0}", request.Id);
                 var callbackTask = RegisterResultCallbackAsync(request.Id, timeOut);
 
@@ -63,17 +75,15 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 }
                 catch (Exception exception)
                 {
-                    RemoveResultCallback(request.Id);
-                    throw new RpcCommunicationException("rpc communication error", exception);
+                    ErrorCallBack(request.Id);
+                    Logger.LogError(exception, "error occor:");
                 }
 
-                return await callbackTask;
+                var rsp = await callbackTask;
+                auditLogger.PushResponse(rsp); //记录响应
+                return rsp;
             }
-            catch (Exception exception)
-            {
-                Logger.LogError(exception, "error occor:");
-                throw exception;
-            }
+                
         }
 
         public override AmpMessage BlockingCall(AmpMessage request, int timeOut = 5000)
@@ -91,7 +101,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             if (e.Message.ServiceId == 0 && e.Message.MessageId == 0)
             {
                 //心跳消息
-                Logger.LogInformation("heart beat message Id{0}", e.Message.Id);
+                Logger.LogDebug("heart beat");
                 return;
             }
 
@@ -159,6 +169,24 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             }
         }
 
+        private void ErrorCallBack(string id)
+        {
+            TaskCompletionSource<AmpMessage> task;
+            if (_resultDictionary.TryGetValue(id, out task))
+            {
+                var message = AmpMessage.CreateResponseMessage(id);
+                message.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+                if (!task.TrySetResult(message))
+                {
+                    Logger.LogWarning("set error result fail,maybe task is completed");
+                }
+
+                Logger.LogWarning("message {0}, error", id);
+                //task.TrySetException(new RpcCommunicationException("operation timeout"));
+                // 移除字典
+                RemoveResultCallback(id);
+            }
+        }
         private Task<AmpMessage> RegisterResultCallbackAsync(string id, int timeOut)
         {
             var tcs = new TaskCompletionSource<AmpMessage>();

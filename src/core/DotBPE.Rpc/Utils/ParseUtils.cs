@@ -1,3 +1,4 @@
+using DotBPE.Rpc.Codes;
 using System;
 using System.Collections.Generic;
 using System.Net;
@@ -70,6 +71,30 @@ namespace DotBPE.Rpc.Utils
                 return ip.Address.ToString();
             }
             return "";
+        }
+
+        public static InvokeMessageType ParseMessageType(byte byteValue)
+        {
+            InvokeMessageType type;
+            switch (byteValue)
+            {
+                case 1:
+                    type = InvokeMessageType.Request;
+                    break;
+
+                case 2:
+                    type = InvokeMessageType.Response;
+                    break;
+
+                case 3:
+                    type = InvokeMessageType.Notify;
+                    break;
+
+                default:
+                    type = InvokeMessageType.Request;
+                    break;
+            }
+            return type;
         }
     }
 }

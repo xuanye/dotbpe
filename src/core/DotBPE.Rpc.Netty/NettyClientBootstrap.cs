@@ -30,12 +30,12 @@ namespace DotBPE.Rpc.Netty
         private readonly ILogger Logger;
         private readonly ILoggerFactory _factory;
         private readonly Bootstrap _bootstrap;
-        private readonly IMessageHandler<TMessage> _handler;
+        private readonly IClientMessageHandler<TMessage> _handler;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
 
         private readonly IOptions<RpcClientOption> _clientOption;
 
-        public NettyClientBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, IOptions<RpcClientOption> option, ILoggerFactory factory)
+        public NettyClientBootstrap(IClientMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, IOptions<RpcClientOption> option, ILoggerFactory factory)
         {
             this._clientOption = option;
 
@@ -80,30 +80,33 @@ namespace DotBPE.Rpc.Netty
             return bootstrap;
         }
 
-        public async Task<IRpcContext<TMessage>> ConnectAsync(EndPoint endpoint)
+        public async Task<IRpcContext<TMessage>> StartConnectAsync(EndPoint remoteAddress)
         {
             var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs,this.Logger);
-            await context.InitAsync(endpoint, _clientOption?.Value);
+            await context.InitAsync(remoteAddress, _clientOption?.Value);
             context.BindDisconnect(this);
             return context;
         }
 
-        public event EventHandler<DisConnectedArgs> DisConnected;
+        public event EventHandler<ConnectionEventArgs> DisConnected;
 
         public void OnChannelInactive(IChannelHandlerContext context)
         {
-            var args = new DisConnectedArgs();
-            args.EndPoint = context.Channel.RemoteAddress;
-            args.ContextId = context.Channel.Id.AsLongText();
-         
+            var args = new ConnectionEventArgs
+            {
+                RemotePoint = context.Channel.RemoteAddress,
+                LocalPoint = context.Channel.LocalAddress,
+                ChannelId = context.Channel.Id.AsLongText()
+            };
+
             this.DisConnected?.Invoke(this, args);
         }
 
         public void ChannelRead(IChannelHandlerContext ctx, TMessage msg)
         {
             var context = new NettyRpcContext<TMessage>(ctx.Channel, this._msgCodecs);
-            context.LocalAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.LocalAddress);
-            context.RemoteAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.RemoteAddress);
+            context.LocalAddress = ctx.Channel.LocalAddress;
+            context.RemoteAddress = ctx.Channel.RemoteAddress;
 
             this._handler.ReceiveAsync(context, msg);
         }
@@ -117,7 +120,6 @@ namespace DotBPE.Rpc.Netty
         public Task SendHeartbeatAsync(IChannelHandlerContext ctx, IdleStateEvent state)
         {
             //获取心跳包的打包内容
-
             TMessage message = this._msgCodecs.HeartbeatMessage();
             var heartbeatBuff = ctx.Allocator.Buffer(message.Length);
             var bufferWritter = NettyBufferManager.CreateBufferWriter(heartbeatBuff);

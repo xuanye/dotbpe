@@ -57,7 +57,7 @@ namespace DotBPE.Protocol.Amp
             int length = reader.ReadInt();
             msg.Sequence = reader.ReadInt();
             byte type = reader.ReadByte();
-            msg.InvokeMessageType = InvokeMessageTypeParser.Parse(type);
+            msg.InvokeMessageType = Rpc.Utils.ParseUtils.ParseMessageType(type);
             msg.ServiceId = reader.ReadUShort();
             msg.MessageId = reader.ReadUShort();
             msg.Code = reader.ReadInt();
@@ -74,6 +74,7 @@ namespace DotBPE.Protocol.Amp
             }
             return msg;
         }
+
 
         public MessageMeta GetMessageMeta()
         {

@@ -1,9 +1,8 @@
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.DefaultImpls;
-using DotBPE.Rpc.Extensions;
 using DotBPE.Rpc.Netty;
+using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.Protocol.Amp
@@ -19,8 +18,9 @@ namespace DotBPE.Protocol.Amp
         {
             return services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>()
                     .AddSingleton<IServiceActorLocator<AmpMessage>, ServiceActorLocator>()
-                    .AddSingleton<ClientProxy>() //注入客户端代理类
-                    .AddSingleton<IRpcClient<AmpMessage>, AgentRpcClient<AmpMessage>>();
+                    .AddSingleton<ClientProxy>()
+                    .AddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient<AmpMessage>>()
+                    .AddSingleton<IRouter<AmpMessage>, LocalPolicyRouter<AmpMessage>>();
         }
 
         /// <summary>
@@ -30,11 +30,9 @@ namespace DotBPE.Protocol.Amp
         /// <returns></returns>
         public static IServiceCollection AddAmpClient(this IServiceCollection services)
         {
-            services.Remove(ServiceDescriptor.Singleton(typeof(IRpcClient<AmpMessage>)));
+            services.Remove(ServiceDescriptor.Singleton(typeof(IRouter<AmpMessage>)));
 
-            return services.AddSingleton<IRpcClient<AmpMessage>, BridgeRpcClient<AmpMessage>>() //在服务端使用客户端链接 需要使用桥接式的实现
-                    .AddSingleton<IBridgeRouter<AmpMessage>, LocalBridgeRouter<AmpMessage>>() //本地桥接路由器，路由信息在服务启动时添加
-                    .AddSingleton<IPreheating, ClientChannelPreheating<AmpMessage>>() //预热
+            return services.AddSingleton<IRouter<AmpMessage>, LoopPolicyRouter<AmpMessage>>()         
                     .AddSingleton<ITransportFactory<AmpMessage>, DefaultTransportFactory<AmpMessage>>()
                     .AddSingleton<IClientBootstrap<AmpMessage>, NettyClientBootstrap<AmpMessage>>();
         }

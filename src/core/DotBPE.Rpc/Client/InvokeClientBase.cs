@@ -26,7 +26,7 @@ namespace DotBPE.Rpc.Client
 
         public void Dispose()
         {
-            this._callInvoke?.Dispose();
+            this._callInvoke?.Dispose();          
         }
     }
 }

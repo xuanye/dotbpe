@@ -37,6 +37,11 @@ namespace DotBPE.Protocol.Amp
             }
         }
 
+
+        public string FriendlyServiceName { get; set; }
+
+        public override bool IsHeartBeat { get => ServiceId == 0; }
+
         public override string ServiceIdentifier => $"{ServiceId}$0";
 
         public override string MethodIdentifier => $"{ServiceId}${MessageId}";
