@@ -6,10 +6,15 @@ using System;
 
 namespace DotBPE.Rpc.Netty
 {
+
+    /// <summary>
+    /// 
+    /// </summary>
+    /// <typeparam name="TMessage">The type of the message.</typeparam>
+    /// <seealso cref="DotNetty.Transport.Channels.SimpleChannelInboundHandler{TMessage}" />
     public class ServerChannelHandlerAdapter<TMessage> : SimpleChannelInboundHandler<TMessage> where TMessage : InvokeMessage
     {
         private readonly NettyServerBootstrap<TMessage> _bootstrap;
-
         private readonly ILogger Logger;
 
         public ServerChannelHandlerAdapter(NettyServerBootstrap<TMessage> bootstrap,ILoggerFactory factory) : base(true)
@@ -34,10 +39,7 @@ namespace DotBPE.Rpc.Netty
         {
             Logger.LogDebug("ready to read message");
 
-            this._bootstrap.ChannelRead(context, msg).ContinueWith((task) =>
-            {
-                Logger.LogDebug("read message completed");
-            });
+            this._bootstrap.ChannelRead(context, msg).Wait();
         }
 
         public override void ChannelReadComplete(IChannelHandlerContext contex)
@@ -47,7 +49,7 @@ namespace DotBPE.Rpc.Netty
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
-            Logger.LogError(ex, $"client：{context.Channel.RemoteAddress} occur an exception ");
+            Logger.LogError(ex, "client：{remoteAddress} occur an exception ", context.Channel.RemoteAddress);
             context.CloseAsync(); //关闭连接
         }
 
@@ -59,7 +61,7 @@ namespace DotBPE.Rpc.Netty
                 var eventState = evt as IdleStateEvent;
                 if (eventState != null)
                 {
-                    Logger.LogError($"client {context.Channel.Id},{context.Channel.RemoteAddress} is timeout，close it!");
+                    Logger.LogError("client {channelId},{remoteAddress} is timeout，close it!", context.Channel.Id,context.Channel.RemoteAddress);
                     context.CloseAsync(); //关闭连接
                 }
             }

@@ -1,0 +1,116 @@
+{
+    "Serilog": {
+        "using": [ "Serilog.Sinks.Async", "Serilog.Sinks.Literate", "Serilog.Sinks.RollingFile", "Serilog.Filters.Expressions" ],
+        "MinimumLevel": {
+            "Default": "Information",
+            "Override": {
+                "Microsoft": "Warning",
+                "System": "Warning"
+            }
+        },
+        "WriteTo": [
+            {
+                "Name": "Logger",
+                "Args": {
+                    "configureLogger": {
+                        "WriteTo": [
+                            {
+                                "Name": "LiterateConsole",
+                                "Args": {
+                                    "restrictedToMinimumLevel": "Warning"
+                                }
+                            },
+                            {
+                                "Name": "Async",
+                                "Args": {
+                                    "configure": [
+                                        {
+                                            "Name": "RollingFile",
+                                            "Args": {
+                                                "pathFormat": "../logs/server/log-{Date}.log",
+                                                "restrictedToMinimumLevel": "Information",
+                                                "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message}{NewLine}{Exception}"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "Filter": [
+                            {
+                                "Name": "ByExcluding",
+                                "Args": {
+                                    "expression": " not @Properties['SourceContext']='DotBPE.Protocol.Amp.CACAuditLogger' or  not @Properties['SourceContext']='DotBPE.Protocol.Amp.RequestAuditLogger'"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "Name": "Logger",
+                "Args": {
+                    "configureLogger": {
+                        "WriteTo": [
+                            {
+                                "Name": "Async",
+                                "Args": {
+                                    "configure": [
+                                        {
+                                            "Name": "RollingFile",
+                                            "Args": {
+                                                "pathFormat": "../logs/server/cac_audit-{Date}.log",
+                                                "restrictedToMinimumLevel": "Information",
+                                                "outputTemplate": "{Timestamp:yyyy-MM-dd.HH:mm:ss.fff}  ,{Message}{NewLine}"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "Filter": [
+                            {
+                                "Name": "ByIncludingOnly",
+                                "Args": {
+                                    "expression": "@Properties['SourceContext']='DotBPE.Protocol.Amp.CACAuditLogger'"
+                                }
+                            }
+                        ]
+                    }
+                }
+            },
+            {
+                "Name": "Logger",
+                "Args": {
+                    "configureLogger": {
+                        "WriteTo": [
+                            {
+                                "Name": "Async",
+                                "Args": {
+                                    "configure": [
+                                        {
+                                            "Name": "RollingFile",
+                                            "Args": {
+                                                "pathFormat": "../logs/server/request_audit-{Date}.log",
+                                                "restrictedToMinimumLevel": "Information",
+                                                "outputTemplate": "{Timestamp:yyyy-MM-dd.HH:mm:ss.fff}  ,{Message}{NewLine}"
+                                            }
+                                        }
+                                    ]
+                                }
+                            }
+                        ],
+                        "Filter": [
+                            {
+                                "Name": "ByIncludingOnly",
+                                "Args": {
+                                    "expression": "@Properties['SourceContext']='DotBPE.Protocol.Amp.RequestAuditLogger'"
+                                }
+                            }
+                        ]
+                    }
+                }
+            }
+        ]
+    }
+}

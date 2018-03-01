@@ -17,15 +17,15 @@ namespace DotBPE.Rpc.Netty
         private readonly ILoggerFactory _factory;
         private IChannel _channel;
         private readonly IMessageCodecs<TMessage> _msgCodecs;
-        private readonly IMessageHandler<TMessage> _handler;
+        private readonly IServerMessageHandler<TMessage> _handler;
 
         private readonly IContextAccessor<TMessage> _contextAccessor;
 
-        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs,ILoggerFactory factory) : this(handler, msgCodecs, factory, null)
+        public NettyServerBootstrap(IServerMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs,ILoggerFactory factory) : this(handler, msgCodecs, factory, null)
         {
         }
 
-        public NettyServerBootstrap(IMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, ILoggerFactory factory, IContextAccessor<TMessage> contextAccessor)
+        public NettyServerBootstrap(IServerMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, ILoggerFactory factory, IContextAccessor<TMessage> contextAccessor)
         {
             this._msgCodecs = msgCodecs;
             this._handler = handler;
@@ -53,16 +53,22 @@ namespace DotBPE.Rpc.Netty
             return Task.CompletedTask;
         }
 
-        public async Task StartAsync(EndPoint endPoint)
+        /// <summary>
+        /// 启动服务，
+        /// </summary>
+        /// <param name="endPoint">绑定到本地的服务地址</param>
+        /// <returns></returns>
+        public async Task StartAsync(EndPoint localPoint)
         {
+            // 主的线程
             var bossGroup = new MultithreadEventLoopGroup(1);
+            // 工作线程，默认根据CPU计算
             var workerGroup = new MultithreadEventLoopGroup();
-            var bootstrap = new ServerBootstrap();
 
-            bootstrap
+            var bootstrap = new ServerBootstrap()
                 .Group(bossGroup, workerGroup)
                 .Channel<TcpServerSocketChannel>()
-                .Option(ChannelOption.SoBacklog, 100)
+                .Option(ChannelOption.SoBacklog, 128) //NOTE: 是否可以公开更多Netty的参数
                 .Handler(new LoggingHandler("SRV-LSTN"))
                 .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
                 {
@@ -84,19 +90,21 @@ namespace DotBPE.Rpc.Netty
                             meta.InitialBytesToStrip
                         )
                     );
-
+                    //收到消息后的解码处理Handler
                     pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs));
+
+                    //业务处理Handler，即解码成功后如何处理消息的类
                     pipeline.AddLast(new ServerChannelHandlerAdapter<TMessage>(this,this._factory));
                 }));
 
-            this._channel = await bootstrap.BindAsync(endPoint);
+            this._channel = await bootstrap.BindAsync(localPoint);
         }
 
         public async Task ChannelRead(IChannelHandlerContext ctx, TMessage message)
         {
             var context = new NettyRpcContext<TMessage>(ctx.Channel, _msgCodecs);
-            context.LocalAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.LocalAddress);
-            context.RemoteAddress = Utils.ParseUtils.ParseEndPointToIPString(ctx.Channel.RemoteAddress);
+            context.LocalAddress = ctx.Channel.LocalAddress;
+            context.RemoteAddress = ctx.Channel.RemoteAddress; 
 
             CallContext<TMessage> callContext = null;
             if (_contextAccessor != null)

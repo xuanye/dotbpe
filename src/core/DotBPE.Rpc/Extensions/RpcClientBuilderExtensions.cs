@@ -1,10 +1,10 @@
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.DefaultImpls;
+using DotBPE.Rpc.Server;
 using DotBPE.Rpc.Utils;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace DotBPE.Rpc.Extensions
+namespace DotBPE.Rpc
 {
     public static class RpcClientBuilderExtensions
     {
@@ -13,7 +13,9 @@ namespace DotBPE.Rpc.Extensions
             builder.ConfigureServices((services) =>
             {
                 services.AddSingleton<ITransportFactory<TMessage>, DefaultTransportFactory<TMessage>>()
-                    .AddSingleton<IMessageHandler<TMessage>>(new ClientMessageHandler<TMessage>())
+                    .AddSingleton<IClientMessageHandler<TMessage>, ClientMessageHandler<TMessage>>()
+                    .AddSingleton<IRouter<TMessage>,TransforPolicyRouter<TMessage>>()
+                    .AddSingleton<IServiceActorLocator<TMessage>,NoopServiceActorLocator<TMessage>>()
                 .AddSingleton<IRpcClient<TMessage>, DefaultRpcClient<TMessage>>();
             });
             return builder;

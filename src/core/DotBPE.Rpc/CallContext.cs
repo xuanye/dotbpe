@@ -1,6 +1,7 @@
 using DotBPE.Rpc.Codes;
 using System;
 using System.Collections.Generic;
+using System.Net;
 
 namespace DotBPE.Rpc
 {
@@ -15,7 +16,7 @@ namespace DotBPE.Rpc
             _items = new Dictionary<string, object>();
         }
 
-        public string RemoteAddress
+        public EndPoint RemoteAddress
         {
             get
             {
@@ -23,7 +24,7 @@ namespace DotBPE.Rpc
             }
         }
 
-        public string LocalAddress
+        public EndPoint LocalAddress
         {
             get
             {

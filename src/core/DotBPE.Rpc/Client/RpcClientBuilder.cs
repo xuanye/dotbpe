@@ -1,11 +1,11 @@
 using DotBPE.Rpc.Codes;
-using DotBPE.Rpc.Extensions;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 
-namespace DotBPE.Rpc
+namespace DotBPE.Rpc.Client
 {
     public class RpcClientBuilder : IRpcClientBuilder
     {
@@ -33,6 +33,13 @@ namespace DotBPE.Rpc
 
             var client = clientServiceProvider.GetRequiredService<IRpcClient<TMessage>>();
 
+            Environment.SetServiceProvider(clientServiceProvider);
+            var loggerFactory = clientServiceProvider.GetService<ILoggerFactory>();
+            if(loggerFactory != null)
+            {
+                Environment.SetLoggerFactory(loggerFactory);
+            }
+
             return client;
         }
 
@@ -57,6 +64,19 @@ namespace DotBPE.Rpc
         {
             return _config[key];
         }
+     
+
+        /// <summary>
+        /// Adds a delegate for configuring the provided <see cref="ILoggingBuilder"/>. This may be called multiple times.
+        /// </summary>
+        /// <param name="hostBuilder">The <see cref="IHostBuilder" /> to configure.</param>
+        /// <param name="configureLogging">The delegate that configures the <see cref="ILoggingBuilder"/>.</param>
+        /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
+        public IRpcClientBuilder ConfigureLogging(Action<ILoggingBuilder> configureLogging)
+        {
+            return this.ConfigureServices((collection) => collection.AddLogging(builder => configureLogging(builder)));
+        }
+
 
         private IServiceCollection BuildCommonServices()
         {
@@ -77,11 +97,13 @@ namespace DotBPE.Rpc
                 configureServices(services);
             }
 
+           
             return services;
         }
 
         private void AddApplicationServices(IServiceCollection services, IServiceProvider hostingServiceProvider)
         {
+            
         }
     }
 }

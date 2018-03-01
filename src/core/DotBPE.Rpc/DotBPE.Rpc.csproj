@@ -31,4 +31,8 @@
     <PackageReference Include="Microsoft.Extensions.Options.ConfigurationExtensions" Version="2.0.0" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DotBPE.Rpc.Abstractions\DotBPE.Rpc.Abstractions.csproj" />
+  </ItemGroup>
+
 </Project>
