@@ -10,7 +10,7 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Protocol.Amp
 {
-    public class AmpCallInvoker : CallInvoker<AmpMessage>
+    public class AmpCallInvoker : AbstractCallInvoker<AmpMessage>
     {
         private ILogger _Logger;
 
@@ -20,31 +20,27 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         private static int INVOKER_SEQ = 0;
         private static object lockObj = new object();
 
-        public AmpCallInvoker(string serverAddress, int multiplexCount = 1) : this(AmpClient.Create(serverAddress, multiplexCount))
+        public AmpCallInvoker(IRpcClient<AmpMessage> client) : this(client,null)
         {
+
         }
 
-        public AmpCallInvoker(IRpcClient<AmpMessage> client) : base(client)
+        public AmpCallInvoker(IRpcClient<AmpMessage> client,ILogger<AmpCallInvoker> logger) : base(client)
         {
-           
+           if(logger == null)
+           {
+               _Logger = NullLogger.Instance;
+           }
+           else
+           {
+               _Logger = logger;
+           }
         }
 
         protected ILogger Logger
         {
             get
             {
-                if (this._Logger == null )
-                {
-                    if(Rpc.Environment.LoggerFactory != null)
-                    {
-                        this._Logger = Rpc.Environment.LoggerFactory.CreateLogger<AmpCallInvoker>();
-                    }
-                    else
-                    {
-                        this._Logger = NullLogger.Instance;
-                    }
-                   
-                }
                 return this._Logger;
             }
         }

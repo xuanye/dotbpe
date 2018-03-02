@@ -258,18 +258,42 @@ service Math{
 }
 
 ```
-2. 使用使用protoc 命令行+Protobuf.Gen.exe插件来生成代码 ，插件最新可以在 [这里][6] 获取到
+2. 使用使用protoc 命令行+[protoc-gen-dotbpe](https://github.com/dotbpe/protoc-gen-dotbpe)插件来生成代码:
 
 ```shell
 set -ex
 
 cd $(dirname $0)
 
+
+unameOut="$(uname -s)"
+case "${unameOut}" in
+    Linux*)     machine=Linux;;
+    Darwin*)    machine=Mac;;
+    CYGWIN*)    machine=Cygwin;;
+    MINGW*)     machine=MinGw;;
+    windows*)   machine=Windows;;
+    *)          machine="UNKNOWN:${unameOut}"
+esac
+
+
 PROTOC=protoc
-PLUGIN=protoc-gen-dotbpe=../../tool/ampplugin/Protobuf.Gen.exe
+
+if [ $machine = "Windows" ] ; then
+  PLUGIN=protoc-gen-dotbpe=dotbpe-amp-link.cmd
+elif [ $machine = "Cygwin" ] ; then
+  PLUGIN=protoc-gen-dotbpe=dotbpe-amp-link.cmd
+elif [ $machine = "MinGw" ] ; then
+  PLUGIN=protoc-gen-dotbpe=dotbpe-amp-link.cmd
+else
+  PLUGIN=protoc-gen-dotbpe=dotbpe-amp-link
+fi
+
+
 OUT_DIR=./MathCommon/_g
+
 PROTO_DIR=./protos
-PROTO_BASE_DIR=../../protos
+BASE_PROTO_DIR=../../protos
 
 if [ -d $OUT_DIR ]; then
   rm -rf $OUT_DIR
@@ -277,12 +301,14 @@ fi
 
 mkdir -p $OUT_DIR
 
-$PROTOC -I=$PROTO_BASE_DIR -I=$PROTO_DIR  --csharp_out=$OUT_DIR --dotbpe_out=$OUT_DIR \
-    $PROTO_DIR/math.proto  --plugin=$PLUGIN
+
+$PROTOC -I=$BASE_PROTO_DIR -I=$PROTO_DIR  --csharp_out=$OUT_DIR --dotbpe_out=$OUT_DIR \
+	$PROTO_DIR/math.proto --plugin=$PLUGIN
 
 ```
+
 代码生成到目录./MathCommon/_g
-如果是使用mac的小伙伴，可以在[这里下载mac版的可执行文件][7] ，把plugin目录copy过去即可
+
 
 3. 编写服务端代码
 实现对应的基类，并完善
@@ -353,9 +379,7 @@ public class MathService : MathBase
 2. 添加必要的DotBPE引用 如下所示
 
 ```shell
-$> dotnet add package DotBPE.Rpc //DotBPE的核心服务
 $> dotnet add package DotBPE.Rpc.Hosting //挂载DotBPE的Host扩展
-$> dotnet add package DotBPE.Rpc.Netty //使用Netty作为通讯框架
 $> dotnet add package DotBPE.Protocol.Amp //使用默认的AMP协议
 $> dotnet add package DotBPE.Plugin.AspNetGateway //使用默认的AMP协议
 $> dotnet add package Microsoft.AspNetCore //添加AspNetCore的支持
@@ -728,11 +752,11 @@ public class Startup
 另外我创建了一个QQ群：
 ![](http://ww1.sinaimg.cn/large/697065c1ly1fnsy1a8apgj206a082t8y.jpg)
 
-  [1]: https://github.com/dotbpe/dotbpe/blob/master/src/sample/01-hello/%20hello%E7%A4%BA%E4%BE%8B
-  [2]: https://github.com/dotbpe/dotbpe/tree/master/src/sample/02-math-json
-  [3]: https://github.com/dotbpe/dotbpe/tree/master/src/sample/03-math-msgpack
-  [4]: https://github.com/dotbpe/dotbpe/tree/master/src/sample/04-math-protobuf
+  [1]: https://github.com/dotbpe/dotbpe-sample/blob/master/01-hello/%20hello%E7%A4%BA%E4%BE%8B
+  [2]: https://github.com/dotbpe/dotbpe-sample/tree/master/02-math-json
+  [3]: https://github.com/dotbpe/dotbpe-sample/tree/master/03-math-msgpack
+  [4]: https://github.com/dotbpe/dotbpe-sample/tree/master/04-math-protobuf
   [5]: https://github.com/dotbpe/dotbpe/blob/master/src/protos/dotbpe_option.proto
   [6]: https://github.com/dotbpe/dotbpe/tree/master/src/tool/ampplugin
   [7]: https://github.com/xuanye/protobuf-gen-csharp/tree/master/dist
-  [8]: https://github.com/dotbpe/dotbpe/tree/master/src/sample/05-generate-service
+  [8]: https://github.com/dotbpe/dotbpe-sample/tree/master/05-generate-service
