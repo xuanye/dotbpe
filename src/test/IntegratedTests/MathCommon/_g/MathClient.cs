@@ -8,19 +8,17 @@ using DotBPE.Rpc;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc.Exceptions;
 using Google.Protobuf;
+using DotBPE.Rpc.Client;
 
 namespace MathCommon {
 
     //start for class MathClient
     public sealed class MathClient : AmpInvokeClient
     {
-        public MathClient(IRpcClient<AmpMessage> client) : base(client)
+        public MathClient(ICallInvoker<AmpMessage> callInvoker) : base(callInvoker)
         {
-        }
-        public MathClient(string remoteAddress) : base(remoteAddress)
-        {
-        }
 
+        }
 
         //同步方法
         public RpcResult<AddRes> Add(AddReq req)
@@ -78,7 +76,6 @@ namespace MathCommon {
 
             return result;
         }
-
 
     }
     //end for class MathClient

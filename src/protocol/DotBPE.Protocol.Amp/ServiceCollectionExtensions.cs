@@ -10,7 +10,7 @@ namespace DotBPE.Protocol.Amp
     public static class ServiceCollectionExtensions
     {
         /// <summary>
-        /// Amp服务端需要的主键注册
+        /// Amp服务端需要的主要注册
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
@@ -18,13 +18,14 @@ namespace DotBPE.Protocol.Amp
         {
             return services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>()
                     .AddSingleton<IServiceActorLocator<AmpMessage>, ServiceActorLocator>()
+                    .AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>()
                     .AddSingleton<ClientProxy>()
                     .AddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient<AmpMessage>>()
                     .AddSingleton<IRouter<AmpMessage>, LocalPolicyRouter<AmpMessage>>();
         }
 
         /// <summary>
-        /// 即是全服务端 ，同时又是客户端
+        /// 即是服务端 ，同时又是客户端
         /// </summary>
         /// <param name="builder"></param>
         /// <returns></returns>
@@ -32,7 +33,8 @@ namespace DotBPE.Protocol.Amp
         {
             services.Remove(ServiceDescriptor.Singleton(typeof(IRouter<AmpMessage>)));
 
-            return services.AddSingleton<IRouter<AmpMessage>, LoopPolicyRouter<AmpMessage>>()         
+            return services.AddSingleton<IRouter<AmpMessage>, LoopPolicyRouter<AmpMessage>>()
+                    .AddSingleton<IClientMessageHandler<AmpMessage>, ClientMessageHandler<AmpMessage>>() // 消息处理器          
                     .AddSingleton<ITransportFactory<AmpMessage>, DefaultTransportFactory<AmpMessage>>()
                     .AddSingleton<IClientBootstrap<AmpMessage>, NettyClientBootstrap<AmpMessage>>();
         }

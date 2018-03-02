@@ -3,9 +3,9 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.Rpc.Netty
 {
-    public static class RpcClientBuilderExtensions
+    public static class ClientProxyBuilderExtensions
     {
-        public static IRpcClientBuilder UserNettyClient<TMessage>(this IRpcClientBuilder builder) where TMessage : InvokeMessage
+        public static IClientProxyBuilder UserNettyClient<TMessage>(this IClientProxyBuilder builder) where TMessage : InvokeMessage
         {
             builder.ConfigureServices((services) =>
             {

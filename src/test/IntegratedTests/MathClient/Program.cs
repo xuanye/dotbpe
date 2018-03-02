@@ -1,5 +1,6 @@
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
+using DotBPE.Rpc.Client;
 using MathCommon;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -25,16 +26,24 @@ namespace MathClient
               .CreateLogger();
 
             Task.Run(RunClient).Wait();
+
+           
         }
 
         public async static Task RunClient()
         {
-            var rpcClient = AmpClient.Create("127.0.0.1:6201", 1
-                , services => services.AddSingleton<IAuditLoggerFormat<AmpMessage>, AuditLoggerFormat>()
-                , logger => logger.AddSerilog()
-             );
 
-            using (var client = new MathCommon.MathClient(rpcClient))
+            var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201")
+                .ConfigureServices( services =>
+                {
+                    services.AddSingleton<IAuditLoggerFormat<AmpMessage>, AuditLoggerFormat>();
+                })
+                .ConfigureLoggingServices(logger=> logger.AddSerilog(dispose: true))
+                .BuildDefault();
+
+           
+           
+            using (var client = proxy.GetClient<MathCommon.MathClient>())
             {
                 Console.WriteLine("ready to send message");
 

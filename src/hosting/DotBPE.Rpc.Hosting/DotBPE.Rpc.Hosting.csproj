@@ -11,6 +11,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\core\DotBPE.Rpc.Abstractions\DotBPE.Rpc.Abstractions.csproj" />
     <ProjectReference Include="..\..\core\DotBPE.Rpc\DotBPE.Rpc.csproj" />
   </ItemGroup>
 
