@@ -13,10 +13,10 @@ namespace DotBPE.Protocol.Amp
         public static IClientProxy BuildDefault(this IClientProxyBuilder builder)
         {
             var client = builder
-                .AddCore<AmpMessage>()             
-                .UserNettyClient<AmpMessage>()
+                .AddClientCore<AmpMessage>() //添加客户端核心依赖
+                .AddNettyClient<AmpMessage>() // 使用Netty客户端
                 .ConfigureServices((services) =>
-                {
+                {                    
                     services.AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>();
                     services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
                 })  

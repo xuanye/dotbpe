@@ -20,7 +20,12 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Google.Protobuf" Version="3.5.0" />
+    <PackageReference Include="Google.Protobuf" Version="3.5.1" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\..\core\DotBPE.Rpc.Abstractions\DotBPE.Rpc.Abstractions.csproj" />
+    <ProjectReference Include="..\DotBPE.Protocol.Amp\DotBPE.Protocol.Amp.csproj" />
   </ItemGroup>
 
 </Project>
