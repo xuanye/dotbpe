@@ -1,3 +1,4 @@
+using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
@@ -20,7 +21,16 @@ namespace DotBPE.Rpc
 
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddRpcCore<TMessage>(this IServiceCollection services) where TMessage : InvokeMessage
+        public static IServiceCollection AddClientCore<TMessage>(this IServiceCollection services) where TMessage : InvokeMessage
+        {
+            return services.AddSingleton<ITransportFactory<TMessage>, DefaultTransportFactory<TMessage>>()
+                   .AddSingleton<IClientMessageHandler<TMessage>, ClientMessageHandler<TMessage>>()
+                   .AddSingleton<IRouter<TMessage>, TransforPolicyRouter<TMessage>>()
+                   .AddSingleton<IServiceActorLocator<TMessage>, NoopServiceActorLocator<TMessage>>()
+               .AddSingleton<IRpcClient<TMessage>, DefaultRpcClient<TMessage>>();
+        }
+
+        public static IServiceCollection AddServerCore<TMessage>(this IServiceCollection services) where TMessage : InvokeMessage
         {
             return services.AddSingleton<IServerMessageHandler<TMessage>, ServerMessageHandler<TMessage>>()
                 .AddSingleton<IServiceActorContainer<TMessage>, DefaultServiceActorContainer<TMessage>>();
@@ -42,7 +52,7 @@ namespace DotBPE.Rpc
             {
                 services.AddSingleton<IServiceActor<TMessage>>(actor);
             }
-           
+
             return services;
         }
 

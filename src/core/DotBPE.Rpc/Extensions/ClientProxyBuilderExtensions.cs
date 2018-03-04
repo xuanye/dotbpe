@@ -19,15 +19,11 @@ namespace DotBPE.Rpc
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
-        public static IClientProxyBuilder AddCore<TMessage>(this IClientProxyBuilder builder) where TMessage : InvokeMessage
+        public static IClientProxyBuilder AddClientCore<TMessage>(this IClientProxyBuilder builder) where TMessage : InvokeMessage
         {
             builder.ConfigureServices((services) =>
             {
-                services.AddSingleton<ITransportFactory<TMessage>, DefaultTransportFactory<TMessage>>()
-                    .AddSingleton<IClientMessageHandler<TMessage>, ClientMessageHandler<TMessage>>()
-                    .AddSingleton<IRouter<TMessage>, TransforPolicyRouter<TMessage>>()
-                    .AddSingleton<IServiceActorLocator<TMessage>, NoopServiceActorLocator<TMessage>>()
-                .AddSingleton<IRpcClient<TMessage>, DefaultRpcClient<TMessage>>();
+                services.AddClientCore<TMessage>();
             });
             return builder;
         }

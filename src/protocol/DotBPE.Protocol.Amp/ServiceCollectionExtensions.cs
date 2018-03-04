@@ -2,7 +2,6 @@ using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Netty;
-using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.Protocol.Amp
@@ -14,7 +13,7 @@ namespace DotBPE.Protocol.Amp
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddAmp(this IServiceCollection services)
+        private static IServiceCollection AddAmp(this IServiceCollection services)
         {
             return services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>()
                     .AddSingleton<IServiceActorLocator<AmpMessage>, ServiceActorLocator>()
@@ -23,33 +22,52 @@ namespace DotBPE.Protocol.Amp
                     .AddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient<AmpMessage>>()
                     .AddSingleton<IRouter<AmpMessage>, LocalPolicyRouter<AmpMessage>>();
         }
-
-        /// <summary>
-        /// 即是服务端 ，同时又是客户端
-        /// </summary>
-        /// <param name="builder"></param>
-        /// <returns></returns>
-        public static IServiceCollection AddAmpClient(this IServiceCollection services)
+        
+        private static IServiceCollection AddAmpClient(this IServiceCollection services)
         {
             services.Remove(ServiceDescriptor.Singleton(typeof(IRouter<AmpMessage>)));
 
             return services.AddSingleton<IRouter<AmpMessage>, LoopPolicyRouter<AmpMessage>>()
-                    .AddSingleton<IClientMessageHandler<AmpMessage>, ClientMessageHandler<AmpMessage>>() // 消息处理器          
+                    .AddSingleton<IClientMessageHandler<AmpMessage>, ClientMessageHandler<AmpMessage>>() // 消息处理器
                     .AddSingleton<ITransportFactory<AmpMessage>, DefaultTransportFactory<AmpMessage>>()
                     .AddSingleton<IClientBootstrap<AmpMessage>, NettyClientBootstrap<AmpMessage>>();
         }
 
         /// <summary>
-        /// 服务端核心协议
+        /// 添加服务端依赖，适用于只是服务端，并不依赖其他客户端
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
         public static IServiceCollection AddDotBPE(this IServiceCollection services)
         {
-            return services.AddRpcCore<AmpMessage>() //添加核心依赖
+            return services.AddServerCore<AmpMessage>() //添加核心依赖
                     .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
                     .AddAmp(); // 使用AMP协议
+        }
 
+        /// <summary>
+        /// 添加服务端引用，并添加客户端引用，适用于即是服务端，又是客户端的情况
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <returns></returns>
+        public static IServiceCollection AddDotBPEWithClient(this IServiceCollection services)
+        {
+            return services.AddServerCore<AmpMessage>() //添加核心依赖
+                   .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
+                   .AddAmp()
+                   .AddAmpClient(); // 使用AMP协议
+        }
+
+        /// <summary>
+        /// 只是客户端，任何服务端
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddTransforClient(this IServiceCollection services)
+        {
+            return services.AddClientCore<AmpMessage>()
+                 .AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>()
+                 .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
         }
     }
 }

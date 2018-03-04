@@ -82,6 +82,8 @@ namespace DotBPE.Rpc.Client
 
             // The configured ILoggerFactory is added as a singleton here. AddLogging below will not add an additional one.
 
+            services.AddLogging();
+
             services.AddOptions();
 
             services.Configure<Options.RpcClientOption>(_config);  // 添加作为客户端的配置

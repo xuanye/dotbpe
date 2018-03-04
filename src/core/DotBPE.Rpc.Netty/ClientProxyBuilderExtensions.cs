@@ -5,7 +5,7 @@ namespace DotBPE.Rpc.Netty
 {
     public static class ClientProxyBuilderExtensions
     {
-        public static IClientProxyBuilder UserNettyClient<TMessage>(this IClientProxyBuilder builder) where TMessage : InvokeMessage
+        public static IClientProxyBuilder AddNettyClient<TMessage>(this IClientProxyBuilder builder) where TMessage : InvokeMessage
         {
             builder.ConfigureServices((services) =>
             {
