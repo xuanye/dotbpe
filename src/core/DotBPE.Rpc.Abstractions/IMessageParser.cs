@@ -1,6 +1,6 @@
 using DotBPE.Rpc.Codes;
 
-namespace DotBPE.Rpc.Abstractions
+namespace DotBPE.Rpc
 {
     /// <summary>
     /// 消息序列化器

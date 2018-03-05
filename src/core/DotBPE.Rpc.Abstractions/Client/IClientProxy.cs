@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotBPE.Rpc.Client
+namespace DotBPE.Rpc
 {
     public interface IClientProxy
     {

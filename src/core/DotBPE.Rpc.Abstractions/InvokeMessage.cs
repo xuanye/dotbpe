@@ -1,7 +1,7 @@
 /// <summary>
-/// 
+///
 /// </summary>
-namespace DotBPE.Rpc.Codes
+namespace DotBPE.Rpc
 {
 
     /// <summary>
@@ -26,7 +26,7 @@ namespace DotBPE.Rpc.Codes
         public abstract bool IsHeartBeat { get; }
     }
 
-  
+
 
     public enum InvokeMessageType : byte
     {

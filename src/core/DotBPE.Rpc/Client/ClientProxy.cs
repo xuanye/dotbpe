@@ -29,7 +29,7 @@ namespace DotBPE.Rpc.Client
                 return cache[type] as TClient;
             }
             else
-            {
+            {              
                 TClient client = ActivatorUtilities.CreateInstance<TClient>(this._serviceProvider);
                 lock (lockObj)
                 {

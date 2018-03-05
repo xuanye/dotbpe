@@ -1,4 +1,3 @@
-using DotBPE.Rpc.Client;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 
