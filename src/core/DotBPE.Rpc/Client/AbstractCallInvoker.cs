@@ -4,25 +4,25 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public abstract class CallInvoker<TMessage> : IDisposable where TMessage : InvokeMessage
+    public abstract class AbstractCallInvoker<TMessage> : ICallInvoker<TMessage> where TMessage : InvokeMessage
     {
         private readonly IRpcClient<TMessage> _client;
 
-        public CallInvoker(IRpcClient<TMessage> client)
+        public AbstractCallInvoker(IRpcClient<TMessage> client)
         {
             this._client = client;
             this._client.Recieved -= MessageRecieved;
             this._client.Recieved += MessageRecieved;
         }
 
-        protected IRpcClient<TMessage> RpcClient
+        public IRpcClient<TMessage> RpcClient
         {
             get
             {
                 return this._client;
             }
         }
-
+        
         protected abstract void MessageRecieved(object sender, MessageRecievedEventArgs<TMessage> e);
 
         /// <summary>

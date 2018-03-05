@@ -1,1 +1,1 @@
-protoc-gen-dotbpe $$
+protoc-gen-dotbpe $@

@@ -4,30 +4,33 @@ using System.Collections.Generic;
 
 namespace DotBPE.Rpc.Client
 {
-    public class ClientProxy
+    public class ClientProxy : IClientProxy
     {
-
         private readonly IServiceProvider _serviceProvider;
         public ClientProxy(IServiceProvider serviceProvider)
         {
             this._serviceProvider = serviceProvider;
-           
         }
 
 
         private static readonly Dictionary<Type, object> cache = new Dictionary<Type, object>();
         private static readonly object lockObj = new object();
 
-        public T GetClient<T>() where T : class
+        public TService GetService<TService>()
         {
-            Type type = typeof(T);
+            return this._serviceProvider.GetService<TService>();
+        }
+
+        public TClient GetClient<TClient>() where TClient : class, IInvokeClient
+        {
+            Type type = typeof(TClient);
             if (cache.ContainsKey(type))
             {
-                return cache[type] as T;
+                return cache[type] as TClient;
             }
             else
             {
-                T client = ActivatorUtilities.CreateInstance<T>(this._serviceProvider);
+                TClient client = ActivatorUtilities.CreateInstance<TClient>(this._serviceProvider);
                 lock (lockObj)
                 {
                     if (!cache.ContainsKey(type))
