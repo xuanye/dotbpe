@@ -1,25 +1,25 @@
 using DotBPE.Protocol.Amp;
-using DotBPE.Rpc.Abstractions;
+using DotBPE.Rpc;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotBPE.Protobuf
 {
     public class MessageParser : IMessageParser<AmpMessage>
     {
-        static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(true));
+        private static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(true).WithFormatEnumsAsIntegers(true));
 
         private readonly ILogger<MessageParser> _logger;
         private readonly IProtobufObjectFactory _factory;
-        public MessageParser(IProtobufObjectFactory factory,ILogger<MessageParser> logger)
+
+        public MessageParser(IProtobufObjectFactory factory, ILogger<MessageParser> logger)
         {
             _logger = logger;
             _factory = factory;
         }
-        public string ToJson(AmpMessage message)
+
+        public virtual string ToJson(AmpMessage message)
         {
             if (message.Code == 0)
             {
@@ -50,7 +50,6 @@ namespace DotBPE.Protobuf
                         }
                     }
 
-
                     ret = AmpJsonFormatter.Format(rspTemp);
 
                     //TODO:清理内部的return_message ;
@@ -62,10 +61,9 @@ namespace DotBPE.Protobuf
             {
                 return "{\"return_code\":" + message.Code + ",\"return_message\":\"\"}";
             }
-
         }
 
-        public AmpMessage ToMessage(RequestData reqData)
+        public virtual AmpMessage ToMessage(RequestData reqData)
         {
             ushort serviceId = (ushort)reqData.ServiceId;
             ushort messageId = (ushort)reqData.MessageId;
@@ -74,7 +72,7 @@ namespace DotBPE.Protobuf
             IMessage reqTemp = _factory.GetRequestTemplate(serviceId, messageId);
             if (reqTemp == null)
             {
-                this._logger.LogError("serviceId={0},messageId={1}的消息不存在", serviceId, messageId);
+                this._logger.LogError("serviceId={0},messageId={1}的消息模板不存在", serviceId, messageId);
                 return null;
             }
 
@@ -98,15 +96,13 @@ namespace DotBPE.Protobuf
                         {
                             field.Accessor.SetValue(reqTemp, reqData.Data[field.JsonName]);
                         }
-
                     }
                 }
                 message.Data = reqTemp.ToByteArray();
-
             }
             catch (Exception ex)
             {
-                this._logger.LogError(ex, "从请求中解析数据错误:" + ex.Message);
+                this._logger.LogError(ex, "从请求中解析数据错误");
                 message = null;
             }
 

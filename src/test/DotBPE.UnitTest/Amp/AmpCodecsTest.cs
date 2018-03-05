@@ -1,5 +1,6 @@
-﻿using System.Text;
+using System.Text;
 using DotBPE.Protocol.Amp;
+using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Netty;
 using DotNetty.Buffers;

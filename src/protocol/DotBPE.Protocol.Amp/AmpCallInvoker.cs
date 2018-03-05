@@ -101,7 +101,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 return;
             }
 
-            if (e.Message.InvokeMessageType == Rpc.Codes.InvokeMessageType.Response)
+            if (e.Message.InvokeMessageType == InvokeMessageType.Response)
             {
                 if (e.Message.Code != 0)
                 {

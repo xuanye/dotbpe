@@ -1,4 +1,5 @@
-using DotBPE.Rpc.Codes;
+
+using DotBPE.Rpc;
 
 namespace DotBPE.Protocol.Amp
 {

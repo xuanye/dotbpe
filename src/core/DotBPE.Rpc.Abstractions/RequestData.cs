@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DotBPE.Rpc.Abstractions
+namespace DotBPE.Rpc
 {
      public class RequestData
     {

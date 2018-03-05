@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotBPE.Rpc.Client
+namespace DotBPE.Rpc
 {
     public interface ICallInvoker<TMessage>: IDisposable where TMessage:InvokeMessage
     {
