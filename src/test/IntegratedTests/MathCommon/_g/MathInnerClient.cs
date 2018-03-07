@@ -12,20 +12,20 @@ using DotBPE.Rpc.Client;
 
 namespace MathCommon {
 
-    //start for class MathClient
-    public sealed class MathClient : AmpInvokeClient
+    //start for class MathInnerClient
+    public sealed class MathInnerClient : AmpInvokeClient
     {
-        public MathClient(ICallInvoker<AmpMessage> callInvoker) : base(callInvoker)
+        public MathInnerClient(ICallInvoker<AmpMessage> callInvoker) : base(callInvoker)
         {
 
         }
 
         //同步方法
-        public RpcResult<AddRes> Add(AddReq req)
+        public RpcResult<AddRes> Plus(AddReq req)
         {
-            AmpMessage message = AmpMessage.CreateRequestMessage(10005, 1);
+            AmpMessage message = AmpMessage.CreateRequestMessage(10006, 1);
 
-            message.FriendlyServiceName = "Math.Add";
+            message.FriendlyServiceName = "MathInner.Plus";
 
 
             message.Data = req.ToByteArray();
@@ -50,10 +50,10 @@ namespace MathCommon {
             return result;
         }
 
-        public async Task<RpcResult<AddRes>> AddAsync(AddReq req, int timeOut = 3000)
+        public async Task<RpcResult<AddRes>> PlusAsync(AddReq req, int timeOut = 3000)
         {
-            AmpMessage message = AmpMessage.CreateRequestMessage(10005, 1);
-            message.FriendlyServiceName = "Math.Add";
+            AmpMessage message = AmpMessage.CreateRequestMessage(10006, 1);
+            message.FriendlyServiceName = "MathInner.Plus";
             message.Data = req.ToByteArray();
             var response = await base.CallInvoker.AsyncCall(message, timeOut);
             if (response == null)
@@ -78,6 +78,6 @@ namespace MathCommon {
         }
 
     }
-    //end for class MathClient
+    //end for class MathInnerClient
 }
 #endregion

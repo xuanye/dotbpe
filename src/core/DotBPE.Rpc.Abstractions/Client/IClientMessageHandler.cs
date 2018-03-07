@@ -8,7 +8,7 @@ namespace DotBPE.Rpc
 {
     public interface IClientMessageHandler<TMessage> where TMessage : InvokeMessage
     {
-        Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message);
+        void Receive(IRpcContext<TMessage> context, TMessage message);
 
         event EventHandler<MessageRecievedEventArgs<TMessage>> Recieved;
     }

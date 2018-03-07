@@ -108,7 +108,7 @@ namespace DotBPE.Rpc.Netty
             context.LocalAddress = ctx.Channel.LocalAddress;
             context.RemoteAddress = ctx.Channel.RemoteAddress;
 
-            this._handler.ReceiveAsync(context, msg);
+            this._handler.Receive(context, msg);
         }
 
         /// <summary>

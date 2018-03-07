@@ -18,7 +18,7 @@ namespace DotBPE.Protocol.Amp
             return services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>()
                     .AddSingleton<IServiceActorLocator<AmpMessage>, ServiceActorLocator>()
                     .AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>()
-                    .AddSingleton<ClientProxy>()
+                    .AddSingleton<IClientProxy, ClientProxy>()
                     .AddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient<AmpMessage>>()
                     .AddSingleton<IRouter<AmpMessage>, LocalPolicyRouter<AmpMessage>>();
         }
@@ -41,23 +41,12 @@ namespace DotBPE.Protocol.Amp
         public static IServiceCollection AddDotBPE(this IServiceCollection services)
         {
             return services.AddServerCore<AmpMessage>() //添加核心依赖
-                    .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
-                    .AddAmp(); // 使用AMP协议
+                  .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
+                  .AddAmp()
+                  .AddAmpClient(); // 使用AMP协议
         }
 
-        /// <summary>
-        /// 添加服务端引用，并添加客户端引用，适用于即是服务端，又是客户端的情况
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <returns></returns>
-        public static IServiceCollection AddDotBPEWithClient(this IServiceCollection services)
-        {
-            return services.AddServerCore<AmpMessage>() //添加核心依赖
-                   .AddNettyServer<AmpMessage>() //使用使用Netty默认实现
-                   .AddAmp()
-                   .AddAmpClient(); // 使用AMP协议
-        }
-
+      
         /// <summary>
         /// 只是客户端，任何服务端
         /// </summary>
@@ -69,5 +58,19 @@ namespace DotBPE.Protocol.Amp
                  .AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>()
                  .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
         }
+        /// <summary>
+        /// 添加单网关的
+        /// </summary>
+        /// <param name="services">The services.</param>
+        /// <returns></returns>
+        public static IServiceCollection AddGatewayClient(this IServiceCollection services)
+        {
+            services.Remove(ServiceDescriptor.Singleton(typeof(IRouter<AmpMessage>)));
+            return services.AddClientCore<AmpMessage>()
+                 .AddSingleton<IRouter<AmpMessage>, LoopPolicyRouter<AmpMessage>>()
+                 .AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>()
+                 .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
+        }
+        
     }
 }

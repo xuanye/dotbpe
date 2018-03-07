@@ -3,6 +3,7 @@ using DotBPE.Rpc;
 using Google.Protobuf;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Text.RegularExpressions;
 
 namespace DotBPE.Protobuf
 {
@@ -50,16 +51,14 @@ namespace DotBPE.Protobuf
                         }
                     }
 
-                    ret = AmpJsonFormatter.Format(rspTemp);
-
-                    //TODO:清理内部的return_message ;
+                    ret = AmpJsonFormatter.Format(rspTemp);                  
                 }
 
-                return "{\"return_code\":" + return_code + ",\"return_message\":\"" + return_message + "\",data:" + ret + "}";
+                return string.Concat("{\"return_code\":",return_code.ToString(), ",\"return_message\":\"",return_message, "\",\"data\":",ClearMetaField(ret), "}");              
             }
             else
             {
-                return "{\"return_code\":" + message.Code + ",\"return_message\":\"\"}";
+                return string.Concat("{\"return_code\":" , message.Code , ",\"return_message\":\"\"}");               
             }
         }
 
@@ -84,7 +83,7 @@ namespace DotBPE.Protobuf
                     reqTemp = descriptor.Parser.ParseJson(reqData.RawBody);
                 }
 
-                if (reqData.Data.Count > 0)
+                if ( reqData.Data !=null && reqData.Data.Count > 0)
                 {
                     foreach (var field in descriptor.Fields.InDeclarationOrder())
                     {
@@ -107,6 +106,13 @@ namespace DotBPE.Protobuf
             }
 
             return message;
+        }
+
+        protected virtual string ClearMetaField(string rspJson)
+        {
+            rspJson = Regex.Replace(rspJson, " \"returnMessage\"[\\040]*:[\\040]*\"[^\"]*\",", "");
+            rspJson = Regex.Replace(rspJson, " ,\"bpeSessionId\"[\\040]*:[\\040]*\"[\\w]*\"", "");
+            return rspJson;
         }
     }
 }

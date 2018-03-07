@@ -8,12 +8,11 @@ namespace DotBPE.Rpc.Netty
     public class ChannelDecodeHandler<TMessage> : DotNetty.Codecs.ByteToMessageDecoder where TMessage : InvokeMessage
     {
         private readonly IMessageCodecs<TMessage> _codecs;
-        private readonly NettyBufferManager _nettyBufferManager;
+       
 
         public ChannelDecodeHandler(IMessageCodecs<TMessage> codecs)
         {
-            this._codecs = codecs;
-            this._nettyBufferManager = new NettyBufferManager();
+            this._codecs = codecs;           
         }
 
         protected override void Decode(IChannelHandlerContext context, IByteBuffer input, List<object> output)
@@ -24,6 +23,7 @@ namespace DotBPE.Rpc.Netty
             {
                 output.Add(message);
             }
+            reader = null;
         }
     }
 }

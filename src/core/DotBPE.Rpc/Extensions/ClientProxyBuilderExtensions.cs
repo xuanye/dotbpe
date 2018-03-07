@@ -53,7 +53,7 @@ namespace DotBPE.Rpc
         {
             Preconditions.CheckArgument(!string.IsNullOrEmpty(remoteAddress), "服务器地址不能为空");
 
-            Preconditions.CheckArgument(multiplexCount <= 0, "链接数不能小于0");
+            Preconditions.CheckArgument( multiplexCount >0 , "链接数不能小于0");
 
             builder.UseSetting("DefaultServerAddress", remoteAddress);
             builder.UseSetting("MultiplexCount", multiplexCount.ToString());

@@ -1,3 +1,4 @@
+using DotBPE.Protobuf;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
@@ -14,6 +15,8 @@ namespace MathClient
     {
         private static void Main(string[] args)
         {
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException; ;
+
             var currentEnv = System.Environment.GetEnvironmentVariable("DOTBPE_ENVIRONMENT");
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("serilog.json")
@@ -29,6 +32,17 @@ namespace MathClient
 
            
         }
+        private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
+        {
+            try
+            {
+                Console.WriteLine(e.Exception.ToString());
+            }
+            catch
+            {
+
+            }
+        }
 
         public async static Task RunClient()
         {
@@ -36,6 +50,8 @@ namespace MathClient
             var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201")
                 .ConfigureServices( services =>
                 {
+                    services.AddSingleton<IProtobufObjectFactory, ProtobufObjectFactory>();
+
                     services.AddSingleton<IAuditLoggerFormat<AmpMessage>, AuditLoggerFormat>();
                 })
                 .ConfigureLoggingServices(logger=> logger.AddSerilog(dispose: true))
@@ -49,7 +65,7 @@ namespace MathClient
 
                 var random = new Random();
                 var i = 0;
-                while( i < 1000)
+                while( i < 1)
                 {
                     AddReq req = new AddReq
                     {
@@ -62,7 +78,7 @@ namespace MathClient
                     try
                     {
                         var res = await client.AddAsync(req);
-                        Console.WriteLine("server repsonse:<-----{0}+{1}={2}", req.A, req.B, res.Data.C);
+                        Console.WriteLine("server repsonse:<-----{0}+{1}={2}", req.A, req.B, res.Data?.C);
                     }
                     catch (Exception ex)
                     {
