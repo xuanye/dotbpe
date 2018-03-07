@@ -18,6 +18,7 @@
     </ItemGroup>
 
     <ItemGroup>
+        <ProjectReference Include="..\..\..\protocol\DotBPE.Protobuf\DotBPE.Protobuf.csproj" />
         <ProjectReference Include="..\MathCommon\MathCommon.csproj" />
     </ItemGroup>
 

@@ -39,7 +39,9 @@ namespace DotBPE.Rpc.Netty
         {
             Logger.LogDebug("ready to read message");
 
-            this._bootstrap.ChannelRead(context, msg).Wait();
+#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+            this._bootstrap.ChannelRead(context, msg);
+#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
         }
 
         public override void ChannelReadComplete(IChannelHandlerContext contex)

@@ -24,7 +24,8 @@ namespace DotBPE.Rpc
 
         public Task SendAsync(TMessage data)
         {
-            return this._handler.ReceiveAsync(this, data);
+            this._handler.Receive(this, data);
+            return Utils.TaskUtils.CompletedTask;
         }
     }
 }

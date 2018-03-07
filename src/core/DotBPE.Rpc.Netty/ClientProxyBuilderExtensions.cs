@@ -9,7 +9,7 @@ namespace DotBPE.Rpc.Netty
         {
             builder.ConfigureServices((services) =>
             {
-                services.AddSingleton<IClientBootstrap<TMessage>, NettyClientBootstrap<TMessage>>();
+                services.AddNettyClient<TMessage>();
             });
             return builder;
         }

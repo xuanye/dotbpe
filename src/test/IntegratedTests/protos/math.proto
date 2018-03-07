@@ -30,3 +30,12 @@ service Math{
     };//尾部的注释
 
 }
+
+service MathInner{
+    option (service_id)= 10006 ;//设定服务ID
+
+    rpc Plus (AddReq) returns (AddRes){
+        option (message_id)= 1 ;//设定消息ID
+    };//尾部的注释
+
+}

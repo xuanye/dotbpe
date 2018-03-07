@@ -4,33 +4,40 @@
 #region Designer generated code
 
 using Google.Protobuf;
+using DotBPE.Protobuf;
 
 namespace MathCommon
 {
-    public class ProtobufObjectFactory
+    public class ProtobufObjectFactory:IProtobufObjectFactory
     {
-        public static IMessage GetRequestTemplate(int serviceId, int messageId)
+        public IMessage GetRequestTemplate(int serviceId, int messageId)
         {
 
-    
             if (serviceId == 10005 && messageId == 1)
             {
                 return new AddReq();
             }
-    
+
+            if (serviceId == 10006 && messageId == 1)
+            {
+                return new AddReq();
+            }
 
             return null;
         }
 
-        public static IMessage GetResponseTemplate(int serviceId, int messageId)
+        public IMessage GetResponseTemplate(int serviceId, int messageId)
         {
 
-    
             if (serviceId == 10005 && messageId == 1)
             {
                 return new AddRes();
             }
-    
+
+            if (serviceId == 10006 && messageId == 1)
+            {
+                return new AddRes();
+            }
 
             return null;
         }
