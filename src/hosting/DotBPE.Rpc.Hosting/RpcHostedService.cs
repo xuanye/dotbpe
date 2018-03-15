@@ -7,6 +7,8 @@ using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
 
+
+
 namespace DotBPE.Rpc.Hosting
 {
     /// <summary>
@@ -143,7 +145,7 @@ namespace DotBPE.Rpc.Hosting
             //设置容器
             Rpc.Environment.SetServiceProvider(this._hostProvider);
 
-            //设置日志工厂类          
+            //设置日志工厂类
             Rpc.Environment.SetLoggerFactory(this._loggerFactory);
 
             _initialized = true;

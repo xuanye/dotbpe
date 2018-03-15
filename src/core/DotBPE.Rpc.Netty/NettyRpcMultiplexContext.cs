@@ -116,7 +116,7 @@ namespace DotBPE.Rpc.Netty
 
         internal void BindDisconnect(IClientBootstrap<TMessage> clientBoot)
         {
-            
+
             clientBoot.DisConnected += Channel_DisConnected;
         }
 
@@ -126,7 +126,7 @@ namespace DotBPE.Rpc.Netty
             if (this._autoReConnect)
             {
                 StartConnect(args.RemotePoint);
-            }            
+            }
         }
 
         private void TryRemoveById(string id)
@@ -153,7 +153,7 @@ namespace DotBPE.Rpc.Netty
         }
 
         /// <summary>
-        /// 要实现特定的轮询算法 ，就要重写这个实现    
+        /// 要实现特定的轮询算法 ，就要重写这个实现
         /// </summary>
         /// <returns></returns>
         private IChannel TryGetOneRandom()
@@ -163,7 +163,7 @@ namespace DotBPE.Rpc.Netty
             {
                 if (_channels.Count == 0)
                 {
-                    throw new Exceptions.RpcException("NettyRpcMultiplexContext wasn't inited");
+                    throw new Exceptions.RpcCommunicationException("当前没有可用链接");
                 }
 
                 int id = Interlocked.Increment(ref this.seq);

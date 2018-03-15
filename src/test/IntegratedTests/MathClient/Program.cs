@@ -30,7 +30,7 @@ namespace MathClient
 
             Task.Run(RunClient).Wait();
 
-           
+
         }
         private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
@@ -57,15 +57,15 @@ namespace MathClient
                 .ConfigureLoggingServices(logger=> logger.AddSerilog(dispose: true))
                 .BuildDefault();
 
-           
-           
+
+
             using (var client = proxy.GetClient<MathCommon.MathClient>())
             {
                 Console.WriteLine("ready to send message");
 
                 var random = new Random();
                 var i = 0;
-                while( i < 1)
+                while( i < 1000)
                 {
                     AddReq req = new AddReq
                     {
@@ -87,11 +87,11 @@ namespace MathClient
 
                     i++;
                 }
-               
+
             }
             Console.WriteLine("Press any key to quit!");
             Console.ReadKey();
-           
+
 
         }
     }

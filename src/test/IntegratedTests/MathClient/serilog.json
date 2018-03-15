@@ -29,7 +29,7 @@
                                             "Args": {
                                                 "pathFormat": "../logs/client/log-{Date}.log",
                                                 "restrictedToMinimumLevel": "Information",
-                                                "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} [{Level:u3}] {Message}{NewLine}{Exception}"
+                                                "outputTemplate": "{Timestamp:yyyy-MM-dd HH:mm:ss.fff} {SourceContext} [{Level:u3}] {Message}{NewLine}{Exception}"
                                             }
                                         }
                                     ]
@@ -40,7 +40,7 @@
                             {
                                 "Name": "ByExcluding",
                                 "Args": {
-                                    "expression": " not @Properties['SourceContext']='DotBPE.Protocol.Amp.CACAuditLogger' or  not @Properties['SourceContext']='DotBPE.Protocol.Amp.RequestAuditLogger'"
+                                    "expression": "EndsWith(@Properties['SourceContext'], 'AuditLogger')"
                                 }
                             }
                         ]
