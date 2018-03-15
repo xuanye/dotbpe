@@ -51,14 +51,14 @@ namespace DotBPE.Protobuf
                         }
                     }
 
-                    ret = AmpJsonFormatter.Format(rspTemp);                  
+                    ret = AmpJsonFormatter.Format(rspTemp);
                 }
 
-                return string.Concat("{\"return_code\":",return_code.ToString(), ",\"return_message\":\"",return_message, "\",\"data\":",ClearMetaField(ret), "}");              
+                return string.Concat("{\"return_code\":",return_code.ToString(), ",\"return_message\":\"",return_message, "\",\"data\":",ClearMetaField(ret), "}");
             }
             else
             {
-                return string.Concat("{\"return_code\":" , message.Code , ",\"return_message\":\"\"}");               
+                return string.Concat("{\"return_code\":" , message.Code , ",\"return_message\":\"\"}");
             }
         }
 
@@ -89,11 +89,11 @@ namespace DotBPE.Protobuf
                     {
                         if (reqData.Data.ContainsKey(field.Name))
                         {
-                            field.Accessor.SetValue(reqTemp, reqData.Data[field.Name]);
+                            ProtobufHelper.SetValue(field.Accessor,reqTemp,reqData.Data[field.Name]);
                         }
                         else if (reqData.Data.ContainsKey(field.JsonName))
                         {
-                            field.Accessor.SetValue(reqTemp, reqData.Data[field.JsonName]);
+                            ProtobufHelper.SetValue(field.Accessor,reqTemp,reqData.Data[field.JsonName]);
                         }
                     }
                 }

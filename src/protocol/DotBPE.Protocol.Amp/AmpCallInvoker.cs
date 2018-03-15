@@ -79,14 +79,14 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 auditLogger.PushResponse(rsp); //记录响应
                 return rsp;
             }
-                
+
         }
 
         public override AmpMessage BlockingCall(AmpMessage request, int timeOut = 5000)
         {
             return this.AsyncCall(request, timeOut).Result;
         }
-        
+
 
         protected override void MessageRecieved(object sender, MessageRecievedEventArgs<AmpMessage> e)
         {
@@ -105,14 +105,14 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             {
                 if (e.Message.Code != 0)
                 {
-                    Logger.LogError("server response error msg ,type{0}", e.Message.InvokeMessageType);
+                    Logger.LogDebug("server response error msg ,type={0}", e.Message.InvokeMessageType);
                     var message = e.Message;
                     TaskCompletionSource<AmpMessage> task;
                     if (_resultDictionary.ContainsKey(message.Id)
                         && _resultDictionary.TryGetValue(message.Id, out task))
                     {
                         task.SetResult(e.Message);
-                        Logger.LogError(string.Format("server response error msg ,code={0}", e.Message.Code));
+                       Logger.LogDebug("message {0},set result success", message.Id);
                         // 移除字典
                         RemoveResultCallback(message.Id);
                     }
@@ -157,7 +157,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 {
                     Logger.LogWarning("set timeout result fail,maybe task is completed");
                 }
-               
+
                 Logger.LogWarning("message {0}, timeout", id);
                 //task.TrySetException(new RpcCommunicationException("operation timeout"));
                 // 移除字典
@@ -203,7 +203,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private void AutoSetSequence(AmpMessage request)
         {
-            
+
             int id = Interlocked.Increment(ref INVOKER_SEQ);
             request.Sequence = id;
         }

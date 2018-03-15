@@ -36,18 +36,24 @@ namespace DotBPE.Rpc.Netty
 
         public void Dispose()
         {
+            if(_channel ==null){
+                return;
+            }
             if (this._channel.Open || this._channel.Active)
             {
-                this._channel.CloseAsync().Wait();
+                this._channel.CloseAsync();
                 this._channel = null;
             }
         }
 
         public Task ShutdownAsync()
         {
+            if(_channel ==null){
+               return Task.CompletedTask;
+            }
             if (this._channel.Open || this._channel.Active)
             {
-                this._channel.CloseAsync().Wait();
+                this._channel.CloseAsync();
                 this._channel = null;
             }
             return Task.CompletedTask;
@@ -104,7 +110,7 @@ namespace DotBPE.Rpc.Netty
         {
             var context = new NettyRpcContext<TMessage>(ctx.Channel, _msgCodecs);
             context.LocalAddress = ctx.Channel.LocalAddress;
-            context.RemoteAddress = ctx.Channel.RemoteAddress; 
+            context.RemoteAddress = ctx.Channel.RemoteAddress;
 
             CallContext<TMessage> callContext = null;
             if (_contextAccessor != null)
