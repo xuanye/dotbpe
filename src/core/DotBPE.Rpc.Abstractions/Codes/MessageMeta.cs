@@ -2,13 +2,11 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotBPE.Rpc.Codes
-{
+namespace DotBPE.Rpc.Codes {
     /// <summary>
     /// 消息元数据定义
     /// </summary>
-    public class MessageMeta
-    {
+    public class MessageMeta {
         /// <summary>
         /// 最大包长度
         /// </summary>
