@@ -3,6 +3,7 @@ using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using Google.Protobuf;
 using System;
+using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
@@ -13,6 +14,10 @@ namespace MathCommon
         private static readonly JsonFormatter JsonFormatter = new JsonFormatter(new JsonFormatter.Settings(false).WithFormatEnumsAsIntegers(true));
 
         private readonly IProtobufObjectFactory _factory;
+
+        private static ConcurrentDictionary<string, Google.Protobuf.MessageParser> tempCache = new ConcurrentDictionary<string, Google.Protobuf.MessageParser>();
+
+
         public AuditLoggerFormat(IProtobufObjectFactory factory)
         {
             _factory = factory;
@@ -22,86 +27,123 @@ namespace MathCommon
         {
             string log = string.Empty;
 
-            if(logType == AuditLogType.CACAduit)
+            if (req == null || rsp == null)
             {
-                log = FormatCACLog(req, rsp, elapsedMS);
+                return log;
             }
-            else if(logType == AuditLogType.RequestAudit)
+            var reqParser = GetMessageParser(req.ServiceId, req.MessageId, 1);
+            var resParser = GetMessageParser(rsp.ServiceId, rsp.MessageId, 2);
+
+            if (logType == AuditLogType.CACAduit)
             {
-                log = FormatRequestLog(context,req, rsp, elapsedMS);
+                log = FormatCACLog(req, rsp, elapsedMS, reqParser, resParser);
+            }
+            else if (logType == AuditLogType.RequestAudit)
+            {
+                log = FormatRequestLog(context, req, rsp, elapsedMS, reqParser, resParser);
             }
 
             return log;
         }
 
-        private string FormatCACLog(AmpMessage req, AmpMessage rsp, long elapsedMS)
+        private string FormatCACLog(AmpMessage req, AmpMessage rsp, long elapsedMS, Google.Protobuf.MessageParser reqParser, Google.Protobuf.MessageParser resParser)
         {
             string mothedName = req.FriendlyServiceName ?? req.MethodIdentifier;
-            //clientIp,reqId,serviceName, elapsedMS,status_code
-            var jsonReq = ToReqJson(req);
-            var jsonRsp = ToResJson(rsp);
 
-            return string.Format("{0}  ,{1}  ,{2}  ,req={3}  ,res={4}  ,{5}","TOKEN",req.Id, mothedName, jsonReq, jsonRsp, elapsedMS, rsp.Code);
+            IMessage reqMsg = reqParser.ParseFrom(req.Data);
+            IMessage resMsg = resParser.ParseFrom(rsp.Data);
+
+            var jsonReq = JsonFormatter.Format(reqMsg);
+            var jsonRsp = JsonFormatter.Format(resMsg);
+
+            var clientIP = FindFieldValue(reqMsg, "client_ip");
+            var requestId = FindFieldValue(reqMsg, "x_request_id");
+            if (string.IsNullOrEmpty(clientIP))
+            {
+                clientIP = "UNKNOWN";
+            }
+            if (string.IsNullOrEmpty(requestId))
+            {
+                requestId = "UNKNOWN";
+            }
+            //clientIp,requestId,serviceName, elapsedMS,status_code
+            return string.Format("{0},  {1},  {2},  req={3},  res={4},  {5}", clientIP, requestId, mothedName, jsonReq, jsonRsp, elapsedMS, rsp.Code);
         }
 
-        private string FormatRequestLog(IRpcContext context,  AmpMessage req, AmpMessage rsp, long elapsedMS)
+
+        private string FormatRequestLog(IRpcContext context, AmpMessage req, AmpMessage rsp, long elapsedMS, Google.Protobuf.MessageParser reqParser, Google.Protobuf.MessageParser resParser)
         {
-            string ip = "unknown";
-            if(context !=null && context.RemoteAddress != null)
+            string remoteIP = "UNKNOWN";
+
+            if (context != null && context.RemoteAddress != null)
             {
-                ip = DotBPE.Rpc.Utils.ParseUtils.ParseEndPointToIPString(context.RemoteAddress);
+                remoteIP = DotBPE.Rpc.Utils.ParseUtils.ParseEndPointToIPString(context.RemoteAddress);
             }
             string mothedName = req.FriendlyServiceName ?? req.MethodIdentifier;
-            var jsonReq = ToReqJson(req);
-            var jsonRsp = ToResJson(rsp);
-            //clientIp,reqId,serviceName,request_data,response_data , elapsedMS ,status_code
-            return string.Format("{0}  ,{1}  ,{2}  ,req={3}  ,res={4}  ,{5}  ,{6}",ip,req.Id, mothedName, jsonReq, jsonRsp, elapsedMS, rsp.Code);
+
+            IMessage reqMsg = reqParser.ParseFrom(req.Data);
+            IMessage resMsg = resParser.ParseFrom(rsp.Data);
+
+            var jsonReq = JsonFormatter.Format(reqMsg);
+            var jsonRsp = JsonFormatter.Format(resMsg);
+
+            var clientIP = FindFieldValue(reqMsg, "client_ip");
+            var requestId = FindFieldValue(reqMsg, "x_request_id");
+            if (string.IsNullOrEmpty(clientIP))
+            {
+                clientIP = "UNKNOWN";
+            }
+            if (string.IsNullOrEmpty(requestId))
+            {
+                requestId = "UNKNOWN";
+            }
+            //remoteIP,clientIp,requestId,serviceName,request_data,response_data , elapsedMS ,status_code
+            return string.Format("{0},  {1},  {2},  {3},  req={4},  res={5},  {6},  {7}", remoteIP, clientIP, requestId, mothedName, jsonReq, jsonRsp, elapsedMS, rsp.Code);
         }
 
-        private string ToResJson(AmpMessage message)
+
+        private Google.Protobuf.MessageParser GetMessageParser(ushort serviceId, ushort messageId, int type)
         {
-            string ret = string.Empty;
-            if (message != null)
+            string cacheKey = string.Format("{0}_{1}_{2}", serviceId, messageId, type);
+            Google.Protobuf.MessageParser tmp = null;
+            if (tempCache.ContainsKey(cacheKey))
             {
-                
-                var tmp = _factory.GetResponseTemplate(message.ServiceId, message.MessageId);
-                if (tmp == null)
-                {
-                    return ret;
-                }
-
-                if (message.Data != null)
-                {
-                    tmp.MergeFrom(message.Data);
-                }
-
-                ret = JsonFormatter.Format(tmp);
+                tempCache.TryGetValue(cacheKey, out tmp);
             }
 
-            return ret;
-
+            if (tmp == null)
+            {
+                IMessage tMsg = null;
+                if (type == 1)
+                {
+                    tMsg = _factory.GetRequestTemplate(serviceId, messageId);
+                }
+                else
+                {
+                    tMsg = _factory.GetResponseTemplate(serviceId, messageId);
+                }
+                if (tMsg != null)
+                {
+                    tmp = tMsg.Descriptor.Parser;
+                    tempCache.TryAdd(cacheKey, tmp);
+                }
+            }
+            return tmp;
         }
-        private string ToReqJson(AmpMessage message)
+
+
+        private static string FindFieldValue(IMessage msg, string fieldName)
         {
-            string ret = string.Empty;
-            if (message != null)
+            var field = msg.Descriptor.FindFieldByName(fieldName);
+            if (field != null)
             {
-
-                var tmp = _factory.GetRequestTemplate(message.ServiceId, message.MessageId);
-                if (tmp == null)
+                var retObjV = field.Accessor.GetValue(msg);
+                if (retObjV != null)
                 {
-                    return ret;
+                    return retObjV.ToString();
                 }
-
-                if (message.Data != null)
-                {
-                    tmp.MergeFrom(message.Data);
-                }
-
-                ret = JsonFormatter.Format(tmp);
             }
-
-            return ret;
+            return "";
         }
     }
 }

@@ -28,12 +28,12 @@ namespace DotBPE.Protocol.Amp
             public IAuditLoggerFormat<AmpMessage> Formater { get;  set; }
         }
 
-    
+
 
         private static Queue<AuditLogEntity> logDict = new Queue<AuditLogEntity>();
         private static object lockobject = new object();
         private static bool _isruning = false;
-       
+
         private Stopwatch _sw;
         private AmpMessage _req;
         private AmpMessage _rsp;
@@ -55,7 +55,7 @@ namespace DotBPE.Protocol.Amp
                     if (Rpc.Environment.ServiceProvider != null)
                     {
                         _Formater = Rpc.Environment.ServiceProvider.GetService<IAuditLoggerFormat<AmpMessage>>();
-                    }                   
+                    }
                 }
                 return _Formater;
             }
@@ -63,7 +63,7 @@ namespace DotBPE.Protocol.Amp
 
         private static void AddAuditLog(ILogger writer,IAuditLoggerFormat<AmpMessage> format,AuditLogType logType,IRpcContext context, AmpMessage req, AmpMessage rsp, long elapsedMS)
         {
-            if(writer ==null || format == null)
+            if(writer == null || format == null)
             {
                 return;
             }
@@ -76,7 +76,7 @@ namespace DotBPE.Protocol.Amp
                 ElapsedMS = elapsedMS,
                 Writer = writer,
                 Formater = format,
-                 LogType = logType
+                LogType = logType
             };
             lock (lockobject)
             {
@@ -111,11 +111,12 @@ namespace DotBPE.Protocol.Amp
                         {
                             log.Writer.LogInformation(logText);
                         }
-                        
+
                     }
                 }
-                catch
+                catch(Exception ex)
                 {
+                    Console.WriteLine(ex.Message+"\r"+ex.StackTrace);
                     //无能为力了
                 }
             }
@@ -157,5 +158,5 @@ namespace DotBPE.Protocol.Amp
         }
     }
 
-  
+
 }

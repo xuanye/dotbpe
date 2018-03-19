@@ -10,7 +10,7 @@ namespace DotBPE.Protocol.Amp
 {
     public class CACAuditLogger : AbstractAuditLogger
     {
-       
+
         private static ILogger _Logger;
 
         protected ILogger Logger
@@ -23,21 +23,16 @@ namespace DotBPE.Protocol.Amp
                     {
                         _Logger = Rpc.Environment.LoggerFactory.CreateLogger<CACAuditLogger>();
                     }
-                    else
-                    {
-                        _Logger = NullLogger.Instance;
-                    }
-
                 }
                 return _Logger;
             }
         }
-               
+
         protected override AuditLogType GetAuditLogType()
         {
             return AuditLogType.CACAduit;
         }
-      
+
         protected override ILogger GetTypeLogger()
         {
             return Logger;

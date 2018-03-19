@@ -6,9 +6,9 @@ using System.Collections.Generic;
 using System.Text;
 
 namespace DotBPE.Protocol.Amp
-{    
+{
     public class RequestAuditLogger : AbstractAuditLogger
-    {        
+    {
         private static ILogger _Logger;
         protected ILogger Logger
         {
@@ -20,22 +20,17 @@ namespace DotBPE.Protocol.Amp
                     {
                         _Logger = Rpc.Environment.LoggerFactory.CreateLogger<RequestAuditLogger>();
                     }
-                    else
-                    {
-                        _Logger = NullLogger.Instance;
-                    }
-
                 }
                 return _Logger;
             }
         }
 
-      
+
         protected override AuditLogType GetAuditLogType()
         {
             return AuditLogType.RequestAudit;
         }
-       
+
 
         protected override ILogger GetTypeLogger()
         {

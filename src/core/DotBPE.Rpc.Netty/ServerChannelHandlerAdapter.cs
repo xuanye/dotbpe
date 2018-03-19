@@ -8,7 +8,7 @@ namespace DotBPE.Rpc.Netty
 {
 
     /// <summary>
-    /// 
+    ///
     /// </summary>
     /// <typeparam name="TMessage">The type of the message.</typeparam>
     /// <seealso cref="DotNetty.Transport.Channels.SimpleChannelInboundHandler{TMessage}" />
@@ -35,13 +35,10 @@ namespace DotBPE.Rpc.Netty
             base.ChannelInactive(context);
         }
 
-        protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
+        protected async override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
             Logger.LogDebug("ready to read message");
-
-#pragma warning disable CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
-            this._bootstrap.ChannelRead(context, msg);
-#pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
+            await this._bootstrap.ChannelRead(context, msg);
         }
 
         public override void ChannelReadComplete(IChannelHandlerContext contex)
