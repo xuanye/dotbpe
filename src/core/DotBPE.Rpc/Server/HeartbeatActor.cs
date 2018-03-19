@@ -1,16 +1,13 @@
-using DotBPE.Rpc.Codes;
 using System.Threading.Tasks;
+using DotBPE.Rpc.Codes;
 
-namespace DotBPE.Rpc.Server
-{
-    public class HeartbeatActor<TMessage> : IServiceActor<TMessage> where TMessage : InvokeMessage
-    {
+namespace DotBPE.Rpc.Server {
+    public class HeartbeatActor<TMessage> : IServiceActor<TMessage> where TMessage : InvokeMessage {
         public string Id => "heartbeat";
 
-        public Task ReceiveAsync(IRpcContext<TMessage> context, TMessage message)
-        {
+        public Task ReceiveAsync (IRpcContext<TMessage> context, TMessage message) {
             message.InvokeMessageType = InvokeMessageType.Response;
-            return context.SendAsync(message);
+            return context.SendAsync (message);
         }
     }
 }

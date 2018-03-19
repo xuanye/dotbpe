@@ -1,9 +1,7 @@
 using System.Threading.Tasks;
 
-namespace DotBPE.Rpc
-{
-    public interface IPreheating
-    {
-        Task StartAsync();
+namespace DotBPE.Rpc {
+    public interface IPreheating {
+        Task StartAsync ();
     }
 }

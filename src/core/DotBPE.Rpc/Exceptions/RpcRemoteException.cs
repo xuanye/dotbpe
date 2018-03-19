@@ -11,21 +11,15 @@
 
 using System;
 
-namespace DotBPE.Rpc.Exceptions
-{
-    public class RpcRemoteException : Exception
-    {
-        public RpcRemoteException()
-        {
-        }
+namespace DotBPE.Rpc.Exceptions {
+    public class RpcRemoteException : Exception {
+        public RpcRemoteException () { }
 
-        public RpcRemoteException(int code, string message) : base(message)
-        {
+        public RpcRemoteException (int code, string message) : base (message) {
             this.Code = code;
         }
 
-        public RpcRemoteException(int code, string message, Exception inner) : base(message, inner)
-        {
+        public RpcRemoteException (int code, string message, Exception inner) : base (message, inner) {
             this.Code = code;
         }
 

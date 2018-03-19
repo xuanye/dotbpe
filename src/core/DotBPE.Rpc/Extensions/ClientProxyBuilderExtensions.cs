@@ -1,33 +1,28 @@
+using System;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Server;
 using DotBPE.Rpc.Utils;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 
-namespace DotBPE.Rpc
-{
+namespace DotBPE.Rpc {
     /// <summary>
     /// 
     /// </summary>
-    public static class ClientProxyBuilderExtensions
-    {
+    public static class ClientProxyBuilderExtensions {
         /// <summary>
         /// 添加客户端所需核心的接口依赖
         /// </summary>
         /// <typeparam name="TMessage">The type of the message.</typeparam>
         /// <param name="builder">The builder.</param>
         /// <returns></returns>
-        public static IClientProxyBuilder AddClientCore<TMessage>(this IClientProxyBuilder builder) where TMessage : InvokeMessage
-        {
-            builder.ConfigureServices((services) =>
-            {
-                services.AddClientCore<TMessage>();
+        public static IClientProxyBuilder AddClientCore<TMessage> (this IClientProxyBuilder builder) where TMessage : InvokeMessage {
+            builder.ConfigureServices ((services) => {
+                services.AddClientCore<TMessage> ();
             });
             return builder;
         }
-
 
         /// <summary>
         /// Uses the server.
@@ -35,10 +30,9 @@ namespace DotBPE.Rpc
         /// <param name="builder">The builder.</param>
         /// <param name="remoteAddress">The remote address.</param>
         /// <returns></returns>
-        public static IClientProxyBuilder UseServer(this IClientProxyBuilder builder, string remoteAddress)
-        {
-            Preconditions.CheckArgument(!string.IsNullOrEmpty(remoteAddress), "服务器地址不能为空");
-            builder.UseSetting("DefaultServerAddress", remoteAddress);
+        public static IClientProxyBuilder UseServer (this IClientProxyBuilder builder, string remoteAddress) {
+            Preconditions.CheckArgument (!string.IsNullOrEmpty (remoteAddress), "服务器地址不能为空");
+            builder.UseSetting ("DefaultServerAddress", remoteAddress);
             return builder;
         }
 
@@ -49,14 +43,13 @@ namespace DotBPE.Rpc
         /// <param name="remoteAddress">The remote address.</param>
         /// <param name="multiplexCount">The multiplex count.</param>
         /// <returns></returns>
-        public static IClientProxyBuilder UseServer(this IClientProxyBuilder builder, string remoteAddress, int multiplexCount)
-        {
-            Preconditions.CheckArgument(!string.IsNullOrEmpty(remoteAddress), "服务器地址不能为空");
+        public static IClientProxyBuilder UseServer (this IClientProxyBuilder builder, string remoteAddress, int multiplexCount) {
+            Preconditions.CheckArgument (!string.IsNullOrEmpty (remoteAddress), "服务器地址不能为空");
 
-            Preconditions.CheckArgument( multiplexCount >0 , "链接数不能小于0");
+            Preconditions.CheckArgument (multiplexCount > 0, "链接数不能小于0");
 
-            builder.UseSetting("DefaultServerAddress", remoteAddress);
-            builder.UseSetting("MultiplexCount", multiplexCount.ToString());
+            builder.UseSetting ("DefaultServerAddress", remoteAddress);
+            builder.UseSetting ("MultiplexCount", multiplexCount.ToString ());
             return builder;
         }
 
@@ -66,10 +59,9 @@ namespace DotBPE.Rpc
         /// <param name="builder">The builder.</param>
         /// <param name="configureLogging">The configure logging.</param>
         /// <returns></returns>
-        public static IClientProxyBuilder ConfigureLoggingServices(this IClientProxyBuilder builder, Action<ILoggingBuilder> configureLogging)
-        {
-            Preconditions.CheckNotNull(configureLogging, "configureLogging");
-            return builder.ConfigureServices(services => services.AddLogging(configureLogging));
+        public static IClientProxyBuilder ConfigureLoggingServices (this IClientProxyBuilder builder, Action<ILoggingBuilder> configureLogging) {
+            Preconditions.CheckNotNull (configureLogging, "configureLogging");
+            return builder.ConfigureServices (services => services.AddLogging (configureLogging));
         }
 
     }

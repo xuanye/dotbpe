@@ -1,67 +1,56 @@
+using System;
+using System.Collections.Generic;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 
-using System;
-using System.Collections.Generic;
-
-namespace DotBPE.Rpc.Client
-{
-    public class ClientProxyBuilder : IClientProxyBuilder
-    {
+namespace DotBPE.Rpc.Client {
+    public class ClientProxyBuilder : IClientProxyBuilder {
         private readonly List<Action<IServiceCollection>> _configureServicesDelegates;
 
         private readonly IConfiguration _config;
 
-        public ClientProxyBuilder()
-        {
-            _configureServicesDelegates = new List<Action<IServiceCollection>>();
+        public ClientProxyBuilder () {
+            _configureServicesDelegates = new List<Action<IServiceCollection>> ();
 
-            _config = new ConfigurationBuilder().AddInMemoryCollection(new[]
-            {
-                new KeyValuePair<string, string>("ApplicationName","dotbpe")
-            }).Build();
+            _config = new ConfigurationBuilder ().AddInMemoryCollection (new [] {
+                new KeyValuePair<string, string> ("ApplicationName", "dotbpe")
+            }).Build ();
         }
 
-        public IClientProxy Build()
-        {
-            var hostingServices = BuildCommonServices();
-            var applicationServices = hostingServices.Clone();
-            var clientServiceProvider = hostingServices.BuildServiceProvider();
+        public IClientProxy Build () {
+            var hostingServices = BuildCommonServices ();
+            var applicationServices = hostingServices.Clone ();
+            var clientServiceProvider = hostingServices.BuildServiceProvider ();
 
-            AddApplicationServices(applicationServices, clientServiceProvider);
+            AddApplicationServices (applicationServices, clientServiceProvider);
 
-            var proxy = clientServiceProvider.GetRequiredService<IClientProxy>();
+            var proxy = clientServiceProvider.GetRequiredService<IClientProxy> ();
 
-            Environment.SetServiceProvider(clientServiceProvider);
-            var loggerFactory = clientServiceProvider.GetService<ILoggerFactory>();
-            if (loggerFactory != null)
-            {
-                Environment.SetLoggerFactory(loggerFactory);
+            Environment.SetServiceProvider (clientServiceProvider);
+            var loggerFactory = clientServiceProvider.GetService<ILoggerFactory> ();
+            if (loggerFactory != null) {
+                Environment.SetLoggerFactory (loggerFactory);
             }
 
             return proxy;
         }
 
-        public IClientProxyBuilder ConfigureServices(Action<IServiceCollection> configureServices)
-        {
-            if (configureServices == null)
-            {
-                throw new ArgumentNullException(nameof(configureServices));
+        public IClientProxyBuilder ConfigureServices (Action<IServiceCollection> configureServices) {
+            if (configureServices == null) {
+                throw new ArgumentNullException (nameof (configureServices));
             }
 
-            _configureServicesDelegates.Add(configureServices);
+            _configureServicesDelegates.Add (configureServices);
             return this;
         }
 
-        public IClientProxyBuilder UseSetting(string key, string value)
-        {
+        public IClientProxyBuilder UseSetting (string key, string value) {
             _config[key] = value;
             return this;
         }
 
-        public string GetSetting(string key)
-        {
+        public string GetSetting (string key) {
             return _config[key];
         }
 
@@ -71,36 +60,31 @@ namespace DotBPE.Rpc.Client
         /// <param name="hostBuilder">The <see cref="IHostBuilder" /> to configure.</param>
         /// <param name="configureLogging">The delegate that configures the <see cref="ILoggingBuilder"/>.</param>
         /// <returns>The same instance of the <see cref="IHostBuilder"/> for chaining.</returns>
-        public IClientProxyBuilder ConfigureLogging(Action<ILoggingBuilder> configureLogging)
-        {
-            return this.ConfigureServices((collection) => collection.AddLogging(builder => configureLogging(builder)));
+        public IClientProxyBuilder ConfigureLogging (Action<ILoggingBuilder> configureLogging) {
+            return this.ConfigureServices ((collection) => collection.AddLogging (builder => configureLogging (builder)));
         }
 
-        private IServiceCollection BuildCommonServices()
-        {
-            var services = new ServiceCollection();
+        private IServiceCollection BuildCommonServices () {
+            var services = new ServiceCollection ();
 
             // The configured ILoggerFactory is added as a singleton here. AddLogging below will not add an additional one.
 
-            services.AddLogging();
+            services.AddLogging ();
 
-            services.AddOptions();
+            services.AddOptions ();
 
-            services.Configure<Options.RpcClientOption>(_config);  // 添加作为客户端的配置
+            services.Configure<Options.RpcClientOption> (_config); // 添加作为客户端的配置
 
-            services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory>();
+            services.AddTransient<IServiceProviderFactory<IServiceCollection>, DefaultServiceProviderFactory> ();
 
-            services.AddSingleton<IClientProxy, ClientProxy>();
+            services.AddSingleton<IClientProxy, ClientProxy> ();
 
-            foreach (var configureServices in _configureServicesDelegates)
-            {
-                configureServices(services);
+            foreach (var configureServices in _configureServicesDelegates) {
+                configureServices (services);
             }
             return services;
         }
 
-        private void AddApplicationServices(IServiceCollection services, IServiceProvider hostingServiceProvider)
-        {
-        }
+        private void AddApplicationServices (IServiceCollection services, IServiceProvider hostingServiceProvider) { }
     }
 }

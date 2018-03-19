@@ -11,19 +11,12 @@
 
 using System;
 
-namespace DotBPE.Rpc.Exceptions
-{
-    public class RpcException : Exception
-    {
-        public RpcException()
-        {
-        }
+namespace DotBPE.Rpc.Exceptions {
+    public class RpcException : Exception {
+        public RpcException () { }
 
-        public RpcException(string message) : base(message)
-        {
-        }
+        public RpcException (string message) : base (message) { }
 
-        public RpcException(string message, Exception inner) : base(message, inner)
-        { }
+        public RpcException (string message, Exception inner) : base (message, inner) { }
     }
 }
