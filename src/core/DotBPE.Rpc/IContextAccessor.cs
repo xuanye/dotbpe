@@ -1,25 +1,19 @@
-using DotBPE.Rpc.Codes;
 using System.Threading;
+using DotBPE.Rpc.Codes;
 
-namespace DotBPE.Rpc
-{
-    public interface IContextAccessor<TMessage> where TMessage : InvokeMessage
-    {
+namespace DotBPE.Rpc {
+    public interface IContextAccessor<TMessage> where TMessage : InvokeMessage {
         CallContext<TMessage> CallContext { get; set; }
     }
 
-    public class DefaultContextAccessor<TMessage> : IContextAccessor<TMessage> where TMessage : InvokeMessage
-    {
-        private static AsyncLocal<CallContext<TMessage>> _callContextCurrent = new AsyncLocal<CallContext<TMessage>>();
+    public class DefaultContextAccessor<TMessage> : IContextAccessor<TMessage> where TMessage : InvokeMessage {
+        private static AsyncLocal<CallContext<TMessage>> _callContextCurrent = new AsyncLocal<CallContext<TMessage>> ();
 
-        public CallContext<TMessage> CallContext
-        {
-            get
-            {
+        public CallContext<TMessage> CallContext {
+            get {
                 return _callContextCurrent.Value;
             }
-            set
-            {
+            set {
                 _callContextCurrent.Value = value;
             }
         }

@@ -1,15 +1,12 @@
-using DotBPE.Rpc.Codes;
 using System.Net;
 using System.Threading.Tasks;
+using DotBPE.Rpc.Codes;
 
-namespace DotBPE.Rpc
-{
-    internal class LocalMockContext<TMessage> : IRpcContext<TMessage> where TMessage : InvokeMessage
-    {
+namespace DotBPE.Rpc {
+    internal class LocalMockContext<TMessage> : IRpcContext<TMessage> where TMessage : InvokeMessage {
         private readonly IClientMessageHandler<TMessage> _handler;
 
-        public LocalMockContext(IClientMessageHandler<TMessage> handler)
-        {
+        public LocalMockContext (IClientMessageHandler<TMessage> handler) {
             this._handler = handler;
         }
 
@@ -17,14 +14,12 @@ namespace DotBPE.Rpc
 
         public EndPoint LocalAddress => null;
 
-        public Task CloseAsync()
-        {
+        public Task CloseAsync () {
             return Task.CompletedTask;
         }
 
-        public Task SendAsync(TMessage data)
-        {
-            this._handler.Receive(this, data);
+        public Task SendAsync (TMessage data) {
+            this._handler.Receive (this, data);
             return Utils.TaskUtils.CompletedTask;
         }
     }

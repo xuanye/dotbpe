@@ -1,24 +1,22 @@
-namespace DotBPE.Rpc.Codes
-{
-    public interface IBufferReader
-    {
-        int ReadInt();
+namespace DotBPE.Rpc.Codes {
+    public interface IBufferReader {
+        int ReadInt ();
 
-        byte ReadByte();
+        byte ReadByte ();
 
-        long ReadLong();
+        long ReadLong ();
 
-        double ReadDouble();
+        double ReadDouble ();
 
-        void ReadBytes(byte[] dist);
+        void ReadBytes (byte[] dist);
 
-        char ReadChar();
+        char ReadChar ();
 
-        short ReadShort();
+        short ReadShort ();
 
-        ushort ReadUShort();
+        ushort ReadUShort ();
 
-        uint ReadUInt();
+        uint ReadUInt ();
 
         int ReadableBytes { get; }
     }

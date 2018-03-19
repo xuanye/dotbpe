@@ -1,13 +1,11 @@
-namespace DotBPE.Rpc.Codes
-{
-    public interface IMessageCodecs<TMessage> where TMessage : InvokeMessage
-    {
-        void Encode(TMessage message, IBufferWriter writer);
+namespace DotBPE.Rpc.Codes {
+    public interface IMessageCodecs<TMessage> where TMessage : InvokeMessage {
+        void Encode (TMessage message, IBufferWriter writer);
 
-        TMessage Decode(IBufferReader reader);
+        TMessage Decode (IBufferReader reader);
 
-        MessageMeta GetMessageMeta();
+        MessageMeta GetMessageMeta ();
 
-        TMessage HeartbeatMessage();
-    }    
+        TMessage HeartbeatMessage ();
+    }
 }
