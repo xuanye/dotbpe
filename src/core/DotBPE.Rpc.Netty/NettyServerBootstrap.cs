@@ -46,17 +46,17 @@ namespace DotBPE.Rpc.Netty
             }
         }
 
-        public Task ShutdownAsync()
+        public async Task ShutdownAsync()
         {
             if(_channel ==null){
-               return Task.CompletedTask;
+               return ;
             }
             if (this._channel.Open || this._channel.Active)
             {
-                this._channel.CloseAsync();
+                await this._channel.CloseAsync();
                 this._channel = null;
             }
-            return Task.CompletedTask;
+            return ;
         }
 
         /// <summary>
