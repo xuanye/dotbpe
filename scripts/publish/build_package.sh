@@ -10,16 +10,18 @@ fi
 
 mkdir -p $artifactsFolder
 
-dotnet restore ./DotBPE.sln
-dotnet build ./DotBPE.sln -c Release
 
 
 
-versionNumber="1.1.25"
+versionNumber="1.1.27"
 
 dotnet pack ./core/DotBPE.Rpc.Abstractions/DotBPE.Rpc.Abstractions.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
 dotnet pack ./core/DotBPE.Rpc/DotBPE.Rpc.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
 dotnet pack ./core/DotBPE.Rpc.Netty/DotBPE.Rpc.Netty.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
+
+
+
+
 dotnet pack ./protocol/DotBPE.Protocol.Amp/DotBPE.Protocol.Amp.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
 dotnet pack ./protocol/DotBPE.Protobuf/DotBPE.Protobuf.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
 dotnet pack ./hosting/DotBPE.Rpc.Hosting/DotBPE.Rpc.Hosting.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber

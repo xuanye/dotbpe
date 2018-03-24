@@ -1,7 +1,25 @@
 <Project Sdk="Microsoft.NET.Sdk">
-
   <PropertyGroup>
-    <TargetFramework>netstandard2.0</TargetFramework>
+     <TargetFramework>netstandard2.0</TargetFramework>
+     <DefineConstants>$(DefineConstants);DOTNETCORE</DefineConstants>
+
+    <Description>DotBPE.Utils是一些常用的类库和帮助类</Description>
+    <Copyright>Xuanye @ 2018</Copyright>
+    <Authors>Xuanye</Authors>
+    <AssemblyTitle>C# Help Lib</AssemblyTitle>
+    <AssemblyName>DotBPE.Utils</AssemblyName>
+    <PackageId>DotBPE.Utils</PackageId>
+    <Version>$(VersionSuffix)</Version>
+    <PackageTags>utility,dotbpe</PackageTags>
+    <PackageReleaseNotes>C# utility Lib</PackageReleaseNotes>
+    <PackageProjectUrl>https://github.com/dotbpe/dotbpe</PackageProjectUrl>
+    <PackageLicenseUrl>https://github.com/dotbpe/dotbpe/blob/master/LICENSE</PackageLicenseUrl>
+    <PackageRequireLicenseAcceptance>false</PackageRequireLicenseAcceptance>
+    <RepositoryType>git</RepositoryType>
+    <RepositoryUrl>https://github.com/dotbpe/dotbpe</RepositoryUrl>
   </PropertyGroup>
 
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+    <OutputPath>..\..\..\dist\</OutputPath>
+  </PropertyGroup>
 </Project>
