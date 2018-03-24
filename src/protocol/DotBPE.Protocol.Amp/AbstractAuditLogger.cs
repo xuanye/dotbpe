@@ -6,6 +6,7 @@ using System.Collections.Generic;
 using System.Diagnostics;
 using System.Text;
 using System.Threading;
+using System.Collections.Concurrent;
 
 namespace DotBPE.Protocol.Amp
 {
@@ -30,7 +31,7 @@ namespace DotBPE.Protocol.Amp
 
 
 
-        private static Queue<AuditLogEntity> logDict = new Queue<AuditLogEntity>();
+        private static ConcurrentQueue<AuditLogEntity> logDict = new ConcurrentQueue<AuditLogEntity>();
         private static object lockobject = new object();
         private static bool _isruning = false;
 
@@ -78,10 +79,9 @@ namespace DotBPE.Protocol.Amp
                 Formater = format,
                 LogType = logType
             };
-            lock (lockobject)
-            {
-                logDict.Enqueue(entity);
-            }
+
+            logDict.Enqueue(entity);
+
             StartWrite();
         }
 
@@ -99,12 +99,17 @@ namespace DotBPE.Protocol.Amp
 
         private static void WriteLog()
         {
-            while (logDict.Count > 0)
+            while (!logDict.IsEmpty)
             {
-                var log = logDict.Dequeue();
+
+                AuditLogEntity log ;
+                var hasLog = logDict.TryDequeue(out log);
+                if(!hasLog || log ==null){
+                    return ;
+                }
                 try
                 {
-                    if (log.Formater != null)
+                    if ( log.Formater != null && log.Writer !=null)
                     {
                         string logText = log.Formater.Format(log.Context,log.LogType,log.Request, log.Response, log.ElapsedMS);
                         if(!string.IsNullOrEmpty(logText))
@@ -116,7 +121,7 @@ namespace DotBPE.Protocol.Amp
                 }
                 catch(Exception ex)
                 {
-                    Console.WriteLine(ex.Message+"\r"+ex.StackTrace);
+                    Console.WriteLine("--写日志出错了--"+ex.Message+"-----\r\n-----"+ex.StackTrace);
                     //无能为力了
                 }
             }
