@@ -9,7 +9,7 @@ namespace DotBPE.Protobuf
 {
     public class MessageParser : IMessageParser<AmpMessage>
     {
-        private static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(true).WithFormatEnumsAsIntegers(true));
+        private static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(false).WithFormatEnumsAsIntegers(true));
 
         private readonly ILogger<MessageParser> _logger;
         private readonly IProtobufObjectFactory _factory;
@@ -22,44 +22,40 @@ namespace DotBPE.Protobuf
 
         public virtual string ToJson(AmpMessage message)
         {
-            if (message.Code == 0)
+            var return_code = 0;
+            var return_message = "";
+            string ret = "";
+            if (message != null)
             {
-                var return_code = 0;
-                var return_message = "";
-                string ret = "";
-                if (message != null)
+                var rspTemp = _factory.GetResponseTemplate(message.ServiceId, message.MessageId);
+                if (rspTemp == null)
                 {
-                    var rspTemp = _factory.GetResponseTemplate(message.ServiceId, message.MessageId);
-                    if (rspTemp == null)
-                    {
-                        return ret;
-                    }
-
-                    if (message.Data != null)
-                    {
-                        rspTemp.MergeFrom(message.Data);
-                    }
-
-                    //提取return_message
-                    var field_msg = rspTemp.Descriptor.FindFieldByName("return_message");
-                    if (field_msg != null)
-                    {
-                        var retObjV = field_msg.Accessor.GetValue(rspTemp);
-                        if (retObjV != null)
-                        {
-                            return_message = retObjV.ToString();
-                        }
-                    }
-
-                    ret = AmpJsonFormatter.Format(rspTemp);
+                    return ret;
                 }
 
+                if (message.Data != null)
+                {
+                    rspTemp.MergeFrom(message.Data);
+                }
+
+                //提取return_message
+                var field_msg = rspTemp.Descriptor.FindFieldByName("return_message");
+                if (field_msg != null)
+                {
+                    var retObjV = field_msg.Accessor.GetValue(rspTemp);
+                    if (retObjV != null)
+                    {
+                        return_message = retObjV.ToString();
+                    }
+                }
+
+                ret = AmpJsonFormatter.Format(rspTemp);
                 return string.Concat("{\"return_code\":",return_code.ToString(), ",\"return_message\":\"",return_message, "\",\"data\":",ClearMetaField(ret), "}");
             }
-            else
-            {
-                return string.Concat("{\"return_code\":" , message.Code , ",\"return_message\":\"\"}");
+            else{
+                return string.Concat("{\"return_code\":" , ErrorCodes.CODE_INTERNAL_ERROR , ",\"return_message\":\"内部错误\"}");
             }
+                
         }
 
         public virtual AmpMessage ToMessage(RequestData reqData)
