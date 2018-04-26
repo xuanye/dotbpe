@@ -1,4 +1,5 @@
 using DotBPE.Rpc;
+using DotBPE.Rpc.Utils;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -148,6 +149,10 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private void TimeOutCallBack(string id)
         {
+            if (!_resultDictionary.ContainsKey(id))
+            {
+                return;
+            }
             TaskCompletionSource<AmpMessage> task;
             if (_resultDictionary.TryGetValue(id, out task))
             {
@@ -167,6 +172,10 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private void ErrorCallBack(string id)
         {
+            if (!_resultDictionary.ContainsKey(id))
+            {
+                return;
+            }
             TaskCompletionSource<AmpMessage> task;
             if (_resultDictionary.TryGetValue(id, out task))
             {
@@ -189,16 +198,14 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
             _resultDictionary.TryAdd(id, tcs);
             var task = tcs.Task;
-            Task.Factory.StartNew(() =>
-            {
-                if (Task.WhenAny(task, Task.Delay(timeOut)).Result != task)
-                {
-                    // timeout logic
-                    TimeOutCallBack(id);
-                }
-            });
+        
+            //TODO:这里要做下优化把，具体看如何实现，超时
+            var ct = new CancellationTokenSource(timeOut);
+
+            ct.Token.Register(() => TimeOutCallBack(id), useSynchronizationContext: false);
 
             return task;
+            /**/
         }
 
         private void AutoSetSequence(AmpMessage request)
