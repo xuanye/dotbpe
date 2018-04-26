@@ -39,14 +39,16 @@ namespace MathCommon {
             {
                 result.Code = response.Code;
             }
-            else if (response.Data == null)
+            
+            if (response.Data == null)
             {
-                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+                result.Data  =  new AddRes();
             }
             else
             {
                 result.Data = AddRes.Parser.ParseFrom(response.Data);
             }
+
             return result;
         }
 
@@ -65,9 +67,10 @@ namespace MathCommon {
             {
                 result.Code = response.Code;
             }
-            else if (response.Data == null)
+            
+            if (response.Data == null)
             {
-                result.Code = ErrorCodes.CODE_INTERNAL_ERROR;
+                result.Data = new AddRes();
             }
             else
             {
