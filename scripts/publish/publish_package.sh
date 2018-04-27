@@ -15,7 +15,7 @@ dotnet build ./DotBPE.sln -c Release
 
 
 
-versionNumber="1.1.25"
+versionNumber="1.1.27"
 
 dotnet pack ./core/DotBPE.Rpc.Abstractions/DotBPE.Rpc.Abstractions.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
 dotnet pack ./core/DotBPE.Rpc/DotBPE.Rpc.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
