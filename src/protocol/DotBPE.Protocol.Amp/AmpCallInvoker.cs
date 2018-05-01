@@ -96,7 +96,6 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             return this.AsyncCall(request, timeOut).Result;
         }
 
-
         protected override void MessageRecieved(object sender, MessageRecievedEventArgs<AmpMessage> e)
         {
             if (e.Message == null)
