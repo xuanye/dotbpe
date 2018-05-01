@@ -20,7 +20,7 @@ namespace MathServer
     {
         static void Main(string[] args)
         {
-            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException; 
+            TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
             var currentEnv = System.Environment.GetEnvironmentVariable("DOTBPE_ENVIRONMENT");
             var configuration = new ConfigurationBuilder()
@@ -60,7 +60,7 @@ namespace MathServer
                 });
 
 
-              
+
 
                 //添加挂载的宿主服务
                 services.AddScoped<IHostedService, RpcHostedService>();
@@ -68,7 +68,7 @@ namespace MathServer
             .ConfigureLogging(
                 logger => logger.AddSerilog(dispose: true)
             );
-                       
+
             builder.RunConsoleAsync().Wait();
 
         }
@@ -85,22 +85,22 @@ namespace MathServer
             }
         }
     }
-    
+
 
     public class MathService : MathBase
     {
-       
+
         private readonly IClientProxy _proxy;
 
         public MathService( IClientProxy proxy)
         {
             _proxy = proxy;
-           
+
         }
         public override async Task<RpcResult<AddRes>> AddAsync(AddReq req){
             var inner = _proxy.GetClient<MathInnerClient>();
 
-            var res = await inner.PlusAsync(req);       
+            var res = await inner.PlusAsync(req);
 
             return res;
         }
@@ -116,7 +116,7 @@ namespace MathServer
 
         public override async Task<RpcResult<AddRes>> PlusAsync(AddReq req)
         {
-            //await Task.Delay(3000);
+            await Task.Delay(3000);
 
             string response =  await _req.GetRequest();
 
