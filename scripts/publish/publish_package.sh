@@ -15,7 +15,7 @@ dotnet build ./DotBPE.sln -c Release
 
 
 
-versionNumber="1.1.25"
+versionNumber="1.1.28"
 
 dotnet pack ./core/DotBPE.Rpc.Abstractions/DotBPE.Rpc.Abstractions.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
 dotnet pack ./core/DotBPE.Rpc/DotBPE.Rpc.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
@@ -36,4 +36,3 @@ dotnet nuget push ./$artifactsFolder/DotBPE.Protocol.Amp.${versionNumber}.nupkg 
 dotnet nuget push ./$artifactsFolder/DotBPE.Protobuf.${versionNumber}.nupkg -k $NUGET_KEY -s https://www.nuget.org
 dotnet nuget push ./$artifactsFolder/DotBPE.Rpc.Hosting.${versionNumber}.nupkg -k $NUGET_KEY -s https://www.nuget.org
 
-dotnet nuget push ./$artifactsFolder/DotBPE.Utils.${versionNumber}.nupkg -k $NUGET_KEY -s https://www.nuget.org
