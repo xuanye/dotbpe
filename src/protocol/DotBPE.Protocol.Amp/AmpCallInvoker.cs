@@ -63,22 +63,30 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 auditLogger.PushRequest(request); //记录请求参数
 
                 Logger.LogDebug("new request id={0}", request.Id);
-                var callbackTask = RegisterResultCallbackAsync(request.Id, timeOut);
 
-                try
+                var cts = new CancellationTokenSource(timeOut);
+                //注册超时处理
+                using(cts.Token.Register(() => TimeOutCallBack(request.Id), useSynchronizationContext: false))
                 {
-                    //发送
-                    await base.RpcClient.SendAsync(request);
-                }
-                catch (Exception exception)
-                {
-                    ErrorCallBack(request.Id);
-                    Logger.LogError(exception, "error occor:");
+
+                    var callbackTask = RegisterResultCallbackAsync(request.Id, timeOut);
+
+                    try
+                    {
+                        //发送
+                        await base.RpcClient.SendAsync(request);
+                    }
+                    catch (Exception exception)
+                    {
+                        ErrorCallBack(request.Id);
+                        Logger.LogError(exception, "error occor:");
+                    }
+
+                    var rsp = await callbackTask;
+                    auditLogger.PushResponse(rsp); //记录响应
+                    return rsp;
                 }
 
-                var rsp = await callbackTask;
-                auditLogger.PushResponse(rsp); //记录响应
-                return rsp;
             }
 
         }
@@ -87,7 +95,6 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         {
             return this.AsyncCall(request, timeOut).Result;
         }
-
 
         protected override void MessageRecieved(object sender, MessageRecievedEventArgs<AmpMessage> e)
         {
@@ -149,12 +156,10 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private void TimeOutCallBack(string id)
         {
-            if (!_resultDictionary.ContainsKey(id))
-            {
-                return;
-            }
+
             TaskCompletionSource<AmpMessage> task;
-            if (_resultDictionary.TryGetValue(id, out task))
+            if (_resultDictionary.ContainsKey(id) &&
+                _resultDictionary.TryGetValue(id, out task))
             {
                 var message = AmpMessage.CreateResponseMessage(id);
                 message.Code = ErrorCodes.CODE_TIMEOUT;
@@ -197,15 +202,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             var tcs = new TaskCompletionSource<AmpMessage>();
 
             _resultDictionary.TryAdd(id, tcs);
-            var task = tcs.Task;
-        
-            //TODO:这里要做下优化把，具体看如何实现，超时
-            var ct = new CancellationTokenSource(timeOut);
-
-            ct.Token.Register(() => TimeOutCallBack(id), useSynchronizationContext: false);
-
-            return task;
-            /**/
+            return tcs.Task;
         }
 
         private void AutoSetSequence(AmpMessage request)
