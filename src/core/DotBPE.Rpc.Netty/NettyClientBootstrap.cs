@@ -36,7 +36,7 @@ namespace DotBPE.Rpc.Netty {
         public NettyClientBootstrap (IClientMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, IOptions<RpcClientOption> option, ILoggerFactory factory) {
             this._clientOption = option;
 
-            _bootstrap = InitBootstrap ();
+            _bootstrap = InitBootstrap();
             _handler = handler;
             _msgCodecs = msgCodecs;
 
@@ -49,11 +49,11 @@ namespace DotBPE.Rpc.Netty {
             bootstrap
                 .Channel<TcpSocketChannel> ()
                 .Option (ChannelOption.TcpNodelay, true)
-                .Option (ChannelOption.ConnectTimeout, TimeSpan.FromSeconds (3))
+                .Option (ChannelOption.ConnectTimeout, TimeSpan.FromSeconds(3))
                 .Group (new MultithreadEventLoopGroup ())
-                .Handler (new ActionChannelInitializer<ISocketChannel> (c => {
+                .Handler (new ActionChannelInitializer<ISocketChannel>(c => {
                     var pipeline = c.Pipeline;
-                    pipeline.AddLast (new LoggingHandler ("CLT-CONN"));
+                    pipeline.AddLast (new LoggingHandler("CLT-CONN"));
                     MessageMeta meta = _msgCodecs.GetMessageMeta ();
 
                     // IdleStateHandler

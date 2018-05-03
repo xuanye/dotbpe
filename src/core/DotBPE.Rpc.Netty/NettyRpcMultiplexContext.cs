@@ -150,7 +150,7 @@ namespace DotBPE.Rpc.Netty {
                         break;
                     }
                     Logger.LogDebug ("will reconnect to {0} after {1} ms, try {2} times", endpoint, tryCount * 1000, tryCount);
-                    Thread.Sleep (tryCount * 1000);
+                    Thread.Sleep (2000); //2秒重试一次
                     try {
                         CreateConnection (endpoint, 1).Wait ();
                         break;
