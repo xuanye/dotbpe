@@ -1,4 +1,5 @@
 using System.Net;
+using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc {
@@ -9,7 +10,7 @@ namespace DotBPE.Rpc {
         /// </summary>
         /// <param name="localPoint">绑定到本地的服务地址</param>
         /// <returns></returns>
-        Task StartAsync (EndPoint localPoint);
+        Task StartAsync (EndPoint localPoint, CancellationToken token);
 
         /// <summary>
         /// Shutdown Server

@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DotBPE.Hosting" Version="1.1.10" />
+    <PackageReference Include="DotBPE.Hosting" Version="1.1.11" />
     <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="2.0.0" />
   </ItemGroup>
 

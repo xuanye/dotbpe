@@ -26,8 +26,13 @@ namespace DotBPE.Rpc.Netty {
         }
 
         public Task SendAsync (TMessage message) {
-            IByteBuffer buf = GetBuffer (message);
-            return this._channel.WriteAndFlushAsync (buf);
+          
+            if (this._channel.IsWritable)
+            {
+                IByteBuffer buf = GetBuffer(message);
+                return this._channel.WriteAndFlushAsync(buf);
+            }
+            return Task.CompletedTask;
         }
 
         private IByteBuffer GetBuffer (TMessage message) {
