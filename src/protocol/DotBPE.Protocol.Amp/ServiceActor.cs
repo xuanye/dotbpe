@@ -1,5 +1,6 @@
 using DotBPE.Rpc;
 using DotBPE.Rpc.Codes;
+using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using System;
@@ -60,7 +61,12 @@ namespace DotBPE.Protocol.Amp
 
                     await context.SendAsync(rsp);
 
-                   
+                    //Logger.LogError("send message,Id={0}", message.Id);
+
+                }
+                catch(ClosedChannelException closedEx)
+                {
+                    Logger.LogError(closedEx, "recieve message occ error,channel closed,{messageId}", message.Id);
                 }
                 catch (Exception ex)
                 {

@@ -1,4 +1,3 @@
-using DotBPE.Protobuf;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using Google.Protobuf;
@@ -7,8 +6,9 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 
-namespace MathCommon
+namespace DotBPE.Protobuf
 {
+
     public class AuditLoggerFormat : IAuditLoggerFormat<AmpMessage>
     {
         private static readonly JsonFormatter JsonFormatter = new JsonFormatter(new JsonFormatter.Settings(false).WithFormatEnumsAsIntegers(true));
@@ -50,11 +50,19 @@ namespace MathCommon
         {
             string mothedName = req.FriendlyServiceName ?? req.MethodIdentifier;
 
-            IMessage reqMsg = reqParser.ParseFrom(req.Data);
-            IMessage resMsg = resParser.ParseFrom(rsp.Data);
+            IMessage reqMsg = null;
+            IMessage resMsg = null;
+            if (req.Data != null)
+            {
+                reqMsg = reqParser.ParseFrom(req.Data);
+            }
+            if (rsp.Data != null)
+            {
+                resMsg = resParser.ParseFrom(rsp.Data);
+            }
 
-            var jsonReq = JsonFormatter.Format(reqMsg);
-            var jsonRsp = JsonFormatter.Format(resMsg);
+            var jsonReq = reqMsg == null ? "" : JsonFormatter.Format(reqMsg);
+            var jsonRsp = resMsg == null ? "" : JsonFormatter.Format(resMsg);
 
             var clientIP = FindFieldValue(reqMsg, "client_ip");
             var requestId = FindFieldValue(reqMsg, "x_request_id");
@@ -80,12 +88,19 @@ namespace MathCommon
                 remoteIP = DotBPE.Rpc.Utils.ParseUtils.ParseEndPointToIPString(context.RemoteAddress);
             }
             string mothedName = req.FriendlyServiceName ?? req.MethodIdentifier;
+            IMessage reqMsg = null;
+            IMessage resMsg = null;
+            if (req.Data != null)
+            {
+                reqMsg = reqParser.ParseFrom(req.Data);
+            }
+            if (rsp.Data != null)
+            {
+                resMsg = resParser.ParseFrom(rsp.Data);
+            }
 
-            IMessage reqMsg = reqParser.ParseFrom(req.Data);
-            IMessage resMsg = resParser.ParseFrom(rsp.Data);
-
-            var jsonReq = JsonFormatter.Format(reqMsg);
-            var jsonRsp = JsonFormatter.Format(resMsg);
+            var jsonReq = reqMsg == null ? "" : JsonFormatter.Format(reqMsg);
+            var jsonRsp = resMsg == null ? "" : JsonFormatter.Format(resMsg);
 
             var clientIP = FindFieldValue(reqMsg, "client_ip");
             var requestId = FindFieldValue(reqMsg, "x_request_id");
@@ -134,6 +149,10 @@ namespace MathCommon
 
         private static string FindFieldValue(IMessage msg, string fieldName)
         {
+            if (msg == null)
+            {
+                return "";
+            }
             var field = msg.Descriptor.FindFieldByName(fieldName);
             if (field != null)
             {

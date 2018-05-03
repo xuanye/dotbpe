@@ -17,7 +17,7 @@ namespace DotBPE.Rpc.Netty {
 
         public ServerChannelHandlerAdapter (NettyServerBootstrap<TMessage> bootstrap, ILoggerFactory factory) : base (true) {
             this._bootstrap = bootstrap;
-            this.Logger = factory.CreateLogger (this.GetType ());
+            this.Logger = factory.CreateLogger (this.GetType());
         }
 
         public override void ChannelActive (IChannelHandlerContext context) {
@@ -37,12 +37,12 @@ namespace DotBPE.Rpc.Netty {
         }
 
         public override void ChannelReadComplete (IChannelHandlerContext contex) {
-            contex.Flush ();
+            contex.Flush();
         }
 
         public override void ExceptionCaught (IChannelHandlerContext context, Exception ex) {
             Logger.LogError (ex, "client：{remoteAddress} occur an exception ", context.Channel.RemoteAddress);
-            context.CloseAsync (); //关闭连接
+            context.CloseAsync(); //关闭连接
         }
 
         //服务端超时则直接关闭链接
