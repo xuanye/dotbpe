@@ -60,8 +60,6 @@ namespace MathServer
                 });
 
 
-
-
                 //添加挂载的宿主服务
                 services.AddScoped<IHostedService, RpcHostedService>();
             })
