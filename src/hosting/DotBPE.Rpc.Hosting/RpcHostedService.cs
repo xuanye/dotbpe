@@ -100,11 +100,10 @@ namespace DotBPE.Rpc.Hosting
         /// <param name="token"></param>
         /// <returns></returns>
         private Task StartServerAsync(CancellationToken token)
-        {
-            this._logger.LogInformation("服务开始启动:{hostIP}:{hostPort}",this._hostIP,this._hostPort);
+        {          
             Initialize();
-            var endpoint = new IPEndPoint(IPAddress.Parse(this._hostIP), this._hostPort);
-            return this._server.StartAsync(endpoint);
+            var endpoint = new IPEndPoint(IPAddress.Parse(this._hostIP), this._hostPort);           
+            return this._server.StartAsync(endpoint,token);
         }
 
         /// <summary>
@@ -113,9 +112,8 @@ namespace DotBPE.Rpc.Hosting
         /// <param name="token"></param>
         /// <returns></returns>
         private Task StopServerAsync(CancellationToken token)
-        {
-            this._logger.LogInformation("服务开始关闭<---");
-            return this._server.ShutdownAsync();
+        {           
+            return this._server.ShutdownAsync();           
         }
 
 
