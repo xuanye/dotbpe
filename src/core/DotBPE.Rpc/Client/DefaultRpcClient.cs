@@ -83,7 +83,8 @@ namespace DotBPE.Rpc.Client
                 throw new Rpc.Exceptions.RpcException("Get routing information error, please check the configuration");
             }
             if (point.RoutePointType == RoutePointType.Local)
-            { //本地调用流程
+            {
+                //本地调用流程
                 Logger.LogDebug("Call  local  service");
                 var actor = this._actorLocator.LocateServiceActor(message);
                 if (actor == null)

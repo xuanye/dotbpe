@@ -67,8 +67,6 @@ namespace DotBPE.Rpc.Client
             string keyService = message.ServiceIdentifier;
             string keyMessage = message.MethodIdentifier;
 
-            string defaultRemoteKey = "0$0";
-
             if (routerDict.ContainsKey(keyMessage))
             {
                 point.RoutePointType = RoutePointType.Remote;
@@ -82,13 +80,7 @@ namespace DotBPE.Rpc.Client
                 point.RemoteAddress = ChooseEndPoint(keyService, routerDict[keyService]);
                 return point;
             }
-            //如果配置了0$0的服务地址则默认使用这个地址
-            if (routerDict.ContainsKey(defaultRemoteKey))
-            {
-                point.RoutePointType = RoutePointType.Remote;
-                point.RemoteAddress = ChooseEndPoint(defaultRemoteKey, routerDict[defaultRemoteKey]);
-                return point;
-            }
+
             return point;
         }
 

@@ -12,6 +12,7 @@ namespace DotBPE.Rpc
     public enum RoutePointType
     {
         Local,
-        Remote
+        Remote,
+        Smart
     }
 }
