@@ -1,16 +1,14 @@
 using DotBPE.Rpc;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
-using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Threading;
 
 namespace DotBPE.Protocol.Amp
 {
+    /// <summary>
+    /// 调用服务日志记录类，该类会尝试记录所有对外发起的请求日志
+    /// </summary>
+    /// <seealso cref="DotBPE.Protocol.Amp.AbstractAuditLogger" />
     public class CACAuditLogger : AbstractAuditLogger
     {
-
         private static ILogger _Logger;
 
         protected ILogger Logger

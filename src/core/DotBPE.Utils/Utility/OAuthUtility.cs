@@ -9,30 +9,31 @@ using System.Runtime.Serialization;
 using System.Security.Cryptography;
 using System.Text;
 
-
-namespace DotBPE.Utils.Utility {
+namespace DotBPE.Utils.Utility
+{
     /// <summary>represents OAuth Token</summary>
-    #pragma warning disable 612, 618
+#pragma warning disable 612, 618
 
     /// <summary>represents OAuth Token</summary>
     [DebuggerDisplay("Key = {Key}, Secret = {Secret}")]
     [DataContract]
-    public abstract class Token {
+    public abstract class Token
+    {
         [DataMember(Order = 1)]
         public string Key { get; private set; }
+
         [DataMember(Order = 2)]
         public string Secret { get; private set; }
 
         /// <summary>for serialize.</summary>
         [Obsolete("this is used for serialize")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public Token() {
-
+        public Token()
+        {
         }
 
-        public Token(string key, string secret) {
-
-
+        public Token(string key, string secret)
+        {
             Key = key;
             Secret = secret;
         }
@@ -40,12 +41,13 @@ namespace DotBPE.Utils.Utility {
 
     /// <summary>represents OAuth AccessToken</summary>
     [DataContract]
-    public class AccessToken : Token {
+    public class AccessToken : Token
+    {
         /// <summary>for serialize.</summary>
         [Obsolete("this is used for serialize")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public AccessToken() {
-
+        public AccessToken()
+        {
         }
 
         public AccessToken(string key, string secret)
@@ -54,14 +56,15 @@ namespace DotBPE.Utils.Utility {
 
     /// <summary>represents OAuth RequestToken</summary>
     [DataContract]
-    public class RequestToken : Token {
+    public class RequestToken : Token
+    {
         /// <summary>
         /// for serialize.
         /// </summary>
         [Obsolete("this is used for serialize")]
         [EditorBrowsable(EditorBrowsableState.Never)]
-        public RequestToken() {
-
+        public RequestToken()
+        {
         }
 
         public RequestToken(string key, string secret)
@@ -69,11 +72,13 @@ namespace DotBPE.Utils.Utility {
     }
 
     /// <summary>OAuth Response</summary>
-    public class TokenResponse<T> where T : Token {
+    public class TokenResponse<T> where T : Token
+    {
         public T Token { get; private set; }
         public ILookup<string, string> ExtraData { get; private set; }
 
-        public TokenResponse(T token, ILookup<string, string> extraData) {
+        public TokenResponse(T token, ILookup<string, string> extraData)
+        {
             //Precondition.NotNull(token, "token");
             //Precondition.NotNull(extraData, "extraData");
 
@@ -82,24 +87,29 @@ namespace DotBPE.Utils.Utility {
         }
     }
 
-    #pragma warning restore 612, 618
+#pragma warning restore 612, 618
 
-    public class HttpClientHelper {
-        public class KnownKeys {
+    public class HttpClientHelper
+    {
+        public class KnownKeys
+        {
             public const string HeaderAuthorization = "Authorization";
             public const string HeaderMediaType = "Content-Type";
             public const string AuthorizationBearer = "Bearer";
         }
 
-        public class KnownValues {
+        public class KnownValues
+        {
             public const string MediaTypeJson = "application/json";
             public const string MediaTypeMultiFormData = "multipart/form-data";
         }
     }
 
-    public static class OAuthUtility {
+    public static class OAuthUtility
+    {
         /// <summary>Escape RFC3986 String</summary>
-        public static string UrlEncode(this string stringToEscape) {
+        public static string UrlEncode(this string stringToEscape)
+        {
             return Uri.EscapeDataString(stringToEscape)
                 .Replace("!", "%21")
                 .Replace("*", "%2A")
@@ -108,7 +118,8 @@ namespace DotBPE.Utils.Utility {
                 .Replace(")", "%29");
         }
 
-        public static string UrlDecode(this string stringToUnescape) {
+        public static string UrlDecode(this string stringToUnescape)
+        {
             return UrlDecodeForPost(stringToUnescape)
                 .Replace("%21", "!")
                 .Replace("%2A", "*")
@@ -117,19 +128,25 @@ namespace DotBPE.Utils.Utility {
                 .Replace("%29", ")");
         }
 
-        public static string UrlDecodeForPost(this string stringToUnescape) {
+        public static string UrlDecodeForPost(this string stringToUnescape)
+        {
             stringToUnescape = stringToUnescape.Replace("+", " ");
             return Uri.UnescapeDataString(stringToUnescape);
         }
 
-        public static IEnumerable<KeyValuePair<string, string>> ParseQueryString(string query, bool post = false) {
+        public static IEnumerable<KeyValuePair<string, string>> ParseQueryString(string query, bool post = false)
+        {
             var queryParams = query.TrimStart('?').Split('&')
                .Where(x => x != "")
-               .Select(x => {
+               .Select(x =>
+               {
                    var xs = x.Split('=');
-                   if (post) {
+                   if (post)
+                   {
                        return new KeyValuePair<string, string>(xs[0].UrlDecode(), xs[1].UrlDecodeForPost());
-                   } else {
+                   }
+                   else
+                   {
                        return new KeyValuePair<string, string>(xs[0].UrlDecode(), xs[1].UrlDecode());
                    }
                });
@@ -137,13 +154,16 @@ namespace DotBPE.Utils.Utility {
             return queryParams;
         }
 
-        public static string Wrap(this string input, string wrapper) {
+        public static string Wrap(this string input, string wrapper)
+        {
             return wrapper + input + wrapper;
         }
 
-        public static string ToString<T>(this IEnumerable<T> source, string separator) {
+        public static string ToString<T>(this IEnumerable<T> source, string separator)
+        {
             return string.Join(separator, source);
         }
+
         //--- end move
 
         public delegate byte[] HashFunction(byte[] key, byte[] buffer);
@@ -171,8 +191,10 @@ namespace DotBPE.Utils.Utility {
         /// </summary>
         public static HashFunction ComputeHash { private get; set; }
 
-        static string GenerateSignature(string consumerSecret, Uri uri, HttpMethod method, Token token, IEnumerable<KeyValuePair<string, string>> parameters) {
-            if (ComputeHash == null) {
+        private static string GenerateSignature(string consumerSecret, Uri uri, HttpMethod method, Token token, IEnumerable<KeyValuePair<string, string>> parameters)
+        {
+            if (ComputeHash == null)
+            {
                 ComputeHash = (key, buffer) => { using (var hmac = new HMACSHA1(key)) { return hmac.ComputeHash(buffer); } };
                 //throw new InvalidOperationException("ComputeHash is null, must initialize before call OAuthUtility.HashFunction = /* your computeHash code */ at once.");
             }
@@ -198,7 +220,8 @@ namespace DotBPE.Utils.Utility {
             return Convert.ToBase64String(hash).UrlEncode();
         }
 
-        public static IEnumerable<KeyValuePair<string, string>> BuildBasicParameters(string consumerKey, string consumerSecret, string url, HttpMethod method, Token token = null, IEnumerable<KeyValuePair<string, string>> optionalParameters = null) {
+        public static IEnumerable<KeyValuePair<string, string>> BuildBasicParameters(string consumerKey, string consumerSecret, string url, HttpMethod method, Token token = null, IEnumerable<KeyValuePair<string, string>> optionalParameters = null)
+        {
             var parameters = new List<KeyValuePair<string, string>>(capacity: 7)
             {
                 new KeyValuePair<string,string>("oauth_consumer_key", consumerKey),
@@ -220,4 +243,3 @@ namespace DotBPE.Utils.Utility {
         }
     }
 }
-

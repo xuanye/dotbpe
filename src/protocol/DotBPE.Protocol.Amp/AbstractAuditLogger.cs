@@ -1,16 +1,14 @@
 using DotBPE.Rpc;
-using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Collections.Generic;
-using System.Diagnostics;
-using System.Text;
-using System.Threading;
 using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Threading;
 
 namespace DotBPE.Protocol.Amp
 {
-    public abstract class AbstractAuditLogger:IDisposable
+    public abstract class AbstractAuditLogger : IDisposable
     {
         protected class AuditLogEntity
         {
@@ -26,10 +24,8 @@ namespace DotBPE.Protocol.Amp
 
             public ILogger Writer { get; set; }
 
-            public IAuditLoggerFormat<AmpMessage> Formater { get;  set; }
+            public IAuditLoggerFormat<AmpMessage> Formater { get; set; }
         }
-
-
 
         private static ConcurrentQueue<AuditLogEntity> logDict = new ConcurrentQueue<AuditLogEntity>();
         private static object lockobject = new object();
@@ -40,18 +36,18 @@ namespace DotBPE.Protocol.Amp
         private AmpMessage _rsp;
         private IRpcContext _context;
 
-
         public AbstractAuditLogger()
         {
             _sw = Stopwatch.StartNew();
         }
 
         private static IAuditLoggerFormat<AmpMessage> _Formater;
-        protected  IAuditLoggerFormat<AmpMessage> Formater
+
+        protected IAuditLoggerFormat<AmpMessage> Formater
         {
             get
             {
-                if(_Formater == null)
+                if (_Formater == null)
                 {
                     if (Rpc.Environment.ServiceProvider != null)
                     {
@@ -62,9 +58,9 @@ namespace DotBPE.Protocol.Amp
             }
         }
 
-        private static void AddAuditLog(ILogger writer,IAuditLoggerFormat<AmpMessage> format,AuditLogType logType,IRpcContext context, AmpMessage req, AmpMessage rsp, long elapsedMS)
+        private static void AddAuditLog(ILogger writer, IAuditLoggerFormat<AmpMessage> format, AuditLogType logType, IRpcContext context, AmpMessage req, AmpMessage rsp, long elapsedMS)
         {
-            if(writer == null || format == null)
+            if (writer == null || format == null)
             {
                 return;
             }
@@ -101,27 +97,26 @@ namespace DotBPE.Protocol.Amp
         {
             while (!logDict.IsEmpty)
             {
-
-                AuditLogEntity log ;
+                AuditLogEntity log;
                 var hasLog = logDict.TryDequeue(out log);
-                if(!hasLog || log ==null){
-                    return ;
+                if (!hasLog || log == null)
+                {
+                    return;
                 }
                 try
                 {
-                    if ( log.Formater != null && log.Writer !=null)
+                    if (log.Formater != null && log.Writer != null)
                     {
-                        string logText = log.Formater.Format(log.Context,log.LogType,log.Request, log.Response, log.ElapsedMS);
-                        if(!string.IsNullOrEmpty(logText))
+                        string logText = log.Formater.Format(log.Context, log.LogType, log.Request, log.Response, log.ElapsedMS);
+                        if (!string.IsNullOrEmpty(logText))
                         {
                             log.Writer.LogInformation(logText);
                         }
-
                     }
                 }
-                catch(Exception ex)
+                catch (Exception ex)
                 {
-                    Console.WriteLine("--写日志出错了--"+ex.Message+"-----\r\n-----"+ex.StackTrace);
+                    Console.WriteLine("--写日志出错了--" + ex.Message + "-----\r\n-----" + ex.StackTrace);
                     //无能为力了
                 }
             }
@@ -134,7 +129,7 @@ namespace DotBPE.Protocol.Amp
             long es = _sw.ElapsedMilliseconds;
             if (this._req != null && this._rsp != null)
             {
-                AddAuditLog(GetTypeLogger(),GetLoggerFormat(),GetAuditLogType(), _context, this._req, this._rsp, es);
+                AddAuditLog(GetTypeLogger(), GetLoggerFormat(), GetAuditLogType(), _context, this._req, this._rsp, es);
             }
             _sw = null;
         }
@@ -143,6 +138,7 @@ namespace DotBPE.Protocol.Amp
         {
             _context = context;
         }
+
         public void PushRequest(AmpMessage request)
         {
             _req = request;
@@ -162,6 +158,4 @@ namespace DotBPE.Protocol.Amp
             return this.Formater;
         }
     }
-
-
 }
