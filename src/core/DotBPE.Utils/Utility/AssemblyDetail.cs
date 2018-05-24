@@ -4,10 +4,10 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Reflection;
 
-
-namespace DotBPE.Utils.Utility {
-    public class AssemblyDetail {
-
+namespace DotBPE.Utils.Utility
+{
+    public class AssemblyDetail
+    {
         public string AssemblyName { get; private set; }
 
         public string AssemblyTitle { get; private set; }
@@ -28,11 +28,12 @@ namespace DotBPE.Utils.Utility {
 
         public string AssemblyInformationalVersion { get; private set; }
 
-
         private static readonly ConcurrentDictionary<Assembly, AssemblyDetail> _detailCache = new ConcurrentDictionary<Assembly, AssemblyDetail>();
 
-        public static AssemblyDetail Extract(Assembly assembly) {
-            var detail = _detailCache.GetOrAdd(assembly, a => {
+        public static AssemblyDetail Extract(Assembly assembly)
+        {
+            var detail = _detailCache.GetOrAdd(assembly, a =>
+            {
                 var assemblyDetail = new AssemblyDetail();
                 var assemblyName = a.GetName();
 
@@ -54,16 +55,17 @@ namespace DotBPE.Utils.Utility {
             return detail;
         }
 
-        public static IEnumerable<AssemblyDetail> ExtractAll(string filter = "Foundatio*") {
+        public static IEnumerable<AssemblyDetail> ExtractAll(string filter = "Foundatio*")
+        {
             var assemblies = AppDomain.CurrentDomain.GetAssemblies();
 
-            foreach (var assembly in assemblies) {
+            foreach (var assembly in assemblies)
+            {
                 if (!assembly.FullName.Like(filter))
                     continue;
 
                 yield return Extract(assembly);
             }
         }
-
     }
 }

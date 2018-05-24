@@ -29,9 +29,8 @@ namespace MathClient
               .CreateLogger();
 
             Task.Run(RunClient).Wait();
-
-
         }
+
         private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
         {
             try
@@ -40,24 +39,20 @@ namespace MathClient
             }
             catch
             {
-
             }
         }
 
         public async static Task RunClient()
         {
-
             var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201")
-                .ConfigureServices( services =>
-                {
-                    services.AddSingleton<IProtobufObjectFactory, ProtobufObjectFactory>();
+                .ConfigureServices(services =>
+               {
+                   services.AddSingleton<IProtobufObjectFactory, ProtobufObjectFactory>();
 
-                    services.AddSingleton<IAuditLoggerFormat<AmpMessage>, AuditLoggerFormat>();
-                })
-                .ConfigureLoggingServices(logger=> logger.AddSerilog(dispose: true))
+                   services.AddSingleton<IAuditLoggerFormat<AmpMessage>, AuditLoggerFormat>();
+               })
+                .ConfigureLoggingServices(logger => logger.AddSerilog(dispose: true))
                 .BuildDefault();
-
-
 
             using (var client = proxy.GetClient<MathCommon.MathClient>())
             {
@@ -65,7 +60,7 @@ namespace MathClient
 
                 var random = new Random();
                 var i = 0;
-                while( i < 10)
+                while (i < 10)
                 {
                     AddReq req = new AddReq
                     {
@@ -87,12 +82,9 @@ namespace MathClient
 
                     i++;
                 }
-
             }
             Console.WriteLine("Press any key to quit!");
             Console.ReadKey();
-
-
         }
     }
 }

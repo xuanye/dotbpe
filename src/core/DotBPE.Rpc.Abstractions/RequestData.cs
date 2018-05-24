@@ -1,12 +1,15 @@
 using System.Collections.Generic;
 
-namespace DotBPE.Rpc {
-    public class RequestData {
+namespace DotBPE.Rpc
+{
+    public class RequestData
+    {
         /// <summary>
         /// 服务ID
         /// </summary>
         /// <returns></returns>
         public int ServiceId { get; set; }
+
         /// <summary>
         /// 消息ID
         /// </summary>

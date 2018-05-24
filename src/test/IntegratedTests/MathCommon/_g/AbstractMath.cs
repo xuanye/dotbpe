@@ -15,20 +15,16 @@ namespace MathCommon
     {
         protected override int ServiceId => 10005;
 
-
         public override Task<AmpMessage> ProcessAsync(AmpMessage req)
         {
             switch (req.MessageId)
             {
-
                 //方法 Math.Add
                 case 1: return this.ProcessAddAsync(req);
 
                 default: return base.ProcessNotFoundAsync(req);
             }
         }
-
-
 
         //调用委托
         private async Task<AmpMessage> ProcessAddAsync(AmpMessage req)
@@ -57,9 +53,9 @@ namespace MathCommon
             }
             return response;
         }
-        //抽象方法
-        public abstract Task<RpcResult<AddRes>> AddAsync( AddReq req);
 
+        //抽象方法
+        public abstract Task<RpcResult<AddRes>> AddAsync(AddReq req);
     }
 
     //end for class AbstractMath
