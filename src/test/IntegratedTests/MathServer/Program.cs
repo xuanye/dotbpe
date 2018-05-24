@@ -1,24 +1,21 @@
-using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+using DotBPE.Hosting;
+using DotBPE.Protobuf;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Hosting;
+using Flurl.Http;
 using MathCommon;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Serilog;
-using DotBPE.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Caching.Distributed;
-using DotBPE.Protobuf;
-using Flurl.Http;
+using System;
+using System.Threading.Tasks;
 
 namespace MathServer
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
@@ -32,7 +29,6 @@ namespace MathServer
             Log.Logger = new LoggerConfiguration()
               .ReadFrom.Configuration(configuration)
               .CreateLogger();
-
 
             string ip = "127.0.0.1";
             int port = 6201;
@@ -59,7 +55,6 @@ namespace MathServer
                     actors.Add<MathInnerService>();
                 });
 
-
                 //添加挂载的宿主服务
                 services.AddScoped<IHostedService, RpcHostedService>();
             })
@@ -68,7 +63,6 @@ namespace MathServer
             );
 
             builder.RunConsoleAsync().Wait();
-
         }
 
         private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
@@ -79,23 +73,21 @@ namespace MathServer
             }
             catch
             {
-
             }
         }
     }
 
-
     public class MathService : MathBase
     {
-
         private readonly IClientProxy _proxy;
 
-        public MathService( IClientProxy proxy)
+        public MathService(IClientProxy proxy)
         {
             _proxy = proxy;
-
         }
-        public override async Task<RpcResult<AddRes>> AddAsync(AddReq req){
+
+        public override async Task<RpcResult<AddRes>> AddAsync(AddReq req)
+        {
             var inner = _proxy.GetClient<MathInnerClient>();
 
             var res = await inner.PlusAsync(req);
@@ -107,6 +99,7 @@ namespace MathServer
     public class MathInnerService : MathInnerBase
     {
         private readonly ClientReq _req;
+
         public MathInnerService()
         {
             _req = new ClientReq();
@@ -116,7 +109,7 @@ namespace MathServer
         {
             await Task.Delay(3000);
 
-            string response =  await _req.GetRequest();
+            string response = await _req.GetRequest();
 
             Console.WriteLine("response:{0}", response);
             var res = new AddRes();
@@ -125,16 +118,12 @@ namespace MathServer
         }
     }
 
-
-    public class ClientReq {
-
+    public class ClientReq
+    {
         public async Task<string> GetRequest()
         {
             string url = "https://www.mocky.io/v2/5185415ba171ea3a00704eed";
             return await url.PostStringAsync("").ReceiveString();
         }
-
     }
-
-
 }

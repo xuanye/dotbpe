@@ -1,9 +1,12 @@
 using System;
 using System.Linq;
 
-namespace DotBPE.Utils.Extensions {
-    public static class ExceptionExtensions {
-        public static Exception GetInnermostException(this Exception exception) {
+namespace DotBPE.Utils.Extensions
+{
+    public static class ExceptionExtensions
+    {
+        public static Exception GetInnermostException(this Exception exception)
+        {
             if (exception == null)
                 return null;
 
@@ -14,7 +17,8 @@ namespace DotBPE.Utils.Extensions {
             return current;
         }
 
-        public static string GetMessage(this Exception exception) {
+        public static string GetMessage(this Exception exception)
+        {
             if (exception == null)
                 return String.Empty;
 

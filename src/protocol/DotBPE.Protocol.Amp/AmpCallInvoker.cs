@@ -1,5 +1,4 @@
 using DotBPE.Rpc;
-using DotBPE.Rpc.Utils;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Exceptions;
 using Microsoft.Extensions.Logging;
@@ -21,21 +20,20 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         private static int INVOKER_SEQ = 0;
         private static object lockObj = new object();
 
-        public AmpCallInvoker(IRpcClient<AmpMessage> client) : this(client,null)
+        public AmpCallInvoker(IRpcClient<AmpMessage> client) : this(client, null)
         {
-
         }
 
-        public AmpCallInvoker(IRpcClient<AmpMessage> client,ILogger<AmpCallInvoker> logger) : base(client)
+        public AmpCallInvoker(IRpcClient<AmpMessage> client, ILogger<AmpCallInvoker> logger) : base(client)
         {
-           if(logger == null)
-           {
-               _Logger = NullLogger.Instance;
-           }
-           else
-           {
-               _Logger = logger;
-           }
+            if (logger == null)
+            {
+                _Logger = NullLogger.Instance;
+            }
+            else
+            {
+                _Logger = logger;
+            }
         }
 
         protected ILogger Logger
@@ -57,7 +55,6 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
         {
             using (CACAuditLogger auditLogger = new CACAuditLogger())
             {
-
                 AutoSetSequence(request);
 
                 auditLogger.PushRequest(request); //记录请求参数
@@ -66,9 +63,8 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
                 var cts = new CancellationTokenSource(timeOut);
                 //注册超时处理
-                using(cts.Token.Register(() => TimeOutCallBack(request.Id), useSynchronizationContext: false))
+                using (cts.Token.Register(() => TimeOutCallBack(request.Id), useSynchronizationContext: false))
                 {
-
                     var callbackTask = RegisterResultCallbackAsync(request.Id, timeOut);
 
                     try
@@ -86,9 +82,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                     auditLogger.PushResponse(rsp); //记录响应
                     return rsp;
                 }
-
             }
-
         }
 
         public override AmpMessage BlockingCall(AmpMessage request, int timeOut = 5000)
@@ -120,7 +114,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                         && _resultDictionary.TryGetValue(message.Id, out task))
                     {
                         task.SetResult(e.Message);
-                       Logger.LogDebug("message {0},set result success", message.Id);
+                        Logger.LogDebug("message {0},set result success", message.Id);
                         // 移除字典
                         RemoveResultCallback(message.Id);
                     }
@@ -156,7 +150,6 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private void TimeOutCallBack(string id)
         {
-
             TaskCompletionSource<AmpMessage> task;
             if (_resultDictionary.ContainsKey(id) &&
                 _resultDictionary.TryGetValue(id, out task))
@@ -197,6 +190,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 RemoveResultCallback(id);
             }
         }
+
         private Task<AmpMessage> RegisterResultCallbackAsync(string id, int timeOut)
         {
             var tcs = new TaskCompletionSource<AmpMessage>();
@@ -207,7 +201,6 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private void AutoSetSequence(AmpMessage request)
         {
-
             int id = Interlocked.Increment(ref INVOKER_SEQ);
             request.Sequence = id;
         }

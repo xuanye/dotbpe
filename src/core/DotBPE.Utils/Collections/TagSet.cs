@@ -5,7 +5,9 @@ namespace DotBPE.Utils.Collections
 {
     public class TagSet : HashSet<string>
     {
-        public TagSet() : base(StringComparer.OrdinalIgnoreCase) { }
+        public TagSet() : base(StringComparer.OrdinalIgnoreCase)
+        {
+        }
 
         public TagSet(IEnumerable<string> values)
             : base(StringComparer.OrdinalIgnoreCase)
@@ -37,6 +39,6 @@ namespace DotBPE.Utils.Collections
                 if (_items.Contains(Value))
                     _items.Remove(Value);
             }
-        }     
+        }
     }
 }
