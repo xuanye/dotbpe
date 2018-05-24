@@ -22,7 +22,7 @@ namespace DotBPE.Protocol.Amp
                     .AddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient<AmpMessage>>()
                     .AddSingleton<IRouter<AmpMessage>, LocalPolicyRouter<AmpMessage>>();
         }
-        
+
         private static IServiceCollection AddAmpClient(this IServiceCollection services)
         {
             services.Remove(ServiceDescriptor.Singleton(typeof(IRouter<AmpMessage>)));
@@ -46,7 +46,6 @@ namespace DotBPE.Protocol.Amp
                   .AddAmpClient(); // 使用AMP协议
         }
 
-      
         /// <summary>
         /// 只是客户端，任何服务端
         /// </summary>
@@ -58,6 +57,7 @@ namespace DotBPE.Protocol.Amp
                  .AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>()
                  .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
         }
+
         /// <summary>
         /// 添加单网关的
         /// </summary>
@@ -71,6 +71,5 @@ namespace DotBPE.Protocol.Amp
                  .AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>()
                  .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
         }
-        
     }
 }

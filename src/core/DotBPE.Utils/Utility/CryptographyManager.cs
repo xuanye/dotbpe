@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DotBPE.Utils.Utility
 {
-   /// <summary>
+    /// <summary>
     /// </summary>
     public class CryptographyManager
     {

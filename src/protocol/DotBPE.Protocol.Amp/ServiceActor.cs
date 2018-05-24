@@ -1,5 +1,4 @@
 using DotBPE.Rpc;
-using DotBPE.Rpc.Codes;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
@@ -11,7 +10,6 @@ namespace DotBPE.Protocol.Amp
     public abstract class ServiceActor : IServiceActor<AmpMessage>
     {
         private ILogger _Logger;
-      
 
         protected abstract int ServiceId { get; }
 
@@ -29,12 +27,10 @@ namespace DotBPE.Protocol.Amp
                     {
                         this._Logger = NullLogger.Instance;
                     }
-
                 }
                 return this._Logger;
             }
         }
-       
 
         public string Id
         {
@@ -46,7 +42,7 @@ namespace DotBPE.Protocol.Amp
 
         public virtual async Task ReceiveAsync(IRpcContext<AmpMessage> context, AmpMessage message)
         {
-            using(var audit = new RequestAuditLogger())
+            using (var audit = new RequestAuditLogger())
             {
                 AmpMessage rsp;
                 try
@@ -62,16 +58,15 @@ namespace DotBPE.Protocol.Amp
                     await context.SendAsync(rsp);
 
                     //Logger.LogError("send message,Id={0}", message.Id);
-
                 }
-                catch(ClosedChannelException closedEx)
+                catch (ClosedChannelException closedEx)
                 {
                     Logger.LogError(closedEx, "recieve message occ error,channel closed,{messageId}", message.Id);
                 }
                 catch (Exception ex)
                 {
-                    Logger.LogError(ex, "recieve message occ error" );
-                    rsp =  await SendErrorResponseAsync(context, message);
+                    Logger.LogError(ex, "recieve message occ error");
+                    rsp = await SendErrorResponseAsync(context, message);
                     audit.PushResponse(rsp);
                 }
             }
@@ -90,12 +85,12 @@ namespace DotBPE.Protocol.Amp
             rsp.Sequence = reqMessage.Sequence;
             rsp.Code = ErrorCodes.CODE_INTERNAL_ERROR; //内部错误
             try
-            {               
+            {
                 await context.SendAsync(rsp);
             }
             catch (Exception ex)
             {
-                Logger.LogError(ex, "send error response fail:" + ex.Message);             
+                Logger.LogError(ex, "send error response fail:" + ex.Message);
             }
 
             return rsp;

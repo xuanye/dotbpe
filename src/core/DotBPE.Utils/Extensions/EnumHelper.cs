@@ -4,8 +4,10 @@ using System.ComponentModel;
 using System.Reflection;
 using System.Threading;
 
-namespace DotBPE.Utils.Extensions {
-    public static class EnumHelper {
+namespace DotBPE.Utils.Extensions
+{
+    public static class EnumHelper
+    {
         /// <summary>
         /// Determines whether any flag is on for the specified mask.
         /// </summary>
@@ -16,7 +18,8 @@ namespace DotBPE.Utils.Extensions {
         /// 	<c>true</c> if any flag is on for the specified mask; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsAnyFlagOn<T>(this Enum mask, T flag)
-            where T : struct, IComparable, IFormattable, IConvertible {
+            where T : struct, IComparable, IFormattable, IConvertible
+        {
             ulong flagInt = Convert.ToUInt64(flag);
             ulong maskInt = Convert.ToUInt64(mask);
 
@@ -33,7 +36,8 @@ namespace DotBPE.Utils.Extensions {
         /// 	<c>true</c> if the flag is on for the specified mask; otherwise, <c>false</c>.
         /// </returns>
         public static bool IsFlagOn<T>(this Enum mask, T flag)
-            where T : struct, IComparable, IFormattable, IConvertible {
+            where T : struct, IComparable, IFormattable, IConvertible
+        {
             ulong flagInt = Convert.ToUInt64(flag);
             ulong maskInt = Convert.ToUInt64(mask);
 
@@ -48,7 +52,8 @@ namespace DotBPE.Utils.Extensions {
         /// <param name="flag">The flag to set.</param>
         /// <returns>The mask with the flag set to on.</returns>
         public static T SetFlagOn<T>(this Enum mask, T flag)
-            where T : struct, IComparable, IFormattable, IConvertible {
+            where T : struct, IComparable, IFormattable, IConvertible
+        {
             ulong flagInt = Convert.ToUInt64(flag);
             ulong maskInt = Convert.ToUInt64(mask);
 
@@ -65,7 +70,8 @@ namespace DotBPE.Utils.Extensions {
         /// <param name="flag">The flag to set.</param>
         /// <returns>The mask with the flag set to off.</returns>
         public static T SetFlagOff<T>(this Enum mask, T flag)
-            where T : struct, IComparable, IFormattable, IConvertible {
+            where T : struct, IComparable, IFormattable, IConvertible
+        {
             ulong flagInt = Convert.ToUInt64(flag);
             ulong maskInt = Convert.ToUInt64(mask);
 
@@ -82,7 +88,8 @@ namespace DotBPE.Utils.Extensions {
         /// <param name="flag">The flag to toggle.</param>
         /// <returns>The mask with the flag set in the opposite position then it was.</returns>
         public static T ToggleFlag<T>(this Enum mask, T flag)
-            where T : struct, IComparable, IFormattable, IConvertible {
+            where T : struct, IComparable, IFormattable, IConvertible
+        {
             ulong flagInt = Convert.ToUInt64(flag);
             ulong maskInt = Convert.ToUInt64(mask);
 
@@ -98,8 +105,9 @@ namespace DotBPE.Utils.Extensions {
         /// <param name="enum">The enum to get the string hex from.</param>
         /// <returns></returns>
         public static string ToStringHex<T>(this Enum @enum)
-            where T : struct, IComparable, IFormattable, IConvertible {
-            return String.Format("{0:x8}", @enum); //hex            
+            where T : struct, IComparable, IFormattable, IConvertible
+        {
+            return String.Format("{0:x8}", @enum); //hex
         }
 
         /// <summary>
@@ -113,20 +121,23 @@ namespace DotBPE.Utils.Extensions {
         /// 	<c>true</c> if the string was able to be parsed to an enum; otherwise, <c>false</c>.
         /// </returns>
         public static bool TryParseEnum<T>(this Enum value, string input, out T returnValue)
-             where T : struct, IComparable, IFormattable, IConvertible {
+             where T : struct, IComparable, IFormattable, IConvertible
+        {
             returnValue = default(T);
             if (String.IsNullOrEmpty(input))
                 return false;
 
             Type t = typeof(T);
-            if (t.IsEnum && Enum.IsDefined(t, input)) {
+            if (t.IsEnum && Enum.IsDefined(t, input))
+            {
                 returnValue = (T)Enum.Parse(t, input, true);
                 return true;
             }
             return false;
         }
 
-        private static T ConvertFlag<T>(ulong maskInt) {
+        private static T ConvertFlag<T>(ulong maskInt)
+        {
             Type t = typeof(T);
             if (t.IsEnum)
                 return (T)Enum.ToObject(t, maskInt);
@@ -140,11 +151,12 @@ namespace DotBPE.Utils.Extensions {
         /// <param name="type"></param>
         /// <param name="value"></param>
         /// <returns>True if the enum value is defined.</returns>
-        public static bool TryEnumIsDefined(Type type, object value) {
+        public static bool TryEnumIsDefined(Type type, object value)
+        {
             if (type == null || value == null || !type.IsEnum)
                 return false;
 
-            // Return true if the value is an enum and is a matching type. 
+            // Return true if the value is an enum and is a matching type.
             if (type == value.GetType())
                 return true;
 
@@ -170,23 +182,28 @@ namespace DotBPE.Utils.Extensions {
             return false;
         }
 
-        private static bool TryEnumIsDefined<T>(Type type, object value) {
+        private static bool TryEnumIsDefined<T>(Type type, object value)
+        {
             // Catch any casting errors that can occur or if 0 is not defined as a default value.
-            try {
+            try
+            {
                 if (value is T && Enum.IsDefined(type, (T)value))
                     return true;
-            } catch (Exception) {}
+            }
+            catch (Exception) { }
 
             return false;
         }
 
 #if !SILVERLIGHT
+
         /// <summary>
         /// Gets the default defined value of an enum.
         /// </summary>
         /// <param name="type">The enum.</param>
         /// <returns>If the value cannot be determined, 0 will be returned.</returns>
-        public static object GetEnumDefaultValue(Type type) {
+        public static object GetEnumDefaultValue(Type type)
+        {
             if (type == null || !type.IsEnum)
                 return 0;
 
@@ -218,18 +235,23 @@ namespace DotBPE.Utils.Extensions {
         /// <param name="type"></param>
         /// <param name="defaultValue"></param>
         /// <returns></returns>
-        private static bool TryGetEnumDefaultValue<T>(Type type, out object defaultValue) {
+        private static bool TryGetEnumDefaultValue<T>(Type type, out object defaultValue)
+        {
             defaultValue = null;
 
-            try {
+            try
+            {
                 defaultValue = (T)type.GetField(Enum.GetValues(type).GetValue(0).ToString()).GetValue(null);
 
                 return true;
-            } catch (Exception) {
+            }
+            catch (Exception)
+            {
             }
 
             return false;
         }
+
 #endif
 
         /// <summary>
@@ -240,12 +262,14 @@ namespace DotBPE.Utils.Extensions {
         /// </summary>
         /// <param name="en">The Enumeration</param>
         /// <returns>A string representing the friendly name</returns>
-        public static string GetDescription(Enum en) {
+        public static string GetDescription(Enum en)
+        {
             Type type = en.GetType();
 
             MemberInfo[] memInfo = type.GetMember(en.ToString());
 
-            if (memInfo.Length > 0) {
+            if (memInfo.Length > 0)
+            {
                 object[] attrs = memInfo[0].GetCustomAttributes(typeof(DescriptionAttribute), false);
 
                 if (attrs.Length > 0)
@@ -257,7 +281,7 @@ namespace DotBPE.Utils.Extensions {
 
         public static List<string> GetValues<T>() where T : struct, IConvertible
         {
-            if (!typeof(T).IsEnum) 
+            if (!typeof(T).IsEnum)
                 throw new ArgumentException("T must be an enumerated type");
 
             var list = new List<string>();

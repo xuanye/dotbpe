@@ -1,7 +1,3 @@
-using System;
-using System.Collections.Generic;
-using System.Text;
-
 namespace DotBPE.Protobuf
 {
     public sealed partial class HttpApiOption

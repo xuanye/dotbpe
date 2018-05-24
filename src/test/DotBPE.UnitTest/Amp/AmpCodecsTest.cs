@@ -1,9 +1,8 @@
-using System.Text;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
-using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Netty;
 using DotNetty.Buffers;
+using System.Text;
 using Xunit;
 
 namespace DotBPE.UnitTest.Amp
@@ -23,7 +22,7 @@ namespace DotBPE.UnitTest.Amp
             msg.Data = Encoding.UTF8.GetBytes("ABC");
             IByteBuffer buffer = Unpooled.Buffer(msg.Length);
 
-            var bufferReader =new NettyByteBufferReader(buffer);
+            var bufferReader = new NettyByteBufferReader(buffer);
             var bufferWriter = new NettyByteBufferWriter(buffer);
             codecs.Encode(msg, bufferWriter);
 
