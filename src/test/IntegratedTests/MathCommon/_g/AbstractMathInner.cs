@@ -15,16 +15,20 @@ namespace MathCommon
     {
         protected override int ServiceId => 10006;
 
+
         public override Task<AmpMessage> ProcessAsync(AmpMessage req)
         {
             switch (req.MessageId)
             {
+
                 //方法 MathInner.Plus
                 case 1: return this.ProcessPlusAsync(req);
 
                 default: return base.ProcessNotFoundAsync(req);
             }
         }
+
+
 
         //调用委托
         private async Task<AmpMessage> ProcessPlusAsync(AmpMessage req)
@@ -53,9 +57,9 @@ namespace MathCommon
             }
             return response;
         }
-
         //抽象方法
-        public abstract Task<RpcResult<AddRes>> PlusAsync(AddReq req);
+        public abstract Task<RpcResult<AddRes>> PlusAsync( AddReq req);
+
     }
 
     //end for class AbstractMathInner

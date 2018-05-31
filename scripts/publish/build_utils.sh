@@ -11,7 +11,7 @@ fi
 mkdir -p $artifactsFolder
 
 
-versionNumber="1.1.1"
+versionNumber="1.2.1"
 
 dotnet pack ./core/DotBPE.Utils/DotBPE.Utils.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
 
