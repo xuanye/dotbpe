@@ -38,7 +38,6 @@ namespace DotBPE.Rpc.Netty
             this._factory = factory;
         }
 
-
         public async Task ShutdownAsync()
         {
             if (_channel == null)

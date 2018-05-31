@@ -1,4 +1,3 @@
-using DotBPE.Hosting;
 using DotBPE.Protobuf;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
@@ -7,6 +6,7 @@ using Flurl.Http;
 using MathCommon;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Serilog;
 using System;
 using System.Threading.Tasks;
@@ -45,7 +45,7 @@ namespace MathServer
                 //添加协议支持
                 services.AddDotBPE();
 
-                services.AddSingleton<IProtobufObjectFactory, ProtobufObjectFactory>();
+                services.AddSingleton<IProtobufDescriptorFactory, ProtobufDescriptorFactory>();
                 services.AddSingleton<IAuditLoggerFormat<AmpMessage>, DotBPE.Protobuf.AuditLoggerFormat>();
 
                 //注册服务
@@ -107,7 +107,7 @@ namespace MathServer
 
         public override async Task<RpcResult<AddRes>> PlusAsync(AddReq req)
         {
-            await Task.Delay(3000);
+            //await Task.Delay(3000);
 
             string response = await _req.GetRequest();
 

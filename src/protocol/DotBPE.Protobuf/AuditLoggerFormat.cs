@@ -74,7 +74,7 @@ namespace DotBPE.Protobuf
                 requestId = "UNKNOWN";
             }
             //clientIp,requestId,serviceName, elapsedMS,status_code
-            return string.Format("{0},  {1},  {2},  req={3},  res={4},  {5}", clientIP, requestId, mothedName, jsonReq, jsonRsp, elapsedMS, rsp.Code);
+            return string.Format("{0},  {1},  {2},  req={3},  res={4},  {5},  {6}", clientIP, requestId, mothedName, jsonReq, jsonRsp, elapsedMS, rsp.Code);
         }
 
         private string FormatRequestLog(IRpcContext context, AmpMessage req, AmpMessage rsp, long elapsedMS, Google.Protobuf.MessageParser reqParser, Google.Protobuf.MessageParser resParser)

@@ -3,15 +3,16 @@
 
 #region Designer generated code
 
-using DotBPE.Protobuf;
 using Google.Protobuf;
+using DotBPE.Protobuf;
 
 namespace MathCommon
 {
-    public class ProtobufObjectFactory : IProtobufObjectFactory
+    public class ProtobufObjectFactory:IProtobufObjectFactory
     {
         public IMessage GetRequestTemplate(int serviceId, int messageId)
         {
+
             if (serviceId == 10005 && messageId == 1)
             {
                 return new AddReq();
@@ -27,6 +28,7 @@ namespace MathCommon
 
         public IMessage GetResponseTemplate(int serviceId, int messageId)
         {
+
             if (serviceId == 10005 && messageId == 1)
             {
                 return new AddRes();

@@ -47,7 +47,7 @@ namespace MathClient
             var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201")
                 .ConfigureServices(services =>
                {
-                   services.AddSingleton<IProtobufObjectFactory, ProtobufObjectFactory>();
+                   services.AddSingleton<IProtobufDescriptorFactory, ProtobufDescriptorFactory>();
 
                    services.AddSingleton<IAuditLoggerFormat<AmpMessage>, AuditLoggerFormat>();
                })
