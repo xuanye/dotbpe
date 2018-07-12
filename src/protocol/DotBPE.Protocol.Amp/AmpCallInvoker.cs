@@ -113,7 +113,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                     if (_resultDictionary.ContainsKey(message.Id)
                         && _resultDictionary.TryGetValue(message.Id, out task))
                     {
-                        task.SetResult(e.Message);
+                        task.TrySetResult(e.Message);
                         Logger.LogDebug("message {0},set result success", message.Id);
                         // 移除字典
                         RemoveResultCallback(message.Id);
