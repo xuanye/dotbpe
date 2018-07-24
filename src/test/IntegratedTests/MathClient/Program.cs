@@ -44,7 +44,7 @@ namespace MathClient
 
         public async static Task RunClient()
         {
-            var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201")
+            var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201", 5)
                 .ConfigureServices(services =>
                {
                    services.AddSingleton<IProtobufDescriptorFactory, ProtobufDescriptorFactory>();
@@ -60,7 +60,7 @@ namespace MathClient
 
                 var random = new Random();
                 var i = 0;
-                while (i < 10)
+                while (i < 10000)
                 {
                     AddReq req = new AddReq
                     {
@@ -80,11 +80,16 @@ namespace MathClient
                         Console.WriteLine("error occ {0}", ex.Message);
                     }
 
+                    Console.WriteLine("请输入后回车:");
+                    var k = Console.ReadLine();
+                    if (k == "q")
+                    {
+                        Console.WriteLine("Quit!");
+                        break;
+                    }
                     i++;
                 }
             }
-            Console.WriteLine("Press any key to quit!");
-            Console.ReadKey();
         }
     }
 }
