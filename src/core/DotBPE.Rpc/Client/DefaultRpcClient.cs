@@ -96,7 +96,8 @@ namespace DotBPE.Rpc.Client
             }
             else
             {
-                Logger.LogDebug("Call  remote  service, {0}", point.RemoteAddress);
+                //为了测试临时调整级别
+                Logger.LogDebug("Call  remote  service, {0},{1}", point.RemoteAddress, message.MethodIdentifier);
                 var transport = this._factory.CreateTransport(point.RemoteAddress);
                 if (transport == null)
                 {
