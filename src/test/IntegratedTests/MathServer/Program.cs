@@ -98,32 +98,13 @@ namespace MathServer
 
     public class MathInnerService : MathInnerBase
     {
-        private readonly ClientReq _req;
-
-        public MathInnerService()
+        public override Task<RpcResult<AddRes>> PlusAsync(AddReq req)
         {
-            _req = new ClientReq();
-        }
-
-        public override async Task<RpcResult<AddRes>> PlusAsync(AddReq req)
-        {
-            //await Task.Delay(3000);
-
-            string response = await _req.GetRequest();
-
-            Console.WriteLine("response:{0}", response);
             var res = new AddRes();
             res.C = req.A + req.B;
-            return new RpcResult<AddRes>() { Data = res };
-        }
-    }
+            var result = new RpcResult<AddRes>() { Data = res };
 
-    public class ClientReq
-    {
-        public async Task<string> GetRequest()
-        {
-            string url = "https://www.mocky.io/v2/5185415ba171ea3a00704eed";
-            return await url.PostStringAsync("").ReceiveString();
+            return Task.FromResult(result);
         }
     }
 }

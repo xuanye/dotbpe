@@ -64,16 +64,17 @@ namespace DotBPE.Rpc.Netty
                 throw new Exceptions.RpcException("获取channel失败");
             }
 
-            if (!channel.Active || !channel.IsWritable)
+            if (!channel.Active || !channel.IsWritable || !channel.Open)
             {
-                Logger.LogWarning("ChannelId={0} is invalid,Active={1},IsWritable={2}", channel.Id.AsLongText(), channel.Active, channel.IsWritable);
+                Logger.LogWarning("ChannelId={0} is invalid,Active={1},IsWritable={2},Open={3}", channel.Id.AsLongText(), channel.Active, channel.IsWritable, channel.Open);
             }
 
             if (channel.Open)
             {
                 var buff = GetBuffer(channel, data);
-                Logger.LogDebug("ChannelId={0} WriteAndFlushAsync", channel.Id.AsLongText());
+                Logger.LogDebug("ChannelId={0} Send Message ={1}", channel.Id.AsLongText(), data.MethodIdentifier);
                 await channel.WriteAndFlushAsync(buff);
+                Logger.LogDebug("ChannelId={0} Send Message ={1} Completed", channel.Id.AsLongText(), data.MethodIdentifier);
             }
             else
             {
@@ -96,6 +97,7 @@ namespace DotBPE.Rpc.Netty
         {
             _remoteAddress = endpoint;
             int multiplexCount = clientOption != null ? clientOption.MultiplexCount : 1;
+            Logger.LogInformation("Ready to Init {0} Connections", multiplexCount);
             return CreateConnection(endpoint, multiplexCount);
         }
 

@@ -158,7 +158,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 message.Code = ErrorCodes.CODE_TIMEOUT;
                 if (!task.TrySetResult(message))
                 {
-                    Logger.LogWarning("set timeout result fail,maybe task is completed");
+                    Logger.LogWarning("set timeout result fail,maybe task is completed,message {0}", id);
                 }
 
                 Logger.LogWarning("message {0}, timeout", id);

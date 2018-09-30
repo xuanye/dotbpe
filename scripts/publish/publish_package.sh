@@ -13,7 +13,7 @@ mkdir -p $artifactsFolder
 
 
 
-versionNumber="1.2.2"
+versionNumber="1.2.3"
 
 dotnet pack ./core/DotBPE.Rpc.Abstractions/DotBPE.Rpc.Abstractions.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
 dotnet pack ./core/DotBPE.Rpc/DotBPE.Rpc.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
