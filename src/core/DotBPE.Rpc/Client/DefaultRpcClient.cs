@@ -82,7 +82,7 @@ namespace DotBPE.Rpc.Client
                 Logger.LogError("Get routing error");
                 throw new Rpc.Exceptions.RpcException("Get routing information error, please check the configuration");
             }
-            if (point.RoutePointType == RoutePointType.Local)
+            if (point.RoutePointType == RoutePointType.Local )
             {
                 //本地调用流程
                 Logger.LogDebug("Call  local  service");
@@ -91,21 +91,39 @@ namespace DotBPE.Rpc.Client
                 {
                     throw new Exceptions.RpcException($"ServiceActor 不存在，未配置对应的服务地址,MethodIdentifier={message.MethodIdentifier}");
                 }
+
+                if(actor.Id != message.ServiceIdentifier &&  actor.Id != message.MethodIdentifier)
+                {
+                    Logger.LogWarning("Service Actor NotFound", message.MethodIdentifier);
+                }
+
                 var context = new LocalMockContext<TMessage>(this._handler); //MOCK Context
                 return actor.ReceiveAsync(context, message);
             }
-            else
-            {
-                Logger.LogDebug("Call  remote  service, {0}", point.RemoteAddress);
-                var transport = this._factory.CreateTransport(point.RemoteAddress);
-                if (transport == null)
+
+            if( point.RoutePointType == RoutePointType.Smart)
+            {  
+                var actor = this._actorLocator.LocateServiceActor(message);
+                if (actor != null && (actor.Id == message.ServiceIdentifier || actor.Id == message.MethodIdentifier))
                 {
-                    throw new Exceptions.RpcException("ITransport 不存在,或地址错误");
+                    Logger.LogDebug("Call  Smart Local Service");
+                    var context = new LocalMockContext<TMessage>(this._handler); //MOCK Context
+                    return actor.ReceiveAsync(context, message);
                 }
-                return transport.SendAsync(message);
             }
+                     
+            Logger.LogDebug("Call  Remote  ervice, {0},{1}", point.RemoteAddress, message.MethodIdentifier);
+            var transport = this._factory.CreateTransport(point.RemoteAddress);
+            if (transport == null)
+            {
+                throw new Exceptions.RpcException("ITransport 不存在,或地址错误");
+            }
+            return transport.SendAsync(message);
+           
             throw new NotImplementedException("There is no default address,call SendAsync(EndPoint serverAddress,AmpMessage message) to send messages");
         }
+
+
 
         public void Dispose()
         {
