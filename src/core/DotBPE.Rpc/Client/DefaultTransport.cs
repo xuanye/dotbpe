@@ -31,25 +31,9 @@ namespace DotBPE.Rpc.Client
         {
         }
 
-        public async Task SendAsync(TMessage message)
+        public Task SendAsync(TMessage message)
         {
-            try
-            {
-                try
-                {
-                    //发送
-                    await this._context.SendAsync(message);
-                }
-                catch (Exception exception)
-                {
-                    throw new RpcCommunicationException("send message error", exception);
-                }
-            }
-            catch (Exception exception)
-            {
-                Logger.LogError("send message error", exception);
-                throw;
-            }
+            return this._context.SendAsync(message);
         }
     }
 }

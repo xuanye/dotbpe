@@ -92,16 +92,17 @@ namespace DotBPE.Rpc.Client
             try
             {
                 return GetOrAdd(endpoint, k => new Lazy<ITransport<TMessage>>(() =>
-                {
-                    var context = _bootstrap.StartConnectAsync(k).Result;
-                    var transportans = new DefaultTransport<TMessage>(context, _factory);
-                    return transportans;
-                })).Value;
+               {
+                   var context = _bootstrap.StartConnectAsync(k).Result;
+                   var transportans = new DefaultTransport<TMessage>(context, _factory);
+                   return transportans;
+               })).Value;
             }
-            catch
+            catch (Exception ex)
             {
+                Logger.LogError(ex, "CreateTransport Error,Msg={0}", ex.Message);
                 RemoveTransport(endpoint, out var _);
-                throw;
+                throw ex;
             }
         }
 

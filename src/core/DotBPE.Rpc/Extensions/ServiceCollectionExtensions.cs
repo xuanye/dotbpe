@@ -20,6 +20,8 @@ namespace DotBPE.Rpc
 
     public static class ServiceCollectionExtensions
     {
+        private static readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
         public static IServiceCollection AddClientCore<TMessage>(this IServiceCollection services) where TMessage : InvokeMessage
         {
             return services.AddSingleton<ITransportFactory<TMessage>, DefaultTransportFactory<TMessage>>()
@@ -60,5 +62,8 @@ namespace DotBPE.Rpc
         {
             return services.AddSingleton<IServiceActor<TMessage>, TActor>();
         }
+
+
+
     }
 }

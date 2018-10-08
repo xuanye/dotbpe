@@ -44,7 +44,7 @@ namespace MathClient
 
         public async static Task RunClient()
         {
-            var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201")
+            var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201", 5)
                 .ConfigureServices(services =>
                {
                    services.AddSingleton<IProtobufDescriptorFactory, ProtobufDescriptorFactory>();
@@ -60,7 +60,7 @@ namespace MathClient
 
                 var random = new Random();
                 var i = 0;
-                while (i < 10)
+                while (i < 10000)
                 {
                     AddReq req = new AddReq
                     {
@@ -68,12 +68,17 @@ namespace MathClient
                         B = random.Next(1, 10000)
                     };
 
-                    Console.WriteLine("call sever MathService.Add  --> {0}+{1} ", req.A, req.B);
-
                     try
                     {
-                        var res = await client.AddAsync(req);
-                        Console.WriteLine("server repsonse:<-----{0}+{1}={2}", req.A, req.B, res.Data?.C);
+                        var t1 = client.AddAsync(req);
+                        var t2 = client.AddAsync(req);
+                        var t3 = client.AddAsync(req);
+                        var t4 = client.AddAsync(req);
+                        var t5 = client.AddAsync(req);
+                        var t6 = client.AddAsync(req);
+                        var t7 = client.AddAsync(req);
+                        await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7);
+                        Console.WriteLine("{0}+{1}={2}", req.A, req.B, t5.Result.Code == 0 ? t5.Result.Data.C : -1);
                     }
                     catch (Exception ex)
                     {
@@ -83,8 +88,6 @@ namespace MathClient
                     i++;
                 }
             }
-            Console.WriteLine("Press any key to quit!");
-            Console.ReadKey();
         }
     }
 }

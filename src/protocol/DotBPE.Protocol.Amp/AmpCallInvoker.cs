@@ -114,14 +114,14 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                         && _resultDictionary.TryGetValue(message.Id, out task))
                     {
                         task.TrySetResult(e.Message);
-                        Logger.LogDebug("message {0},set result success", message.Id);
+                        Logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, e.Message.Code);
                         // 移除字典
                         RemoveResultCallback(message.Id);
                     }
                     else
                     {
                         //TODO:详细的错误日志信息
-                        Logger.LogError(string.Format("server response error msg ,code={0},", e.Message.Code));
+                        Logger.LogError(string.Format("server response error msg ,id={0},code={1},", message.Id, e.Message.Code));
                     }
                 }
                 else //正常返回
@@ -133,7 +133,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                         && _resultDictionary.TryGetValue(message.Id, out task))
                     {
                         task.TrySetResult(message);
-                        Logger.LogDebug("message {0},set result success", message.Id);
+                        Logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, e.Message.Code);
                         // 移除字典
                         RemoveResultCallback(message.Id);
                     }
@@ -158,7 +158,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
                 message.Code = ErrorCodes.CODE_TIMEOUT;
                 if (!task.TrySetResult(message))
                 {
-                    Logger.LogWarning("set timeout result fail,maybe task is completed");
+                    Logger.LogWarning("set timeout result fail,maybe task is completed,message {0}", id);
                 }
 
                 Logger.LogWarning("message {0}, timeout", id);

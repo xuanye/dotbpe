@@ -56,25 +56,32 @@ namespace DotBPE.Rpc.Netty
             return Task.CompletedTask;
         }
 
-        public Task SendAsync(TMessage data)
+        public async Task SendAsync(TMessage data)
         {
             var channel = TryGetOneRandom();
             if (channel == null)
             {
                 throw new Exceptions.RpcException("获取channel失败");
             }
+
+            if (!channel.Active || !channel.IsWritable || !channel.Open)
+            {
+                Logger.LogWarning("ChannelId={0} is invalid,Active={1},IsWritable={2},Open={3}", channel.Id.AsLongText(), channel.Active, channel.IsWritable, channel.Open);
+            }
+
             if (channel.Open)
             {
                 var buff = GetBuffer(channel, data);
-                Logger.LogDebug("ChannelId={0} WriteAndFlushAsync", channel.Id.AsLongText());
-                return channel.WriteAndFlushAsync(buff);
+                Logger.LogDebug("ChannelId={0} Send Message ={1}", channel.Id.AsLongText(), data.MethodIdentifier);
+                await channel.WriteAndFlushAsync(buff);
+                Logger.LogDebug("ChannelId={0} Send Message ={1} Completed", channel.Id.AsLongText(), data.MethodIdentifier);
             }
             else
             {
-                Logger.LogDebug("ChannelId={0} is invalid,ready to remove it", channel.Id.AsLongText());
-                TryRemove(channel); // 移除无用的Channel
+                Logger.LogWarning("ChannelId={0} is invalid,ready to remove it", channel.Id.AsLongText());
+                await channel.DisconnectAsync();
                 // StartConnect(channel.RemoteAddress); //启动自动重连
-                return SendAsync(data); // 重新调用一次 ，直到链接被移除完
+                await SendAsync(data); // 重新调用一次 ，直到链接被移除完
             }
         }
 
@@ -90,6 +97,7 @@ namespace DotBPE.Rpc.Netty
         {
             _remoteAddress = endpoint;
             int multiplexCount = clientOption != null ? clientOption.MultiplexCount : 1;
+            Logger.LogInformation("Ready to Init {0} Connections", multiplexCount);
             return CreateConnection(endpoint, multiplexCount);
         }
 
@@ -97,7 +105,6 @@ namespace DotBPE.Rpc.Netty
         {
             if (count > 1)
             {
-                Task[] tasks = new Task[count];
                 for (var i = 0; i < count; i++)
                 {
                     var channel = await this._bootstrap.ConnectAsync(endpoint);
