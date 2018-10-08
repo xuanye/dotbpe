@@ -13,6 +13,7 @@ namespace DotBPE.Rpc.Client
         private readonly static Dictionary<string, int> chooseRandom = new Dictionary<string, int>();
         private readonly object lockObject = new object();
 
+        const string DEFAULT_ROUTER_KEY = "0$0";
         public LoopPolicyRouter(IOptions<RemoteServicesOption> options)
         {
             this._options = options;
@@ -66,7 +67,7 @@ namespace DotBPE.Rpc.Client
 
             string keyService = message.ServiceIdentifier;
             string keyMessage = message.MethodIdentifier;
-
+          
             if (routerDict.ContainsKey(keyMessage))
             {
                 point.RoutePointType = RoutePointType.Remote;
@@ -78,6 +79,14 @@ namespace DotBPE.Rpc.Client
             {
                 point.RoutePointType = RoutePointType.Remote;
                 point.RemoteAddress = ChooseEndPoint(keyService, routerDict[keyService]);
+                return point;
+            }
+
+            //默认配置
+            if (routerDict.ContainsKey(DEFAULT_ROUTER_KEY))
+            {
+                point.RoutePointType = RoutePointType.Smart;
+                point.RemoteAddress = ChooseEndPoint(DEFAULT_ROUTER_KEY, routerDict[DEFAULT_ROUTER_KEY]);
                 return point;
             }
 

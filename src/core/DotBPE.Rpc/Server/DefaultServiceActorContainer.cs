@@ -66,7 +66,7 @@ namespace DotBPE.Rpc.Server
                     }
                 }
             }
-            Logger.LogWarning("Actor not exist，actorId={actorId},Actor Count ={actorCount}", actorId, actorDict.Count);
+            Logger.LogDebug("Actor not exist，actorId={actorId},Actor Count ={actorCount}", actorId, actorDict.Count);
 
             return null;
         }
