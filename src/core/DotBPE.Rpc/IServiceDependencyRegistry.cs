@@ -1,3 +1,4 @@
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -7,6 +8,6 @@ namespace DotBPE.Rpc
 {
     public interface IServiceDependencyRegistry
     {
-        IServiceCollection AddServiceDependency(IServiceCollection services);
+        IServiceCollection AddServiceDependency(IConfiguration configuration, IServiceCollection services);
     }
 }

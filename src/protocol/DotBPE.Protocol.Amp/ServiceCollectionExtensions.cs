@@ -2,6 +2,7 @@ using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Netty;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
@@ -58,7 +59,7 @@ namespace DotBPE.Protocol.Amp
         /// </summary>
         /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection ScanAddServiceActors(this IServiceCollection services, string dllPrefix, string pluginDirName = "")
+        public static IServiceCollection ScanAddServiceActors(this IServiceCollection services, IConfiguration configuration, string dllPrefix, string pluginDirName = "")
         {
 
             var dllFiles = Directory.GetFiles(string.Concat(BaseDirectory, pluginDirName), $"{dllPrefix}*.dll");
@@ -92,7 +93,7 @@ namespace DotBPE.Protocol.Amp
 
             if (registryTypes.Count > 0) //注册依赖
             {
-                registryTypes.ForEach(r => ServiceActorDescriptor.ServiceDependencyRegistry(services, r));
+                registryTypes.ForEach(r => ServiceActorDescriptor.ServiceDependencyRegistry(configuration, services, r));
             }
             if (actorTypes.Count > 0) //注册服务
             {
