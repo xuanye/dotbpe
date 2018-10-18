@@ -33,11 +33,12 @@ namespace DotBPE.Protocol.Amp
         private static IServiceCollection AddAmpClient(this IServiceCollection services)
         {
             services.Remove(ServiceDescriptor.Singleton(typeof(IRouter<AmpMessage>)));
-
+            
             return services.AddSingleton<IRouter<AmpMessage>, LoopPolicyRouter<AmpMessage>>()
                     .AddSingleton<IClientMessageHandler<AmpMessage>, ClientMessageHandler<AmpMessage>>() // 消息处理器
                     .AddSingleton<ITransportFactory<AmpMessage>, DefaultTransportFactory<AmpMessage>>()
-                    .AddSingleton<IClientBootstrap<AmpMessage>, NettyClientBootstrap<AmpMessage>>();
+                    .AddSingleton<IClientBootstrap<AmpMessage>, NettyClientBootstrap<AmpMessage>>()
+                    .AddSingleton<IClientBootstrap, WrapClientBootstrap>(); 
         }
 
         /// <summary>

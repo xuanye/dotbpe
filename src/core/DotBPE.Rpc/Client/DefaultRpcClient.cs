@@ -102,7 +102,7 @@ namespace DotBPE.Rpc.Client
             }
 
             if( point.RoutePointType == RoutePointType.Smart)
-            {  
+            {
                 var actor = this._actorLocator.LocateServiceActor(message);
                 if (actor != null && (actor.Id == message.ServiceIdentifier || actor.Id == message.MethodIdentifier))
                 {
@@ -111,15 +111,15 @@ namespace DotBPE.Rpc.Client
                     return actor.ReceiveAsync(context, message);
                 }
             }
-                     
-            Logger.LogDebug("Call  Remote  ervice, {0},{1}", point.RemoteAddress, message.MethodIdentifier);
+
+            Logger.LogDebug("Call  Remote  Service, {0},{1}", point.RemoteAddress, message.MethodIdentifier);
             var transport = this._factory.CreateTransport(point.RemoteAddress);
             if (transport == null)
             {
                 throw new Exceptions.RpcException("ITransport 不存在,或地址错误");
             }
             return transport.SendAsync(message);
-           
+
             throw new NotImplementedException("There is no default address,call SendAsync(EndPoint serverAddress,AmpMessage message) to send messages");
         }
 

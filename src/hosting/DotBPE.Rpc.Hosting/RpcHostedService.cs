@@ -21,7 +21,8 @@ namespace DotBPE.Rpc.Hosting
         private string _hostIP;
         private int _hostPort;
 
-        private IServerBootstrap _server;
+        private IServerBootstrap _sos;
+        private IClientBootstrap _soc;
 
         public RpcHostedService(IServiceProvider hostProvider, IConfiguration config, ILogger<RpcHostedService> logger, ILoggerFactory loggerFactory)
         {
@@ -63,11 +64,12 @@ namespace DotBPE.Rpc.Hosting
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        private Task StartServerAsync(CancellationToken token)
+        private async Task StartServerAsync(CancellationToken token)
         {
             BuildApplication();
             var endpoint = new IPEndPoint(IPAddress.Parse(this._hostIP), this._hostPort);
-            return this._server.StartAsync(endpoint, token);
+            await this._sos.StartAsync(endpoint, token);
+            await this._soc.StartAsync();
         }
 
         /// <summary>
@@ -75,9 +77,10 @@ namespace DotBPE.Rpc.Hosting
         /// </summary>
         /// <param name="token"></param>
         /// <returns></returns>
-        private Task StopServerAsync(CancellationToken token)
+        private async Task StopServerAsync(CancellationToken token)
         {
-            return this._server.ShutdownAsync();
+            await this._sos.ShutdownAsync();
+            await this._soc.StopAsync();
         }
 
         /// <summary>
@@ -94,9 +97,14 @@ namespace DotBPE.Rpc.Hosting
 
         private void EnsureServer()
         {
-            if (_server == null)
+            if (_sos == null)
             {
-                _server = _hostProvider.GetRequiredService<IServerBootstrap>();
+                _sos = _hostProvider.GetRequiredService<IServerBootstrap>();
+            }
+
+            if (_soc == null)
+            {
+                _soc = _hostProvider.GetRequiredService<IClientBootstrap>();
             }
         }
     }

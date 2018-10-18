@@ -2,6 +2,7 @@ using DotNetty.Handlers.Timeout;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Logging;
 using System;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Netty
 {
@@ -33,10 +34,16 @@ namespace DotBPE.Rpc.Netty
             base.ChannelInactive(context);
         }
 
-        protected async override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
+        protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
             Logger.LogDebug("ready to read message");
-            await this._bootstrap.ChannelRead(context, msg);
+
+            Task.Run(async () =>
+            {
+                await this._bootstrap.ChannelRead(context, msg).ConfigureAwait(false);
+            });
+
+
         }
 
         public override void ChannelReadComplete(IChannelHandlerContext contex)

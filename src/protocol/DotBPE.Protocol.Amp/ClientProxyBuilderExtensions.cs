@@ -18,7 +18,7 @@ namespace DotBPE.Protocol.Amp
                     services.AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
                 })
                 .Build();
-
+            
             return client;
         }
     }

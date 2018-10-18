@@ -16,15 +16,14 @@ namespace DotBPE.Rpc.Netty
     {
         private readonly ILogger Logger;
         private readonly IMessageCodecs<TMessage> _codecs;
-        private readonly Bootstrap _bootstrap;
-        private EndPoint _remoteAddress;
+        private readonly Bootstrap _bootstrap;     
         private List<IChannel> _channels = new List<IChannel>();
 
         private bool _autoReConnect = true;
 
         private static object _lockObj = new object();
 
-        private int seq = 0;
+        private int seq = 0;             
 
         public EndPoint RemoteAddress { get; set; }
         public EndPoint LocalAddress { get; set; }
@@ -61,7 +60,8 @@ namespace DotBPE.Rpc.Netty
             var channel = TryGetOneRandom();
             if (channel == null)
             {
-                throw new Exceptions.RpcException("获取channel失败");
+               throw new Exceptions.RpcException("获取channel失败");
+              
             }
 
             if (!channel.Active || !channel.IsWritable || !channel.Open)
@@ -93,12 +93,14 @@ namespace DotBPE.Rpc.Netty
             return buff;
         }
 
+       
+
         public Task InitAsync(EndPoint endpoint, RpcClientOption clientOption)
         {
-            _remoteAddress = endpoint;
-            int multiplexCount = clientOption != null ? clientOption.MultiplexCount : 1;
+            RemoteAddress = endpoint;   
+            int multiplexCount = clientOption != null && clientOption.MultiplexCount>0 ? clientOption.MultiplexCount : 1;
             Logger.LogInformation("Ready to Init {0} Connections", multiplexCount);
-            return CreateConnection(endpoint, multiplexCount);
+            return CreateConnection(endpoint, multiplexCount);           
         }
 
         private async Task CreateConnection(EndPoint endpoint, int count)
@@ -107,15 +109,17 @@ namespace DotBPE.Rpc.Netty
             {
                 for (var i = 0; i < count; i++)
                 {
-                    var channel = await this._bootstrap.ConnectAsync(endpoint);
+                    var channel = await this._bootstrap.ConnectAsync(endpoint).ConfigureAwait(false);
                     _channels.Add(channel);
                 }
             }
             else
-            {
-                IChannel channel = await this._bootstrap.ConnectAsync(endpoint);
-                _channels.Add(channel);
+            {           
+                IChannel channel = await this._bootstrap.ConnectAsync(endpoint).ConfigureAwait(false);
+                _channels.Add(channel);              
             }
+            
+            Logger.LogInformation(" Inited {0} Connections", _channels.Count);
         }
 
         internal void BindDisconnect(IClientBootstrap<TMessage> clientBoot)
@@ -128,7 +132,7 @@ namespace DotBPE.Rpc.Netty
             TryRemoveById(args.ChannelId);
             if (this._autoReConnect)
             {
-                StartConnect(args.RemotePoint);
+                StartConnect(args.RemotePoint,1);
             }
         }
 
@@ -176,10 +180,11 @@ namespace DotBPE.Rpc.Netty
             return channel;
         }
 
-        private void StartConnect(EndPoint endpoint)
+        private Task StartConnect(EndPoint endpoint,int mCount)
         {
             int tryCount = 0;
-            Thread thread = new Thread(new ThreadStart(() =>
+
+            var task= Task.Factory.StartNew(async () =>
             {
                 while (_autoReConnect)
                 {
@@ -190,21 +195,21 @@ namespace DotBPE.Rpc.Netty
                         Logger.LogDebug("reconnect to {0} 100000 times, but fail, restart !", endpoint);
                         break;
                     }
-                    Logger.LogDebug("will reconnect to {0} after {1} ms, try {2} times", endpoint, tryCount * 1000, tryCount);
-                    Thread.Sleep(2000); //2秒重试一次
+                    Logger.LogInformation("will reconnect to {0} after {1} ms, try {2} times", endpoint, tryCount * 1000, tryCount);                   
                     try
                     {
-                        CreateConnection(endpoint, 1).Wait();
+                        await CreateConnection(endpoint, mCount);
                         break;
                     }
                     catch
                     {
                         Logger.LogWarning("reconnect {0} failed，try {1} times", endpoint, tryCount);
                     }
+                    await Task.Delay(TimeSpan.FromSeconds(2));
                 }
-            }));
-            thread.IsBackground = true;
-            thread.Start();
+            });
+          
+            return task;
         }
     }
 }

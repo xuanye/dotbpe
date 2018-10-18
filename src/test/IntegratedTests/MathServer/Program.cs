@@ -2,11 +2,14 @@ using DotBPE.Protobuf;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Hosting;
+using DotBPE.Rpc.Options;
+using DotNetty.Common.Internal.Logging;
 using Flurl.Http;
 using MathCommon;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging.Console;
 using Serilog;
 using System;
 using System.Threading.Tasks;
@@ -19,7 +22,10 @@ namespace MathServer
         {
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
-            var currentEnv = System.Environment.GetEnvironmentVariable("DOTBPE_ENVIRONMENT");
+            //InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
+
+
+           var currentEnv = System.Environment.GetEnvironmentVariable("DOTBPE_ENVIRONMENT");
             var configuration = new ConfigurationBuilder()
                 .AddJsonFile("serilog.json")
                 .AddJsonFile($"serilog.{currentEnv}.json", optional: true)
@@ -31,23 +37,27 @@ namespace MathServer
               .CreateLogger();
 
             string ip = "127.0.0.1";
-            int port = 6201;
+            int port = args.Length>0?6202:6201;
             var builder = new HostBuilder()
             .UseServer(ip, port)
             .ConfigureServices(services =>
             {
-                //services.AddDistributedRedisCache(options =>
-                //{
-                //    options.Configuration = "10.240.225.136:6379";
-                //    options.InstanceName = "Survey:";
-                //});
-
+              
                 //添加协议支持
                 services.AddDotBPE();
 
                 services.AddSingleton<IProtobufDescriptorFactory, ProtobufDescriptorFactory>();
                 services.AddSingleton<IAuditLoggerFormat<AmpMessage>, DotBPE.Protobuf.AuditLoggerFormat>();
 
+                services.Configure<RemoteServicesOption>( x=>
+                {
+                    x.Add(new ServiceOption()
+                    {
+                         ServiceId = 10006,
+                         MessageId = "0",
+                         RemoteAddress="127.0.0.1:6202"
+                    });
+                });
                 //注册服务
                 services.AddServiceActors<AmpMessage>((actors) =>
                 {
