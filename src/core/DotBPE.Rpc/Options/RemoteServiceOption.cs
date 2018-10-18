@@ -8,7 +8,7 @@ namespace DotBPE.Rpc.Options
     {
         public int ServiceId { get; set; }
         public string MessageId { get; set; }
-
+        public RoutePointType RoutePointType {get;set;}
         public string RemoteAddress { get; set; }
     }
 }

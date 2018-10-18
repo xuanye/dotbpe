@@ -2,9 +2,11 @@ using DotBPE.Protobuf;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
+using DotNetty.Common.Internal.Logging;
 using MathCommon;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging.Console;
 using Serilog;
 using System;
 using System.Threading.Tasks;
@@ -16,6 +18,8 @@ namespace MathClient
         private static void Main(string[] args)
         {
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException; ;
+
+            //InternalLoggerFactory.DefaultFactory.AddProvider(new ConsoleLoggerProvider((s, level) => true, false));
 
             var currentEnv = System.Environment.GetEnvironmentVariable("DOTBPE_ENVIRONMENT");
             var configuration = new ConfigurationBuilder()
@@ -44,7 +48,7 @@ namespace MathClient
 
         public async static Task RunClient()
         {
-            var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201", 5)
+            var proxy = new ClientProxyBuilder().UseServer("127.0.0.1:6201", 1)
                 .ConfigureServices(services =>
                {
                    services.AddSingleton<IProtobufDescriptorFactory, ProtobufDescriptorFactory>();
@@ -60,7 +64,7 @@ namespace MathClient
 
                 var random = new Random();
                 var i = 0;
-                while (i < 10000)
+                while (i < 100)
                 {
                     AddReq req = new AddReq
                     {
@@ -70,15 +74,10 @@ namespace MathClient
 
                     try
                     {
-                        var t1 = client.AddAsync(req);
-                        var t2 = client.AddAsync(req);
-                        var t3 = client.AddAsync(req);
-                        var t4 = client.AddAsync(req);
-                        var t5 = client.AddAsync(req);
-                        var t6 = client.AddAsync(req);
-                        var t7 = client.AddAsync(req);
-                        await Task.WhenAll(t1, t2, t3, t4, t5, t6, t7);
-                        Console.WriteLine("{0}+{1}={2}", req.A, req.B, t5.Result.Code == 0 ? t5.Result.Data.C : -1);
+                        var res = await client.AddAsync(req);
+                       
+                   
+                        Console.WriteLine("{0}+{1}={2}", req.A, req.B, res.Data.C);
                     }
                     catch (Exception ex)
                     {

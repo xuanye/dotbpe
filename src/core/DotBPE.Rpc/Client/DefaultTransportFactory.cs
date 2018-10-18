@@ -93,7 +93,11 @@ namespace DotBPE.Rpc.Client
             {
                 return GetOrAdd(endpoint, k => new Lazy<ITransport<TMessage>>(() =>
                {
-                   var context = _bootstrap.StartConnectAsync(k).Result;
+                   var context = _bootstrap.GetContext(endpoint);
+                   if(context == null)
+                   {
+                       return null;
+                   }
                    var transportans = new DefaultTransport<TMessage>(context, _factory);
                    return transportans;
                })).Value;
