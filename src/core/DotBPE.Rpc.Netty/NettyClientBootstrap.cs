@@ -82,6 +82,11 @@ namespace DotBPE.Rpc.Netty
             {
                 ctx = CON_LIST[remotePoint];
             }
+
+            if(ctx != null)
+            {
+                return ctx;
+            }
             //if(_clientOption !=null &&  _clientOption.Value !=null && !string.IsNullOrEmpty(_clientOption.Value.DefaultServerAddress))
             {
                 var remote = remotePoint; //ParseUtils.ParseEndPointFromString(_clientOption.Value.DefaultServerAddress);
@@ -238,8 +243,7 @@ namespace DotBPE.Rpc.Netty
                     catch
                     {
                         Logger.LogWarning("reconnect {0} failed，try {1} times", address, tryCount);
-                    }
-                    Logger.LogInformation("will reconnect to {0} after {1} ms, try {2} times", address, tryCount * 1000, tryCount);
+                    }               
                     await Task.Delay(TimeSpan.FromSeconds(2));
                   
                 }

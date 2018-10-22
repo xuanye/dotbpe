@@ -48,7 +48,7 @@ namespace MathServer
 
                 services.AddSingleton<IProtobufDescriptorFactory, ProtobufDescriptorFactory>();
                 services.AddSingleton<IAuditLoggerFormat<AmpMessage>, DotBPE.Protobuf.AuditLoggerFormat>();
-
+                services.Configure<RpcClientOption>(x => x.MultiplexCount = 3);
                 services.Configure<RemoteServicesOption>( x=>
                 {
                     x.Add(new ServiceOption()
