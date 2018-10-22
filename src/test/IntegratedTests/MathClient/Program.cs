@@ -64,7 +64,7 @@ namespace MathClient
 
                 var random = new Random();
                 var i = 0;
-                while (i < 100)
+                while (i < 10)
                 {
                     AddReq req = new AddReq
                     {

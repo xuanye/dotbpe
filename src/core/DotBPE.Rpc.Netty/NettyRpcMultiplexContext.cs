@@ -99,7 +99,7 @@ namespace DotBPE.Rpc.Netty
         {
             RemoteAddress = endpoint;   
             int multiplexCount = clientOption != null && clientOption.MultiplexCount>0 ? clientOption.MultiplexCount : 1;
-            Logger.LogInformation("Ready to Init {0} Connections", multiplexCount);
+            Logger.LogDebug("Ready to Init {0} Connections", multiplexCount);
             return CreateConnection(endpoint, multiplexCount);           
         }
 
@@ -119,7 +119,7 @@ namespace DotBPE.Rpc.Netty
                 _channels.Add(channel);              
             }
             
-            Logger.LogInformation(" Inited {0} Connections", _channels.Count);
+            Logger.LogDebug("Inited {0} Connections", _channels.Count);
         }
 
         internal void BindDisconnect(IClientBootstrap<TMessage> clientBoot)

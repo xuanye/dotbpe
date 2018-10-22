@@ -94,7 +94,7 @@ namespace DotBPE.Rpc.Client
 
                 if(actor.Id != message.ServiceIdentifier &&  actor.Id != message.MethodIdentifier)
                 {
-                    Logger.LogWarning("Service Actor NotFound", message.MethodIdentifier);
+                    Logger.LogWarning("Service {0} Actor NotFound", message.MethodIdentifier);
                 }
 
                 var context = new LocalMockContext<TMessage>(this._handler); //MOCK Context
