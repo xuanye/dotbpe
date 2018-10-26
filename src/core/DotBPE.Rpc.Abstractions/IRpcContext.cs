@@ -14,5 +14,7 @@ namespace DotBPE.Rpc
         Task SendAsync(TMessage msg);
 
         Task CloseAsync();
+
+        void OnContextInActived(ConnectionEventArgs args);
     }
 }

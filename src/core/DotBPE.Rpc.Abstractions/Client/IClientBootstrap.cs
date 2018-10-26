@@ -13,10 +13,7 @@ namespace DotBPE.Rpc
         /// <returns></returns>
         IRpcContext<TMessage> GetContext(EndPoint remotePoint);
 
-        /// <summary>
-        /// 断开链接时的事件
-        /// </summary>
-        event EventHandler<ConnectionEventArgs> DisConnected;
+      
     }
 
     public interface IClientBootstrap : IDisposable

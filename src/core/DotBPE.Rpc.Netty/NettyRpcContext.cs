@@ -29,6 +29,11 @@ namespace DotBPE.Rpc.Netty
             return this._channel.CloseAsync();
         }
 
+        public void OnContextInActived(ConnectionEventArgs args)
+        {
+           
+        }
+
         public Task SendAsync(TMessage message)
         {
             if (this._channel.IsWritable)
@@ -38,7 +43,7 @@ namespace DotBPE.Rpc.Netty
             }
             return Task.CompletedTask;
         }
-
+         
         private IByteBuffer GetBuffer(TMessage message)
         {
             var buff = this._channel.Allocator.Buffer(message.Length);

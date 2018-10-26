@@ -21,10 +21,16 @@ namespace DotBPE.Rpc
             return Task.CompletedTask;
         }
 
+        public void OnContextInActived(ConnectionEventArgs args)
+        {
+           
+        }
+
         public Task SendAsync(TMessage data)
         {
             this._handler.Receive(this, data);
             return Utils.TaskUtils.CompletedTask;
         }
+         
     }
 }
