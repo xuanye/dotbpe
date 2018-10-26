@@ -43,8 +43,7 @@ namespace DotBPE.Rpc.Client
             // 收到了消息然后冒泡到 上层
             if (args.Message.InvokeMessageType != InvokeMessageType.Request)
             {
-                Logger.LogDebug("收到消息返回");
-
+                Logger.LogDebug("收到消息返回,Id={0}",args.Message.MethodIdentifier);
                 Recieved?.Invoke(sender, args);
             }
         }

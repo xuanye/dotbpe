@@ -28,8 +28,6 @@ namespace DotBPE.Rpc.Netty
         /// <param name="context"></param>
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            // 这里应该移除之前ITransprotFactory中的缓存 或者通知对方
-            Logger.LogInformation($"Server {context.Channel.RemoteAddress} Inactive");
             this._bootstrap.OnChannelInactive(context);
         }
 

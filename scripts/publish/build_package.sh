@@ -5,7 +5,7 @@ cd $(dirname $0)/../../src/
 artifactsFolder="../artifacts"
 
 if [ -d $artifactsFolder ]; then
-  rm -R $artifactsFolder
+   rm -R $artifactsFolder 
 fi
 
 mkdir -p $artifactsFolder
@@ -13,7 +13,7 @@ mkdir -p $artifactsFolder
 
 
 
-versionNumber="1.2.8"
+versionNumber="1.2.10"
 
 dotnet pack ./core/DotBPE.Rpc.Abstractions/DotBPE.Rpc.Abstractions.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber
 dotnet pack ./core/DotBPE.Rpc/DotBPE.Rpc.csproj -c Release -o ../../$artifactsFolder --version-suffix=$versionNumber

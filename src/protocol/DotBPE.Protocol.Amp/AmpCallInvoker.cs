@@ -99,7 +99,7 @@ new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
             if (e.Message.ServiceId == 0 && e.Message.MessageId == 0)
             {
                 //心跳消息
-                Logger.LogDebug("heart beat");
+                Logger.LogTrace("recieved heart beat");
                 return;
             }
 

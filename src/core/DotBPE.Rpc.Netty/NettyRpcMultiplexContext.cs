@@ -16,14 +16,14 @@ namespace DotBPE.Rpc.Netty
     {
         private readonly ILogger Logger;
         private readonly IMessageCodecs<TMessage> _codecs;
-        private readonly Bootstrap _bootstrap;     
+        private readonly Bootstrap _bootstrap;
         private List<IChannel> _channels = new List<IChannel>();
 
         private bool _autoReConnect = true;
 
         private static object _lockObj = new object();
 
-        private int seq = 0;             
+        private int seq = 0;
 
         public EndPoint RemoteAddress { get; set; }
         public EndPoint LocalAddress { get; set; }
@@ -61,7 +61,7 @@ namespace DotBPE.Rpc.Netty
             if (channel == null)
             {
                throw new Exceptions.RpcException("获取channel失败");
-              
+
             }
 
             if (!channel.Active || !channel.IsWritable || !channel.Open)
@@ -93,14 +93,14 @@ namespace DotBPE.Rpc.Netty
             return buff;
         }
 
-       
+
 
         public Task InitAsync(EndPoint endpoint, RpcClientOption clientOption)
         {
-            RemoteAddress = endpoint;   
+            RemoteAddress = endpoint;
             int multiplexCount = clientOption != null && clientOption.MultiplexCount>0 ? clientOption.MultiplexCount : 1;
             Logger.LogDebug("Ready to Init {0} Connections", multiplexCount);
-            return CreateConnection(endpoint, multiplexCount);           
+            return CreateConnection(endpoint, multiplexCount);
         }
 
         private async Task CreateConnection(EndPoint endpoint, int count)
@@ -110,53 +110,47 @@ namespace DotBPE.Rpc.Netty
                 for (var i = 0; i < count; i++)
                 {
                     var channel = await this._bootstrap.ConnectAsync(endpoint).ConfigureAwait(false);
+                    Logger.LogInformation("注册链接成功,remoteAddress={0},channelId={1}", endpoint, channel.Id.AsLongText());
                     _channels.Add(channel);
                 }
             }
             else
-            {           
+            {
                 IChannel channel = await this._bootstrap.ConnectAsync(endpoint).ConfigureAwait(false);
-                _channels.Add(channel);              
+                Logger.LogInformation("注册链接成功,remoteAddress={0},channelId={1}", endpoint, channel.Id.AsLongText());
+                _channels.Add(channel);
             }
-            
+
             Logger.LogDebug("Inited {0} Connections", _channels.Count);
         }
 
-        internal void BindDisconnect(IClientBootstrap<TMessage> clientBoot)
-        {
-            clientBoot.DisConnected += Channel_DisConnected;
-        }
+       
 
-        private void Channel_DisConnected(object sender, ConnectionEventArgs args)
-        {
-            TryRemoveById(args.ChannelId);
-            if (this._autoReConnect)
-            {
-                StartConnect(args.RemotePoint,1);
-            }
-        }
-
-        private void TryRemoveById(string id)
+        private bool TryRemoveById(string id)
         {
             lock (_lockObj)
             {
                 var channel = _channels.Find(x => x.Id.AsLongText() == id);
                 if (channel != null)
                 {
-                    _channels.Remove(channel);
+                    return _channels.Remove(channel);
                 }
             }
+            Logger.LogWarning("移除Channel时，发现Channel不在对应的队列中,{0}", id);
+            return false;
         }
 
-        private void TryRemove(IChannel channel)
+        private bool TryRemove(IChannel channel)
         {
             lock (_lockObj)
             {
                 if (_channels.Contains(channel))
                 {
-                    _channels.Remove(channel);
+                   return _channels.Remove(channel);
                 }
             }
+            Logger.LogWarning("移除Channel时，发现Channel不在对应的队列中,{0}", channel.Id.AsLongText());
+            return false;
         }
 
         /// <summary>
@@ -195,7 +189,7 @@ namespace DotBPE.Rpc.Netty
                         Logger.LogDebug("reconnect to {0} 100000 times, but fail, restart !", endpoint);
                         break;
                     }
-                    Logger.LogInformation("will reconnect to {0} after {1} ms, try {2} times", endpoint, tryCount * 1000, tryCount);                   
+                    //Logger.LogInformation("will reconnect to {0} after {1} ms, try {2} times", endpoint, tryCount * 1000, tryCount);
                     try
                     {
                         await CreateConnection(endpoint, mCount);
@@ -208,8 +202,17 @@ namespace DotBPE.Rpc.Netty
                     await Task.Delay(TimeSpan.FromSeconds(2));
                 }
             });
-          
+
             return task;
+        }
+
+        public void OnContextInActived(ConnectionEventArgs args)
+        {
+            bool removed = TryRemoveById(args.ChannelId);
+            if (this._autoReConnect && removed)
+            {
+                StartConnect(args.RemotePoint, 1);
+            }
         }
     }
 }

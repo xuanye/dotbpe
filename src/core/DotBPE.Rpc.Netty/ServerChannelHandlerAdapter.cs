@@ -24,19 +24,19 @@ namespace DotBPE.Rpc.Netty
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            Logger.LogDebug($"client {context.Channel.RemoteAddress} connected");
+            Logger.LogDebug("client {RemoteAddress} connected,ChannelId={ChannelId}",context.Channel.RemoteAddress,context.Channel.Id.AsLongText());
             base.ChannelActive(context);
         }
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            Logger.LogDebug($"client {context.Channel.RemoteAddress} disconnected");
+            Logger.LogDebug("client {RemoteAddress} disconnected,ChannelId={ChannelId}",context.Channel.RemoteAddress,context.Channel.Id.AsLongText());
             base.ChannelInactive(context);
         }
 
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
-            Logger.LogDebug("ready to read message");
+            Logger.LogDebug("server recieve message,Id={messageId}", msg.MethodIdentifier);
 
             Task.Run(async () =>
             {
@@ -53,7 +53,7 @@ namespace DotBPE.Rpc.Netty
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
-            Logger.LogError(ex, "client：{remoteAddress} occur an exception ", context.Channel.RemoteAddress);
+            Logger.LogError(ex, "client：{remoteAddress} occur an exception,ChannelId={ChannelId} ", context.Channel.RemoteAddress,context.Channel.Id.AsLongText());
             context.CloseAsync(); //关闭连接
         }
 
@@ -65,7 +65,7 @@ namespace DotBPE.Rpc.Netty
                 var eventState = evt as IdleStateEvent;
                 if (eventState != null)
                 {
-                    Logger.LogError("client {channelId},{remoteAddress} is timeout，close it!", context.Channel.Id, context.Channel.RemoteAddress);
+                    Logger.LogError("client {channelId},{remoteAddress} is timeout，close it!", context.Channel.Id.AsLongText(), context.Channel.RemoteAddress);
                     context.CloseAsync(); //关闭连接
                 }
             }

@@ -41,6 +41,7 @@ namespace DotBPE.Rpc.Netty
         private readonly ILogger Logger;
         private bool _stoped = false;
 
+        private static object LOCKOBJ = new object();
         public NettyClientBootstrap(
             IClientMessageHandler<TMessage> handler,
             IMessageCodecs<TMessage> msgCodecs,
@@ -59,8 +60,7 @@ namespace DotBPE.Rpc.Netty
             this._factory = factory;
         }
 
-        public event EventHandler<ConnectionEventArgs> DisConnected;
-
+      
         public void ChannelRead(IChannelHandlerContext ctx, TMessage msg)
         {
             var context = new NettyRpcContext<TMessage>(ctx.Channel, this._msgCodecs);
@@ -78,39 +78,60 @@ namespace DotBPE.Rpc.Netty
         public IRpcContext<TMessage> GetContext(EndPoint remotePoint)
         {
             IRpcContext<TMessage> ctx = null;
-            if (CON_LIST.ContainsKey(remotePoint))
-            {
-                ctx = CON_LIST[remotePoint];
-            }
-
-            if(ctx != null)
+            if( CON_LIST.TryGetValue(remotePoint,out ctx))
             {
                 return ctx;
             }
+
             //if(_clientOption !=null &&  _clientOption.Value !=null && !string.IsNullOrEmpty(_clientOption.Value.DefaultServerAddress))
-            {
+            lock(LOCKOBJ)
+            {               
                 var remote = remotePoint; //ParseUtils.ParseEndPointFromString(_clientOption.Value.DefaultServerAddress);
+             
                 var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs, this.Logger);
-                context.InitAsync(remote, _clientOption?.Value).Wait() ;
-                context.BindDisconnect(this);
+                context.InitAsync(remote, _clientOption?.Value).Wait() ;             
                 if (CON_LIST.TryAdd(remote, context))
                 {
+                    Logger.LogDebug("add context to cache list,{RemoteAddress}", remote);
                     ctx = context;
-                }                
+                }
+                else
+                {
+                    context.CloseAsync();
+                }
             }
             return ctx;
         }
 
         public void OnChannelInactive(IChannelHandlerContext context)
         {
+            Logger.LogDebug("Client Channel Inactive,RemoteAddress:{0},ChannelId:{1}",context.Channel.RemoteAddress,context.Channel.Id.AsLongText());
             var args = new ConnectionEventArgs
             {
                 RemotePoint = context.Channel.RemoteAddress,
                 LocalPoint = context.Channel.LocalAddress,
                 ChannelId = context.Channel.Id.AsLongText()
             };
-
-            this.DisConnected?.Invoke(this, args);
+            IRpcContext<TMessage> ctx;
+            if(CON_LIST.TryGetValue(context.Channel.RemoteAddress,out ctx)){
+                ctx.OnContextInActived(args);
+                return;
+            }
+            var remotePoint = context.Channel.RemoteAddress as IPEndPoint;
+           
+           if (remotePoint != null)
+            {
+                var ipv4 = new IPEndPoint(remotePoint.Address.MapToIPv4(), remotePoint.Port);
+                if (CON_LIST.TryGetValue(ipv4, out ctx))
+                {
+                    ctx.OnContextInActived(args);
+                    return;
+                }
+            }
+           
+            Logger.LogWarning("Client Channel Inactived,context not found,RemoteAddress:{0},ChannelId:{1}", context.Channel.RemoteAddress, context.Channel.Id.AsLongText());
+           
+            //this.DisConnected?.Invoke(this, args);
         }
 
         /// <summary>
@@ -177,14 +198,14 @@ namespace DotBPE.Rpc.Netty
         }
 
         private Bootstrap InitBootstrap()
-        {   
+        {
             var bootstrap = new Bootstrap();
             bootstrap
                 .Group(new MultithreadEventLoopGroup())
                 .Channel<TcpSocketChannel>()
                 .Option(ChannelOption.TcpNodelay, true)
                 .Option(ChannelOption.SoKeepalive, true)
-                .Option(ChannelOption.ConnectTimeout, TimeSpan.FromSeconds(3))                
+                .Option(ChannelOption.ConnectTimeout, TimeSpan.FromSeconds(3))
                 .Handler(new ActionChannelInitializer<ISocketChannel>(c =>
                 {
                     var pipeline = c.Pipeline;
@@ -223,14 +244,13 @@ namespace DotBPE.Rpc.Netty
                     if (tryCount >= 100000)
                     {
                         tryCount = 1;
-                        Logger.LogWarning("reconnect to {0} 100000 times, but fail and restart !", address);                      
+                        Logger.LogWarning("reconnect to {0} 100000 times, but fail and restart !", address);
                     }
-                    
+
                     try
                     {
                         var context = new NettyRpcMultiplexContext<TMessage>(this._bootstrap, this._msgCodecs, this.Logger);
-                        await context.InitAsync(remote, _clientOption?.Value);
-                        context.BindDisconnect(this);
+                        await context.InitAsync(remote, _clientOption?.Value);                     
                         if (CON_LIST.TryAdd(remote, context))
                         {
                             break;
@@ -238,14 +258,14 @@ namespace DotBPE.Rpc.Netty
                         else
                         {
                             await context.CloseAsync();
-                        }                       
+                        }
                     }
                     catch
                     {
                         Logger.LogWarning("reconnect {0} failed，try {1} times", address, tryCount);
-                    }               
+                    }
                     await Task.Delay(TimeSpan.FromSeconds(2));
-                  
+
                 }
             });
         }

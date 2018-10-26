@@ -10,4 +10,5 @@ namespace DotBPE.Rpc
 
         public string ChannelId { get; set; }
     }
+
 }
