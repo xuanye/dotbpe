@@ -1,8 +1,10 @@
 using System;
 using System.IO;
 
-namespace DotBPE.Utils.Utility {
-    public static class PathHelper {
+namespace DotBPE.Utils.Utility
+{
+    public static class PathHelper
+    {
         private const string DATA_DIRECTORY = "|DataDirectory|";
 
         /// <summary>
@@ -10,7 +12,8 @@ namespace DotBPE.Utils.Utility {
         /// </summary>
         /// <param name="path">The path to expand</param>
         /// <returns>The expanded path</returns>
-        public static string ExpandPath(string path) {
+        public static string ExpandPath(string path)
+        {
             if (String.IsNullOrEmpty(path))
                 return path;
 
@@ -39,7 +42,8 @@ namespace DotBPE.Utils.Utility {
         /// Gets the data directory for the |DataDirectory| macro.
         /// </summary>
         /// <returns>The DataDirectory path.</returns>
-        public static string GetDataDirectory() {
+        public static string GetDataDirectory()
+        {
             string dataDirectory = AppDomain.CurrentDomain.GetData("DataDirectory") as string;
             if (String.IsNullOrEmpty(dataDirectory))
                 dataDirectory = AppDomain.CurrentDomain.BaseDirectory;

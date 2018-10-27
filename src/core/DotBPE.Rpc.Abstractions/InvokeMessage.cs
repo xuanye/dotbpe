@@ -1,12 +1,13 @@
 /// <summary>
 ///
 /// </summary>
-namespace DotBPE.Rpc {
-
+namespace DotBPE.Rpc
+{
     /// <summary>
     /// 传输消息的抽象类，必须包含这些内容
     /// </summary>
-    public abstract class InvokeMessage {
+    public abstract class InvokeMessage
+    {
         public InvokeMessageType InvokeMessageType { get; set; }
 
         public abstract int Length { get; }
@@ -24,7 +25,8 @@ namespace DotBPE.Rpc {
         public abstract bool IsHeartBeat { get; }
     }
 
-    public enum InvokeMessageType : byte {
+    public enum InvokeMessageType : byte
+    {
         Request = 1,
         Response = 2,
         Notify = 3

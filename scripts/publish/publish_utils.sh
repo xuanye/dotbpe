@@ -12,7 +12,7 @@ mkdir -p $artifactsFolder
 
 
 
-versionNumber="1.1.30"
+versionNumber="1.2.1"
 
 
 

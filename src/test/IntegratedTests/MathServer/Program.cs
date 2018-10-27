@@ -1,24 +1,21 @@
-using System;
-using System.IO;
-using System.Text;
-using System.Threading.Tasks;
+using DotBPE.Protobuf;
 using DotBPE.Protocol.Amp;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Hosting;
-using MathCommon;
-using Microsoft.Extensions.DependencyInjection;
-using Serilog;
-using DotBPE.Hosting;
-using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.Caching.Distributed;
-using DotBPE.Protobuf;
 using Flurl.Http;
+using MathCommon;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Serilog;
+using System;
+using System.Threading.Tasks;
 
 namespace MathServer
 {
-    class Program
+    internal class Program
     {
-        static void Main(string[] args)
+        private static void Main(string[] args)
         {
             TaskScheduler.UnobservedTaskException += TaskScheduler_UnobservedTaskException;
 
@@ -32,7 +29,6 @@ namespace MathServer
             Log.Logger = new LoggerConfiguration()
               .ReadFrom.Configuration(configuration)
               .CreateLogger();
-
 
             string ip = "127.0.0.1";
             int port = 6201;
@@ -49,7 +45,7 @@ namespace MathServer
                 //添加协议支持
                 services.AddDotBPE();
 
-                services.AddSingleton<IProtobufObjectFactory, ProtobufObjectFactory>();
+                services.AddSingleton<IProtobufDescriptorFactory, ProtobufDescriptorFactory>();
                 services.AddSingleton<IAuditLoggerFormat<AmpMessage>, DotBPE.Protobuf.AuditLoggerFormat>();
 
                 //注册服务
@@ -59,7 +55,6 @@ namespace MathServer
                     actors.Add<MathInnerService>();
                 });
 
-
                 //添加挂载的宿主服务
                 services.AddScoped<IHostedService, RpcHostedService>();
             })
@@ -68,7 +63,6 @@ namespace MathServer
             );
 
             builder.RunConsoleAsync().Wait();
-
         }
 
         private static void TaskScheduler_UnobservedTaskException(object sender, UnobservedTaskExceptionEventArgs e)
@@ -79,23 +73,21 @@ namespace MathServer
             }
             catch
             {
-
             }
         }
     }
 
-
     public class MathService : MathBase
     {
-
         private readonly IClientProxy _proxy;
 
-        public MathService( IClientProxy proxy)
+        public MathService(IClientProxy proxy)
         {
             _proxy = proxy;
-
         }
-        public override async Task<RpcResult<AddRes>> AddAsync(AddReq req){
+
+        public override async Task<RpcResult<AddRes>> AddAsync(AddReq req)
+        {
             var inner = _proxy.GetClient<MathInnerClient>();
 
             var res = await inner.PlusAsync(req);
@@ -106,35 +98,13 @@ namespace MathServer
 
     public class MathInnerService : MathInnerBase
     {
-        private readonly ClientReq _req;
-        public MathInnerService()
+        public override Task<RpcResult<AddRes>> PlusAsync(AddReq req)
         {
-            _req = new ClientReq();
-        }
-
-        public override async Task<RpcResult<AddRes>> PlusAsync(AddReq req)
-        {
-            await Task.Delay(3000);
-
-            string response =  await _req.GetRequest();
-
-            Console.WriteLine("response:{0}", response);
             var res = new AddRes();
             res.C = req.A + req.B;
-            return new RpcResult<AddRes>() { Data = res };
+            var result = new RpcResult<AddRes>() { Data = res };
+
+            return Task.FromResult(result);
         }
     }
-
-
-    public class ClientReq {
-
-        public async Task<string> GetRequest()
-        {
-            string url = "https://www.mocky.io/v2/5185415ba171ea3a00704eed";
-            return await url.PostStringAsync("").ReceiveString();
-        }
-
-    }
-
-
 }

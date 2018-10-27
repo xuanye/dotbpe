@@ -1,11 +1,15 @@
-﻿namespace System.Threading.Tasks {
-    public static partial class TaskFactoryExtensions {
+namespace System.Threading.Tasks
+{
+    public static partial class TaskFactoryExtensions
+    {
         public static Task StartNewDelayed(
-            this TaskFactory factory, int millisecondsDelay) {
+            this TaskFactory factory, int millisecondsDelay)
+        {
             return StartNewDelayed(factory, millisecondsDelay, CancellationToken.None);
         }
 
-        public static Task StartNewDelayed(this TaskFactory factory, int millisecondsDelay, CancellationToken cancellationToken) {
+        public static Task StartNewDelayed(this TaskFactory factory, int millisecondsDelay, CancellationToken cancellationToken)
+        {
             // Validate arguments
             if (factory == null) throw new ArgumentNullException("factory");
             if (millisecondsDelay < 0) throw new ArgumentOutOfRangeException("millisecondsDelay");
@@ -16,7 +20,8 @@
 
             // Create the timer but don't start it yet.  If we start it now,
             // it might fire before ctr has been set to the right registration.
-            var timer = new Timer(self => {
+            var timer = new Timer(self =>
+            {
                 // Clean up both the cancellation token and the timer, and try to transition to completed
                 ctr.Dispose();
                 ((Timer)self).Dispose();
@@ -24,10 +29,12 @@
             });
 
             // Register with the cancellation token.
-            if (cancellationToken.CanBeCanceled) {
+            if (cancellationToken.CanBeCanceled)
+            {
                 // When cancellation occurs, cancel the timer and try to transition to canceled.
                 // There could be a race, but it's benign.
-                ctr = cancellationToken.Register(() => {
+                ctr = cancellationToken.Register(() =>
+                {
                     timer.Dispose();
                     tcs.TrySetCanceled();
                 });
@@ -40,7 +47,8 @@
 
         public static Task StartNewDelayed(
             this TaskFactory factory,
-            int millisecondsDelay, Action action) {
+            int millisecondsDelay, Action action)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, action, factory.CancellationToken, factory.CreationOptions, factory.GetTargetScheduler());
         }
@@ -48,7 +56,8 @@
         public static Task StartNewDelayed(
             this TaskFactory factory,
             int millisecondsDelay, Action action,
-            TaskCreationOptions creationOptions) {
+            TaskCreationOptions creationOptions)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, action, factory.CancellationToken, creationOptions, factory.GetTargetScheduler());
         }
@@ -56,7 +65,8 @@
         public static Task StartNewDelayed(
             this TaskFactory factory,
             int millisecondsDelay, Action action,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, action, cancellationToken, factory.CreationOptions, factory.GetTargetScheduler());
         }
@@ -64,7 +74,8 @@
         public static Task StartNewDelayed(
             this TaskFactory factory,
             int millisecondsDelay, Action action,
-            CancellationToken cancellationToken, TaskCreationOptions creationOptions, TaskScheduler scheduler) {
+            CancellationToken cancellationToken, TaskCreationOptions creationOptions, TaskScheduler scheduler)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             if (millisecondsDelay < 0) throw new ArgumentOutOfRangeException("millisecondsDelay");
             if (action == null) throw new ArgumentNullException("action");
@@ -77,7 +88,8 @@
 
         public static Task StartNewDelayed(
             this TaskFactory factory,
-            int millisecondsDelay, Action<object> action, object state) {
+            int millisecondsDelay, Action<object> action, object state)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, action, state, factory.CancellationToken, factory.CreationOptions, factory.GetTargetScheduler());
         }
@@ -85,7 +97,8 @@
         public static Task StartNewDelayed(
             this TaskFactory factory,
             int millisecondsDelay, Action<object> action, object state,
-            TaskCreationOptions creationOptions) {
+            TaskCreationOptions creationOptions)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, action, state, factory.CancellationToken, creationOptions, factory.GetTargetScheduler());
         }
@@ -93,7 +106,8 @@
         public static Task StartNewDelayed(
             this TaskFactory factory,
             int millisecondsDelay, Action<object> action, object state,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, action, state, cancellationToken, factory.CreationOptions, factory.GetTargetScheduler());
         }
@@ -101,7 +115,8 @@
         public static Task StartNewDelayed(
             this TaskFactory factory,
             int millisecondsDelay, Action<object> action, object state,
-            CancellationToken cancellationToken, TaskCreationOptions creationOptions, TaskScheduler scheduler) {
+            CancellationToken cancellationToken, TaskCreationOptions creationOptions, TaskScheduler scheduler)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             if (millisecondsDelay < 0) throw new ArgumentOutOfRangeException("millisecondsDelay");
             if (action == null) throw new ArgumentNullException("action");
@@ -113,13 +128,17 @@
             // Delay a continuation to run the action
             factory
                 .StartNewDelayed(millisecondsDelay, cancellationToken)
-                .ContinueWith(t => {
+                .ContinueWith(t =>
+                {
                     if (t.IsCanceled) result.TrySetCanceled();
-                    else {
-                        try {
+                    else
+                    {
+                        try
+                        {
                             action(state);
                             result.TrySetResult(null);
-                        } catch (Exception exc) { result.TrySetException(exc); }
+                        }
+                        catch (Exception exc) { result.TrySetException(exc); }
                     }
                 }, scheduler);
 
@@ -129,7 +148,8 @@
 
         public static Task<TResult> StartNewDelayed<TResult>(
             this TaskFactory<TResult> factory,
-            int millisecondsDelay, Func<TResult> function) {
+            int millisecondsDelay, Func<TResult> function)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, function, factory.CancellationToken, factory.CreationOptions, factory.GetTargetScheduler());
         }
@@ -137,7 +157,8 @@
         public static Task<TResult> StartNewDelayed<TResult>(
             this TaskFactory<TResult> factory,
             int millisecondsDelay, Func<TResult> function,
-            TaskCreationOptions creationOptions) {
+            TaskCreationOptions creationOptions)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, function, factory.CancellationToken, creationOptions, factory.GetTargetScheduler());
         }
@@ -145,7 +166,8 @@
         public static Task<TResult> StartNewDelayed<TResult>(
             this TaskFactory<TResult> factory,
             int millisecondsDelay, Func<TResult> function,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, function, cancellationToken, factory.CreationOptions, factory.GetTargetScheduler());
         }
@@ -153,7 +175,8 @@
         public static Task<TResult> StartNewDelayed<TResult>(
             this TaskFactory<TResult> factory,
             int millisecondsDelay, Func<TResult> function,
-            CancellationToken cancellationToken, TaskCreationOptions creationOptions, TaskScheduler scheduler) {
+            CancellationToken cancellationToken, TaskCreationOptions creationOptions, TaskScheduler scheduler)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             if (millisecondsDelay < 0) throw new ArgumentOutOfRangeException("millisecondsDelay");
             if (function == null) throw new ArgumentNullException("function");
@@ -165,7 +188,8 @@
                 tcs, millisecondsDelay, Timeout.Infinite);
 
             // Return a task that executes the function when the trigger fires
-            return tcs.Task.ContinueWith(_ => {
+            return tcs.Task.ContinueWith(_ =>
+            {
                 timer.Dispose();
                 return function();
             }, cancellationToken, ContinuationOptionsFromCreationOptions(creationOptions), scheduler);
@@ -173,7 +197,8 @@
 
         public static Task<TResult> StartNewDelayed<TResult>(
             this TaskFactory<TResult> factory,
-            int millisecondsDelay, Func<object, TResult> function, object state) {
+            int millisecondsDelay, Func<object, TResult> function, object state)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, function, state, factory.CancellationToken, factory.CreationOptions, factory.GetTargetScheduler());
         }
@@ -181,7 +206,8 @@
         public static Task<TResult> StartNewDelayed<TResult>(
             this TaskFactory<TResult> factory,
             int millisecondsDelay, Func<object, TResult> function, object state,
-            CancellationToken cancellationToken) {
+            CancellationToken cancellationToken)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, function, state, cancellationToken, factory.CreationOptions, factory.GetTargetScheduler());
         }
@@ -196,7 +222,8 @@
         public static Task<TResult> StartNewDelayed<TResult>(
             this TaskFactory<TResult> factory,
             int millisecondsDelay, Func<object, TResult> function, object state,
-            TaskCreationOptions creationOptions) {
+            TaskCreationOptions creationOptions)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             return StartNewDelayed(factory, millisecondsDelay, function, state, factory.CancellationToken, creationOptions, factory.GetTargetScheduler());
         }
@@ -213,7 +240,8 @@
         public static Task<TResult> StartNewDelayed<TResult>(
             this TaskFactory<TResult> factory,
             int millisecondsDelay, Func<object, TResult> function, object state,
-            CancellationToken cancellationToken, TaskCreationOptions creationOptions, TaskScheduler scheduler) {
+            CancellationToken cancellationToken, TaskCreationOptions creationOptions, TaskScheduler scheduler)
+        {
             if (factory == null) throw new ArgumentNullException("factory");
             if (millisecondsDelay < 0) throw new ArgumentOutOfRangeException("millisecondsDelay");
             if (function == null) throw new ArgumentNullException("action");
@@ -227,7 +255,8 @@
             var functionTask = new Task<TResult>(function, state, creationOptions);
 
             // When the function task completes, transfer the results to the returned task
-            functionTask.ContinueWith(t => {
+            functionTask.ContinueWith(t =>
+            {
                 result.SetFromTask(t);
                 timer.Dispose();
             }, cancellationToken, ContinuationOptionsFromCreationOptions(creationOptions) | TaskContinuationOptions.ExecuteSynchronously, scheduler);

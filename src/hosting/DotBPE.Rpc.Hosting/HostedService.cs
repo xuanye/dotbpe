@@ -1,7 +1,4 @@
-using DotBPE.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using Microsoft.Extensions.Hosting;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -9,8 +6,6 @@ namespace DotBPE.Rpc.Hosting
 {
     public abstract class HostedService : IHostedService
     {
-
-
         private Task _executingTask;
         private CancellationTokenSource _cts;
 
@@ -44,7 +39,7 @@ namespace DotBPE.Rpc.Hosting
             cancellationToken.ThrowIfCancellationRequested();
         }
 
-        // Derived classes should override this and execute a long running method until 
+        // Derived classes should override this and execute a long running method until
         // cancellation is requested
         protected abstract Task ExecuteAsync(CancellationToken cancellationToken);
     }

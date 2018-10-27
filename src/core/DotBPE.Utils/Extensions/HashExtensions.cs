@@ -5,7 +5,8 @@ using System.Linq;
 using System.Security.Cryptography;
 using System.Text;
 
-namespace DotBPE.Utils.Extensions {
+namespace DotBPE.Utils.Extensions
+{
     public static class HashExtensions
     {
         #region ComputeHash
@@ -58,8 +59,9 @@ namespace DotBPE.Utils.Extensions {
 
             return ToHex(data);
         }
-        
+
 #if !SILVERLIGHT
+
         /// <summary>Compute hash on input string</summary>
         /// <param name="file">The file to get hash from.</param>
         /// <param name="algorithm"> </param>
@@ -71,6 +73,7 @@ namespace DotBPE.Utils.Extensions {
                 return ComputeHash(stream, algorithm);
             }
         }
+
 #endif
 
         /// <summary>Compute hash on input string</summary>
@@ -82,7 +85,7 @@ namespace DotBPE.Utils.Extensions {
             return ComputeHash(buffer.ToString(), algorithm);
         }
 
-        #endregion
+        #endregion ComputeHash
 
         #region SHA1
 
@@ -126,6 +129,7 @@ namespace DotBPE.Utils.Extensions {
         }
 
 #if !SILVERLIGHT
+
         /// <summary>Compute SHA1 hash on input string</summary>
         /// <param name="file">The file to get hash from.</param>
         /// <returns>The hash as a hexadecimal String.</returns>
@@ -133,6 +137,7 @@ namespace DotBPE.Utils.Extensions {
         {
             return ComputeHash(file, new SHA1Managed());
         }
+
 #endif
 
         /// <summary>Compute SHA1 hash on input string</summary>
@@ -143,7 +148,7 @@ namespace DotBPE.Utils.Extensions {
             return ComputeHash(buffer, new SHA1Managed());
         }
 
-        #endregion
+        #endregion SHA1
 
         #region SHA256
 
@@ -174,6 +179,7 @@ namespace DotBPE.Utils.Extensions {
         }
 
 #if !SILVERLIGHT
+
         /// <summary>Compute SHA256 hash on input string</summary>
         /// <param name="file">The file to get hash from.</param>
         /// <returns>The hash as a hexadecimal String.</returns>
@@ -181,6 +187,7 @@ namespace DotBPE.Utils.Extensions {
         {
             return ComputeHash(file, new SHA256Managed());
         }
+
 #endif
 
         /// <summary>Compute SHA256 hash on input string</summary>
@@ -191,11 +198,12 @@ namespace DotBPE.Utils.Extensions {
             return ComputeHash(buffer, new SHA256Managed());
         }
 
-        #endregion
+        #endregion SHA256
 
         #region SHA512
 
 #if !SILVERLIGHT
+
         /// <summary>Compute SHA512 hash on input string</summary>
         /// <param name="input">The string to compute hash on.</param>
         /// <returns>The hash as a hexadecimal String.</returns>
@@ -237,9 +245,10 @@ namespace DotBPE.Utils.Extensions {
         {
             return ComputeHash(buffer, new SHA512Managed());
         }
+
 #endif
 
-        #endregion
+        #endregion SHA512
 
         #region MD5
 
@@ -285,7 +294,7 @@ namespace DotBPE.Utils.Extensions {
             return ComputeHash(buffer, MD5.Create());
         }
 
-        #endregion
+        #endregion MD5
 
         /// <summary>
         /// Converts a byte array to Hexadecimal.
