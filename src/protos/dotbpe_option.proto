@@ -29,13 +29,15 @@ extend google.protobuf.FileOptions {
   bool generic_objectfactory = 51006; //是否生成对象创建工厂
 
   bool generic_http_api_routes = 51007; //是否生成
+  string common_fields = 51008; //定义所有的公共字段
 }
 
 //
 message HttpApiOption {
-    string path = 1 ; // 路径
-    string method = 2 ; //请求的方法
-    string description = 3 ;//注释说明
-    int32 timeout= 4;   //调用超时配置
-    string plugin = 5 ; //插件
+  string path = 1 ; // 路径
+  string method = 2 ; //请求的方法
+  string description = 3 ;//注释说明
+  int32  timeout= 4;   //调用超时配置
+  string plugin = 5 ; //插件
+  string category=6; // Api分类
 }

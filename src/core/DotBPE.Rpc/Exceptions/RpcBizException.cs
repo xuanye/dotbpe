@@ -15,10 +15,16 @@ namespace DotBPE.Rpc.Exceptions
 {
     public class RpcBizException : Exception
     {
-        public RpcBizException() { }
+        public RpcBizException()
+        {
+        }
 
-        public RpcBizException(string message) : base(message) { }
+        public RpcBizException(string message) : base(message)
+        {
+        }
 
-        public RpcBizException(string message, Exception inner) : base(message, inner) { }
+        public RpcBizException(string message, Exception inner) : base(message, inner)
+        {
+        }
     }
 }

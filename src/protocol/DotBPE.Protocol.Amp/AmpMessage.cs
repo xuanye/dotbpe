@@ -1,4 +1,3 @@
-
 using DotBPE.Rpc;
 
 namespace DotBPE.Protocol.Amp
@@ -37,7 +36,6 @@ namespace DotBPE.Protocol.Amp
                 return HEAD_LENGTH + (Data != null ? Data.Length : 0);
             }
         }
-
 
         public string FriendlyServiceName { get; set; }
 

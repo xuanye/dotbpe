@@ -1,13 +1,11 @@
-using DotBPE.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Net;
 using System.Threading;
 using System.Threading.Tasks;
-
-
 
 namespace DotBPE.Rpc.Hosting
 {
@@ -17,17 +15,15 @@ namespace DotBPE.Rpc.Hosting
     public class RpcHostedService : IHostedService
     {
         private readonly IServiceProvider _hostProvider;
-     
-        private readonly ILogger<RpcHostedService>  _logger;
+
+        private readonly ILogger<RpcHostedService> _logger;
         private readonly ILoggerFactory _loggerFactory;
         private string _hostIP;
         private int _hostPort;
 
-
         private IServerBootstrap _server;
-        
 
-        public RpcHostedService(IServiceProvider hostProvider,  IConfiguration config,ILogger<RpcHostedService> logger,ILoggerFactory loggerFactory)
+        public RpcHostedService(IServiceProvider hostProvider, IConfiguration config, ILogger<RpcHostedService> logger, ILoggerFactory loggerFactory)
         {
             this._hostProvider = hostProvider;
             this._logger = logger;
@@ -36,18 +32,15 @@ namespace DotBPE.Rpc.Hosting
             ParseHostAddress(config);
         }
 
-
         public Task StartAsync(CancellationToken cancellationToken)
-        {          
+        {
             return StartServerAsync(cancellationToken);
         }
 
-
-        public  Task StopAsync(CancellationToken cancellationToken)
+        public Task StopAsync(CancellationToken cancellationToken)
         {
-            return StopServerAsync(cancellationToken);         
+            return StopServerAsync(cancellationToken);
         }
-
 
         private void ParseHostAddress(IConfiguration config)
         {
@@ -73,8 +66,8 @@ namespace DotBPE.Rpc.Hosting
         private Task StartServerAsync(CancellationToken token)
         {
             BuildApplication();
-            var endpoint = new IPEndPoint(IPAddress.Parse(this._hostIP), this._hostPort);           
-            return this._server.StartAsync(endpoint,token);
+            var endpoint = new IPEndPoint(IPAddress.Parse(this._hostIP), this._hostPort);
+            return this._server.StartAsync(endpoint, token);
         }
 
         /// <summary>
@@ -83,26 +76,21 @@ namespace DotBPE.Rpc.Hosting
         /// <param name="token"></param>
         /// <returns></returns>
         private Task StopServerAsync(CancellationToken token)
-        {           
-            return this._server.ShutdownAsync();           
+        {
+            return this._server.ShutdownAsync();
         }
-
-
-      
 
         /// <summary>
         /// 创建一个RPC Application
         /// </summary>
         private void BuildApplication()
-        {  
+        {
             EnsureServer();
             //设置容器
             Rpc.Environment.SetServiceProvider(this._hostProvider);
             //设置日志工厂类
             Rpc.Environment.SetLoggerFactory(this._loggerFactory);
         }
-
-
 
         private void EnsureServer()
         {

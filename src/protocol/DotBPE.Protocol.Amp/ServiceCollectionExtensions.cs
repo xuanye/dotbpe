@@ -2,12 +2,19 @@ using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Codes;
 using DotBPE.Rpc.Netty;
+using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using System;
+using System.Collections.Generic;
+using System.IO;
+using System.Reflection;
 
 namespace DotBPE.Protocol.Amp
 {
     public static class ServiceCollectionExtensions
     {
+        private static readonly string BaseDirectory = AppDomain.CurrentDomain.BaseDirectory;
+
         /// <summary>
         /// Amp服务端需要的主要注册
         /// </summary>
@@ -22,7 +29,7 @@ namespace DotBPE.Protocol.Amp
                     .AddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient<AmpMessage>>()
                     .AddSingleton<IRouter<AmpMessage>, LocalPolicyRouter<AmpMessage>>();
         }
-        
+
         private static IServiceCollection AddAmpClient(this IServiceCollection services)
         {
             services.Remove(ServiceDescriptor.Singleton(typeof(IRouter<AmpMessage>)));
@@ -46,30 +53,53 @@ namespace DotBPE.Protocol.Amp
                   .AddAmpClient(); // 使用AMP协议
         }
 
-      
+
         /// <summary>
-        /// 只是客户端，任何服务端
+        /// 扫描注册服务
         /// </summary>
-        /// <param name="builder"></param>
+        /// <param name="services"></param>
         /// <returns></returns>
-        public static IServiceCollection AddTransforClient(this IServiceCollection services)
+        public static IServiceCollection ScanAddServiceActors(this IServiceCollection services, IConfiguration configuration, string dllPrefix, string pluginDirName = "")
         {
-            return services.AddClientCore<AmpMessage>()
-                 .AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>()
-                 .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
-        }
-        /// <summary>
-        /// 添加单网关的
-        /// </summary>
-        /// <param name="services">The services.</param>
-        /// <returns></returns>
-        public static IServiceCollection AddGatewayClient(this IServiceCollection services)
-        {
-            services.Remove(ServiceDescriptor.Singleton(typeof(IRouter<AmpMessage>)));
-            return services.AddClientCore<AmpMessage>()
-                 .AddSingleton<IRouter<AmpMessage>, LoopPolicyRouter<AmpMessage>>()
-                 .AddSingleton<ICallInvoker<AmpMessage>, AmpCallInvoker>()
-                 .AddSingleton<IMessageCodecs<AmpMessage>, AmpCodecs>();
+
+            var dllFiles = Directory.GetFiles(string.Concat(BaseDirectory, pluginDirName), $"{dllPrefix}*.dll");
+            List<Assembly> assemblies = new List<Assembly>();
+            foreach (var file in dllFiles)
+            {
+                assemblies.Add(Assembly.LoadFrom(file));
+            }
+
+            //扫描注册所有的ServiceRegistry
+            //扫描注册所有的ServiceActor
+            var serviceRegistryType = typeof(IServiceDependencyRegistry);
+            var serviceActorType = typeof(ServiceActor);
+            List<Type> registryTypes = new List<Type>();
+            List<Type> actorTypes = new List<Type>();
+            foreach (Assembly a in assemblies)
+            {
+                //Console.WriteLine(a.FullName);
+                foreach (Type t in a.GetTypes())
+                {
+                    if (serviceRegistryType.IsAssignableFrom(t) && t.IsClass) //t 实现了某接口
+                    {
+                        registryTypes.Add(t);
+                    }
+                    else if (t.IsSubclassOf(serviceActorType) && !t.IsAbstract)
+                    {
+                        actorTypes.Add(t);
+                    }
+                }
+            }
+
+            if (registryTypes.Count > 0) //注册依赖
+            {
+                registryTypes.ForEach(r => ServiceActorDescriptor.ServiceDependencyRegistry(configuration, services, r));
+            }
+            if (actorTypes.Count > 0) //注册服务
+            {
+                ServiceActorDescriptor.AddServiceActor(services, actorTypes);
+            }
+            return services;
         }
         
     }

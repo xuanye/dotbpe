@@ -7,7 +7,6 @@ namespace DotBPE.Protocol.Amp
     {
         public AmpInvokeClient(ICallInvoker<AmpMessage> callInvoker) : base(callInvoker)
         {
-
         }
     }
 }

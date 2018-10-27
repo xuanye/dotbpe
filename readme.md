@@ -5,7 +5,7 @@
 
 dotbpe ![](https://travis-ci.org/xuanye/dotbpe.svg?branch=master)
 -------------
-dotbpe是一款基于DOTNET Core编写的RPC框架，但是它的目标不仅仅只是解决rpc的问题，而是解决整个业务解决方案的问题，封装在常见的项目产品开发中的通用组件，让开发人员只专注于开发业务逻辑代码。底层通信默认实现基于DotNetty，可替换成其他Socket通信组件。dotbpe使用的默认协议名称叫Amp,编解码使用谷歌的Protobuf3,不过这些默认实现都是可以替换的。
+dotbpe是一款基于dotnet core（C#）编写的RPC框架，但是它的目标不仅仅只是解决rpc的问题，而是解决整个业务解决方案的问题，封装在常见的项目产品开发中的通用组件，让开发人员只专注于开发业务逻辑代码。底层通信默认实现基于DotNetty，可替换成其他Socket通信组件。dotbpe使用的默认协议名称叫Amp,编解码使用谷歌的Protobuf3,不过这些默认实现都是可以替换的。
 
 
 
@@ -48,7 +48,7 @@ public class HelloService : ServiceActor
 
             var name = Encoding.UTF8.GetString(req.Data);
 
-            rsp.Data = Encoding.UTF8.GetBytes(string.Format("Hello {0}！", name));
+            rsp.Data = Encoding.UTF8.GetBytes(string.Format("Hello {0}，Amazing！", name));
             return Task.FromResult(rsp);
         }
     }
@@ -213,15 +213,19 @@ extend google.protobuf.FileOptions {
   bool generic_objectfactory = 51006; //是否生成对象创建工厂
 
   bool generic_http_api_routes = 51007; //是否生成
+  string common_fields = 51008; //定义所有的公共字段
 }
 
 //
 message HttpApiOption {
-    string path = 1 ; // 路径
-    string method = 2 ; //请求的方法
-
-    string description = 3 ;//注释说明
+  string path = 1 ; // 路径
+  string method = 2 ; //请求的方法
+  string description = 3 ;//注释说明
+  int32  timeout= 4;   //调用超时配置
+  string plugin = 5 ; //插件
+  string category=6; // Api分类
 }
+
 
 ```
 
@@ -256,7 +260,7 @@ service Math{
 }
 
 ```
-2. 使用使用protoc 命令行+[protoc-gen-dotbpe](https://github.com/dotbpe/protoc-gen-dotbpe)插件来生成代码:
+2. 使用使用protoc 命令行+[protoc-gen-dotbpe](https://github.com/dotbpe/protoc-gen-dotbpe)插件来生成代码,以下是一个代码生成的sh命令，具体可参考示例:
 
 ```shell
 set -ex
@@ -470,196 +474,42 @@ service Greeter{
     }
 ```
 
-6. 实现ForwardService，这个实现， 大多是一样的，可根据实际情况，修改部分代码，如需添加Session的支持等。
+6. 添加路由
 
 ```CSharp
-    /// <summary>
-    /// 转发服务，需要根据自己的协议 将HTTP请求的数据转码成对应的协议二进制
-    /// 并将协议二进制数据转换成对应的 Http响应数据（一般是json）
-    /// </summary>
-    public class ForwardService : AbstractForwardService<AmpMessage>
+    public static class AspNetGatewayExtension
     {
-
-        static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(true));
-
-
-
-        readonly ILogger<ForwardService> Logger;
-        private static AmpCallInvoker _invoker;
-        private static object _lockObj = new object();
-
-        public ForwardService(IRpcClient<AmpMessage> rpcClient,
-           IOptions<HttpRouterOption> optionsAccessor,ILogger<ForwardService> logger) : base(rpcClient, optionsAccessor, logger)
-        {
-            this.Logger = logger;
-        }
-
         /// <summary>
-        ///  将收集的请求数据转换层协议消息
+        /// 扩展路由配置信息
         /// </summary>
-        /// <param name="reqData">请求数据，从body,form和queryString中获取</param>
+        /// <param name="builder"></param>
         /// <returns></returns>
-        protected override AmpMessage EncodeRequest(RequestData reqData)
+        public static IServiceCollection AddRoutes(this IServiceCollection services)
         {
-            ushort serviceId = (ushort)reqData.ServiceId;
-            ushort messageId = (ushort)reqData.MessageId;
-            AmpMessage message = AmpMessage.CreateRequestMessage(serviceId, messageId);
-
-
-            IMessage reqTemp = ProtobufObjectFactory.GetRequestTemplate(serviceId, messageId);
-            if (reqTemp == null)
+            services.Configure<HttpRouterOption>(opt =>
             {
-                Logger.LogError("serviceId={0},messageId={1}的消息不存在", serviceId, messageId);
-                return null;
-            }
+                opt.CookieMode = CookieMode.Manual;
 
-            try
-            {
-                var descriptor = reqTemp.Descriptor;
-                if (!string.IsNullOrEmpty(reqData.RawBody))
+                if (opt.Items == null)
                 {
-                    reqTemp = descriptor.Parser.ParseJson(reqData.RawBody);
+                    opt.Items = new List<HttpRouterOptionItem>();
                 }
 
-                if (reqData.Data.Count > 0)
+                foreach (var item in HttpApiRouterOptions.GetList())
                 {
-                    foreach (var field in descriptor.Fields.InDeclarationOrder())
+                    opt.Items.Add(new HttpRouterOptionItem()
                     {
-                        if (reqData.Data.ContainsKey(field.Name))
-                        {
-                            field.Accessor.SetValue(reqTemp, reqData.Data[field.Name]);
-                        }
-                        else if (reqData.Data.ContainsKey(field.JsonName))
-                        {
-                            field.Accessor.SetValue(reqTemp, reqData.Data[field.JsonName]);
-                        }
-
-                    }
+                        ServiceId = item.ServiceId,
+                        MessageId = item.MessageId,
+                        Method = item.Method,
+                        Path = item.Path,
+                        Description = item.Description,
+                        PluginName = item.Plugin,
+                        TimeOut = item.Timeout
+                    });
                 }
-
-
-                message.Data = reqTemp.ToByteArray();
-
-            }
-            catch (Exception ex)
-            {
-                Logger.LogError(ex, "从HTTP请求中解析数据错误:" + ex.Message);
-                message = null;
-            }
-
-            return message;
-
-        }
-        /// <summary>
-        /// 返回协议调用者
-        /// </summary>
-        /// <param name="rpcClient"></param>
-        /// <returns></returns>
-        protected override CallInvoker<AmpMessage> GetProtocolCallInvoker(IRpcClient<AmpMessage> rpcClient)
-        {
-            if(_invoker != null)
-            {
-                return _invoker;
-            }
-            else
-            {
-                lock (_lockObj)
-                {
-                    if(_invoker == null)
-                    {
-                        _invoker = new AmpCallInvoker(rpcClient);
-                    }
-                    return _invoker;
-                }
-            }
-        }
-
-        /// <summary>
-        /// 从消息中读取SessionId ，只有在配置了需要保持状态的网关上才会执行，并且只有在没有sessionId的时候才读取
-        /// </summary>
-        /// <param name="message">返回到客户端解析前的消息</param>
-        /// <returns></returns>
-        protected override string GetSessionIdFromMessage(AmpMessage message)
-        {
-            if (message.Code == 0)
-            {
-
-                if (message != null)
-                {
-                    var rspTemp = ProtobufObjectFactory.GetResponseTemplate(message.ServiceId, message.MessageId);
-                    if (rspTemp == null)
-                    {
-                        return base.GetSessionIdFromMessage(message);
-                    }
-
-                    if (message.Data != null)
-                    {
-                        rspTemp.MergeFrom(message.Data);
-                    }
-                    //提取内部的return_code 字段
-                    var field_sessionId = rspTemp.Descriptor.FindFieldByName(Constants.SEESIONID_FIELD_NAME);
-                    if (field_sessionId != null)
-                    {
-                        var ObjV = field_sessionId.Accessor.GetValue(rspTemp);
-                        if (ObjV != null)
-                        {
-                            return ObjV.ToString();
-                        }
-                    }
-
-                }
-            }
-            return base.GetSessionIdFromMessage(message);
-        }
-
-
-        /// <summary>
-        /// 将消息序列化成JSON，可以使用自己喜欢的序列化组件
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        protected override string MessageToJson(AmpMessage message)
-        {
-            if (message.Code == 0)
-            {
-                var return_code = 0;
-                var return_message = "";
-                string ret = "";
-                if (message != null)
-                {
-                    var rspTemp = ProtobufObjectFactory.GetResponseTemplate(message.ServiceId, message.MessageId);
-                    if (rspTemp == null)
-                    {
-                        return ret;
-                    }
-
-                    if (message.Data != null)
-                    {
-                        rspTemp.MergeFrom(message.Data);
-                    }
-
-                    //提取return_message
-                    var field_msg = rspTemp.Descriptor.FindFieldByName("return_message");
-                    if (field_msg != null)
-                    {
-                        var retObjV = field_msg.Accessor.GetValue(rspTemp);
-                        if (retObjV != null)
-                        {
-                            return_message = retObjV.ToString();
-                        }
-                    }
-                    ret = AmpJsonFormatter.Format(rspTemp);
-                    //TODO:清理内部的return_message ;
-                }
-
-                return "{\"return_code\":" + return_code + ",\"return_message\":\"" + return_message + "\",data:" + ret + "}";
-            }
-            else
-            {
-                return "{\"return_code\":" + message.Code + ",\"return_message\":\"\"}";
-            }
-
-
+            });
+            return services;
         }
     }
 ```
@@ -667,7 +517,7 @@ service Greeter{
 7. 编写Startup.cs
 
 ```CSharp
-public class Startup
+ public class Startup
     {
         public Startup(IConfiguration config)
         {
@@ -679,33 +529,32 @@ public class Startup
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            //路由配置,也可以使用配置文件哦
             //添加路由信息
             services.AddRoutes();
 
-            // 自动转发服务
-            services.AddSingleton<IForwardService, ForwardService>();
+            //添加默认AspNetGateWay相关依赖
+            services.AddSingleton<IProtobufDescriptorFactory, ProtobufDescriptorFactory>();
+            services.AddSingleton<IMessageParser<AmpMessage>, MessageParser>();
+
+            services.AddProtocolPipe<AmpMessage>();
 
             //添加服务端支持
             services.AddDotBPE();
-            //注册业务的服务
+
             services.AddServiceActors<AmpMessage>((actors) =>
             {
                 actors.Add<GreeterService>();
             });
 
-            //添加本地代理模式客户端
-            services.AddAgentClient<AmpMessage>();
-
             //添加RPC服务
-            services.AddSingleton<IHostedService, VirtualRpcHostService>();
+            services.AddSingleton<IHostedService, RpcHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
-        public void Configure(IApplicationBuilder app, IHostingEnvironment env)
+        public void Configure(IApplicationBuilder app)
         {
             //使用网关
-            app.UseGateWay();
+            app.UseGateway();
         }
     }
 ```

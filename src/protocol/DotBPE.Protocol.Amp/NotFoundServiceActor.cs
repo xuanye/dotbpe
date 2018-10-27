@@ -1,5 +1,4 @@
 using DotBPE.Rpc;
-using DotBPE.Rpc.Codes;
 using System.Threading.Tasks;
 
 namespace DotBPE.Protocol.Amp
