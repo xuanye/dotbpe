@@ -21,9 +21,7 @@ dotbpe是一款基于DOTNET Core编写的RPC框架，但是它的目标不仅仅
  2. 添加服务端的引用
 
 ```shell
-$> dotnet add package DotBPE.Rpc //DotBPE的核心服务
 $> dotnet add package DotBPE.Rpc.Hosting //挂载DotBPE的Host扩展
-$> dotnet add package DotBPE.Rpc.Netty //使用Netty作为通讯框架
 $> dotnet add package DotBPE.Protocol.Amp //使用默认的AMP协议
 ```
 
@@ -58,6 +56,7 @@ public class HelloService : ServiceActor
 }
 
 ```
+
 第二部 启动服务
 
 ```CSharp
@@ -111,9 +110,8 @@ namespace HelloServer
  2. 添加客户端相关的引用
 
  ```shell
-$> dotnet add package DotBPE.Rpc //DotBPE的核心服务
-$> dotnet add package DotBPE.Rpc.Netty //使用Netty作为通讯框架
 $> dotnet add package DotBPE.Protocol.Amp //使用默认的AMP协议
+
 ```
 
 3. 代码清单
