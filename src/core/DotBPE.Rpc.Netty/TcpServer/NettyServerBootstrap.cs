@@ -1,3 +1,7 @@
+using System.Net;
+using System.Runtime.InteropServices;
+using System.Threading;
+using System.Threading.Tasks;
 using DotBPE.Rpc.Codes;
 using DotNetty.Codecs;
 using DotNetty.Handlers.Logging;
@@ -6,9 +10,6 @@ using DotNetty.Transport.Bootstrapping;
 using DotNetty.Transport.Channels;
 using DotNetty.Transport.Channels.Sockets;
 using Microsoft.Extensions.Logging;
-using System.Net;
-using System.Threading;
-using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Netty
 {
@@ -26,8 +27,7 @@ namespace DotBPE.Rpc.Netty
         private readonly IContextAccessor<TMessage> _contextAccessor;
 
         public NettyServerBootstrap(IServerMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, ILoggerFactory factory) : this(handler, msgCodecs, factory, null)
-        {
-        }
+        { }
 
         public NettyServerBootstrap(IServerMessageHandler<TMessage> handler, IMessageCodecs<TMessage> msgCodecs, ILoggerFactory factory, IContextAccessor<TMessage> contextAccessor)
         {
@@ -73,36 +73,44 @@ namespace DotBPE.Rpc.Netty
             _workerGroup = new MultithreadEventLoopGroup();
 
             var bootstrap = new ServerBootstrap()
-            .Group(_bossGroup, _workerGroup)
-            .Channel<TcpServerSocketChannel>()
-            .Option(ChannelOption.SoBacklog, 128) //NOTE: 是否可以公开更多Netty的参数
-            .Option(ChannelOption.SoReuseaddr, true) //NOTE: 端口复用
-            .Handler(new LoggingHandler("LSTN"))
-            .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
+                .Group(_bossGroup, _workerGroup)
+                .Channel<TcpServerSocketChannel>()
+                .Option(ChannelOption.SoBacklog, 128); //NOTE: 是否可以公开更多Netty的参数
+
+            if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
+                || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
             {
-                var pipeline = channel.Pipeline;
+                bootstrap
+                    .Option(ChannelOption.SoReuseport, true)
+                    .ChildOption(ChannelOption.SoReuseaddr, true);
+            }
 
-                pipeline.AddLast(new LoggingHandler("CONN"));
-                MessageMeta meta = _msgCodecs.GetMessageMeta();
+            bootstrap.Handler(new LoggingHandler("LSTN"))
+                .ChildHandler(new ActionChannelInitializer<ISocketChannel>(channel =>
+                {
+                    var pipeline = channel.Pipeline;
 
-                // IdleStateHandler
-                pipeline.AddLast("timeout", new IdleStateHandler(0, 0, meta.HeartbeatInterval / 1000 * 2)); //服务端双倍来处理
+                    pipeline.AddLast(new LoggingHandler("CONN"));
+                    MessageMeta meta = _msgCodecs.GetMessageMeta();
 
-                //消息前处理
-                pipeline.AddLast(
-            new LengthFieldBasedFrameDecoder(
-                meta.MaxFrameLength,
-                meta.LengthFieldOffset,
-                meta.LengthFieldLength,
-                meta.LengthAdjustment,
-                meta.InitialBytesToStrip
-            )
-        );
-                //收到消息后的解码处理Handler
-                pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs));
-                //业务处理Handler，即解码成功后如何处理消息的类
-                pipeline.AddLast(new ServerChannelHandlerAdapter<TMessage>(this, this._factory));
-            }));
+                    // IdleStateHandler
+                    pipeline.AddLast("timeout", new IdleStateHandler(0, 0, meta.HeartbeatInterval / 1000 * 2)); //服务端双倍来处理
+
+                    //消息前处理
+                    pipeline.AddLast(
+                        new LengthFieldBasedFrameDecoder(
+                            meta.MaxFrameLength,
+                            meta.LengthFieldOffset,
+                            meta.LengthFieldLength,
+                            meta.LengthAdjustment,
+                            meta.InitialBytesToStrip
+                        )
+                    );
+                    //收到消息后的解码处理Handler
+                    pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_msgCodecs));
+                    //业务处理Handler，即解码成功后如何处理消息的类
+                    pipeline.AddLast(new ServerChannelHandlerAdapter<TMessage>(this, this._factory));
+                }));
 
             _channel = await bootstrap.BindAsync(localPoint);
 
@@ -128,7 +136,7 @@ namespace DotBPE.Rpc.Netty
             {
                 callContext.Dispose();
                 callContext = null;
-            }        
+            }
             context = null;
         }
     }
