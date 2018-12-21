@@ -111,7 +111,7 @@ namespace DotBPE.Rpc.Client
                 }
             }
 
-            Logger.LogDebug("Call  Remote  Service, {0},{1}", point.RemoteAddress, message.MethodIdentifier);
+            Logger.LogInformation("Call  Remote  Service, {0},{1}", point.RemoteAddress, message.MethodIdentifier);
             var transport = this._factory.CreateTransport(point.RemoteAddress);
             if (transport == null)
             {
