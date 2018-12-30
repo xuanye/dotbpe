@@ -8,11 +8,16 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Server
 {
-    public class HeartbeatActor : IServiceActor<AmpMessage> 
+    public class HeartbeatActor : IServiceActor<AmpMessage>
     {
         public string Id => "0$0";
 
         public string Category => "Default";
+
+        public object Invoke(ushort messageId,params object[] args)
+        {
+            return Task.CompletedTask;
+        }
 
         public Task ReceiveAsync(ISocketContext<AmpMessage> context, AmpMessage message)
         {

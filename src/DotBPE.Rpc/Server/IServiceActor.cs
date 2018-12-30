@@ -7,9 +7,9 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Server
 {
-    public interface IServiceActor<TMessage> where TMessage : IMessage
-    {     
-        string Id { get; }    
+    public interface IServiceActor<TMessage> :IRpcService where TMessage : IMessage
+    {
+        string Id { get; }
 
         Task ReceiveAsync(ISocketContext<TMessage> context, TMessage message);
     }

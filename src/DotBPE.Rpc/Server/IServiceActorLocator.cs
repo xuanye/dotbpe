@@ -11,6 +11,6 @@ namespace DotBPE.Rpc.Server
     /// <typeparam name="TMessage"></typeparam>
     public interface IServiceActorLocator<TMessage> where TMessage : IMessage
     {
-        IServiceActor<TMessage> LocateServiceActor(TMessage message);
+        IServiceActor<TMessage> LocateServiceActor(string servicePath);
     }
 }

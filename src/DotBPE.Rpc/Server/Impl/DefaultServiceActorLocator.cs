@@ -19,19 +19,17 @@ namespace DotBPE.Rpc.Server
             var logFactory = serviceProvider.GetService<ILoggerFactory>();
             _logger = logFactory.CreateLogger<DefaultServiceActorLocator>();
             Initialize(serviceProvider);
-
-           
         }
-        
+
         private void Initialize(IServiceProvider serviceProvider)
         {
             var actorList = serviceProvider.GetServices<IServiceActor<AmpMessage>>();
             if (actorList != null && actorList.Count() >0)
-            {  
+            {
                 foreach (var actor in actorList)
                 {
                     ACTOR_CACHE.AddOrUpdate(actor.Id, actor, (k, v) => actor);
-                }               
+                }
             }
             else
             {
@@ -43,25 +41,19 @@ namespace DotBPE.Rpc.Server
         /// </summary>
         /// <param name="message"></param>
         /// <returns></returns>
-        public IServiceActor<AmpMessage> LocateServiceActor(AmpMessage message)
+        public IServiceActor<AmpMessage> LocateServiceActor(string servicePath)
         {
-            if (message.IsHeartBeat)
+            if (HeartbeatActor.Id.Equals(servicePath))
             {
                 //心跳消息
                 return HeartbeatActor;
             }
 
-            if (ACTOR_CACHE.TryGetValue(message.ServiceIdentifier,out var serviceActor))
+            if (ACTOR_CACHE.TryGetValue(servicePath,out var serviceActor))
             {
                 return serviceActor;
             }
-
-            if (ACTOR_CACHE.TryGetValue(message.MethodIdentifier, out var methodServiceActor))
-            {
-                return methodServiceActor;
-            }
-
-            return null;
+            return NotFoundServiceActor.Default;
         }
     }
 }

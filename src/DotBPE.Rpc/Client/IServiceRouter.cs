@@ -9,8 +9,8 @@ namespace DotBPE.Rpc.Client
     /// <summary>
     /// 服务路由接口
     /// </summary>
-    public interface IServiceRouter<TMessage> where TMessage:IMessage
+    public interface IServiceRouter
     {
-        Task<IRouterPoint> FindRouterPoint(TMessage message);
+        IRouterPoint FindRouterPoint(string servicePath);
     }
 }

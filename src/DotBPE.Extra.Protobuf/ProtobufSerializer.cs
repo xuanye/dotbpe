@@ -16,18 +16,43 @@ namespace DotBPE.Extra
         public T Deserialize<T>(byte[] data)
         {
             var messageType = typeof(T);
-            MessageParser parser;
-            if (!PARSER_CACHE.TryGetValue(messageType,out parser))
-            {
-                parser = FindMessageParser<T>();
-                PARSER_CACHE.TryAdd(messageType, parser);
-            }            
-            return (T)parser.ParseFrom(data);
+            return (T)Deserialize( data,messageType);
         }
 
         public byte[] Serialize<T>(T item)
         {
-            var messageType = typeof(T);           
+            return Serialize(typeof(T), item);
+        }
+
+        private static MessageParser FindMessageParser(Type messageType)
+        {
+            if (BaseType.IsAssignableFrom(messageType) && messageType.IsClass)
+            {
+               var descriptorType = messageType.GetProperty("Descriptor").PropertyType;
+               var parserType = descriptorType.GetProperty("Parser").PropertyType;
+               return (MessageParser)Activator.CreateInstance(parserType);
+            }
+            throw new Rpc.Exceptions.RpcException("Message is not a Protobuf Message");
+        }
+
+        public object Deserialize(byte[] data, Type messageType)
+        {
+            MessageParser parser;
+            if (!PARSER_CACHE.TryGetValue(messageType,out parser))
+            {
+                parser = FindMessageParser(messageType);
+                PARSER_CACHE.TryAdd(messageType, parser);
+            }
+            return parser.ParseFrom(data);
+        }
+
+        public byte[] Serialize(object item)
+        {
+            return Serialize(item.GetType(), item);
+        }
+
+        private byte[] Serialize(Type messageType, object item)
+        {
             if (BaseType.IsAssignableFrom(messageType) && messageType.IsClass)
             {
                 IMessage message =item as IMessage;
@@ -36,18 +61,6 @@ namespace DotBPE.Extra
                     return new byte[0];
                 }
                 return message.ToByteArray();
-            }
-            throw new Rpc.Exceptions.RpcException("Message is not a Protobuf Message");
-        }
-
-        private static MessageParser FindMessageParser<T>()
-        {
-            var messageType = typeof(T);
-            if (BaseType.IsAssignableFrom(messageType) && messageType.IsClass)
-            {
-               var descriptorType = messageType.GetProperty("Descriptor").PropertyType;
-               var parserType = descriptorType.GetProperty("Parser").PropertyType;
-               return (MessageParser)Activator.CreateInstance(parserType);
             }
             throw new Rpc.Exceptions.RpcException("Message is not a Protobuf Message");
         }

@@ -11,8 +11,15 @@ namespace DotBPE.Rpc.Server
     {
         public static NotFoundServiceActor Default = new NotFoundServiceActor();
 
-        public string Id => "NotFoundServiceActor";       
+        public string Id => "NotFoundServiceActor";
         public string Category => "Default";
+
+        public object Invoke(ushort messageId,params object[] args)
+        {
+            RpcResult result  = new RpcResult();
+            result.Code = RpcErrorCodes.CODE_SERVICE_NOT_FOUND;
+            return Task.FromResult(result);
+        }
 
         public async Task ReceiveAsync(ISocketContext<AmpMessage> context, AmpMessage message)
         {

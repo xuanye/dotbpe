@@ -33,8 +33,8 @@ namespace DotBPE.Rpc.Server
         }
 
         public abstract string Id { get; }
-        
-        
+
+
         /// <summary>
         /// 处理接收消息
         /// TODO: 处理审计日志的问题
@@ -47,7 +47,7 @@ namespace DotBPE.Rpc.Server
             AmpMessage rsp;
             try
             {
-              
+
                 Logger.LogDebug("Receive message,Id={0}", message.Id);
                 rsp = await ProcessAsync(message);
                 rsp.Sequence = message.Sequence; //通讯请求序列
@@ -64,12 +64,12 @@ namespace DotBPE.Rpc.Server
             {
                 Logger.LogError(ex, "Receive message occ error ,messageId={messageId}", message.Id);
                 rsp = await SendErrorResponseAsync(context, message);
-               
+
             }
         }
 
         public abstract Task<AmpMessage> ProcessAsync(AmpMessage req);
-
+        public abstract object Invoke(ushort messageId,params object[] args);
         /// <summary>
         /// 发送服务端意外错误的消息
         /// </summary>
