@@ -11,11 +11,14 @@ namespace DotBPE.Rpc
         {
 
         }
-        public RpcServiceAttribute(ushort serviceId)
+        public RpcServiceAttribute(ushort serviceId,string groupName="default")
         {
             this.ServiceId = serviceId;
+            this.GroupName = groupName;
         }
 
         public ushort ServiceId { get; set; }
+
+        public string GroupName { get; set; } = "default";
     }
 }

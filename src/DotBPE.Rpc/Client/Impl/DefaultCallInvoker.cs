@@ -9,12 +9,12 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public class DefaultCallInvoker : ICallInvoker<AmpMessage>
+    public class DefaultCallInvoker : ICallInvoker
     {
         private readonly IClientMessageHandler<AmpMessage> _handler;
         private readonly IRpcClient<AmpMessage> _rpcClient;
         private readonly ILogger<DefaultCallInvoker> _logger;
-
+        private readonly ISerializer _serializer;
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>
             _resultDictionary =new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
@@ -25,16 +25,15 @@ namespace DotBPE.Rpc.Client
         public DefaultCallInvoker(
             IClientMessageHandler<AmpMessage> handler,
             IRpcClient<AmpMessage> rpcClient,
+            ISerializer serializer,
             ILogger<DefaultCallInvoker> logger
         )
         {
             _handler = handler;
             _rpcClient = rpcClient;
+            _serializer = serializer;
             _logger = logger;
-
-
             _handler.OnReceived += _handler_OnReceived;
-
         }
 
         /// <summary>
@@ -84,15 +83,49 @@ namespace DotBPE.Rpc.Client
                 return rsp;
             }
         }
-
-
-
-        public AmpMessage BlockingCall(AmpMessage request, int timeOut = 3000)
+        public async Task<RpcResult> AsyncCallWithOutResponse<T>(string callName, ushort serviceId, ushort messageId, T req)
         {
-            return this.AsyncCall(request, timeOut).Result;
+            RpcResult result = new RpcResult();
+            var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId,true);
+            reqMessage.FriendlyServiceName = callName;
+            reqMessage.Data = _serializer.Serialize(req);
+            var rsp = await AsyncCall(reqMessage);
+            if(rsp != null)
+            {
+                result.Code = rsp.Code;
+            }
+            else
+            {
+                _logger.LogError("Call {0} , return null",callName);
+                result.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            return result;
         }
+    
 
-
+        public async Task<RpcResult<TResult>> AsyncCall<T, TResult>(string callName, ushort serviceId, ushort messageId, T req, int timeOut = 3000)
+        {
+            RpcResult<TResult> result = new RpcResult<TResult>();
+            var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId, true);
+            reqMessage.FriendlyServiceName = callName;
+            reqMessage.Data = _serializer.Serialize(req);
+            var rsp = await AsyncCall(reqMessage);
+            if (rsp != null)
+            {
+                result.Code = rsp.Code;
+                if(rsp.Data != null)
+                {
+                    result.Data = _serializer.Deserialize<TResult>(rsp.Data);
+                }
+            }
+            else
+            {
+                _logger.LogError("Call {0} , return null", callName);
+                result.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
+            }
+            return result;
+        }
+        
         private async Task<bool> SendAsync(AmpMessage request)
         {
             bool success = false;
@@ -195,5 +228,6 @@ namespace DotBPE.Rpc.Client
             int id = Interlocked.Increment(ref INVOKER_SEQ);
             request.Sequence = id;
         }
+              
     }
 }

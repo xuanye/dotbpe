@@ -6,10 +6,11 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public interface ICallInvoker<TMessage> where TMessage:IMessage
-    {
-        TMessage BlockingCall(TMessage request, int timeOut = 3000);
+    public interface ICallInvoker
+    { 
 
-        Task<TMessage> AsyncCall(TMessage request, int timeOut = 3000);
+        Task<RpcResult> AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
+
+        Task<RpcResult<TResult>> AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000) ;
     }
 }
