@@ -8,8 +8,12 @@ namespace DotBPE.Rpc.Client
 {
     public interface ICallInvoker<TMessage> where TMessage:IMessage
     {
-        TMessage BlockingCall(TMessage request, int timeOut = 3000);
 
-        Task<TMessage> AsyncCall(TMessage request, int timeOut = 3000);
+        Task<TMessage> AsyncCall(TMessage request, int timeout = 3000);
+
+        Task<RpcResult<T2>> AsyncCall<T1,T2>(string callName,T1 reqObj,ushort serviceId,ushort messageId,int timeout=3000);
+
+        Task<RpcResult> AsyncCallWithoutResponse<T1>(string callName,T1 reqObj,ushort serviceId,ushort messageId);
+
     }
 }

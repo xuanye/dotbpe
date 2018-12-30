@@ -49,14 +49,17 @@ namespace DotBPE.Extra.Castle
                 META_CACHE.TryAdd(cacheKey, meta);
             }
 
+            //invocation.Method.ReturnType.;
+
             AmpMessage message = AmpMessage.CreateRequestMessage(meta.ServiceId, meta.MessageId);
             message.FriendlyServiceName = cacheKey;
-            var taskRsp = _callInvoker.AsyncCall(message);
+
+
 
             //taskRsp.Result.Data
             //TODO:序列化
-            //message.Data = req.ToByteArray();     
-            //invocation.ReturnValue 
+            //message.Data = req.ToByteArray();
+            //invocation.ReturnValue
             //在被拦截的方法执行完毕后 继续执行
             //invocation.Proceed();
             invocation.ReturnValue = invocation.Arguments[0];
