@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
+
     public interface ICallInvoker
     { 
 

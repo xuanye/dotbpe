@@ -1,11 +1,11 @@
-using DotBPE.Rpc.Protocol;
-using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
+using DotBPE.Rpc.Protocol;
+using Microsoft.Extensions.Logging;
 
 namespace DotBPE.Rpc.Client
 {
@@ -36,19 +36,20 @@ namespace DotBPE.Rpc.Client
             _handler.OnReceived += _handler_OnReceived;
         }
 
-        /// <summary>
-        /// 调用返回
-        /// </summary>
-        /// <param name="sender"></param>
-        /// <param name="e"></param>
-        private void _handler_OnReceived(object sender, AmpMessage message)
-        {
-            if(message.InvokeMessageType == InvokeMessageType.Response)
+
+            /// <summary>
+            /// 调用返回
+            /// </summary>
+            /// <param name="sender"></param>
+            /// <param name="e"></param>
+            private void _handler_OnReceived(object sender, AmpMessage message)
             {
-                //处理消息
-                MessageRecieved(message);
+                if (message.InvokeMessageType == InvokeMessageType.Response)
+                {
+                    //处理消息
+                    MessageRecieved(message);
+                }
             }
-        }
 
         /// <summary>
         /// TODO:记录审计日志
@@ -61,10 +62,10 @@ namespace DotBPE.Rpc.Client
             AutoSetSequence(request);
             _logger.LogDebug("new request id={0}", request.Id);
 
-            if(request.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse)
+            if (request.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse)
             {
                 await SendAsync(request);
-                return AmpMessage.CreateRequestMessage(request.ServiceId,request.MessageId);
+                return AmpMessage.CreateRequestMessage(request.ServiceId, request.MessageId);
             }
 
             var cts = new CancellationTokenSource(timeOut);
@@ -79,10 +80,11 @@ namespace DotBPE.Rpc.Client
 
                 //get return message
                 var rsp = await callbackTask;
-             
+
                 return rsp;
             }
         }
+
         public async Task<RpcResult> AsyncCallWithOutResponse<T>(string callName, ushort serviceId, ushort messageId, T req)
         {
             RpcResult result = new RpcResult();
@@ -101,7 +103,7 @@ namespace DotBPE.Rpc.Client
             }
             return result;
         }
-    
+
 
         public async Task<RpcResult<TResult>> AsyncCall<T, TResult>(string callName, ushort serviceId, ushort messageId, T req, int timeOut = 3000)
         {
@@ -125,7 +127,7 @@ namespace DotBPE.Rpc.Client
             }
             return result;
         }
-        
+
         private async Task<bool> SendAsync(AmpMessage request)
         {
             bool success = false;
@@ -145,89 +147,88 @@ namespace DotBPE.Rpc.Client
         }
 
         private void MessageRecieved(AmpMessage message)
-        {
-         
-            if (message.ServiceId == 0 && message.MessageId == 0)
-            {                
-                _logger.LogTrace("recieved heart beat");
-                return;
-            }
-
-            TaskCompletionSource<AmpMessage> task;
-            if (message.Code != 0)
             {
-                _logger.LogDebug("server response error msg ,type={0}", message.InvokeMessageType);              
-                if (_resultDictionary.TryRemove(message.Id, out task))
+
+                if (message.ServiceId == 0 && message.MessageId == 0)
                 {
-                    task.TrySetResult(message);
-                    _logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, message.Code);                   
+                    _logger.LogTrace("recieved heart beat");
+                    return;
+                }
+
+                TaskCompletionSource<AmpMessage> task;
+                if (message.Code != 0)
+                {
+                    _logger.LogDebug("server response error msg ,type={0}", message.InvokeMessageType);
+                    if (_resultDictionary.TryRemove(message.Id, out task))
+                    {
+                        task.TrySetResult(message);
+                        _logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, message.Code);
+                    }
+                    else
+                    {
+                        _logger.LogError(string.Format("server response error msg ,id={0},code={1},", message.Id, message.Code));
+                    }
                 }
                 else
-                {                  
-                    _logger.LogError(string.Format("server response error msg ,id={0},code={1},", message.Id, message.Code));
-                }
-            }
-            else 
-            {
-                _logger.LogDebug($"receive message, id:{message.Id}");             
-                if (_resultDictionary.TryRemove(message.Id, out task))
                 {
-                    task.TrySetResult(message);
-                    _logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, message.Code);                  
-                }
-              
-            }
-           
-        }
-              
+                    _logger.LogDebug($"receive message, id:{message.Id}");
+                    if (_resultDictionary.TryRemove(message.Id, out task))
+                    {
+                        task.TrySetResult(message);
+                        _logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, message.Code);
+                    }
 
-        private void TimeOutCallBack(string id)
-        {
-            TaskCompletionSource<AmpMessage> task;
-            if (_resultDictionary.TryRemove(id, out task))
+                }
+
+            }
+
+            private void TimeOutCallBack(string id)
             {
-                var message = AmpMessage.CreateResponseMessage(id);
-                message.Code = RpcErrorCodes.CODE_TIMEOUT;
-                if (!task.TrySetResult(message))
+                TaskCompletionSource<AmpMessage> task;
+                if (_resultDictionary.TryRemove(id, out task))
                 {
-                    _logger.LogWarning("set timeout result fail,maybe task is completed,message {0}", id);
+                    var message = AmpMessage.CreateResponseMessage(id);
+                    message.Code = RpcErrorCodes.CODE_TIMEOUT;
+                    if (!task.TrySetResult(message))
+                    {
+                        _logger.LogWarning("set timeout result fail,maybe task is completed,message {0}", id);
+                    }
+                    _logger.LogWarning("message {0}, timeout", id);
                 }
-                _logger.LogWarning("message {0}, timeout", id);              
             }
-        }
 
-        private void ErrorCallBack(string id)
-        {
-            if (!_resultDictionary.ContainsKey(id))
+            private void ErrorCallBack(string id)
             {
-                return;
-            }
-            TaskCompletionSource<AmpMessage> task;
-            if (_resultDictionary.TryRemove(id, out task))
-            {
-                var message = AmpMessage.CreateResponseMessage(id);
-                message.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
-                if (!task.TrySetResult(message))
+                if (!_resultDictionary.ContainsKey(id))
                 {
-                    _logger.LogWarning("set error result fail,maybe task is completed");
+                    return;
                 }
-                _logger.LogWarning("message {0}, error", id);             
+                TaskCompletionSource<AmpMessage> task;
+                if (_resultDictionary.TryRemove(id, out task))
+                {
+                    var message = AmpMessage.CreateResponseMessage(id);
+                    message.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
+                    if (!task.TrySetResult(message))
+                    {
+                        _logger.LogWarning("set error result fail,maybe task is completed");
+                    }
+                    _logger.LogWarning("message {0}, error", id);
+                }
             }
-        }
 
-        private Task<AmpMessage> RegisterResultCallbackAsync(string id, int timeOut)
-        {
-            var tcs = new TaskCompletionSource<AmpMessage>();
+            private Task<AmpMessage> RegisterResultCallbackAsync(string id, int timeOut)
+            {
+                var tcs = new TaskCompletionSource<AmpMessage>();
 
-            _resultDictionary.TryAdd(id, tcs);
-            return tcs.Task;
-        }
+                _resultDictionary.TryAdd(id, tcs);
+                return tcs.Task;
+            }
 
-        private void AutoSetSequence(AmpMessage request)
-        {
-            int id = Interlocked.Increment(ref INVOKER_SEQ);
-            request.Sequence = id;
-        }
-              
+            private void AutoSetSequence(AmpMessage request)
+            {
+                int id = Interlocked.Increment(ref INVOKER_SEQ);
+                request.Sequence = id;
+            }
+      
     }
 }

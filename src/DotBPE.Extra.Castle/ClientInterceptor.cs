@@ -32,7 +32,7 @@ namespace DotBPE.Extra
         {
              Console.WriteLine("你正在调用方法 \"{0}\"  参数是 {1}... ",
                invocation.Method.Name,
-               string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray()));           
+               string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray()));
 
             var serviceNameArr= invocation.Method.DeclaringType.FullName.Split('.');
             string cacheKey = $"{serviceNameArr[serviceNameArr.Length-1]}.{invocation.Method.Name}";
@@ -54,9 +54,9 @@ namespace DotBPE.Extra
                 var sAttr = service as RpcServiceAttribute;
                 var mAttr = method as RpcMethodAttribute;
                 meta = new InvokeMeta() { ServiceId = sAttr.ServiceId, MessageId = mAttr.MessageId };
-              
+
                 var returnType = invocation.Method.ReturnType;
-                Type innerType = null;              
+                Type innerType = null;
                 if (returnType == typeof(Task))
                 {
                     meta.WithNoResponse = true;
@@ -78,16 +78,16 @@ namespace DotBPE.Extra
                 {
                     throw new DotBPE.Rpc.Exceptions.RpcException("ReturnType must be Task or Task<RpcResult<T>>");
                 }
-               
+
                 if (meta.WithNoResponse)
-                {                   
+                {
                     meta.InvokeMethod = this._AsyncCaller1.MakeGenericMethod(req.GetType());
                 }
                 else
                 {
                     meta.InvokeMethod = this._AsyncCaller2.MakeGenericMethod(req.GetType(),meta.ResultType);
                 }
-                
+
                 META_CACHE.TryAdd(cacheKey, meta);
             }
 
@@ -107,8 +107,8 @@ namespace DotBPE.Extra
                 {
                     invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker,new object[] { cacheKey, meta.ServiceId, meta.MessageId, req,3000});
                 }
-                
-            }   
+
+            }
             Console.WriteLine("方法执行完毕，返回结果：{0}", invocation.ReturnValue);
         }
 
