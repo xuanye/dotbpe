@@ -9,9 +9,9 @@ namespace DotBPE.Rpc.Client
     /// <summary>
     /// 基于服务注册和发现的服务路由
     /// </summary>
-    public class DiscoveryServiceRouter : IServiceRouter<AmpMessage>
+    public class DiscoveryServiceRouter : IServiceRouter
     {
-        public Task<IRouterPoint> FindRouterPoint(AmpMessage message)
+        public IRouterPoint FindRouterPoint(string servicePath)
         {
             throw new NotImplementedException();
         }

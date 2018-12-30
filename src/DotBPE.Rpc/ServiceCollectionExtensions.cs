@@ -14,7 +14,7 @@ namespace DotBPE.Rpc
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddDotBPE(this IServiceCollection services)          
+        public static IServiceCollection AddDotBPE(this IServiceCollection services)
         {
             services.AddAmpProtocol();
             services.AddDefaultImpl();
@@ -34,12 +34,12 @@ namespace DotBPE.Rpc
             services.TryAddSingleton<IServiceActorLocator<AmpMessage>, DefaultServiceActorLocator>();
             services.TryAddSingleton<IServerMessageHandler<AmpMessage>, DefaultServerMessageHandler>();
 
-            //client           
-            services.TryAddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient>();          
+            //client
+            services.TryAddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient>();
             services.TryAddSingleton<ICallInvoker, DefaultCallInvoker>();
             services.TryAddSingleton<IClientMessageHandler<AmpMessage>, DefaultClientMessageHandler>();
             services.TryAddSingleton<IRouterPolicy, RoundrobinPolicy>();
-            services.TryAddSingleton<IServiceRouter<AmpMessage>, DefaultServiceRouter>();
+            services.TryAddSingleton<IServiceRouter, DefaultServiceRouter>();
             services.TryAddSingleton<ITransportFactory<AmpMessage>, DefaultTransportFactory>();
 
             return services;

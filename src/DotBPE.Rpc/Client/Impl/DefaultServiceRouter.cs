@@ -14,13 +14,13 @@ namespace DotBPE.Rpc.Client
     /// <summary>
     /// local config base router
     /// </summary>
-    public class DefaultServiceRouter : IServiceRouter<AmpMessage>
+    public class DefaultServiceRouter : IServiceRouter
     {
         private readonly RouterPointOptions _routeOptions;
         private readonly IRouterPolicy _policy;
         private readonly Dictionary<string, List<IRouterPoint>> SERVICE_CACHE = new Dictionary<string, List<IRouterPoint>>();
 
-        private readonly Dictionary<ushort, string> SERVICE_CATEGORY_MAP = new Dictionary<ushort, string>();
+        private readonly Dictionary<string, string> SERVICE_CATEGORY_MAP = new Dictionary<string, string>();
 
         public DefaultServiceRouter(
             IOptions<RouterPointOptions> routeOptions,
@@ -50,7 +50,7 @@ namespace DotBPE.Rpc.Client
                     if (remoteLst.Any())
                     {
                         AddRouter($"{cfg.ServiceId}${cfg.MessageId}", cfg.Weight, remoteLst);
-                       
+
                     }
                 }
             }
@@ -100,24 +100,25 @@ namespace DotBPE.Rpc.Client
 
         private void AddMap(ushort service,string category)
         {
-            if (SERVICE_CATEGORY_MAP.ContainsKey(service))
+            string key = service.ToString();
+            if (SERVICE_CATEGORY_MAP.ContainsKey(key))
             {
-                SERVICE_CATEGORY_MAP[service] = category;
+                SERVICE_CATEGORY_MAP[key] = category;
             }
             else
             {
-                SERVICE_CATEGORY_MAP.Add(service, category);
+                SERVICE_CATEGORY_MAP.Add(key, category);
             }
         }
 
-        private void AddRouter(string key,int weigth, List<EndPoint> remoteAddress)
+        private void AddRouter(string key,int weight, List<EndPoint> remoteAddress)
         {
             var ls = remoteAddress.ConvertAll<IRouterPoint>(
                                 x => new RouterPoint()
                                 {
                                     RemoteAddress = x,
                                     RoutePointType = RoutePointType.Remote,
-                                    Weight = weigth
+                                    Weight = weight
                                 });
 
             if (SERVICE_CACHE.ContainsKey(key))
@@ -133,36 +134,36 @@ namespace DotBPE.Rpc.Client
         }
 
 
-        public Task<IRouterPoint> FindRouterPoint(AmpMessage message)
+        public IRouterPoint FindRouterPoint(string servicePath)
         {
             IRouterPoint point = new RouterPoint() {  RoutePointType = RoutePointType.Local };
-        
 
-            string keyService = message.ServiceIdentifier;
-            string keyMessage = message.MethodIdentifier;
-         
+            string[] keys = servicePath.Split('$');
+            string keyService = keys[0]+"$0";
+            string keyMessage = servicePath;
+
 
             if (SERVICE_CACHE.ContainsKey(keyMessage))
             {
                 point = SelectEndPoint(keyMessage, SERVICE_CACHE[keyMessage]);
-                return Task.FromResult(point);
+                return point;
             }
 
             if (SERVICE_CACHE.ContainsKey(keyService))
             {
                 point = SelectEndPoint(keyService, SERVICE_CACHE[keyService]);
-                return Task.FromResult(point);
+                return point;
             }
 
-            string keyCategory = GetCategory(message.ServiceId);
+            string keyCategory = GetCategory(keys[0]);
             //默认配置
             if (SERVICE_CACHE.ContainsKey(keyCategory))
-            {  
+            {
                 point = SelectEndPoint(keyCategory, SERVICE_CACHE[keyCategory]);
-                return Task.FromResult(point);
+                return point;
             }
 
-            return Task.FromResult(point);
+            return point;
         }
 
         private IRouterPoint SelectEndPoint(string serviceKey,List<IRouterPoint> remoteAddresses)
@@ -170,7 +171,7 @@ namespace DotBPE.Rpc.Client
             return _policy.Select(serviceKey, remoteAddresses);
         }
 
-        private string GetCategory(ushort serviceId)
+        private string GetCategory(string serviceId)
         {
             if (SERVICE_CATEGORY_MAP.ContainsKey(serviceId))
             {

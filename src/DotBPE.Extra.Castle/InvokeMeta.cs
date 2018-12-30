@@ -2,6 +2,8 @@ using System;
 using System.Collections.Generic;
 using System.Reflection;
 using System.Text;
+using DotBPE.Rpc.Protocol;
+using DotBPE.Rpc.Server;
 
 namespace DotBPE.Extra
 {
@@ -15,5 +17,8 @@ namespace DotBPE.Extra
         public Type ResultType { get; set; }
 
         public MethodInfo InvokeMethod { get; set; }
+
+        public bool IsLocal{get;set;}
+        public IServiceActor<AmpMessage> LocalActor {get;set;}
     }
 }

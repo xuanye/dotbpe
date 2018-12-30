@@ -3,11 +3,12 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
+using DotBPE.Rpc.Server.Impl;
 
 namespace MathService.Definition
 {
-    public class MathService: IMathService,IRpcService
-    {        
+    public class MathService: BaseService<IMathService>,IMathService
+    {
         public Task<RpcResult<SumRes>> SumAsync(SumReq req)
         {
             RpcResult<SumRes> result = new RpcResult<SumRes>() { Data = new SumRes() };
