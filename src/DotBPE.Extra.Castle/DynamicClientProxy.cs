@@ -22,10 +22,12 @@ namespace DotBPE.Extra
             _interceptor = provider.GetRequiredService<ClientInterceptor>();
         }
 
-        public TService Create<TService>() where TService : class,IRpcService
+        public TService Create<TService>() where TService : class
         {
            return _generator.CreateInterfaceProxyWithoutTarget<TService>(_interceptor);
         }
+
+       
     }
 
   

@@ -6,6 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\src\DotBPE.Extra.Castle\DotBPE.Extra.Castle.csproj" />
     <ProjectReference Include="..\MathService.Definition\MathService.Definition.csproj" />
   </ItemGroup>
 

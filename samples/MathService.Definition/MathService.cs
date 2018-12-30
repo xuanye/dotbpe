@@ -4,15 +4,22 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Server.Impl;
+using Microsoft.Extensions.Logging;
 
 namespace MathService.Definition
 {
     public class MathService: BaseService<IMathService>,IMathService
     {
+        private readonly ILogger<MathService> _logger;
+        public MathService(ILogger<MathService> logger)
+        {
+            _logger = logger;
+        }
         public Task<RpcResult<SumRes>> SumAsync(SumReq req)
         {
             RpcResult<SumRes> result = new RpcResult<SumRes>() { Data = new SumRes() };
             result.Data.Total = req.A + req.B;
+            this._logger.LogInformation("A+B=C {A}+{B}={C}",req.A,req.B,result.Data.Total);
             return Task.FromResult(result);
         }
     }

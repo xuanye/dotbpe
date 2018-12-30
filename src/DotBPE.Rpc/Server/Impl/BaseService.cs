@@ -6,6 +6,7 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
+using DotBPE.Baseline.Extensions;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.DependencyInjection;
@@ -16,23 +17,32 @@ namespace DotBPE.Rpc.Server.Impl
     {
         static ConcurrentDictionary<string, MethodInfo> METHOD_CACHE = new ConcurrentDictionary<string, MethodInfo>();
 
-        private readonly ISerializer _serializer;
         public BaseService()
         {
-
             var serviceType = typeof(TInterFace);
             var serviceAttribute = (RpcServiceAttribute) serviceType.GetCustomAttribute(typeof(RpcServiceAttribute), false);
             this.ServiceId = serviceAttribute.ServiceId;
             this.GroupName = serviceAttribute.GroupName;
-
-            this._serializer = Rpc.Internal.Environment.ServiceProvider.GetRequiredService<ISerializer>();
+           
             //注册Group和Message
             Initialize(serviceType);
+        }
+        private ISerializer _serializer;
+        protected ISerializer Serializer
+        {
+            get
+            {
+                if(this._serializer == null)
+                {
+                    this._serializer = Rpc.Internal.Environment.ServiceProvider.GetRequiredService<ISerializer>();
+                }
+                return this._serializer;
+            }
         }
 
         private void Initialize(Type serviceType)
         {
-            var allMethods = serviceType.GetMethods(BindingFlags.Public);
+            var allMethods = serviceType.GetMethods();
             foreach (var method in allMethods)
             {
                 var tt = method.GetCustomAttribute(typeof(RpcMethodAttribute), false);
@@ -51,7 +61,7 @@ namespace DotBPE.Rpc.Server.Impl
         {
             get
             {
-                return $"{this.ServiceId}%0";
+                return $"{this.ServiceId}$0";
             }
         }
 
@@ -66,7 +76,7 @@ namespace DotBPE.Rpc.Server.Impl
                 if(pinfos.Length <1 || pinfos.Length>2){
                     new RpcException("rpc method parameters count error,must be [1,2]");
                 }
-                object arg1 = this._serializer.Deserialize(req.Data,pinfos[0].ParameterType);
+                object arg1 = this.Serializer.Deserialize(req.Data,pinfos[0].ParameterType);
                 bool withResponse = req.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse;
 
                 object retVal;
@@ -81,24 +91,47 @@ namespace DotBPE.Rpc.Server.Impl
                 else{
                     retVal = m.Invoke(this,new object[]{arg1});
                 }
-                if(retVal.GetType() == typeof(Task)){
+                var retValType = retVal.GetType();
+                if (retValType == typeof(Task)){
                     return resMsg;
                 }
 
-                Task<RpcResult> retTask = retVal as Task<RpcResult>;
-                var result = await retTask;
-                var resultType =result.GetType();
-                object dataVal = null;
-                if(resultType.BaseType == typeof(RpcResult)){ //泛型返回结果
-                    var dataProp =  resultType.GetProperty("Data");
-                    if(dataProp !=null){
+                var tType = retValType.GenericTypeArguments[0];
+                if (tType == typeof(RpcResult))
+                {
+                    Task<RpcResult> retTask = retVal as Task<RpcResult>;
+                    var result = await retTask;
+                    resMsg.Code = result.Code;
+                }
+                else if (tType.IsGenericType)
+                {
+                    Task retTask = retVal as Task;
+                    await retTask.AnyContext();
+
+                    var resultProp = retValType.GetProperty("Result");
+                    if (resultProp == null)
+                    {
+                        resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
+                        return resMsg;
+                    }
+                    object result = resultProp.GetValue(retVal);
+                                      
+                    object dataVal = null;
+                    var dataProp = tType.GetProperty("Data");
+                    if (dataProp != null)
+                    {                        
                         dataVal = dataProp.GetValue(result);
                     }
+                    if (dataVal != null)
+                    {
+                        resMsg.Data = this.Serializer.Serialize(dataVal);
+                    }
                 }
-                resMsg.Code = result.Code;
-                if(dataVal !=null){
-                    resMsg.Data = this._serializer.Serialize(dataVal);
-                }
+                else
+                {
+                    resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
+                    //LOG Error;
+                }                
             }
             else
             {

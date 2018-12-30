@@ -8,13 +8,14 @@ using System.Text;
 
 namespace MathService.Definition
 {
-    [DataContract]
+    [DataContract]  
     public class SumRes
     {
         [DataMember(Order =1,Name ="total")]
         public int Total { get; set; }
     }
 
+    [DataContract]
     public class SumReq
     {
         [DataMember(Order = 1, Name = "a")]

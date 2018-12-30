@@ -23,7 +23,7 @@ namespace DotBPE.Rpc.Server
 
         public Task ReceiveAsync(ISocketContext<AmpMessage> context, AmpMessage message)
         {
-            if (message.InvokeMessageType != InvokeMessageType.Request)
+            if (message.InvokeMessageType == InvokeMessageType.Response)
             {
                 return Task.CompletedTask;
             }

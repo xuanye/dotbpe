@@ -6,6 +6,6 @@ namespace DotBPE.Rpc.Client
 {
     public interface IClientProxy
     {
-        TService Create<TService>() where TService: class, IRpcService;
+        TService Create<TService>() where TService : class;
     }
 }

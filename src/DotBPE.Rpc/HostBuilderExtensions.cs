@@ -1,9 +1,11 @@
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Client.RouterPolicy;
+using DotBPE.Rpc.Hosting;
 using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Peach;
+using Peach.Tcp;
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -14,10 +16,10 @@ namespace DotBPE.Rpc
     {
         public static IHostBuilder UseRpcServer(this IHostBuilder builder)
         {
-            builder.UseTcpServer<AmpMessage>();
-
             return builder.ConfigureServices(services =>
             {
+                services.AddScoped<IHostedService, RpcHostedService>();
+                services.AddSingleton<IServerBootstrap, TcpServerBootstrap<AmpMessage>>();
                 services.AddDotBPE();
             });            
         }
