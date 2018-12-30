@@ -6,7 +6,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Math.Protocols\Math.Protocols.csproj" />
+    <ProjectReference Include="..\MathService.Definition\MathService.Definition.csproj" />
   </ItemGroup>
 
 </Project>

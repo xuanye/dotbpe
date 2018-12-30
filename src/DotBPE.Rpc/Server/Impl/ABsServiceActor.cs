@@ -12,17 +12,14 @@ namespace DotBPE.Rpc.Server
 {
     public abstract class AbsServiceActor : IServiceActor<AmpMessage>
     {
-        protected abstract int ServiceId { get; }
-       
         private ILogger _logger;
-
         protected ILogger Logger
         {
             get
             {
                 if (_logger == null)
                 {
-                    if ( Environment.LoggerFactory != null)
+                    if (Environment.LoggerFactory != null)
                     {
                         _logger = Environment.LoggerFactory.CreateLogger<AbsServiceActor>();
                     }
@@ -35,16 +32,9 @@ namespace DotBPE.Rpc.Server
             }
         }
 
-        public string Id
-        {
-            get
-            {
-                return $"{this.ServiceId}$0";
-            }
-        }
-
-        public abstract string Category { get; }
-
+        public abstract string Id { get; }
+        
+        
         /// <summary>
         /// 处理接收消息
         /// TODO: 处理审计日志的问题

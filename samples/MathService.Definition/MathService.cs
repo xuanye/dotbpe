@@ -4,7 +4,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Math.Protocols
+namespace MathService.Definition
 {
     public class MathService: IMathService,IRpcService
     {        
@@ -16,7 +16,10 @@ namespace Math.Protocols
         }
     }
 
-    public interface IMathService {
+    [RpcService(100)]
+    public interface IMathService
+    {
+        [RpcMethod(1)]
         Task<RpcResult<SumRes>> SumAsync(SumReq req);
     }
 
