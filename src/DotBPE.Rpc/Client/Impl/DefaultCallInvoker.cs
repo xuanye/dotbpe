@@ -58,10 +58,10 @@ namespace DotBPE.Rpc.Client
         /// <param name="request"></param>
         /// <param name="timeOut"></param>
         /// <returns></returns>
-        public async Task<AmpMessage> AsyncCall(AmpMessage request, int timeOut = 3000)
+        private async Task<AmpMessage> AsyncCallInner(AmpMessage request, int timeOut = 3000)
         {
             AutoSetSequence(request);
-            _logger.LogDebug("new request id={0}", request.Id);
+            _logger.LogInformation("new request id={0},type={1}", request.Id,request.InvokeMessageType);
 
             if (request.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse)
             {
@@ -94,7 +94,7 @@ namespace DotBPE.Rpc.Client
             reqMessage.FriendlyServiceName = callName;
 
             reqMessage.Data = _serializer.Serialize(req);
-            var rsp = await AsyncCall(reqMessage);
+            var rsp = await AsyncCallInner(reqMessage);
             if (rsp != null)
             {
                 result.Code = rsp.Code;
@@ -110,10 +110,10 @@ namespace DotBPE.Rpc.Client
         public async Task<RpcResult<TResult>> AsyncCall<T, TResult>(string callName, ushort serviceId, ushort messageId, T req, int timeOut = 3000)
         {
             RpcResult<TResult> result = new RpcResult<TResult>();
-            var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId, true);
+            var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId, false);
             reqMessage.FriendlyServiceName = callName;
             reqMessage.Data = _serializer.Serialize(req);
-            var rsp = await AsyncCall(reqMessage);
+            var rsp = await AsyncCallInner(reqMessage);
             if (rsp != null)
             {
                 result.Code = rsp.Code;

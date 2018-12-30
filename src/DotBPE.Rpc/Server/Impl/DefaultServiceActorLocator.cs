@@ -33,7 +33,7 @@ namespace DotBPE.Rpc.Server
             }
             else
             {
-                _logger.LogInformation(" any service actor is not registered");
+                _logger.LogWarning("no service actor was registered");
             }
         }
         /// <summary>
@@ -48,8 +48,15 @@ namespace DotBPE.Rpc.Server
                 //心跳消息
                 return HeartbeatActor;
             }
+            string[] path = servicePath.Split('$');
+            string serviceKey = $"{path[0]}$0";
 
-            if (ACTOR_CACHE.TryGetValue(servicePath,out var serviceActor))
+            if (ACTOR_CACHE.TryGetValue(serviceKey, out var serviceActor))
+            {
+                return serviceActor;
+            }
+
+            if (ACTOR_CACHE.TryGetValue(servicePath,out serviceActor))
             {
                 return serviceActor;
             }

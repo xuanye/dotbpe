@@ -130,7 +130,7 @@ namespace DotBPE.Extra
                 }
 
             }
-            Console.WriteLine("方法执行完毕，返回结果：{0}", invocation.ReturnValue);
+            Console.WriteLine("方法执行完毕，返回结果：{0}", invocation.ReturnValue?.GetType());
         }
 
         private bool IsLocalCall(ushort serviceId, ushort messageId)

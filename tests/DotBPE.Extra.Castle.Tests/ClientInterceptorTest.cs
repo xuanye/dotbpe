@@ -7,6 +7,7 @@ using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server;
 using Moq;
+using Peach;
 
 namespace DotBPE.Extra.Castle.Tests
 {
@@ -34,7 +35,8 @@ namespace DotBPE.Extra.Castle.Tests
 
 
             var actor = new Mock<IServiceActor<AmpMessage>>();
-            actor.Setup(x => x.Invoke(It.IsAny<ushort>())).Returns(req);
+            actor.Setup(x => x.Invoke(1,It.IsAny<int>())).Returns(Task.FromResult(result2));
+            actor.Setup(x => x.Invoke(2, It.IsAny<int>())).Returns(Task.FromResult(result1));
 
             var locator = new Mock<IServiceActorLocator<AmpMessage>>();
             locator.Setup(x=>x.LocateServiceActor(It.IsAny<string>())).Returns(actor.Object);
@@ -70,4 +72,6 @@ namespace DotBPE.Extra.Castle.Tests
         [RpcMethod(2)]
         Task<RpcResult> FooNoRsponse(int a);
     }
+
+   
 }

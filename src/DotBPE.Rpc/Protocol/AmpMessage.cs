@@ -41,7 +41,13 @@ namespace DotBPE.Rpc.Protocol
             }
         }
 
-        public override int Length { get; }
+        public override int Length {
+            get
+            {
+                int hl = this.Version == 0 ? VERSION_0_HEAD_LENGTH : VERSION_1_HEAD_LENGTH;
+                return hl + Data.Length;
+            }
+        }
 
         /// <summary>
         /// 消息标识
