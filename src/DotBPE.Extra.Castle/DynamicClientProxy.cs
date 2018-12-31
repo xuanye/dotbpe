@@ -12,19 +12,31 @@ namespace DotBPE.Extra
     public class DynamicClientProxy : IClientProxy
     {
         private readonly IProxyGenerator _generator;
-        private readonly ClientInterceptor _interceptor;
+        private ClientInterceptor _interceptor;
+        private readonly IServiceProvider _provider;
 
-     
 
         public DynamicClientProxy(IServiceProvider provider)
         {
             _generator = provider.GetRequiredService<IProxyGenerator>();
-            _interceptor = provider.GetRequiredService<ClientInterceptor>();
+            _provider = provider;
+        }
+
+        protected IInterceptor ClientInterceptor
+        {
+            get
+            {
+                if(_interceptor == null)
+                {
+                    _interceptor = _provider.GetRequiredService<ClientInterceptor>();
+                }
+                return _interceptor;
+            }
         }
 
         public TService Create<TService>() where TService : class
         {
-           return _generator.CreateInterfaceProxyWithoutTarget<TService>(_interceptor);
+           return _generator.CreateInterfaceProxyWithoutTarget<TService>(this.ClientInterceptor);
         }
 
        
