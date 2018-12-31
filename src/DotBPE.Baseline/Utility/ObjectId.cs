@@ -43,15 +43,15 @@ namespace DotBPE.Baseline.Utility
             {
                 throw new ArgumentNullException("bytes");
             }
-            Unpack(bytes, out _timestamp, out _machine, out _pid, out _increment);
+            Unpack(bytes, out this._timestamp, out this._machine, out this._pid, out this._increment);
         }
 
         internal ObjectId(byte[] bytes, int index)
         {
-            _timestamp = (bytes[index] << 24) | (bytes[index + 1] << 16) | (bytes[index + 2] << 8) | bytes[index + 3];
-            _machine = (bytes[index + 4] << 16) | (bytes[index + 5] << 8) | bytes[index + 6];
-            _pid = (short)((bytes[index + 7] << 8) | bytes[index + 8]);
-            _increment = (bytes[index + 9] << 16) | (bytes[index + 10] << 8) | bytes[index + 11];
+            this._timestamp = (bytes[index] << 24) | (bytes[index + 1] << 16) | (bytes[index + 2] << 8) | bytes[index + 3];
+            this._machine = (bytes[index + 4] << 16) | (bytes[index + 5] << 8) | bytes[index + 6];
+            this._pid = (short)((bytes[index + 7] << 8) | bytes[index + 8]);
+            this._increment = (bytes[index + 9] << 16) | (bytes[index + 10] << 8) | bytes[index + 11];
         }
 
         public ObjectId(DateTime timestamp, int machine, short pid, int increment)
@@ -70,10 +70,10 @@ namespace DotBPE.Baseline.Utility
                 throw new ArgumentOutOfRangeException("increment", "The increment value must be between 0 and 16777215 (it must fit in 3 bytes).");
             }
 
-            _timestamp = timestamp;
-            _machine = machine;
-            _pid = pid;
-            _increment = increment;
+            this._timestamp = timestamp;
+            this._machine = machine;
+            this._pid = pid;
+            this._increment = increment;
         }
 
         public ObjectId(string value)
@@ -82,7 +82,7 @@ namespace DotBPE.Baseline.Utility
             {
                 throw new ArgumentNullException("value");
             }
-            Unpack(Utils.ParseHexString(value), out _timestamp, out _machine, out _pid, out _increment);
+            Unpack(Utils.ParseHexString(value), out this._timestamp, out this._machine, out this._pid, out this._increment);
         }
 
         public static ObjectId Empty
@@ -92,27 +92,27 @@ namespace DotBPE.Baseline.Utility
 
         public int Timestamp
         {
-            get { return _timestamp; }
+            get { return this._timestamp; }
         }
 
         public int Machine
         {
-            get { return _machine; }
+            get { return this._machine; }
         }
 
         public short Pid
         {
-            get { return _pid; }
+            get { return this._pid; }
         }
 
         public int Increment
         {
-            get { return _increment; }
+            get { return this._increment; }
         }
 
         public DateTime CreationTime
         {
-            get { return __unixEpoch.AddSeconds(_timestamp); }
+            get { return __unixEpoch.AddSeconds(this._timestamp); }
         }
 
         public static bool operator <(ObjectId lhs, ObjectId rhs)
@@ -268,22 +268,18 @@ namespace DotBPE.Baseline.Utility
 
         public int CompareTo(ObjectId other)
         {
-            int r = _timestamp.CompareTo(other._timestamp);
+            int r = this._timestamp.CompareTo(other._timestamp);
             if (r != 0) { return r; }
-            r = _machine.CompareTo(other._machine);
+            r = this._machine.CompareTo(other._machine);
             if (r != 0) { return r; }
-            r = _pid.CompareTo(other._pid);
+            r = this._pid.CompareTo(other._pid);
             if (r != 0) { return r; }
-            return _increment.CompareTo(other._increment);
+            return this._increment.CompareTo(other._increment);
         }
 
         public bool Equals(ObjectId rhs)
         {
-            return
-                _timestamp == rhs._timestamp &&
-                _machine == rhs._machine &&
-                _pid == rhs._pid &&
-                _increment == rhs._increment;
+            return this._timestamp == rhs._timestamp && this._machine == rhs._machine && this._pid == rhs._pid && this._increment == rhs._increment;
         }
 
         public override bool Equals(object obj)
@@ -301,37 +297,37 @@ namespace DotBPE.Baseline.Utility
         public override int GetHashCode()
         {
             int hash = 17;
-            hash = 37 * hash + _timestamp.GetHashCode();
-            hash = 37 * hash + _machine.GetHashCode();
-            hash = 37 * hash + _pid.GetHashCode();
-            hash = 37 * hash + _increment.GetHashCode();
+            hash = 37 * hash + this._timestamp.GetHashCode();
+            hash = 37 * hash + this._machine.GetHashCode();
+            hash = 37 * hash + this._pid.GetHashCode();
+            hash = 37 * hash + this._increment.GetHashCode();
             return hash;
         }
 
         public byte[] ToByteArray()
         {
-            return Pack(_timestamp, _machine, _pid, _increment);
+            return Pack(this._timestamp, this._machine, this._pid, this._increment);
         }
 
         public override string ToString()
         {
-            return Pack(_timestamp, _machine, _pid, _increment).ToHex();
+            return Pack(this._timestamp, this._machine, this._pid, this._increment).ToHex();
         }
 
         internal void GetBytes(byte[] bytes, int index)
         {
-            bytes[index] = (byte)(_timestamp >> 24);
-            bytes[1 + index] = (byte)(_timestamp >> 16);
-            bytes[2 + index] = (byte)(_timestamp >> 8);
-            bytes[3 + index] = (byte)(_timestamp);
-            bytes[4 + index] = (byte)(_machine >> 16);
-            bytes[5 + index] = (byte)(_machine >> 8);
-            bytes[6 + index] = (byte)(_machine);
-            bytes[7 + index] = (byte)(_pid >> 8);
-            bytes[8 + index] = (byte)(_pid);
-            bytes[9 + index] = (byte)(_increment >> 16);
-            bytes[10 + index] = (byte)(_increment >> 8);
-            bytes[11 + index] = (byte)(_increment);
+            bytes[index] = (byte)(this._timestamp >> 24);
+            bytes[1 + index] = (byte)(this._timestamp >> 16);
+            bytes[2 + index] = (byte)(this._timestamp >> 8);
+            bytes[3 + index] = (byte)(this._timestamp);
+            bytes[4 + index] = (byte)(this._machine >> 16);
+            bytes[5 + index] = (byte)(this._machine >> 8);
+            bytes[6 + index] = (byte)(this._machine);
+            bytes[7 + index] = (byte)(this._pid >> 8);
+            bytes[8 + index] = (byte)(this._pid);
+            bytes[9 + index] = (byte)(this._increment >> 16);
+            bytes[10 + index] = (byte)(this._increment >> 8);
+            bytes[11 + index] = (byte)(this._increment);
         }
 
         TypeCode IConvertible.GetTypeCode()

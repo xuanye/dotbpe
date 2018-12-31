@@ -44,8 +44,8 @@ namespace Peach.Tcp
 
         public TcpClient(TcpClientOption clientOption, IProtocol<TMessage> protocol)
         {
-            _clientOption = clientOption;
-            _protocol = protocol;
+            this._clientOption = clientOption;
+            this._protocol = protocol;
             InitBootstrap();
         }
 
@@ -56,32 +56,31 @@ namespace Peach.Tcp
         /// Init Bootstrap
         /// </summary>
         private void InitBootstrap()
-        {         
-            _bootstrap.Group(_group)
+        {
+            this._bootstrap.Group(this._group)
                 .Channel<TcpSocketChannel>();
 
-            if (_clientOption.TcpNodelay)
+            if (this._clientOption.TcpNodelay)
             {
-                _bootstrap.Option(ChannelOption.TcpNodelay, true);
+                this._bootstrap.Option(ChannelOption.TcpNodelay, true);
             }
-            if (_clientOption.SoKeepalive)
+            if (this._clientOption.SoKeepalive)
             {
-                _bootstrap.Option(ChannelOption.SoKeepalive, true);
+                this._bootstrap.Option(ChannelOption.SoKeepalive, true);
             }
-            if (_clientOption.ConnectTimeout > 0)
+            if (this._clientOption.ConnectTimeout > 0)
             {
-                _bootstrap.Option(ChannelOption.ConnectTimeout, TimeSpan.FromMilliseconds(_clientOption.ConnectTimeout));
+                this._bootstrap.Option(ChannelOption.ConnectTimeout, TimeSpan.FromMilliseconds(this._clientOption.ConnectTimeout));
             }
 
 
-
-            _bootstrap.Handler(new ActionChannelInitializer<IChannel>(c =>
+            this._bootstrap.Handler(new ActionChannelInitializer<IChannel>(c =>
             {
                 var pipeline = c.Pipeline;
                 pipeline.AddLast(new LoggingHandler("CLT-CONN"));
 
                 //TODO:ssl support
-                var meta = _protocol.GetProtocolMeta();
+                var meta = this._protocol.GetProtocolMeta();
 
                 if (meta != null)
                 {
@@ -107,8 +106,8 @@ namespace Peach.Tcp
                 }
 
 
-                pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_protocol));
-                pipeline.AddLast(new TcpClientChannelHandlerAdapter<TMessage>(this, _protocol));
+                pipeline.AddLast(new ChannelDecodeHandler<TMessage>(this._protocol));
+                pipeline.AddLast(new TcpClientChannelHandlerAdapter<TMessage>(this, this._protocol));
 
             }));
         }
@@ -159,28 +158,29 @@ namespace Peach.Tcp
         public async Task<ISocketContext<TMessage>> ConnectAsync(EndPoint endPoint)
         {
             SocketContext<TMessage> context = null;
-            if (channels.TryGetValue(endPoint, out context)
+            if (this.channels.TryGetValue(endPoint, out context)
                 && context.Active)
             {
                 return context;
             }
             else
             {
-                var channel = await _bootstrap.ConnectAsync(endPoint);
-                context = new SocketContext<TMessage>(channel, _protocol);
-                channels.AddOrUpdate(endPoint, context, (x, y) => context);
+                var channel = await this._bootstrap.ConnectAsync(endPoint);
+                context = new SocketContext<TMessage>(channel, this._protocol);
+                this.channels.AddOrUpdate(endPoint, context, (x, y) => context);
                 return context;
             }
         }
 
         public async Task ShutdownGracefullyAsync(int quietPeriodMS, int shutdownTimeoutMS)
         {
-            foreach(var c in channels.Values)
+            foreach(var c in this.channels.Values)
             {
                await c.Channel.CloseAsync();
             }
-            channels.Clear();
-            await _group.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(quietPeriodMS), TimeSpan.FromMilliseconds(shutdownTimeoutMS));
+
+            this.channels.Clear();
+            await this._group.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(quietPeriodMS), TimeSpan.FromMilliseconds(shutdownTimeoutMS));
         }
 
         public void Receive(ISocketContext<TMessage> context, TMessage msg)

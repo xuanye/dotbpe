@@ -28,12 +28,12 @@ namespace DotBPE.Extra
             IServiceActorLocator<AmpMessage> actorLocator
         )
         {
-            _callInvoker = callInvoker;
-            _AsyncCaller1 = callInvoker.GetType().GetMethod("AsyncCallWithOutResponse");
-            _AsyncCaller2 = callInvoker.GetType().GetMethod("AsyncCall");
+            this._callInvoker = callInvoker;
+            this._AsyncCaller1 = callInvoker.GetType().GetMethod("AsyncCallWithOutResponse");
+            this._AsyncCaller2 = callInvoker.GetType().GetMethod("AsyncCall");
 
-            _actorLocator = actorLocator;
-            _serviceRouter = serviceRouter;
+            this._actorLocator = actorLocator;
+            this._serviceRouter = serviceRouter;
         }
 
         public void Intercept(IInvocation invocation)
@@ -88,15 +88,15 @@ namespace DotBPE.Extra
 
                     if (meta.WithNoResponse || meta.ResultType == null)
                     {
-                        meta.InvokeMethod = _AsyncCaller1.MakeGenericMethod(req.GetType());
+                        meta.InvokeMethod = this._AsyncCaller1.MakeGenericMethod(req.GetType());
                     }
                     else
                     {
-                        meta.InvokeMethod = _AsyncCaller2.MakeGenericMethod(req.GetType(), meta.ResultType);
+                        meta.InvokeMethod = this._AsyncCaller2.MakeGenericMethod(req.GetType(), meta.ResultType);
                     }
                 }
                 else{
-                    meta.LocalActor = _actorLocator.LocateServiceActor($"{meta.ServiceId}${meta.MessageId}");
+                    meta.LocalActor = this._actorLocator.LocateServiceActor($"{meta.ServiceId}${meta.MessageId}");
                 }
 
                 META_CACHE.TryAdd(cacheKey, meta);
@@ -108,18 +108,18 @@ namespace DotBPE.Extra
             if (meta.WithNoResponse)
             {
                 // AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
-                invocation.ReturnValue = meta.InvokeMethod.Invoke(_callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req });
+                invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req });
             }
             else
             {
                 //AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000)
                 if (invocation.Arguments.Length > 1)
                 {
-                    invocation.ReturnValue = meta.InvokeMethod.Invoke(_callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, invocation.Arguments[1] });
+                    invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, invocation.Arguments[1] });
                 }
                 else
                 {
-                    invocation.ReturnValue = meta.InvokeMethod.Invoke(_callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, 3000 });
+                    invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, 3000 });
                 }
             }          
         }
@@ -133,7 +133,7 @@ namespace DotBPE.Extra
             }
             else
             {
-                var point = _serviceRouter.FindRouterPoint(key);
+                var point = this._serviceRouter.FindRouterPoint(key);
                 isLocal = point.RoutePointType == RoutePointType.Local;
                 CACHE_LOCALCALL.TryAdd(key, isLocal);
             }
