@@ -13,7 +13,7 @@ namespace Peach.EventArgs
 
         public DisconnectedEventArgs(ISocketContext<TMessage> context)
         {
-            this.Context = context;
+            Context = context;
         }
 
         public ISocketContext<TMessage> Context { get; set; }

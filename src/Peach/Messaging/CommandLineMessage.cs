@@ -43,8 +43,8 @@ namespace Peach.Messaging
         {
             Preconditions.CheckNotNull(cmdName, nameof(cmdName));  
           
-            this.Command = cmdName;
-            this.Parameters = parameters;
+            Command = cmdName;
+            Parameters = parameters;
         }
              
     }    

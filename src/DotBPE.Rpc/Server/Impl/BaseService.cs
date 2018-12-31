@@ -21,8 +21,8 @@ namespace DotBPE.Rpc.Server.Impl
         {
             var serviceType = typeof(TInterFace);
             var serviceAttribute = (RpcServiceAttribute) serviceType.GetCustomAttribute(typeof(RpcServiceAttribute), false);
-            this.ServiceId = serviceAttribute.ServiceId;
-            this.GroupName = serviceAttribute.GroupName;
+            ServiceId = serviceAttribute.ServiceId;
+            GroupName = serviceAttribute.GroupName;
            
             //注册Group和Message
             Initialize(serviceType);
@@ -32,11 +32,11 @@ namespace DotBPE.Rpc.Server.Impl
         {
             get
             {
-                if(this._serializer == null)
+                if(_serializer == null)
                 {
-                    this._serializer = Rpc.Internal.Environment.ServiceProvider.GetRequiredService<ISerializer>();
+                    _serializer = Internal.Environment.ServiceProvider.GetRequiredService<ISerializer>();
                 }
-                return this._serializer;
+                return _serializer;
             }
         }
 
@@ -51,7 +51,7 @@ namespace DotBPE.Rpc.Server.Impl
                     continue;
                 }
                 var methodAttr = tt as RpcMethodAttribute;
-                METHOD_CACHE.TryAdd($"{this.ServiceId}${methodAttr.MessageId}", method);
+                METHOD_CACHE.TryAdd($"{ServiceId}${methodAttr.MessageId}", method);
                 //TODO:注册分组路由
             }
         }
@@ -61,7 +61,7 @@ namespace DotBPE.Rpc.Server.Impl
         {
             get
             {
-                return $"{this.ServiceId}$0";
+                return $"{ServiceId}$0";
             }
         }
 
@@ -76,7 +76,7 @@ namespace DotBPE.Rpc.Server.Impl
                 if(pinfos.Length <1 || pinfos.Length>2){
                     new RpcException("rpc method parameters count error,must be [1,2]");
                 }
-                object arg1 = this.Serializer.Deserialize(req.Data,pinfos[0].ParameterType);
+                object arg1 = Serializer.Deserialize(req.Data,pinfos[0].ParameterType);
                 bool withResponse = req.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse;
 
                 object retVal;
@@ -124,7 +124,7 @@ namespace DotBPE.Rpc.Server.Impl
                     }
                     if (dataVal != null)
                     {
-                        resMsg.Data = this.Serializer.Serialize(dataVal);
+                        resMsg.Data = Serializer.Serialize(dataVal);
                     }
                 }
                 else
@@ -144,7 +144,7 @@ namespace DotBPE.Rpc.Server.Impl
         #region  IRpcService Method
         public override object Invoke(ushort messageId,params object[] args)
         {
-            string key = $"{this.ServiceId}${messageId}";
+            string key = $"{ServiceId}${messageId}";
 
             if (METHOD_CACHE.TryGetValue(key, out var m))
             {

@@ -16,6 +16,9 @@ namespace DotBPE.Rpc
     {
         public static IServiceCollection AddDotBPE(this IServiceCollection services)
         {
+            //add common
+            services.AddLogging();
+            services.AddOptions();
             services.AddAmpProtocol();
             services.AddDefaultImpl();
             return services;

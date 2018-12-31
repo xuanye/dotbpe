@@ -138,7 +138,7 @@ namespace DotBPE.Rpc.Client
             try
             {
                 //发送
-                await this._rpcClient.SendAsync(request);
+                await _rpcClient.SendAsync(request);
                 success = true;
             }
             catch (Exception exception)

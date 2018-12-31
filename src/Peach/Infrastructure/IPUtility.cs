@@ -103,7 +103,7 @@ namespace Peach.Infrastructure
             .SelectMany(p => p.UnicastAddresses)
             .Where(p => 
                 p.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork 
-                && !System.Net.IPAddress.IsLoopback(p.Address)
+                && !IPAddress.IsLoopback(p.Address)
                 && IsIntranet(p.Address)
             ).FirstOrDefault()?.Address;
         }
@@ -118,7 +118,7 @@ namespace Peach.Infrastructure
             .SelectMany(p => p.UnicastAddresses)
             .Where(p => 
                 p.Address.AddressFamily == System.Net.Sockets.AddressFamily.InterNetwork 
-                && !System.Net.IPAddress.IsLoopback(p.Address)
+                && !IPAddress.IsLoopback(p.Address)
                 && IsIntranet(p.Address)            
             );
                      

@@ -13,8 +13,8 @@ namespace Peach.EventArgs
 
         public MessageReceivedEventArgs(ISocketContext<TMessage> context, TMessage message)
         {
-            this.Context = context;
-            this.Message = message;
+            Context = context;
+            Message = message;
         }
 
         public ISocketContext<TMessage> Context { get; set; }

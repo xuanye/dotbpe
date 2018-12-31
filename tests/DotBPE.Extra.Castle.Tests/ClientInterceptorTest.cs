@@ -18,11 +18,10 @@ namespace DotBPE.Extra.Castle.Tests
         {
             var req = 1;
             var result1 = new RpcResult();
-            var result2 = new RpcResult<int>();
-            result2.Data = req;
+            var result2 = new RpcResult<int> {Data = req};
 
             var invoke = new Mock<ICallInvoker>();
-            invoke.Setup(x => x.AsyncCallWithOutResponse<int>
+            invoke.Setup(x => x.AsyncCallWithOutResponse
            (It.IsAny<string>(), It.IsAny<ushort>(), It.IsAny<ushort>(), It.IsAny<int>()))
             .Returns(Task.FromResult(result1));
 

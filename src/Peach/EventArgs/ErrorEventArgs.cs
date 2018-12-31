@@ -13,8 +13,8 @@ namespace Peach.EventArgs
 
         public ErrorEventArgs(ISocketContext<TMessage> context, Exception ex)
         {
-            this.Context = context;
-            this.Error = ex;
+            Context = context;
+            Error = ex;
         }
 
         public ISocketContext<TMessage> Context { get; set; }

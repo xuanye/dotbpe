@@ -8,7 +8,7 @@ namespace DotBPE.Rpc.Protocol
     public class AmpMessage : InvokeMessage, Peach.Messaging.IMessage
     {
 
-        public static AmpMessage HEARBEAT = AmpMessage.CreateRequestMessage(0,0,true);
+        public static AmpMessage HEARBEAT = CreateRequestMessage(0,0,true);
 
         /// <summary>
         /// 第一个版本为18个字节头固定长度
@@ -37,14 +37,14 @@ namespace DotBPE.Rpc.Protocol
         {
             get
             {
-                return this.ServiceId == 0 && this.MessageId == 0;
+                return ServiceId == 0 && MessageId == 0;
             }
         }
 
         public override int Length {
             get
             {
-                int hl = this.Version == 0 ? VERSION_0_HEAD_LENGTH : VERSION_1_HEAD_LENGTH;
+                int hl = Version == 0 ? VERSION_0_HEAD_LENGTH : VERSION_1_HEAD_LENGTH;
                 return hl + Data.Length;
             }
         }
@@ -66,7 +66,7 @@ namespace DotBPE.Rpc.Protocol
         /// </summary>
         public ushort MessageId { get; set; }
 
-        public override string MethodIdentifier { get { return $"{this.ServiceId}${this.MessageId}"; } }
+        public override string MethodIdentifier { get { return $"{ServiceId}${MessageId}"; } }
 
         /// <summary>
         /// 请求的序列号
@@ -78,7 +78,7 @@ namespace DotBPE.Rpc.Protocol
         /// </summary>
         public ushort ServiceId { get; set; }
 
-        public override string ServiceIdentifier { get { return $"{this.ServiceId}$0"; } }
+        public override string ServiceIdentifier { get { return $"{ServiceId}$0"; } }
 
         /// <summary>
         /// 协议版本0/1

@@ -20,26 +20,26 @@ namespace Peach.Tcp
             Protocol.IProtocol<TMessage> protocol
         ) : base(true)
         {
-            this._service = service;
-            this._protocol = protocol;
+            _service = service;
+            _protocol = protocol;
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            _service.OnConnected(new SocketContext<TMessage>(context.Channel, this._protocol));
+            _service.OnConnected(new SocketContext<TMessage>(context.Channel, _protocol));
             base.ChannelActive(context);
         }
 
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            _service.OnDisconnected(new SocketContext<TMessage>(context.Channel, this._protocol));
+            _service.OnDisconnected(new SocketContext<TMessage>(context.Channel, _protocol));
             base.ChannelInactive(context);
         }
 
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
             listener.ServiceReceive(msg);
-            _service.OnReceive(new SocketContext<TMessage>(context.Channel, this._protocol), msg);
+            _service.OnReceive(new SocketContext<TMessage>(context.Channel, _protocol), msg);
             listener.ServiceReceiveCompleted(msg);
         }
 
@@ -50,7 +50,7 @@ namespace Peach.Tcp
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
-            this._service.OnException(new SocketContext<TMessage>(context.Channel, this._protocol), ex);
+            _service.OnException(new SocketContext<TMessage>(context.Channel, _protocol), ex);
             listener.ServiceException(ex);
             context.CloseAsync(); //关闭连接
         }

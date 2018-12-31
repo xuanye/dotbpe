@@ -13,7 +13,7 @@ namespace DotBPE.Rpc
         }
         public RpcMethodAttribute(ushort messageId)
         {
-            this.MessageId = messageId;
+            MessageId = messageId;
         }
 
         public ushort MessageId { get; set; }

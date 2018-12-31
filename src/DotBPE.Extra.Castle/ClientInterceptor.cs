@@ -1,10 +1,7 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Linq;
-using System.Linq.Expressions;
 using System.Reflection;
-using System.Text;
 using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using DotBPE.Rpc;
@@ -86,16 +83,16 @@ namespace DotBPE.Extra
                     }
                     else
                     {
-                        throw new DotBPE.Rpc.Exceptions.RpcException("ReturnType must be Task or Task<RpcResult<T>>");
+                        throw new Rpc.Exceptions.RpcException("ReturnType must be Task or Task<RpcResult<T>>");
                     }
 
                     if (meta.WithNoResponse || meta.ResultType == null)
                     {
-                        meta.InvokeMethod = this._AsyncCaller1.MakeGenericMethod(req.GetType());
+                        meta.InvokeMethod = _AsyncCaller1.MakeGenericMethod(req.GetType());
                     }
                     else
                     {
-                        meta.InvokeMethod = this._AsyncCaller2.MakeGenericMethod(req.GetType(), meta.ResultType);
+                        meta.InvokeMethod = _AsyncCaller2.MakeGenericMethod(req.GetType(), meta.ResultType);
                     }
                 }
                 else{
@@ -111,18 +108,18 @@ namespace DotBPE.Extra
             if (meta.WithNoResponse)
             {
                 // AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
-                invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req });
+                invocation.ReturnValue = meta.InvokeMethod.Invoke(_callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req });
             }
             else
             {
                 //AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000)
                 if (invocation.Arguments.Length > 1)
                 {
-                    invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, invocation.Arguments[1] });
+                    invocation.ReturnValue = meta.InvokeMethod.Invoke(_callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, invocation.Arguments[1] });
                 }
                 else
                 {
-                    invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, 3000 });
+                    invocation.ReturnValue = meta.InvokeMethod.Invoke(_callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, 3000 });
                 }
             }          
         }
@@ -136,7 +133,7 @@ namespace DotBPE.Extra
             }
             else
             {
-                var point = this._serviceRouter.FindRouterPoint(key);
+                var point = _serviceRouter.FindRouterPoint(key);
                 isLocal = point.RoutePointType == RoutePointType.Local;
                 CACHE_LOCALCALL.TryAdd(key, isLocal);
             }

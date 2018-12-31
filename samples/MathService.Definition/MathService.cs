@@ -33,7 +33,7 @@ namespace MathService.Definition
             }
             result.Data.FooWord = fooResult.Data?.RetWord;
 
-            this._logger.LogInformation("A+B=C {A}+{B}={C}",req.A,req.B,result.Data.Total);
+            _logger.LogInformation("A+B=C {A}+{B}={C}",req.A,req.B,result.Data.Total);
             return result;
         }
     }
