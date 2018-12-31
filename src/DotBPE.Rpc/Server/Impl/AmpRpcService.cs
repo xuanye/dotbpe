@@ -8,7 +8,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotBPE.Rpc
+namespace DotBPE.Rpc.Server
 {
     public class AmpRpcService : AbsSocketService<AmpMessage>
     {
@@ -19,34 +19,34 @@ namespace DotBPE.Rpc
             ILogger<AmpRpcService> logger
             )
         {
-            _messageHandler = messageHandler;
-            _logger = logger;
+            this._messageHandler = messageHandler;
+            this._logger = logger;
         }
 
         public override void OnReceive(ISocketContext<AmpMessage> context, AmpMessage msg)
         {
-            _logger.LogInformation("receive message {id}", msg.Id);
+            this._logger.LogInformation("receive message {id}", msg.Id);
             Task.Run(async () =>
             {
-                await _messageHandler.ReceiveAsync(context, msg);
+                await this._messageHandler.ReceiveAsync(context, msg);
             }).AnyContext();
         }
 
         public override void OnException(ISocketContext<AmpMessage> context, Exception ex)
         {
-            _logger.LogError(ex, "server error occ");
+            this._logger.LogError(ex, "server error occ");
             base.OnException(context, ex);
         }
 
         public override void OnDisconnected(ISocketContext<AmpMessage> context)
         {
-            _logger.LogInformation("client disconnected from {address}", context.RemoteEndPoint.Address);
+            this._logger.LogInformation("client disconnected from {address}", context.RemoteEndPoint.Address);
             base.OnDisconnected(context);
         }
 
         public override void OnConnected(ISocketContext<AmpMessage> context)
         {
-            _logger.LogInformation("client connected from {address}", context.RemoteEndPoint.Address);
+            this._logger.LogInformation("client connected from {address}", context.RemoteEndPoint.Address);
             base.OnConnected(context);
         }
     }

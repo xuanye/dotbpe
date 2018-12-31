@@ -15,7 +15,7 @@ namespace DotBPE.Rpc.Client
         private readonly IClientMessageHandler<AmpMessage> _handler;
         public InprocContext(IClientMessageHandler<AmpMessage> handler)
         {
-            _handler = handler;
+            this._handler = handler;
             Id = ObjectId.GenerateNewId().ToString();
         }
         public bool Active { get { return true; } }
@@ -27,7 +27,7 @@ namespace DotBPE.Rpc.Client
 
         public Task SendAsync(AmpMessage message)
         {
-            _handler.RaiseReceive(message);
+            this._handler.RaiseReceive(message);
             return Task.CompletedTask;
         }
     }

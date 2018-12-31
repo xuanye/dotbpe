@@ -17,8 +17,8 @@ namespace DotBPE.Rpc.Server
             ILogger<DefaultServerMessageHandler> logger
             )
         {
-            _actorLocator = actorLocator;
-            _logger = logger;
+            this._actorLocator = actorLocator;
+            this._logger = logger;
         }
 
         public Task ReceiveAsync(ISocketContext<AmpMessage> context, AmpMessage message)
@@ -28,10 +28,10 @@ namespace DotBPE.Rpc.Server
                 return Task.CompletedTask;
             }
 
-            var actor = _actorLocator.LocateServiceActor(message.MethodIdentifier);
+            var actor = this._actorLocator.LocateServiceActor(message.MethodIdentifier);
             if (actor == null) // 找不到对应的执行程序
             {
-                _logger.LogError("the service actor is not found,MethodId={methodIdentifier}", message.MethodIdentifier);
+                this._logger.LogError("the service actor is not found,MethodId={methodIdentifier}", message.MethodIdentifier);
                 return NotFoundServiceActor.Default.ReceiveAsync(context,message);
             }
 

@@ -16,7 +16,7 @@ namespace DotBPE.Rpc.Client
         private IServiceProvider _provider;
         private ClientProxyFactory(IServiceCollection container)
         {
-            _container = container;
+            this._container = container;
         }
 
         public static IClientProxyFactory Create()
@@ -44,22 +44,22 @@ namespace DotBPE.Rpc.Client
 
         public IClientProxyFactory Configure<TOption>(Action<TOption> configureOptions) where TOption : class
         {
-            _container.Configure(configureOptions);
+            this._container.Configure(configureOptions);
             return this;
         }
 
         public IClientProxyFactory AddDependencyServices(Action<IServiceCollection> configServicesDelegate)
         {
-            configServicesDelegate(_container);
+            configServicesDelegate(this._container);
             return this;
         }
         public IClientProxy GetProxyInstance()
         {
-            if (_provider == null)
+            if (this._provider == null)
             {
-                _provider = _container.BuildServiceProvider();
+                this._provider = this._container.BuildServiceProvider();
             }
-            return _provider.GetRequiredService<IClientProxy>();
+            return this._provider.GetRequiredService<IClientProxy>();
         }
     }
 }

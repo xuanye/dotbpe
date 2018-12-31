@@ -11,17 +11,17 @@ namespace Peach.Hosting
         public PeachHostedService(IServerBootstrap server)
         {
             Preconditions.CheckNotNull(server, nameof(server));
-            _server = server;
+            this._server = server;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
-            return _server.StartAsync(cancellationToken);
+            return this._server.StartAsync(cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            return _server.StopAsync(cancellationToken);
+            return this._server.StopAsync(cancellationToken);
         }
        
     }

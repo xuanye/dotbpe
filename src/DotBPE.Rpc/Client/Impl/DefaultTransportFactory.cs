@@ -20,13 +20,13 @@ namespace DotBPE.Rpc.Client
 
         public DefaultTransportFactory(ISocketClient<AmpMessage> socket, IClientMessageHandler<AmpMessage> handler)
         {
-            _socket = socket;
-            _handler = handler;
-            _socket.OnIdleState += _socket_OnIdleState;
-            _socket.OnReceived += _socket_OnReceived;
-            _socket.OnConnected += _socket_OnConnected;
-            _socket.OnDisconnected += _socket_OnDisconnected;
-            _socket.OnError += _socket_OnError;
+            this._socket = socket;
+            this._handler = handler;
+            this._socket.OnIdleState += _socket_OnIdleState;
+            this._socket.OnReceived += _socket_OnReceived;
+            this._socket.OnConnected += _socket_OnConnected;
+            this._socket.OnDisconnected += _socket_OnDisconnected;
+            this._socket.OnError += _socket_OnError;
         }
 
 
@@ -49,7 +49,7 @@ namespace DotBPE.Rpc.Client
         /// <param name="e"></param>
         private void _socket_OnReceived(object sender, Peach.EventArgs.MessageReceivedEventArgs<AmpMessage> e)
         {
-            _handler.RaiseReceive(e.Message);
+            this._handler.RaiseReceive(e.Message);
         }
 
 
@@ -73,7 +73,7 @@ namespace DotBPE.Rpc.Client
 
         public async Task CloseTransportAsync(EndPoint endpoint)
         {
-            if (TRANSPORT_CACHE.TryRemove(endpoint, out var transport))
+            if (this.TRANSPORT_CACHE.TryRemove(endpoint, out var transport))
             {
                 await transport.CloseAsync(CancellationToken.None).AnyContext();              
             }
@@ -81,13 +81,13 @@ namespace DotBPE.Rpc.Client
 
         public async Task<ITransport<AmpMessage>> CreateTransport(EndPoint endpoint)
         {
-            if(TRANSPORT_CACHE.TryGetValue(endpoint,out var transport))
+            if(this.TRANSPORT_CACHE.TryGetValue(endpoint,out var transport))
             {
                 return transport;
             }
-            var context = await _socket.ConnectAsync(endpoint);
+            var context = await this._socket.ConnectAsync(endpoint);
             transport = new DefaultTransport(endpoint, context);
-            TRANSPORT_CACHE.AddOrUpdate(endpoint, transport, (k, old) => {
+            this.TRANSPORT_CACHE.AddOrUpdate(endpoint, transport, (k, old) => {
                 //Dispose
                 old.CloseAsync(CancellationToken.None).AnyContext();
                 return transport;
@@ -98,11 +98,12 @@ namespace DotBPE.Rpc.Client
 
         public async Task CloseAllTransports(CancellationToken cancellationToken)
         {
-            foreach(var transport in TRANSPORT_CACHE.Values)
+            foreach(var transport in this.TRANSPORT_CACHE.Values)
             {
                 await transport.CloseAsync(CancellationToken.None).AnyContext();
             }
-            TRANSPORT_CACHE.Clear(); 
+
+            this.TRANSPORT_CACHE.Clear(); 
         }
     }
 }

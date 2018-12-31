@@ -19,15 +19,15 @@ namespace Peach
         private readonly Protocol.IProtocol<TMessage> _protocol;
         public SocketContext(IChannel channel,Protocol.IProtocol<TMessage> protocol)
         {
-            _channel = channel;
-            _protocol = protocol;         
+            this._channel = channel;
+            this._protocol = protocol;         
            
         }
         public bool Active
         {
             get
             {
-                return _channel.Active;
+                return this._channel.Active;
             }
         }
 
@@ -35,21 +35,21 @@ namespace Peach
         {
             get
             {
-                return _channel;
+                return this._channel;
             }
         }
 
         public string Id
         {
             get {
-                return _channel.Id.AsLongText();
+                return this._channel.Id.AsLongText();
             }      
         }
 
         public IPEndPoint LocalEndPoint
         {
             get {
-                return (IPEndPoint)_channel.LocalAddress;
+                return (IPEndPoint) this._channel.LocalAddress;
             }
            
         }
@@ -57,17 +57,17 @@ namespace Peach
         public IPEndPoint RemoteEndPoint
         {
             get {
-                return (IPEndPoint)_channel.RemoteAddress;
+                return (IPEndPoint) this._channel.RemoteAddress;
             }
         }
         public Task SendAsync(TMessage message)
         {
-            if (_channel.IsWritable)
+            if (this._channel.IsWritable)
             {
                 var buffer = GetBuffer(message);
                 if(buffer != null)
                 {
-                    return _channel.WriteAndFlushAsync(buffer);
+                    return this._channel.WriteAndFlushAsync(buffer);
                 }                
             }
 
@@ -87,9 +87,9 @@ namespace Peach
                 return null;
             }
 
-            var buff = _channel.Allocator.Buffer(length);
+            var buff = this._channel.Allocator.Buffer(length);
             IBufferWriter writer = ByteBufferManager.CreateBufferWriter(buff);
-            _protocol.Pack(writer, message);
+            this._protocol.Pack(writer, message);
             return buff;
         }
     }

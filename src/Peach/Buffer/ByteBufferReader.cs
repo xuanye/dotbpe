@@ -11,55 +11,55 @@ namespace Peach.Buffer
 
         public ByteBufferReader(IByteBuffer buffer)
         {
-            _buffer = buffer;
+            this._buffer = buffer;
         }
 
         public byte ReadByte()
         {
-            return _buffer.ReadByte();
+            return this._buffer.ReadByte();
         }
 
         public void ReadBytes(byte[] dest)
         {
-            _buffer.ReadBytes(dest);
+            this._buffer.ReadBytes(dest);
         }
 
         public char ReadChar()
         {
-            return _buffer.ReadChar();
+            return this._buffer.ReadChar();
         }
 
         public double ReadDouble()
         {
-            return _buffer.ReadDouble();
+            return this._buffer.ReadDouble();
         }
 
         public int ReadInt()
         {
-            return _buffer.ReadInt();
+            return this._buffer.ReadInt();
         }
 
         public long ReadLong()
         {
-            return _buffer.ReadLong();
+            return this._buffer.ReadLong();
         }
 
         public short ReadShort()
         {
-            return _buffer.ReadShort();
+            return this._buffer.ReadShort();
         }
 
         public ushort ReadUShort()
         {
-            return _buffer.ReadUnsignedShort();
+            return this._buffer.ReadUnsignedShort();
         }
 
         public uint ReadUInt()
         {
-            return _buffer.ReadUnsignedInt();
+            return this._buffer.ReadUnsignedInt();
         }
 
-        public int ReadableBytes => _buffer.ReadableBytes;
+        public int ReadableBytes => this._buffer.ReadableBytes;
     }
 
    

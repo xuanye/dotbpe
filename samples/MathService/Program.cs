@@ -16,14 +16,13 @@ namespace MathService
         static void Main(string[] args)
         {
             var builder = new HostBuilder()
+             .UseRpcServer()
              .UseCastleDynamicProxy()
              .UseMessagePack()
              .ConfigureServices((context, services) =>
              {
-                 services.AddSingleton<IServiceActor<AmpMessage>, Definition.MathService>();
-                 services.AddSingleton<IServiceActor<AmpMessage>, Definition.FooService>();
+                 services.BindService<Definition.MathService>();
              })
-             .UseRpcServer()
              .ConfigureLogging(
                  logger =>
                  {

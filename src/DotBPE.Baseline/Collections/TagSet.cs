@@ -28,7 +28,7 @@ namespace DotBPE.Baseline.Collections
 
             public DisposableTag(TagSet items, string value)
             {
-                _items = items;
+                this._items = items;
                 Value = value;
             }
 
@@ -36,8 +36,7 @@ namespace DotBPE.Baseline.Collections
 
             public void Dispose()
             {
-                if (_items.Contains(Value))
-                    _items.Remove(Value);
+                if (this._items.Contains(Value)) this._items.Remove(Value);
             }
         }
     }

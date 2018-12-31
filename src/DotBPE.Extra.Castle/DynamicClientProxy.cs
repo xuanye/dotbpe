@@ -14,25 +14,25 @@ namespace DotBPE.Extra
 
         public DynamicClientProxy(IServiceProvider provider)
         {
-            _generator = provider.GetRequiredService<IProxyGenerator>();
-            _provider = provider;
+            this._generator = provider.GetRequiredService<IProxyGenerator>();
+            this._provider = provider;
         }
 
         protected IInterceptor ClientInterceptor
         {
             get
             {
-                if(_interceptor == null)
+                if(this._interceptor == null)
                 {
-                    _interceptor = _provider.GetRequiredService<ClientInterceptor>();
+                    this._interceptor = this._provider.GetRequiredService<ClientInterceptor>();
                 }
-                return _interceptor;
+                return this._interceptor;
             }
         }
 
         public TService Create<TService>() where TService : class
         {
-           return _generator.CreateInterfaceProxyWithoutTarget<TService>(ClientInterceptor);
+           return this._generator.CreateInterfaceProxyWithoutTarget<TService>(ClientInterceptor);
         }
 
        
