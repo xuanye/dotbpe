@@ -17,7 +17,7 @@ namespace DotBPE.Rpc.Server
         public DefaultServiceActorLocator(IServiceProvider serviceProvider)
         {
             var logFactory = serviceProvider.GetService<ILoggerFactory>();
-            _logger = logFactory.CreateLogger<DefaultServiceActorLocator>();
+            this._logger = logFactory.CreateLogger<DefaultServiceActorLocator>();
             Initialize(serviceProvider);
         }
 
@@ -33,7 +33,7 @@ namespace DotBPE.Rpc.Server
             }
             else
             {
-                _logger.LogWarning("no service actor was registered");
+                this._logger.LogWarning("no service actor was registered");
             }
         }
         /// <summary>

@@ -6,7 +6,7 @@ using System.Text;
 
 namespace DotBPE.Rpc.Internal
 {
-    public class Environment
+    public static class Environment
     {
         /// <summary>
         /// Gets application-wide logger used by internal.
@@ -35,6 +35,11 @@ namespace DotBPE.Rpc.Internal
             Preconditions.CheckNotNull(loggerFactory, nameof(LoggerFactory));
             if (LoggerFactory == null)
                 LoggerFactory = loggerFactory;
+        }
+
+        public static string GetAppBasePath()
+        {
+            return AppDomain.CurrentDomain.BaseDirectory;
         }
     }
 }

@@ -1,0 +1,1313 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ChangeListManager">
+    <list default="true" id="c20cb159-caaa-4403-be06-1f036a9925db" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/samples/MathService.Definition/ExtraCallFooMathService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/samples/MathService.Definition/FooService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/samples/MathService.Definition/IFooService.cs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/samples/MathService.Definition/IMathService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DotBPE/.idea/contentModel.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DotBPE/.idea/contentModel.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/.idea.DotBPE/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/.idea.DotBPE/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/MathService.Definition/MathService.Definition.csproj" beforeDir="false" afterPath="$PROJECT_DIR$/samples/MathService.Definition/MathService.Definition.csproj" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/MathService.Definition/MathService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/samples/MathService.Definition/MathService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/samples/MathService/Program.cs" beforeDir="false" afterPath="$PROJECT_DIR$/samples/MathService/Program.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Baseline/Collections/ObservableDictionary.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Baseline/Collections/ObservableDictionary.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Baseline/Collections/TagSet.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Baseline/Collections/TagSet.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Baseline/Utility/ObjectId.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Baseline/Utility/ObjectId.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Extra.Castle/ClientInterceptor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Extra.Castle/ClientInterceptor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Extra.Castle/DynamicClientProxy.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Extra.Castle/DynamicClientProxy.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/AmpRpcService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/AmpRpcService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/ClientProxyFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/ClientProxyFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultCallInvoker.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultCallInvoker.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultRpcClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultRpcClient.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultServiceRouter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultServiceRouter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultTransport.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultTransport.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultTransportFactory.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultTransportFactory.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/InprocContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/InprocContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Hosting/RpcHostedService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Hosting/RpcHostedService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Internal/Environment.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Internal/Environment.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/ABsServiceActor.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/ABsServiceActor.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/BaseService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/BaseService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/DefaultServerMessageHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/DefaultServerMessageHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/DefaultServiceActorLocator.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/DefaultServiceActorLocator.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/DotBPE.Rpc/ServiceCollectionExtensions.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/DotBPE.Rpc/ServiceCollectionExtensions.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/Buffer/ByteBufferReader.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/Buffer/ByteBufferReader.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/Buffer/ByteBufferWriter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/Buffer/ByteBufferWriter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/Config/TcpHostOption.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/Config/TcpHostOption.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/Hosting/PeachHostedService.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/Hosting/PeachHostedService.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/SocketContext.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/SocketContext.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/Tcp/ChannelDecodeHandler.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/Tcp/ChannelDecodeHandler.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/Tcp/TcpClient.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/Tcp/TcpClient.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/Tcp/TcpClientChannelHandlerAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/Tcp/TcpClientChannelHandlerAdapter.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/Tcp/TcpServerBootstrap.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/Tcp/TcpServerBootstrap.cs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/Peach/Tcp/TcpServerChannelHandlerAdapter.cs" beforeDir="false" afterPath="$PROJECT_DIR$/src/Peach/Tcp/TcpServerChannelHandlerAdapter.cs" afterDir="false" />
+    </list>
+    <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
+    <option name="SHOW_DIALOG" value="false" />
+    <option name="HIGHLIGHT_CONFLICTS" value="true" />
+    <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
+    <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="FileEditorManager">
+    <leaf SIDE_TABS_SIZE_LIMIT_KEY="300">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DiscoveryServiceRouter.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="19" selection-start-line="19" selection-end-line="19" />
+              <folding>
+                <marker date="1546158194478" expanded="false" signature="6:123" ph="..." />
+                <marker date="1546158194478" expanded="true" signature="152:418" ph="{...}" />
+                <marker date="1546158194478" expanded="true" signature="159:214" ph="/// 基于服务注册和发现的服务路由 ... " />
+                <marker date="1546158194478" expanded="true" signature="271:416" ph="{...}" />
+                <marker date="1546158194478" expanded="true" signature="341:410" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/BaseService.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="246">
+              <caret line="66" column="83" selection-start-line="66" selection-start-column="83" selection-end-line="66" selection-end-column="83" />
+              <folding>
+                <marker date="1546266743214" expanded="false" signature="6:381" ph="..." />
+                <marker date="1546266743214" expanded="true" signature="415:6562" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="501:6560" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="659:971" ph="{...}" />
+                <marker date="1546266743214" expanded="false" signature="981:1526" ph="Properties" />
+                <marker date="1546266743214" expanded="true" signature="1051:1110" ph="/// service id ... " />
+                <marker date="1546266743214" expanded="true" signature="1164:1231" ph="/// service group name ... " />
+                <marker date="1546266743214" expanded="true" signature="1577:2056" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="1689:2046" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="1822:1888" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="2131:2496" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="2326:2447" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="2506:2638" ph="///  Remote Call ... " />
+                <marker date="1546266743214" expanded="true" signature="2714:5876" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="3005:5725" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="3151:3276" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="3556:4021" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="3647:3768" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="3793:4003" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="4042:4137" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="4237:4308" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="4421:4625" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="4671:5552" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="4904:5060" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="5274:5379" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="5421:5534" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="5573:5711" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="5742:5838" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="5886:6554" ph="IRpcService Method" />
+                <marker date="1546266743214" expanded="true" signature="5923:6155" ph="///  ... " />
+                <marker date="1546266743214" expanded="true" signature="6233:6534" ph="{...}" />
+                <marker date="1546266743214" expanded="true" signature="6379:6452" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/samples/MathService/Program.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="240">
+              <caret line="24" column="15" lean-forward="true" selection-start-line="24" selection-start-column="15" selection-end-line="24" selection-end-column="15" />
+              <folding>
+                <marker date="1546265597788" expanded="false" signature="6:275" ph="..." />
+                <marker date="1546265597788" expanded="true" signature="298:887" ph="{...}" />
+                <marker date="1546265597788" expanded="true" signature="318:885" ph="{...}" />
+                <marker date="1546265597788" expanded="true" signature="364:879" ph="{...}" />
+                <marker date="1546265597788" expanded="true" signature="571:666" ph="{...}" />
+                <marker date="1546265597788" expanded="true" signature="726:806" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/ServiceCollectionExtensions.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="523">
+              <caret line="108" column="86" selection-start-line="108" selection-start-column="86" selection-end-line="108" selection-end-column="86" />
+              <folding>
+                <marker date="1546264643559" expanded="false" signature="6:365" ph="..." />
+                <marker date="1546264643559" expanded="true" signature="459:5492" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="513:5490" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="604:826" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="984:1085" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="1241:1770" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="1498:1611" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="1656:1730" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="1954:2067" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="2246:2354" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="2554:4211" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="2855:2940" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="2954:3012" ph="/* 扫描注册所有的ServiceRegistry ... */" />
+                <marker date="1546264643559" expanded="true" signature="3304:3811" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="3415:3797" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="3522:3612" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="3692:3779" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="3860:4010" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="4055:4172" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="4303:4586" ph="{...}" />
+                <marker date="1546264643559" expanded="true" signature="4678:5483" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/ServiceActorCollection.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="630">
+              <caret line="43" column="1" selection-start-line="43" selection-start-column="1" selection-end-line="43" selection-end-column="1" />
+              <folding>
+                <marker date="1546265336352" expanded="false" signature="6:99" ph="..." />
+                <marker date="1546265336352" expanded="true" signature="121:1113" ph="{...}" />
+                <marker date="1546265336352" expanded="true" signature="163:1111" ph="{...}" />
+                <marker date="1546265336352" expanded="true" signature="322:444" ph="{...}" />
+                <marker date="1546265336352" expanded="true" signature="545:710" ph="{...}" />
+                <marker date="1546265336352" expanded="true" signature="604:675" ph="{...}" />
+                <marker date="1546265336352" expanded="true" signature="823:903" ph="{...}" />
+                <marker date="1546265336352" expanded="true" signature="943:989" ph="{...}" />
+                <marker date="1546265336352" expanded="true" signature="1054:1105" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Internal/Environment.cs">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="534">
+              <caret line="40" column="9" lean-forward="true" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
+              <folding>
+                <marker date="1546262875779" expanded="false" signature="6:130" ph="..." />
+                <marker date="1546262875779" expanded="true" signature="161:1445" ph="{...}" />
+                <marker date="1546262875779" expanded="true" signature="199:1443" ph="{...}" />
+                <marker date="1546262875779" expanded="true" signature="214:348" ph="/// Gets application-wide logger used by internal. ... " />
+                <marker date="1546262875779" expanded="true" signature="509:656" ph="/// Sets the service provider. ... " />
+                <marker date="1546262875779" expanded="true" signature="736:930" ph="{...}" />
+                <marker date="1546262875779" expanded="true" signature="940:1054" ph="/// Sets the application-wide logger that should be used by internal. ... " />
+                <marker date="1546262875779" expanded="true" signature="1128:1312" ph="{...}" />
+                <marker date="1546262875779" expanded="true" signature="1359:1437" ph="{...}" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+    </leaf>
+  </component>
+  <component name="Git.Settings">
+    <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$" />
+  </component>
+  <component name="HighlightingSettingsPerFile">
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/ServiceActorDescriptor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/ServiceActorCollection.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DiscoveryServiceRouter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultRpcClient.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/HostBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultServiceRouter.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/samples/MathService.Definition/MathService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultCallInvoker.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/IRpcService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/samples/MathService/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/tests/DotBPE.Rpc.Tests/UnitTest1.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/AmpRpcService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/IServiceActor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Baseline/Extensions/StringExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/BaseService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/HeartbeatActor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/ServiceCollectionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/NotFoundServiceActor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/DefaultServerMessageHandler.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/MessagePackSerializer.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/ABsServiceActor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Internal/Environment.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.Castle/ClientInterceptor.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/ServiceCollectionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/samples/MathClient/Program.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/HostBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/ClientProxyFactoryExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/tests/DotBPE.Extra.Castle.Tests/ClientInterceptorTest.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/ServiceCollectionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/HostBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/samples/MathService.Definition/IFooService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/samples/MathService.Definition/ExtraCallFooMathService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Peach/Tcp/TcpServerBootstrap.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/ClientProxyFactoryExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.Castle/HostBuilderExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/samples/MathService.Definition/IMathService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.Castle/ClientProxyFactoryExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/samples/MathService.Definition/FooService.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/ClientProxyFactoryExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/ClientProxyFactory.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/IClientProxyFactory.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.Castle/ServiceCollectionExtensions.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/Peach/Config/TcpHostOption.cs" root0="FORCE_HIGHLIGHTING" />
+    <setting file="file://$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/ProtobufSerializer.cs" root0="FORCE_HIGHLIGHTING" />
+  </component>
+  <component name="IdeDocumentHistory">
+    <option name="CHANGED_PATHS">
+      <list>
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DiscoveryServiceRouter.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/IRpcService.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/HeartbeatActor.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/NotFoundServiceActor.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultServiceRouter.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/DefaultServerMessageHandler.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.Castle/ClientInterceptor.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/MessagePackSerializer.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/ProtobufSerializer.cs" />
+        <option value="$PROJECT_DIR$/tests/DotBPE.Extra.Castle.Tests/ClientInterceptorTest.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultRpcClient.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/IClientBuilder.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Client/IClientProxyFactory.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.Castle/ServiceCollectionExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/ClientProxyFactoryExtension.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/ClientProxyFactoryExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.Castle/ClientProxyFactoryExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.Castle/HostBuilderExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/ClientProxyFactoryExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/HostBuilderExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/ServiceCollectionExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/ServiceCollectionExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/HostBuilderExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/ClientProxyFactoryExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/ClientProxyFactory.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/HostBuilderExtensions.cs" />
+        <option value="$PROJECT_DIR$/samples/MathClient/Program.cs" />
+        <option value="$PROJECT_DIR$/samples/MathService.Definition/IMathService.cs" />
+        <option value="$PROJECT_DIR$/samples/MathService.Definition/IFooService.cs" />
+        <option value="$PROJECT_DIR$/samples/MathService.Definition/FooService.cs" />
+        <option value="$PROJECT_DIR$/samples/MathService.Definition/EtraCallFooMathService.cs" />
+        <option value="$PROJECT_DIR$/samples/MathService.Definition/ExtraCallFooMathService.cs" />
+        <option value="$PROJECT_DIR$/samples/MathService.Definition/MathService.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/AbsServiceActor.cs" />
+        <option value="$PROJECT_DIR$/src/Peach/Config/TcpHostOption.cs" />
+        <option value="$PROJECT_DIR$/src/Peach/Tcp/TcpServerBootstrap.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Internal/Environment.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/ServiceCollectionExtensions.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/ServiceActorDescriptor.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/ServiceActorCollection.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/AmpRpcService.cs" />
+        <option value="$PROJECT_DIR$/samples/MathService/Program.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Server/ServiceActorDescriptor.cs" />
+        <option value="$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/BaseService.cs" />
+      </list>
+    </option>
+  </component>
+  <component name="ProjectFrameBounds" extendedState="6" fullScreen="true">
+    <option name="y" value="23" />
+    <option name="width" value="1440" />
+    <option name="height" value="877" />
+  </component>
+  <component name="ProjectLevelVcsManager">
+    <ConfirmationsSetting value="1" id="Add" />
+  </component>
+  <component name="ProjectView">
+    <navigator currentView="SolutionExplorer" proportions="" version="1">
+      <foldersAlwaysOnTop value="true" />
+    </navigator>
+    <panes>
+      <pane id="FileSystemExplorer" />
+      <pane id="AssemblyExplorer" />
+      <pane id="SolutionExplorer">
+        <subPane>
+          <expand>
+            <path>
+              <item name="Project" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="DotBPE" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="Project" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="DotBPE" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="samples" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="Project" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="DotBPE" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="src" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="Project" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="DotBPE" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="src" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="DotBPE.Rpc" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="Project" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="DotBPE" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="src" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="DotBPE.Rpc" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Server" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+            <path>
+              <item name="Project" type="784c90a0:SolutionExplorerRootNode" />
+              <item name="DotBPE" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="src" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="DotBPE.Rpc" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Server" type="24d0babc:SolutionExplorerModelNode" />
+              <item name="Impl" type="24d0babc:SolutionExplorerModelNode" />
+            </path>
+          </expand>
+          <select />
+        </subPane>
+        <option name="show-all-files" value="false" />
+      </pane>
+    </panes>
+  </component>
+  <component name="PropertiesComponent">
+    <property name="Rider.DefaultBreakpoints.AreToggled" value="true" />
+    <property name="Rider.ProjectViewActivator.IsNotFirstRun" value="true" />
+    <property name="WebServerToolWindowFactoryState" value="false" />
+    <property name="editor.config.ad.shown" value="true" />
+    <property name="full.screen.before.presentation.mode" value="true" />
+    <property name="nodejs_interpreter_path.stuck_in_default_project" value="undefined stuck path" />
+    <property name="nodejs_npm_path_reset_for_default_project" value="true" />
+    <property name="settings.editor.selected.configurable" value="preferences.sourceCode.C#" />
+  </component>
+  <component name="RunDashboard">
+    <option name="ruleStates">
+      <list>
+        <RuleState>
+          <option name="name" value="ConfigurationTypeDashboardGroupingRule" />
+        </RuleState>
+        <RuleState>
+          <option name="name" value="StatusDashboardGroupingRule" />
+        </RuleState>
+      </list>
+    </option>
+  </component>
+  <component name="RunManager">
+    <configuration name="Default" type="DotNetProject" factoryName=".NET Project">
+      <option name="EXE_PATH" value="$PROJECT_DIR$/samples/MathService/bin/Debug/netcoreapp2.2/MathService.dll" />
+      <option name="PROGRAM_PARAMETERS" value="" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$/samples/MathService" />
+      <option name="PASS_PARENT_ENVS" value="1" />
+      <envs>
+        <env name="ASPNETCORE_ENVIRONMENT" value="Development" />
+        <env name="ASPNETCORE_URLS" value="http://localhost:5000" />
+      </envs>
+      <option name="USE_EXTERNAL_CONSOLE" value="0" />
+      <option name="USE_MONO" value="0" />
+      <option name="RUNTIME_ARGUMENTS" value="" />
+      <option name="PROJECT_PATH" value="$PROJECT_DIR$/samples/MathService/MathService.csproj" />
+      <option name="PROJECT_EXE_PATH_TRACKING" value="1" />
+      <option name="PROJECT_ARGUMENTS_TRACKING" value="1" />
+      <option name="PROJECT_WORKING_DIRECTORY_TRACKING" value="1" />
+      <option name="PROJECT_KIND" value="DotNetCore" />
+      <option name="PROJECT_TFM" value=".NETCoreApp,Version=v2.2" />
+      <browser url="http://localhost:5000" />
+      <method v="2">
+        <option name="Build" enabled="true" />
+      </method>
+    </configuration>
+  </component>
+  <component name="SvnConfiguration">
+    <configuration />
+  </component>
+  <component name="TaskManager">
+    <task active="true" id="Default" summary="Default task">
+      <changelist id="c20cb159-caaa-4403-be06-1f036a9925db" name="Default Changelist" comment="" />
+      <created>1546142338605</created>
+      <option name="number" value="Default" />
+      <option name="presentableId" value="Default" />
+      <updated>1546142338605</updated>
+      <workItem from="1546142341954" duration="23000" />
+      <workItem from="1546142514851" duration="3232000" />
+      <workItem from="1546230121793" duration="7054000" />
+      <workItem from="1546252390759" duration="1681000" />
+      <workItem from="1546254390358" duration="1922000" />
+      <workItem from="1546260121653" duration="6457000" />
+    </task>
+    <servers />
+  </component>
+  <component name="TimeTrackingManager">
+    <option name="totallyTimeSpent" value="20369000" />
+  </component>
+  <component name="TodoView">
+    <todo-panel id="selected-file">
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+    <todo-panel id="all">
+      <are-packages-shown value="true" />
+      <is-autoscroll-to-source value="true" />
+    </todo-panel>
+  </component>
+  <component name="ToolWindowManager">
+    <frame x="0" y="0" width="1440" height="900" extended-state="6" />
+    <editor active="true" />
+    <layout>
+      <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
+      <window_info id="Image Layers" order="1" />
+      <window_info id="Capture Tool" order="2" />
+      <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Build" order="0" sideWeight="0.49928468" weight="0.29362214" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Find" order="2" />
+      <window_info anchor="bottom" id="Run" order="3" weight="0.32939914" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="7" weight="0.32824427" />
+      <window_info anchor="bottom" id="NuGet" order="8" weight="0.32939914" />
+      <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="bottom" id="Database Changes" order="11" />
+      <window_info anchor="bottom" id="Unit Tests" order="12" sideWeight="0.49928468" weight="0.32832617" />
+      <window_info anchor="bottom" id="Terminal" order="13" />
+      <window_info anchor="bottom" id="Event Log" order="14" sideWeight="0.5007153" side_tool="true" weight="0.32832617" />
+      <window_info anchor="bottom" id="Performance Profiler" order="15" weight="0.32939914" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info active="true" anchor="right" content_ui="combo" id="Project" order="4" visible="true" weight="0.23785715" />
+      <window_info anchor="right" id="Errors In Solution" order="5" weight="0.3292857" />
+      <window_info anchor="right" id="Database" order="6" />
+      <window_info anchor="right" id="Unit Tests Coverage" order="7" />
+    </layout>
+    <layout-to-restore>
+      <window_info id="Structure" order="0" side_tool="true" weight="0.25" />
+      <window_info id="Image Layers" order="1" />
+      <window_info id="Capture Tool" order="2" />
+      <window_info id="Favorites" order="3" side_tool="true" />
+      <window_info anchor="bottom" id="Build" order="0" sideWeight="0.49928468" weight="0.3120482" />
+      <window_info anchor="bottom" id="Message" order="1" />
+      <window_info anchor="bottom" id="Find" order="2" />
+      <window_info anchor="bottom" id="Run" order="3" />
+      <window_info anchor="bottom" id="Debug" order="4" weight="0.4" />
+      <window_info anchor="bottom" id="Cvs" order="5" weight="0.25" />
+      <window_info anchor="bottom" id="Inspection" order="6" weight="0.4" />
+      <window_info anchor="bottom" id="TODO" order="7" />
+      <window_info anchor="bottom" id="NuGet" order="8" />
+      <window_info anchor="bottom" id="Docker" order="9" show_stripe_button="false" />
+      <window_info anchor="bottom" id="Version Control" order="10" />
+      <window_info anchor="bottom" id="Database Changes" order="11" />
+      <window_info anchor="bottom" id="Unit Tests" order="12" sideWeight="0.49928468" weight="0.32891566" />
+      <window_info anchor="bottom" id="Terminal" order="13" />
+      <window_info anchor="bottom" id="Event Log" order="14" sideWeight="0.5007153" side_tool="true" weight="0.32891566" />
+      <window_info anchor="right" id="Commander" internal_type="SLIDING" order="0" type="SLIDING" weight="0.4" />
+      <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
+      <window_info anchor="right" content_ui="combo" id="Hierarchy" order="2" weight="0.25" />
+      <window_info anchor="right" id="Capture Analysis" order="3" />
+      <window_info anchor="right" id="Errors In Solution" order="4" weight="0.3297568" />
+      <window_info anchor="right" id="Database" order="5" />
+      <window_info active="true" anchor="right" content_ui="combo" id="Project" order="6" visible="true" weight="0.26357144" />
+    </layout-to-restore>
+  </component>
+  <component name="TypeScriptGeneratedFilesManager">
+    <option name="version" value="1" />
+  </component>
+  <component name="UnityProjectConfiguration" hasMinimizedUI="false" />
+  <component name="UnityUnitTestConfiguration" currentTestLauncher="NUnit" />
+  <component name="XDebuggerManager">
+    <breakpoint-manager>
+      <breakpoints>
+        <breakpoint enabled="true" suspend="NONE" type="DotNet Exception Breakpoints">
+          <properties exception="System.Threading.ThreadAbortException" displayValue="System.Threading.ThreadAbortException" />
+          <option name="timeStamp" value="1" />
+        </breakpoint>
+        <line-breakpoint enabled="true" type="DotNet Breakpoints">
+          <url>file://$PROJECT_DIR$/src/DotBPE.Rpc/ServiceCollectionExtensions.cs</url>
+          <line>89</line>
+          <properties documentPath="$PROJECT_DIR$/src/DotBPE.Rpc/ServiceCollectionExtensions.cs" initialLine="89">
+            <startOffsets>
+              <option value="3384" />
+            </startOffsets>
+            <endOffsets>
+              <option value="3415" />
+            </endOffsets>
+          </properties>
+          <option name="timeStamp" value="2" />
+        </line-breakpoint>
+      </breakpoints>
+    </breakpoint-manager>
+  </component>
+  <component name="editorHistoryManager">
+    <entry file="file://$PROJECT_DIR$/samples/mathService/Math.Protocols/obj/Debug/netstandard2.0/Math.Protocols.AssemblyInfo.cs" />
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/IRpcService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="90">
+          <caret line="8" column="38" selection-start-line="8" selection-start-column="38" selection-end-line="8" selection-end-column="38" />
+          <folding>
+            <marker date="1546158536582" expanded="false" signature="6:66" ph="..." />
+            <marker date="1546158536582" expanded="true" signature="88:199" ph="{...}" />
+            <marker date="1546158536582" expanded="true" signature="123:197" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/HeartbeatActor.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="16" column="45" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="45" />
+          <folding>
+            <marker date="1546158559827" expanded="false" signature="6:159" ph="..." />
+            <marker date="1546158559827" expanded="true" signature="188:698" ph="{...}" />
+            <marker date="1546158559827" expanded="true" signature="250:696" ph="{...}" />
+            <marker date="1546158559827" expanded="true" signature="406:465" ph="{...}" />
+            <marker date="1546158559827" expanded="true" signature="555:690" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/NotFoundServiceActor.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="150">
+          <caret line="16" column="45" selection-start-line="16" selection-start-column="45" selection-end-line="16" selection-end-column="45" />
+          <folding>
+            <marker date="1546158572284" expanded="false" signature="6:136" ph="..." />
+            <marker date="1546158572284" expanded="true" signature="165:1181" ph="{...}" />
+            <marker date="1546158572284" expanded="true" signature="233:1179" ph="{...}" />
+            <marker date="1546158572284" expanded="true" signature="487:664" ph="{...}" />
+            <marker date="1546158572284" expanded="true" signature="760:1173" ph="{...}" />
+            <marker date="1546158572284" expanded="true" signature="832:1065" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/MessagePackSerializer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="360">
+          <caret line="27" column="88" selection-start-line="27" selection-start-column="88" selection-end-line="27" selection-end-column="88" />
+          <folding>
+            <marker date="1546162209781" expanded="false" signature="6:84" ph="..." />
+            <marker date="1546162209781" expanded="true" signature="127:802" ph="{...}" />
+            <marker date="1546162209781" expanded="true" signature="182:800" ph="{...}" />
+            <marker date="1546162209781" expanded="true" signature="234:330" ph="{...}" />
+            <marker date="1546162209781" expanded="true" signature="389:498" ph="{...}" />
+            <marker date="1546162209781" expanded="true" signature="542:632" ph="{...}" />
+            <marker date="1546162209781" expanded="true" signature="678:794" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/ProtobufSerializer.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="52">
+          <caret line="18" column="52" selection-start-line="18" selection-start-column="52" selection-end-line="18" selection-end-column="52" />
+          <folding>
+            <marker date="1546162526905" expanded="false" signature="6:192" ph="..." />
+            <marker date="1546162526905" expanded="true" signature="216:2240" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="268:2238" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="490:605" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="649:716" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="790:1251" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="879:1153" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="1317:1624" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="1428:1571" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="1670:1742" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="1807:2232" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="1896:2134" ph="{...}" />
+            <marker date="1546162526905" expanded="true" signature="1998:2074" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/DotBPE.Rpc.Tests/UnitTest1.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="105">
+          <caret line="8" column="20" selection-start-line="8" selection-start-column="20" selection-end-line="8" selection-end-column="20" />
+          <folding>
+            <marker date="1546077738430" expanded="false" signature="6:26" ph="..." />
+            <marker date="1546077738430" expanded="true" signature="54:161" ph="{...}" />
+            <marker date="1546077738430" expanded="true" signature="83:159" ph="{...}" />
+            <marker date="1546077738430" expanded="true" signature="132:153" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/tests/DotBPE.Extra.Castle.Tests/ClientInterceptorTest.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="135">
+          <caret line="9" column="12" lean-forward="true" selection-start-line="9" selection-start-column="12" selection-end-line="9" selection-end-column="12" />
+          <folding>
+            <marker date="1546228867215" expanded="true" signature="6:202" ph="..." />
+            <marker date="1546228867215" expanded="true" signature="239:2369" ph="{...}" />
+            <marker date="1546228867215" expanded="true" signature="280:2159" ph="{...}" />
+            <marker date="1546228867215" expanded="true" signature="354:2153" ph="{...}" />
+            <marker date="1546228867215" expanded="true" signature="2216:2362" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/DefaultServerMessageHandler.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="231">
+          <caret line="30" column="86" selection-start-line="30" selection-start-column="86" selection-end-line="30" selection-end-column="86" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultServiceRouter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="614">
+          <caret line="157" column="54" selection-start-line="157" selection-start-column="54" selection-end-line="157" selection-end-column="54" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultRpcClient.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="-312">
+          <caret column="2" selection-start-column="2" selection-end-column="2" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.Castle/ClientInterceptor.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="2007">
+          <caret line="135" column="67" selection-start-line="135" selection-start-column="67" selection-end-line="135" selection-end-column="67" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/IClientBuilder.cs" />
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.Castle/ServiceCollectionExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state>
+          <caret column="47" selection-start-column="47" selection-end-column="47" />
+          <folding>
+            <marker date="1546244427656" expanded="true" signature="6:99" ph="..." />
+            <marker date="1546244427656" expanded="true" signature="123:502" ph="{...}" />
+            <marker date="1546244427656" expanded="true" signature="177:500" ph="{...}" />
+            <marker date="1546244427656" expanded="true" signature="280:494" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/IClientProxyFactory.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="8" lean-forward="true" selection-start-line="8" selection-end-line="8" />
+          <folding>
+            <marker date="1546244400601" expanded="true" signature="6:61" ph="..." />
+            <marker date="1546244400601" expanded="true" signature="90:397" ph="{...}" />
+            <marker date="1546244400601" expanded="true" signature="133:395" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/ClientProxyFactoryExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="544">
+          <caret line="34" column="9" selection-start-line="14" selection-start-column="7" selection-end-line="34" selection-end-column="9" />
+          <folding>
+            <marker date="1546245006928" expanded="true" signature="6:83" ph="..." />
+            <marker date="1546245006928" expanded="true" signature="105:1108" ph="{...}" />
+            <marker date="1546245006928" expanded="true" signature="160:1106" ph="{...}" />
+            <marker date="1546245006928" expanded="true" signature="280:365" ph="{...}" />
+            <marker date="1546245006928" expanded="true" signature="492:1100" ph="{...}" />
+            <marker date="1546245006928" expanded="true" signature="563:1087" ph="{...}" />
+            <marker date="1546245006928" expanded="true" signature="619:728" ph="{...}" />
+            <marker date="1546245006928" expanded="true" signature="848:1017" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.Castle/HostBuilderExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="8" column="89" selection-start-line="8" selection-start-column="89" selection-end-line="8" selection-end-column="89" />
+          <folding>
+            <marker date="1546245548332" expanded="true" signature="59:314" ph="{...}" />
+            <marker date="1546245548332" expanded="true" signature="107:312" ph="{...}" />
+            <marker date="1546245548332" expanded="true" signature="195:305" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/ClientProxyFactoryExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="8" column="86" selection-start-line="8" selection-start-column="86" selection-end-line="8" selection-end-column="86" />
+          <folding>
+            <marker date="1546245673936" expanded="true" signature="48:320" ph="{...}" />
+            <marker date="1546245673936" expanded="true" signature="103:318" ph="{...}" />
+            <marker date="1546245673936" expanded="true" signature="198:311" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/HostBuilderExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="8" column="78" selection-start-line="8" selection-start-column="78" selection-end-line="8" selection-end-column="78" />
+          <folding>
+            <marker date="1546245701518" expanded="true" signature="59:300" ph="{...}" />
+            <marker date="1546245701518" expanded="true" signature="107:298" ph="{...}" />
+            <marker date="1546245701518" expanded="true" signature="188:291" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.MessagePack/ServiceCollectionExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="16">
+          <caret line="1" column="17" selection-start-line="1" selection-start-column="17" selection-end-line="1" selection-end-column="17" />
+          <folding>
+            <marker date="1546245729177" expanded="true" signature="6:65" ph="..." />
+            <marker date="1546245729177" expanded="true" signature="89:366" ph="{...}" />
+            <marker date="1546245729177" expanded="true" signature="143:364" ph="{...}" />
+            <marker date="1546245729177" expanded="true" signature="239:358" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/ServiceCollectionExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="128">
+          <caret line="9" column="27" selection-start-line="9" selection-start-column="27" selection-end-line="9" selection-end-column="27" />
+          <folding>
+            <marker date="1546245768257" expanded="false" signature="6:65" ph="..." />
+            <marker date="1546245768257" expanded="true" signature="89:360" ph="{...}" />
+            <marker date="1546245768257" expanded="true" signature="143:358" ph="{...}" />
+            <marker date="1546245768257" expanded="true" signature="236:352" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/HostBuilderExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="96">
+          <caret line="6" column="46" selection-start-line="6" selection-start-column="35" selection-end-line="6" selection-end-column="46" />
+          <folding>
+            <marker date="1546245819387" expanded="true" signature="59:294" ph="{...}" />
+            <marker date="1546245819387" expanded="true" signature="107:292" ph="{...}" />
+            <marker date="1546245819387" expanded="true" signature="185:285" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/HostBuilderExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="288">
+          <caret line="28" column="45" selection-start-line="28" selection-start-column="45" selection-end-line="28" selection-end-column="45" />
+          <folding>
+            <marker date="1546249139950" expanded="true" signature="363:2275" ph="{...}" />
+            <marker date="1546249139950" expanded="true" signature="411:2273" ph="{...}" />
+            <marker date="1546249139950" expanded="true" signature="604:1323" ph="{...}" />
+            <marker date="1546249139950" expanded="true" signature="671:1311" ph="{...}" />
+            <marker date="1546249139950" expanded="true" signature="743:1094" ph="{...}" />
+            <marker date="1546249139950" expanded="false" signature="1333:1675" ph="register services" />
+            <marker date="1546249139950" expanded="true" signature="1479:1656" ph="{...}" />
+            <marker date="1546249139950" expanded="true" signature="1546:1644" ph="{...}" />
+            <marker date="1546249139950" expanded="false" signature="1686:2267" ph="client route policy" />
+            <marker date="1546249139950" expanded="true" signature="1791:1968" ph="{...}" />
+            <marker date="1546249139950" expanded="true" signature="1858:1956" ph="{...}" />
+            <marker date="1546249139950" expanded="true" signature="2059:2248" ph="{...}" />
+            <marker date="1546249139950" expanded="true" signature="2126:2236" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.Protobuf/ClientProxyFactoryExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="144">
+          <caret line="8" column="83" selection-start-line="8" selection-start-column="83" selection-end-line="8" selection-end-column="83" />
+          <folding>
+            <marker date="1546249139872" expanded="true" signature="48:314" ph="{...}" />
+            <marker date="1546249139872" expanded="true" signature="103:312" ph="{...}" />
+            <marker date="1546249139872" expanded="true" signature="195:305" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/ClientProxyFactory.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="222">
+          <caret line="40" column="35" selection-start-line="39" selection-start-column="11" selection-end-line="40" selection-end-column="35" />
+          <folding>
+            <marker date="1546252769516" expanded="false" signature="6:270" ph="..." />
+            <marker date="1546252769516" expanded="true" signature="299:2499" ph="{...}" />
+            <marker date="1546252769516" expanded="true" signature="357:2497" ph="{...}" />
+            <marker date="1546252769516" expanded="true" signature="528:589" ph="{...}" />
+            <marker date="1546252769516" expanded="true" signature="641:752" ph="{...}" />
+            <marker date="1546252769516" expanded="true" signature="832:1793" ph="{...}" />
+            <marker date="1546252769516" expanded="true" signature="1904:2006" ph="{...}" />
+            <marker date="1546252769516" expanded="true" signature="2115:2213" ph="{...}" />
+            <marker date="1546252769516" expanded="true" signature="2260:2491" ph="{...}" />
+            <marker date="1546252769516" expanded="true" signature="2310:2411" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Extra.Castle/ClientProxyFactoryExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="126">
+          <caret line="7" column="9" selection-start-line="7" selection-start-column="9" selection-end-line="7" selection-end-column="9" />
+          <folding>
+            <marker date="1546249139825" expanded="true" signature="48:334" ph="{...}" />
+            <marker date="1546249139825" expanded="true" signature="103:332" ph="{...}" />
+            <marker date="1546249139825" expanded="true" signature="205:325" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/samples/MathClient/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="216">
+          <caret line="27" column="78" selection-start-line="27" selection-start-column="69" selection-end-line="27" selection-end-column="78" />
+          <folding>
+            <marker date="1546249139794" expanded="false" signature="6:429" ph="..." />
+            <marker date="1546249139794" expanded="true" signature="452:1589" ph="{...}" />
+            <marker date="1546249139794" expanded="true" signature="479:1587" ph="{...}" />
+            <marker date="1546249139794" expanded="true" signature="525:1581" ph="{...}" />
+            <marker date="1546249139794" expanded="true" signature="962:1481" ph="{...}" />
+            <marker date="1546249139794" expanded="true" signature="1253:1402" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/samples/MathService.Definition/IMathService.cs" />
+    <entry file="file://$PROJECT_DIR$/samples/MathService.Definition/IFooService.cs" />
+    <entry file="file://$PROJECT_DIR$/samples/MathService.Definition/MathService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="12" column="5" selection-start-line="12" selection-start-column="5" selection-end-line="12" selection-end-column="5" />
+          <folding>
+            <marker date="1546260029081" expanded="false" signature="6:205" ph="..." />
+            <marker date="1546260029081" expanded="true" signature="239:656" ph="{...}" />
+            <marker date="1546260029081" expanded="true" signature="310:653" ph="{...}" />
+            <marker date="1546260029081" expanded="true" signature="376:647" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DefaultCallInvoker.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="704">
+          <caret line="55" column="12" selection-start-line="55" selection-start-column="12" selection-end-line="55" selection-end-column="12" />
+          <folding>
+            <marker date="1546260029084" expanded="false" signature="6:245" ph="..." />
+            <marker date="1546260029084" expanded="true" signature="274:8299" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="327:8297" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="1083:1321" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="1331:1463" ph="/// 调用返回 ... " />
+            <marker date="1546260029084" expanded="true" signature="1539:1725" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="1622:1715" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="1735:1913" ph="/// TODO:记录审计日志 ... " />
+            <marker date="1546260029084" expanded="true" signature="2007:2960" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="2252:2416" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="2616:2950" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="3086:3729" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="3439:3507" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="3524:3692" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="3878:4695" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="4248:4473" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="4340:4459" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="4490:4658" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="4761:5208" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="4821:4960" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="5000:5170" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="5266:6560" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="5343:5457" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="5544:6146" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="5739:5944" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="5965:6132" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="6163:6549" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="6329:6534" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="6609:7166" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="6734:7156" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="6924:7072" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="7213:7866" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="7280:7332" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="7447:7856" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="7644:7774" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="7952:8116" ph="{...}" />
+            <marker date="1546260029084" expanded="true" signature="8174:8290" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Baseline/Extensions/StringExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="23696">
+          <caret line="1525" column="11" selection-start-line="1525" selection-start-column="11" selection-end-line="1525" selection-end-column="11" />
+          <folding>
+            <marker date="1546077738399" expanded="false" signature="6:187" ph="..." />
+            <marker date="1546077738399" expanded="true" signature="225:55294" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="263:2555" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="312:372" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="433:1092" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="694:1047" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="842:919" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="1238:2549" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="1854:2539" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="2007:2482" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="2147:2464" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="2597:55203" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="2854:4033" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="3261:3478" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="3495:3903" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="3629:3844" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="4130:4411" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="4220:4366" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="4492:4563" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="4662:4932" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="4752:4887" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="5005:5589" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="5142:5539" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="5232:5429" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="5450:5525" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="5717:5901" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="5998:6719" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="6833:6931" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="7055:7340" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="7148:7295" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="7405:7569" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="7631:7728" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="7795:7900" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="7962:8073" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="8160:8452" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="8231:8419" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="8524:8700" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="8760:8912" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="9007:9294" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="9361:9662" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="9772:10159" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="10246:10955" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="10379:10905" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="10615:10818" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="10680:10800" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="11042:11493" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="11578:11882" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="11942:12009" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="12074:12172" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="12256:12938" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="12597:12894" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="12692:12789" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="12810:12880" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="13160:13230" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="13316:14606" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="13404:14572" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="13482:14558" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="13572:13708" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="13845:13980" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="14117:14252" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="14678:14798" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="14890:15169" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="15247:16200" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="15659:16122" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="15784:16108" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="16275:16659" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="16710:17503" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="16905:17469" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="17191:17342" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="17363:17455" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="17562:46929" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="17629:46895" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="47088:47473" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="47225:47437" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="47483:47841" ph="/// Determines whether the specified string is not &lt;see cref=&quot;IsNullOrEmpty&quot;/&gt;. ... " />
+            <marker date="1546077738399" expanded="true" signature="47896:47965" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="47975:48241" ph="/// Uses the string as a format ... " />
+            <marker date="1546077738399" expanded="true" signature="48323:48483" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="48493:48679" ph="/// Converts a string to use camelCase. ... " />
+            <marker date="1546077738399" expanded="true" signature="48739:49027" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="49037:49220" ph="/// Converts a string to use PascalCase. ... " />
+            <marker date="1546077738399" expanded="true" signature="49281:49357" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="49367:49633" ph="/// Converts a string to use PascalCase. ... " />
+            <marker date="1546077738399" expanded="true" signature="49712:50807" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="49977:50449" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="50038:50435" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="50097:50303" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="50328:50417" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="50488:50665" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="50682:50758" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="50817:51040" ph="/// Takes a NameIdentifier and spaces it out into words &quot;Name Identifier&quot;. ... " />
+            <marker date="1546077738399" expanded="true" signature="51096:51641" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="51385:51500" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="51651:51866" ph="/// Does string contain both uppercase and lowercase characters? ... " />
+            <marker date="1546077738399" expanded="true" signature="51920:52164" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="52239:52370" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="52442:52643" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="52653:52962" ph="/// Compares a string against a wildcard pattern. ... " />
+            <marker date="1546077738399" expanded="true" signature="53026:53217" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="53314:54519" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="53370:54460" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="53432:54446" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="54573:54650" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="54713:55197" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="54858:55152" ph="{...}" />
+            <marker date="1546077738399" expanded="true" signature="55236:55292" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/ABsServiceActor.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="26" column="12" selection-start-line="26" selection-start-column="12" selection-end-line="26" selection-end-column="12" />
+          <folding>
+            <marker date="1546260029088" expanded="false" signature="6:309" ph="..." />
+            <marker date="1546260029088" expanded="true" signature="337:2786" ph="{...}" />
+            <marker date="1546260029088" expanded="true" signature="409:2784" ph="{...}" />
+            <marker date="1546260029088" expanded="true" signature="481:598" ph="{...}" />
+            <marker date="1546260029088" expanded="true" signature="653:854" ph="/// 处理接收消息 ... " />
+            <marker date="1546260029088" expanded="true" signature="949:1764" ph="{...}" />
+            <marker date="1546260029088" expanded="true" signature="1003:1330" ph="{...}" />
+            <marker date="1546260029088" expanded="true" signature="1382:1521" ph="{...}" />
+            <marker date="1546260029088" expanded="true" signature="1554:1754" ph="{...}" />
+            <marker date="1546260029088" expanded="true" signature="1923:2105" ph="/// 发送服务端意外错误的消息 ... " />
+            <marker date="1546260029088" expanded="true" signature="2226:2778" ph="{...}" />
+            <marker date="1546260029088" expanded="true" signature="2529:2603" ph="{...}" />
+            <marker date="1546260029088" expanded="true" signature="2636:2743" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/samples/MathService.Definition/ExtraCallFooMathService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="19" column="85" selection-start-line="19" selection-start-column="85" selection-end-line="19" selection-end-column="85" />
+          <folding>
+            <marker date="1546260029078" expanded="false" signature="6:138" ph="..." />
+            <marker date="1546260029078" expanded="true" signature="172:1268" ph="{...}" />
+            <marker date="1546260029078" expanded="true" signature="255:1265" ph="{...}" />
+            <marker date="1546260029078" expanded="true" signature="461:561" ph="{...}" />
+            <marker date="1546260029078" expanded="true" signature="627:1259" ph="{...}" />
+            <marker date="1546260029078" expanded="true" signature="965:1070" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/samples/MathService.Definition/FooService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="6" column="34" selection-start-line="6" selection-start-column="34" selection-end-line="6" selection-end-column="34" />
+          <folding>
+            <marker date="1546260029078" expanded="false" signature="6:77" ph="..." />
+            <marker date="1546260029078" expanded="true" signature="111:470" ph="{...}" />
+            <marker date="1546260029078" expanded="true" signature="181:468" ph="{...}" />
+            <marker date="1546260029078" expanded="true" signature="247:462" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Peach/Config/TcpHostOption.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="192">
+          <caret line="23" column="34" selection-start-line="23" selection-start-column="22" selection-end-line="23" selection-end-column="34" />
+          <folding>
+            <marker date="1546260029091" expanded="false" signature="6:66" ph="..." />
+            <marker date="1546260029091" expanded="true" signature="90:817" ph="{...}" />
+            <marker date="1546260029091" expanded="true" signature="123:639" ph="{...}" />
+            <marker date="1546260029091" expanded="true" signature="672:815" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/Peach/Tcp/TcpServerBootstrap.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1968">
+          <caret line="141" column="96" selection-start-line="141" selection-start-column="96" selection-end-line="141" selection-end-column="96" />
+          <folding>
+            <marker date="1546260029094" expanded="false" signature="6:482" ph="..." />
+            <marker date="1546260029094" expanded="true" signature="503:6325" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="510:584" ph="/// Tcp Server ... " />
+            <marker date="1546260029094" expanded="true" signature="685:6323" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="1324:1716" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="1792:5647" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="2134:2217" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="2234:2323" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="2615:2797" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="2942:4644" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="3224:3910" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="3962:4325" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="4711:4818" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="4898:5169" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="5241:5368" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="5385:5539" ph="{...}" />
+            <marker date="1546260029094" expanded="true" signature="5721:6317" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/IServiceActor.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="64">
+          <caret line="9" column="21" selection-start-line="9" selection-start-column="21" selection-end-line="9" selection-end-column="21" />
+          <folding>
+            <marker date="1546155631455" expanded="false" signature="6:132" ph="..." />
+            <marker date="1546155631455" expanded="true" signature="161:368" ph="{...}" />
+            <marker date="1546155631455" expanded="true" signature="247:366" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Client/Impl/DiscoveryServiceRouter.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="19" selection-start-line="19" selection-end-line="19" />
+          <folding>
+            <marker date="1546158194478" expanded="false" signature="6:123" ph="..." />
+            <marker date="1546158194478" expanded="true" signature="152:418" ph="{...}" />
+            <marker date="1546158194478" expanded="true" signature="159:214" ph="/// 基于服务注册和发现的服务路由 ... " />
+            <marker date="1546158194478" expanded="true" signature="271:416" ph="{...}" />
+            <marker date="1546158194478" expanded="true" signature="341:410" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Internal/Environment.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="534">
+          <caret line="40" column="9" lean-forward="true" selection-start-line="40" selection-start-column="9" selection-end-line="40" selection-end-column="9" />
+          <folding>
+            <marker date="1546262875779" expanded="false" signature="6:130" ph="..." />
+            <marker date="1546262875779" expanded="true" signature="161:1445" ph="{...}" />
+            <marker date="1546262875779" expanded="true" signature="199:1443" ph="{...}" />
+            <marker date="1546262875779" expanded="true" signature="214:348" ph="/// Gets application-wide logger used by internal. ... " />
+            <marker date="1546262875779" expanded="true" signature="509:656" ph="/// Sets the service provider. ... " />
+            <marker date="1546262875779" expanded="true" signature="736:930" ph="{...}" />
+            <marker date="1546262875779" expanded="true" signature="940:1054" ph="/// Sets the application-wide logger that should be used by internal. ... " />
+            <marker date="1546262875779" expanded="true" signature="1128:1312" ph="{...}" />
+            <marker date="1546262875779" expanded="true" signature="1359:1437" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/ServiceCollectionExtensions.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="523">
+          <caret line="108" column="86" selection-start-line="108" selection-start-column="86" selection-end-line="108" selection-end-column="86" />
+          <folding>
+            <marker date="1546264643559" expanded="false" signature="6:365" ph="..." />
+            <marker date="1546264643559" expanded="true" signature="459:5492" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="513:5490" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="604:826" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="984:1085" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="1241:1770" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="1498:1611" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="1656:1730" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="1954:2067" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="2246:2354" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="2554:4211" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="2855:2940" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="2954:3012" ph="/* 扫描注册所有的ServiceRegistry ... */" />
+            <marker date="1546264643559" expanded="true" signature="3304:3811" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="3415:3797" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="3522:3612" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="3692:3779" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="3860:4010" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="4055:4172" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="4303:4586" ph="{...}" />
+            <marker date="1546264643559" expanded="true" signature="4678:5483" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/AmpRpcService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="208">
+          <caret line="21" column="50" lean-forward="true" selection-start-line="21" selection-start-column="50" selection-end-line="21" selection-end-column="50" />
+          <folding>
+            <marker date="1546265414761" expanded="false" signature="6:231" ph="..." />
+            <marker date="1546265414761" expanded="true" signature="260:1770" ph="{...}" />
+            <marker date="1546265414761" expanded="true" signature="324:1768" ph="{...}" />
+            <marker date="1546265414761" expanded="true" signature="611:717" ph="{...}" />
+            <marker date="1546265414761" expanded="true" signature="809:1049" ph="{...}" />
+            <marker date="1546265414761" expanded="true" signature="925:1024" ph="{...}" />
+            <marker date="1546265414761" expanded="true" signature="1141:1263" ph="{...}" />
+            <marker date="1546265414761" expanded="true" signature="1344:1517" ph="{...}" />
+            <marker date="1546265414761" expanded="true" signature="1595:1762" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/samples/MathService/Program.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="240">
+          <caret line="24" column="15" lean-forward="true" selection-start-line="24" selection-start-column="15" selection-end-line="24" selection-end-column="15" />
+          <folding>
+            <marker date="1546265597788" expanded="false" signature="6:275" ph="..." />
+            <marker date="1546265597788" expanded="true" signature="298:887" ph="{...}" />
+            <marker date="1546265597788" expanded="true" signature="318:885" ph="{...}" />
+            <marker date="1546265597788" expanded="true" signature="364:879" ph="{...}" />
+            <marker date="1546265597788" expanded="true" signature="571:666" ph="{...}" />
+            <marker date="1546265597788" expanded="true" signature="726:806" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/ServiceActorDescriptor.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="48">
+          <caret line="10" column="1" lean-forward="true" selection-start-line="10" selection-start-column="1" selection-end-line="10" selection-end-column="1" />
+          <folding>
+            <marker date="1546266441727" expanded="false" signature="6:292" ph="..." />
+            <marker date="1546266441727" expanded="true" signature="314:1506" ph="{...}" />
+            <marker date="1546266441727" expanded="true" signature="363:1504" ph="{...}" />
+            <marker date="1546266441727" expanded="true" signature="586:769" ph="{...}" />
+            <marker date="1546266441727" expanded="true" signature="893:1498" ph="{...}" />
+            <marker date="1546266441727" expanded="true" signature="956:1486" ph="{...}" />
+            <marker date="1546266441727" expanded="true" signature="1103:1179" ph="{...}" />
+            <marker date="1546266441727" expanded="true" signature="1360:1467" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/ServiceActorCollection.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="630">
+          <caret line="43" column="1" selection-start-line="43" selection-start-column="1" selection-end-line="43" selection-end-column="1" />
+          <folding>
+            <marker date="1546265336352" expanded="false" signature="6:99" ph="..." />
+            <marker date="1546265336352" expanded="true" signature="121:1113" ph="{...}" />
+            <marker date="1546265336352" expanded="true" signature="163:1111" ph="{...}" />
+            <marker date="1546265336352" expanded="true" signature="322:444" ph="{...}" />
+            <marker date="1546265336352" expanded="true" signature="545:710" ph="{...}" />
+            <marker date="1546265336352" expanded="true" signature="604:675" ph="{...}" />
+            <marker date="1546265336352" expanded="true" signature="823:903" ph="{...}" />
+            <marker date="1546265336352" expanded="true" signature="943:989" ph="{...}" />
+            <marker date="1546265336352" expanded="true" signature="1054:1105" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/src/DotBPE.Rpc/Server/Impl/BaseService.cs">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="246">
+          <caret line="66" column="83" selection-start-line="66" selection-start-column="83" selection-end-line="66" selection-end-column="83" />
+          <folding>
+            <marker date="1546266743214" expanded="false" signature="6:381" ph="..." />
+            <marker date="1546266743214" expanded="true" signature="415:6562" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="501:6560" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="659:971" ph="{...}" />
+            <marker date="1546266743214" expanded="false" signature="981:1526" ph="Properties" />
+            <marker date="1546266743214" expanded="true" signature="1051:1110" ph="/// service id ... " />
+            <marker date="1546266743214" expanded="true" signature="1164:1231" ph="/// service group name ... " />
+            <marker date="1546266743214" expanded="true" signature="1577:2056" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="1689:2046" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="1822:1888" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="2131:2496" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="2326:2447" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="2506:2638" ph="///  Remote Call ... " />
+            <marker date="1546266743214" expanded="true" signature="2714:5876" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="3005:5725" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="3151:3276" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="3556:4021" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="3647:3768" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="3793:4003" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="4042:4137" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="4237:4308" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="4421:4625" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="4671:5552" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="4904:5060" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="5274:5379" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="5421:5534" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="5573:5711" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="5742:5838" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="5886:6554" ph="IRpcService Method" />
+            <marker date="1546266743214" expanded="true" signature="5923:6155" ph="///  ... " />
+            <marker date="1546266743214" expanded="true" signature="6233:6534" ph="{...}" />
+            <marker date="1546266743214" expanded="true" signature="6379:6452" ph="{...}" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+  </component>
+</project>

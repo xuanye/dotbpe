@@ -11,60 +11,60 @@ namespace Peach.Buffer
 
         public ByteBufferWriter(IByteBuffer buffer)
         {
-            _buffer = buffer;
+            this._buffer = buffer;
         }
 
         public IBufferWriter WriteByte(byte value)
         {
-            _buffer.WriteByte(value);
+            this._buffer.WriteByte(value);
             return this;
         }
 
         public IBufferWriter WriteBytes(byte[] value)
         {
-            _buffer.WriteBytes(value);
+            this._buffer.WriteBytes(value);
             return this;
         }
 
         public IBufferWriter WriteChar(char value)
         {
-            _buffer.WriteChar(value);
+            this._buffer.WriteChar(value);
             return this;
         }
 
         public IBufferWriter WriteDouble(double value)
         {
-            _buffer.WriteDouble(value);
+            this._buffer.WriteDouble(value);
             return this;
         }
 
         public IBufferWriter WriteInt(int value)
         {
-            _buffer.WriteInt(value);
+            this._buffer.WriteInt(value);
             return this;
         }
 
         public IBufferWriter WriteShort(short value)
         {
-            _buffer.WriteShort(value);
+            this._buffer.WriteShort(value);
             return this;
         }
 
         public IBufferWriter WriteUInt(uint value)
         {
-            _buffer.WriteIntLE((int)value);
+            this._buffer.WriteIntLE((int)value);
             return this;
         }
 
         public IBufferWriter WriteUShort(ushort value)
         {
-            _buffer.WriteUnsignedShort(value);
+            this._buffer.WriteUnsignedShort(value);
             return this;
         }
 
         public IBufferWriter WriteLong(long value)
         {
-            _buffer.WriteLong(value);
+            this._buffer.WriteLong(value);
             return this;
         }
     }

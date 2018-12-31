@@ -20,27 +20,27 @@ namespace DotBPE.Rpc.Hosting
         public RpcHostedService(IServerBootstrap server,IServiceProvider provider)
         {
             Preconditions.CheckNotNull(server, nameof(server));
-            _server = server;
-            _provider = provider;
-            _loggerFactory = provider.GetService<ILoggerFactory>();
+            this._server = server;
+            this._provider = provider;
+            this._loggerFactory = provider.GetService<ILoggerFactory>();
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
             SetEnvironment();
-            return _server.StartAsync(cancellationToken);
+            return this._server.StartAsync(cancellationToken);
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
            
-            return _server.StopAsync(cancellationToken);
+            return this._server.StopAsync(cancellationToken);
         }
 
         private void SetEnvironment()
         {
-            Internal.Environment.SetServiceProvider(_provider);
-            Internal.Environment.SetLoggerFactory(_loggerFactory);
+            Internal.Environment.SetServiceProvider(this._provider);
+            Internal.Environment.SetLoggerFactory(this._loggerFactory);
         }
 
     }
