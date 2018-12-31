@@ -18,13 +18,13 @@ namespace Peach.Tcp
 
         public TcpClientChannelHandlerAdapter(ISocketClient<TMessage> client,Protocol.IProtocol<TMessage> protocol)
         {
-            this._client = client;
-            this._protocol = protocol;
+            _client = client;
+            _protocol = protocol;
         }
 
         public override void ChannelActive(IChannelHandlerContext context)
         {
-            this._client.RaiseConnected(new SocketContext<TMessage>(context.Channel, this._protocol));
+            _client.RaiseConnected(new SocketContext<TMessage>(context.Channel, _protocol));
             base.ChannelActive(context);
         }      
 
@@ -34,21 +34,21 @@ namespace Peach.Tcp
         /// <param name="context"></param>
         public override void ChannelInactive(IChannelHandlerContext context)
         {
-            this._client.RaiseDisconnected(new SocketContext<TMessage>(context.Channel, this._protocol));
+            _client.RaiseDisconnected(new SocketContext<TMessage>(context.Channel, _protocol));
             base.ChannelInactive(context);
         }
 
         protected override void ChannelRead0(IChannelHandlerContext context, TMessage msg)
         {
             listener.ClientReceive(msg);
-            this._client.RaiseReceive(new SocketContext<TMessage>(context.Channel, this._protocol), msg);
+            _client.RaiseReceive(new SocketContext<TMessage>(context.Channel, _protocol), msg);
             listener.ClientReceiveComplete(msg);
             //this._bootstrap.ChannelRead(ctx, msg);
         }
 
         public override void ExceptionCaught(IChannelHandlerContext context, Exception ex)
         {
-            this._client.RaiseError(new SocketContext<TMessage>(context.Channel, this._protocol), ex);
+            _client.RaiseError(new SocketContext<TMessage>(context.Channel, _protocol), ex);
             listener.ClientException(ex);
             context.CloseAsync(); //关闭连接
         }
@@ -60,7 +60,7 @@ namespace Peach.Tcp
                 var eventState = evt as IdleStateEvent;
                 if (eventState != null)
                 {                  
-                    this._client.RaiseIdleState(new SocketContext<TMessage>(context.Channel, this._protocol), eventState);
+                    _client.RaiseIdleState(new SocketContext<TMessage>(context.Channel, _protocol), eventState);
                 }
             }
         }

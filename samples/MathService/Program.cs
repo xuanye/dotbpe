@@ -15,13 +15,11 @@ namespace MathService
     {
         static void Main(string[] args)
         {
-            var builder = new HostBuilder()                
+            var builder = new HostBuilder()
+             .UseCastleDynamicProxy()
+             .UseMessagePack()
              .ConfigureServices((context, services) =>
              {
-                 services.AddSingleton<ISerializer, DotBPE.Extra.MessagePackSerializer>();
-                 services.AddSingleton<IClientProxy, DynamicClientProxy>();
-                 services.AddSingleton<IProxyGenerator, ProxyGenerator>();
-                 services.AddSingleton<ClientInterceptor>();
                  services.AddSingleton<IServiceActor<AmpMessage>, Definition.MathService>();
                  services.AddSingleton<IServiceActor<AmpMessage>, Definition.FooService>();
              })

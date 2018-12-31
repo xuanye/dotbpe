@@ -44,8 +44,8 @@ namespace Peach.Tcp
 
         public TcpClient(TcpClientOption clientOption, IProtocol<TMessage> protocol)
         {
-            this._clientOption = clientOption;
-            this._protocol = protocol;
+            _clientOption = clientOption;
+            _protocol = protocol;
             InitBootstrap();
         }
 
@@ -81,7 +81,7 @@ namespace Peach.Tcp
                 pipeline.AddLast(new LoggingHandler("CLT-CONN"));
 
                 //TODO:ssl support
-                var meta = this._protocol.GetProtocolMeta();
+                var meta = _protocol.GetProtocolMeta();
 
                 if (meta != null)
                 {
@@ -107,8 +107,8 @@ namespace Peach.Tcp
                 }
 
 
-                pipeline.AddLast(new ChannelDecodeHandler<TMessage>(this._protocol));
-                pipeline.AddLast(new TcpClientChannelHandlerAdapter<TMessage>(this, this._protocol));
+                pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_protocol));
+                pipeline.AddLast(new TcpClientChannelHandlerAdapter<TMessage>(this, _protocol));
 
             }));
         }
@@ -167,7 +167,7 @@ namespace Peach.Tcp
             else
             {
                 var channel = await _bootstrap.ConnectAsync(endPoint);
-                context = new SocketContext<TMessage>(channel, this._protocol);
+                context = new SocketContext<TMessage>(channel, _protocol);
                 channels.AddOrUpdate(endPoint, context, (x, y) => context);
                 return context;
             }

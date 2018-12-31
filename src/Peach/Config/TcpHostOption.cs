@@ -6,7 +6,7 @@ namespace Peach.Config
 {
     public class TcpHostOption
     {
-        public AddressBindType BindType { get; set; } = AddressBindType.LocalAddress;
+        public AddressBindType BindType { get; set; } = AddressBindType.InternalAddress;
 
         public int Port { get; set; } = 5566;
 
@@ -18,11 +18,15 @@ namespace Peach.Config
         public int ShutdownTimeout { get; set; } = 3;
 
         public bool UseLibuv { get; set; } = true;
+
+        public string SpecialAddress { get; set; } = "127.0.0.1";
     }
 
     public enum AddressBindType
     {
-        All,
-        LocalAddress
+        Any, //0.0.0.0 Address.Any
+        Loopback, // localhost
+        InternalAddress, //本机内网地址
+        SpecialAddress //自定义地址
     }
 }

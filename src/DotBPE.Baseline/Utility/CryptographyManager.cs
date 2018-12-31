@@ -13,7 +13,7 @@ namespace DotBPE.Baseline.Utility
 
         public static string Md5(string encryptingString)
         {
-            var md5 = System.Security.Cryptography.MD5.Create();
+            var md5 = MD5.Create();
             byte[] data = md5.ComputeHash(Encoding.UTF8.GetBytes(encryptingString));
 
             StringBuilder sBuilder = new StringBuilder();

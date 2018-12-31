@@ -17,14 +17,14 @@ namespace Peach.Tcp
 
         public ChannelDecodeHandler(Protocol.IProtocol<TMessage> protocol)
         {
-            this._protocol = protocol;
+            _protocol = protocol;
         }
 
         protected override void Decode(IChannelHandlerContext context, IByteBuffer input, List<object> output)
         {
             IBufferReader reader = ByteBufferManager.CreateBufferReader(input);
                        
-            var message = this._protocol.Parse(reader);
+            var message = _protocol.Parse(reader);
             if (message != null)
             {
                 output.Add(message);

@@ -21,12 +21,12 @@ namespace DotBPE.Rpc.Exceptions
 
         public RpcRemoteException(int code, string message) : base(message)
         {
-            this.Code = code;
+            Code = code;
         }
 
         public RpcRemoteException(int code, string message, Exception inner) : base(message, inner)
         {
-            this.Code = code;
+            Code = code;
         }
 
         public int Code { get; set; }

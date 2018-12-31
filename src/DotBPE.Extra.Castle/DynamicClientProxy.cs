@@ -1,11 +1,7 @@
 using Castle.DynamicProxy;
-using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using System;
 using Microsoft.Extensions.DependencyInjection;
-using System.Collections.Generic;
-using System.Text;
-using System.Collections.Concurrent;
 
 namespace DotBPE.Extra
 {
@@ -36,7 +32,7 @@ namespace DotBPE.Extra
 
         public TService Create<TService>() where TService : class
         {
-           return _generator.CreateInterfaceProxyWithoutTarget<TService>(this.ClientInterceptor);
+           return _generator.CreateInterfaceProxyWithoutTarget<TService>(ClientInterceptor);
         }
 
        

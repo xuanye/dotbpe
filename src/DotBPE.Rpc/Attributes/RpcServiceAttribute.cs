@@ -13,8 +13,8 @@ namespace DotBPE.Rpc
         }
         public RpcServiceAttribute(ushort serviceId,string groupName="default")
         {
-            this.ServiceId = serviceId;
-            this.GroupName = groupName;
+            ServiceId = serviceId;
+            GroupName = groupName;
         }
 
         public ushort ServiceId { get; set; }

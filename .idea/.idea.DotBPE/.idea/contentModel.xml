@@ -94,8 +94,10 @@
         <e p="DotBPE.Extra.Castle" t="IncludeRecursive">
           <e p="bin" t="ExcludeRecursive" />
           <e p="ClientInterceptor.cs" t="Include" />
+          <e p="ClientProxyFactoryExtensions.cs" t="Include" />
           <e p="DotBPE.Extra.Castle.csproj" t="IncludeRecursive" />
           <e p="DynamicClientProxy.cs" t="Include" />
+          <e p="HostBuilderExtensions.cs" t="Include" />
           <e p="InvokeMeta.cs" t="Include" />
           <e p="obj" t="ExcludeRecursive">
             <e p="Debug" t="Include">
@@ -104,10 +106,13 @@
               </e>
             </e>
           </e>
+          <e p="ServiceCollectionExtensions.cs" t="Include" />
         </e>
         <e p="DotBPE.Extra.MessagePack" t="IncludeRecursive">
           <e p="bin" t="ExcludeRecursive" />
+          <e p="ClientProxyFactoryExtensions.cs" t="Include" />
           <e p="DotBPE.Extra.MessagePack.csproj" t="IncludeRecursive" />
+          <e p="HostBuilderExtensions.cs" t="Include" />
           <e p="MessagePackSerializer.cs" t="Include" />
           <e p="obj" t="ExcludeRecursive">
             <e p="Debug" t="Include">
@@ -116,10 +121,13 @@
               </e>
             </e>
           </e>
+          <e p="ServiceCollectionExtensions.cs" t="Include" />
         </e>
         <e p="DotBPE.Extra.Protobuf" t="IncludeRecursive">
           <e p="bin" t="ExcludeRecursive" />
+          <e p="ClientProxyFactoryExtensions.cs" t="Include" />
           <e p="DotBPE.Extra.Protobuf.csproj" t="IncludeRecursive" />
+          <e p="HostBuilderExtensions.cs" t="Include" />
           <e p="obj" t="ExcludeRecursive">
             <e p="Debug" t="Include">
               <e p="netstandard2.0" t="Include">
@@ -128,6 +136,7 @@
             </e>
           </e>
           <e p="ProtobufSerializer.cs" t="Include" />
+          <e p="ServiceCollectionExtensions.cs" t="Include" />
         </e>
         <e p="DotBPE.Rpc" t="IncludeRecursive">
           <e p="AmpRpcService.cs" t="Include" />
@@ -140,7 +149,9 @@
             <e p="ICallInvoker.cs" t="Include" />
             <e p="IClientMessageHandler.cs" t="Include" />
             <e p="IClientProxy.cs" t="Include" />
+            <e p="IClientProxyFactory.cs" t="Include" />
             <e p="Impl" t="Include">
+              <e p="ClientProxyFactory.cs" t="Include" />
               <e p="DefaultCallInvoker.cs" t="Include" />
               <e p="DefaultClientMessageHandler.cs" t="Include" />
               <e p="DefaultRpcClient.cs" t="Include" />
@@ -150,11 +161,11 @@
               <e p="DiscoveryServiceRouter.cs" t="Include" />
               <e p="InprocContext.cs" t="Include" />
               <e p="RouterPoint.cs" t="Include" />
+              <e p="RpcSocketClient.cs" t="Include" />
             </e>
             <e p="IRouterPoint.cs" t="Include" />
             <e p="IRouterPolicy.cs" t="Include" />
             <e p="IRpcClient.cs" t="Include" />
-            <e p="ISerializer.cs" t="Include" />
             <e p="IServiceRouter.cs" t="Include" />
             <e p="ITransport.cs" t="Include" />
             <e p="ITransportFactory.cs" t="Include" />
@@ -164,6 +175,7 @@
               <e p="WeightedRoundRobinPolicy.cs" t="Include" />
             </e>
           </e>
+          <e p="ClientProxyFactoryExtensions.cs" t="Include" />
           <e p="Codec" t="Include">
             <e p="CodecType.cs" t="Include" />
           </e>
@@ -182,6 +194,9 @@
             <e p="RpcRemoteException.cs" t="Include" />
           </e>
           <e p="HostBuilderExtensions.cs" t="Include" />
+          <e p="Hosting" t="Include">
+            <e p="RpcHostedService.cs" t="Include" />
+          </e>
           <e p="IHealthCheck.cs" t="Include" />
           <e p="Internal" t="Include">
             <e p="EndPointParser.cs" t="Include" />
