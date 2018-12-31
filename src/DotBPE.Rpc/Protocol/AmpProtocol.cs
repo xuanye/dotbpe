@@ -9,7 +9,7 @@ using Peach.Protocol;
 namespace DotBPE.Rpc.Protocol
 {
     /// <summary>
-    /// TODO：待实现协议
+    /// Amp Protocol
     /// </summary>
     public class AmpProtocol : IProtocol<AmpMessage>
     {

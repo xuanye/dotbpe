@@ -24,6 +24,7 @@ namespace DotBPE.Rpc
         private static IServiceCollection AddAmpProtocol(this IServiceCollection services)
         {
             services.AddSingleton<IProtocol<AmpMessage>, AmpProtocol>();
+            services.AddSingleton<ISocketClient<AmpMessage>, RpcSocketClient>();
             services.AddSingleton<ISocketService<AmpMessage>, AmpRpcService>();
             return services;
         }

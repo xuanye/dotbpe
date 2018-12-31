@@ -45,14 +45,22 @@ namespace Math.Client
             var proxy = services.GetRequiredService<IClientProxy>();
 
             IMathService mathService = proxy.Create<IMathService>();
-            var req = new SumReq() { A = 100, B = 101 };
-            var result = mathService.SumAsync(req).Result;
 
-            Console.WriteLine("Call Math Service ,return_code={0}",result.Code);
-            if(result.Code == 0)
+            int i = 1;
+            Random random = new Random();
+            while (i++ < 100000)
             {
-                Console.WriteLine("Call Math Service Add {0}+{1}={2}", req.A, req.B, result?.Data?.Total);
+                var req = new SumReq() { A = random.Next(100000), B = random.Next(100000) };
+                var result = mathService.SumAsync(req).Result;
+
+                //Console.WriteLine("Call Math Service ,return_code={0}", result.Code);
+                if (result.Code == 0)
+                {
+                    //Console.WriteLine("Call Math Service Add {0}+{1}={2}", req.A, req.B, result?.Data?.Total);
+                }
+                //Console.WriteLine("============= count:",i);
             }
+         
             Console.WriteLine("Press any key to exit !");
             Console.ReadKey();
             

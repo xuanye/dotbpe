@@ -6,6 +6,8 @@ using DotBPE.Rpc;
 using DotBPE.Rpc.Server;
 using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Client;
+using DotBPE.Extra;
+using Castle.DynamicProxy;
 
 namespace MathService
 {
@@ -13,13 +15,17 @@ namespace MathService
     {
         static void Main(string[] args)
         {
-            var builder = new HostBuilder()
-             .UseRpcServer()            
+            var builder = new HostBuilder()                
              .ConfigureServices((context, services) =>
              {
                  services.AddSingleton<ISerializer, DotBPE.Extra.MessagePackSerializer>();
+                 services.AddSingleton<IClientProxy, DynamicClientProxy>();
+                 services.AddSingleton<IProxyGenerator, ProxyGenerator>();
+                 services.AddSingleton<ClientInterceptor>();
                  services.AddSingleton<IServiceActor<AmpMessage>, Definition.MathService>();
+                 services.AddSingleton<IServiceActor<AmpMessage>, Definition.FooService>();
              })
+             .UseRpcServer()
              .ConfigureLogging(
                  logger =>
                  {

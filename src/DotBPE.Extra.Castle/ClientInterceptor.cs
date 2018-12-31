@@ -41,10 +41,6 @@ namespace DotBPE.Extra
 
         public void Intercept(IInvocation invocation)
         {
-            Console.WriteLine("你正在调用方法 \"{0}\"  参数是 {1}... ",
-                invocation.Method.Name,
-                string.Join(", ", invocation.Arguments.Select(a => (a ?? "").ToString()).ToArray()));
-
             var serviceNameArr = invocation.Method.DeclaringType.FullName.Split('.');
             string cacheKey = $"{serviceNameArr[serviceNameArr.Length-1]}.{invocation.Method.Name}";
 
@@ -128,9 +124,7 @@ namespace DotBPE.Extra
                 {
                     invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, 3000 });
                 }
-
-            }
-            Console.WriteLine("方法执行完毕，返回结果：{0}", invocation.ReturnValue?.GetType());
+            }          
         }
 
         private bool IsLocalCall(ushort serviceId, ushort messageId)
