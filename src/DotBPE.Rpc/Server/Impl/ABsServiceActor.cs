@@ -15,21 +15,8 @@ namespace DotBPE.Rpc.Server
         private ILogger _logger;
         protected ILogger Logger
         {
-            get
-            {
-                if (_logger == null)
-                {
-                    if (Environment.LoggerFactory != null)
-                    {
-                        _logger = Environment.LoggerFactory.CreateLogger<AbsServiceActor>();
-                    }
-                    else
-                    {
-                        _logger = NullLogger.Instance;
-                    }
-                }
-                return _logger;
-            }
+            get => this._logger ?? NullLogger.Instance;
+            set => this._logger = value;
         }
 
         public abstract string Id { get; }

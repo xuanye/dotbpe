@@ -30,12 +30,12 @@ namespace DotBPE.Rpc.Client
             ILogger<DefaultCallInvoker> logger
         )
         {
-            _handler = handler;
-            _rpcClient = rpcClient;
-            _serializer = serializer;
+            this._handler = handler;
+            this._rpcClient = rpcClient;
+            this._serializer = serializer;
 
-            _logger = logger;
-            _handler.OnReceived += _handler_OnReceived;
+            this._logger = logger;
+            this._handler.OnReceived += _handler_OnReceived;
         }
 
         /// <summary>
@@ -61,7 +61,7 @@ namespace DotBPE.Rpc.Client
         private async Task<AmpMessage> AsyncCallInner(AmpMessage request, int timeOut = 3000)
         {
             AutoSetSequence(request);
-            _logger.LogInformation("new request id={0},type={1}", request.Id,request.InvokeMessageType);
+            this._logger.LogInformation("new request id={0},type={1}", request.Id,request.InvokeMessageType);
 
             if (request.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse)
             {
@@ -93,7 +93,7 @@ namespace DotBPE.Rpc.Client
             var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId, true);
             reqMessage.FriendlyServiceName = callName;
 
-            reqMessage.Data = _serializer.Serialize(req);
+            reqMessage.Data = this._serializer.Serialize(req);
             var rsp = await AsyncCallInner(reqMessage);
             if (rsp != null)
             {
@@ -101,7 +101,7 @@ namespace DotBPE.Rpc.Client
             }
             else
             {
-                _logger.LogError("Call {0} , return null", callName);
+                this._logger.LogError("Call {0} , return null", callName);
                 result.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
             }
             return result;
@@ -112,19 +112,19 @@ namespace DotBPE.Rpc.Client
             RpcResult<TResult> result = new RpcResult<TResult>();
             var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId, false);
             reqMessage.FriendlyServiceName = callName;
-            reqMessage.Data = _serializer.Serialize(req);
+            reqMessage.Data = this._serializer.Serialize(req);
             var rsp = await AsyncCallInner(reqMessage);
             if (rsp != null)
             {
                 result.Code = rsp.Code;
                 if (rsp.Data != null)
                 {
-                    result.Data = _serializer.Deserialize<TResult>(rsp.Data);
+                    result.Data = this._serializer.Deserialize<TResult>(rsp.Data);
                 }
             }
             else
             {
-                _logger.LogError("Call {0} , return null", callName);
+                this._logger.LogError("Call {0} , return null", callName);
                 result.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
             }
             return result;
@@ -138,14 +138,14 @@ namespace DotBPE.Rpc.Client
             try
             {
                 //发送
-                await _rpcClient.SendAsync(request);
+                await this._rpcClient.SendAsync(request);
                 success = true;
             }
             catch (Exception exception)
             {
                 success = false;
                 ErrorCallBack(request.Id);
-                _logger.LogError(exception, "error occor:");
+                this._logger.LogError(exception, "error occor:");
             }
             return success;
         }
@@ -155,31 +155,31 @@ namespace DotBPE.Rpc.Client
 
             if (message.ServiceId == 0 && message.MessageId == 0)
             {
-                _logger.LogTrace("recieved heart beat");
+                this._logger.LogTrace("recieved heart beat");
                 return;
             }
 
             TaskCompletionSource<AmpMessage> task;
             if (message.Code != 0)
             {
-                _logger.LogDebug("server response error msg ,type={0}", message.InvokeMessageType);
-                if (_resultDictionary.TryRemove(message.Id, out task))
+                this._logger.LogDebug("server response error msg ,type={0}", message.InvokeMessageType);
+                if (this._resultDictionary.TryRemove(message.Id, out task))
                 {
                     task.TrySetResult(message);
-                    _logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, message.Code);
+                    this._logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, message.Code);
                 }
                 else
                 {
-                    _logger.LogError(string.Format("server response error msg ,id={0},code={1},", message.Id, message.Code));
+                    this._logger.LogError(string.Format("server response error msg ,id={0},code={1},", message.Id, message.Code));
                 }
             }
             else
             {
-                _logger.LogDebug($"receive message, id:{message.Id}");
-                if (_resultDictionary.TryRemove(message.Id, out task))
+                this._logger.LogDebug($"receive message, id:{message.Id}");
+                if (this._resultDictionary.TryRemove(message.Id, out task))
                 {
                     task.TrySetResult(message);
-                    _logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, message.Code);
+                    this._logger.LogDebug("message {0},set result success,message.code ={1}", message.Id, message.Code);
                 }
 
             }
@@ -189,34 +189,36 @@ namespace DotBPE.Rpc.Client
         private void TimeOutCallBack(string id)
         {
             TaskCompletionSource<AmpMessage> task;
-            if (_resultDictionary.TryRemove(id, out task))
+            if (this._resultDictionary.TryRemove(id, out task))
             {
                 var message = AmpMessage.CreateResponseMessage(id);
                 message.Code = RpcErrorCodes.CODE_TIMEOUT;
                 if (!task.TrySetResult(message))
                 {
-                    _logger.LogWarning("set timeout result fail,maybe task is completed,message {0}", id);
+                    this._logger.LogWarning("set timeout result fail,maybe task is completed,message {0}", id);
                 }
-                _logger.LogWarning("message {0}, timeout", id);
+
+                this._logger.LogWarning("message {0}, timeout", id);
             }
         }
 
         private void ErrorCallBack(string id)
         {
-            if (!_resultDictionary.ContainsKey(id))
+            if (!this._resultDictionary.ContainsKey(id))
             {
                 return;
             }
             TaskCompletionSource<AmpMessage> task;
-            if (_resultDictionary.TryRemove(id, out task))
+            if (this._resultDictionary.TryRemove(id, out task))
             {
                 var message = AmpMessage.CreateResponseMessage(id);
                 message.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
                 if (!task.TrySetResult(message))
                 {
-                    _logger.LogWarning("set error result fail,maybe task is completed");
+                    this._logger.LogWarning("set error result fail,maybe task is completed");
                 }
-                _logger.LogWarning("message {0}, error", id);
+
+                this._logger.LogWarning("message {0}, error", id);
             }
         }
 
@@ -224,7 +226,7 @@ namespace DotBPE.Rpc.Client
         {
             var tcs = new TaskCompletionSource<AmpMessage>();
 
-            _resultDictionary.TryAdd(id, tcs);
+            this._resultDictionary.TryAdd(id, tcs);
             return tcs.Task;
         }
 

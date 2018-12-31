@@ -17,6 +17,7 @@ using Peach.Infrastructure;
 
 namespace Peach.Tcp
 {
+    /// <inheritdoc />
     /// <summary>
     /// Tcp Server
     /// </summary>
@@ -42,25 +43,25 @@ namespace Peach.Tcp
             Preconditions.CheckNotNull(protocol, nameof(protocol));
             Preconditions.CheckNotNull(socketService, nameof(socketService));
 
-            _options = hostOption?.Value ?? new TcpHostOption();
-            _protocol = protocol;
-            _socketService = socketService;
-            _logger = loggerFactory.CreateLogger(GetType());
+            this._options = hostOption?.Value ?? new TcpHostOption();
+            this._protocol = protocol;
+            this._socketService = socketService;
+            this._logger = loggerFactory.CreateLogger(GetType());
         }
 
 
         public async Task StartAsync(CancellationToken cancellationToken)
         {
             // 主的线程
-            _bossGroup = new MultithreadEventLoopGroup(1);
+            this._bossGroup = new MultithreadEventLoopGroup(1);
             // 工作线程，默认根据CPU计算
-            _workerGroup = new MultithreadEventLoopGroup();
+            this._workerGroup = new MultithreadEventLoopGroup();
 
             var bootstrap = new ServerBootstrap()
-                .Group(_bossGroup, _workerGroup);
+                .Group(this._bossGroup, this._workerGroup);
 
 
-            if (_options.UseLibuv)
+            if (this._options.UseLibuv)
             {
                 bootstrap.Channel<TcpServerChannel>();
             }
@@ -70,7 +71,7 @@ namespace Peach.Tcp
             }
 
             bootstrap.Channel<TcpServerSocketChannel>()
-                .Option(ChannelOption.SoBacklog, _options.SoBacklog); //NOTE: 是否可以公开更多Netty的参数
+                .Option(ChannelOption.SoBacklog, this._options.SoBacklog); //NOTE: 是否可以公开更多Netty的参数
 
             if (RuntimeInformation.IsOSPlatform(OSPlatform.Linux)
                 || RuntimeInformation.IsOSPlatform(OSPlatform.OSX))
@@ -88,7 +89,7 @@ namespace Peach.Tcp
                     //TODO:ssl support
 
                     pipeline.AddLast(new LoggingHandler("CONN"));
-                    var meta = _protocol.GetProtocolMeta();
+                    var meta = this._protocol.GetProtocolMeta();
 
                     if (meta != null)
                     {
@@ -114,42 +115,42 @@ namespace Peach.Tcp
                     }
 
                     //收到消息后的解码处理Handler
-                    pipeline.AddLast(new ChannelDecodeHandler<TMessage>(_protocol));
+                    pipeline.AddLast(new ChannelDecodeHandler<TMessage>(this._protocol));
                     //业务处理Handler，即解码成功后如何处理消息的类
-                    pipeline.AddLast(new TcpServerChannelHandlerAdapter<TMessage>(_socketService,_protocol));
+                    pipeline.AddLast(new TcpServerChannelHandlerAdapter<TMessage>(this._socketService, this._protocol));
                 }));
 
-            if (_options.BindType == AddressBindType.Any)
+            if (this._options.BindType == AddressBindType.Any)
             {
-                _channel = await bootstrap.BindAsync(_options.Port);
+                this._channel = await bootstrap.BindAsync(this._options.Port);
             }
-            else if (_options.BindType == AddressBindType.InternalAddress)
+            else if (this._options.BindType == AddressBindType.InternalAddress)
             {
                 var localPoint = IPUtility.GetLocalIntranetIP();
                 //this._logger.LogInformation("TcpServerHost bind at {0}",localPoint);
-                _channel = await bootstrap.BindAsync(localPoint, _options.Port);
+                this._channel = await bootstrap.BindAsync(localPoint, this._options.Port);
             }
-            else if(_options.BindType == AddressBindType.Loopback)
+            else if(this._options.BindType == AddressBindType.Loopback)
             {
-                _channel = await bootstrap.BindAsync(IPAddress.Loopback, _options.Port);
+                this._channel = await bootstrap.BindAsync(IPAddress.Loopback, this._options.Port);
             }
             else
             {
-                _channel = await bootstrap.BindAsync(IPAddress.Parse(_options.SpecialAddress), _options.Port);
+                this._channel = await bootstrap.BindAsync(IPAddress.Parse(this._options.SpecialAddress), this._options.Port);
             }
 
-            _logger.LogInformation("TcpServerHost bind at {0}", _channel.LocalAddress);
+            this._logger.LogInformation(this._options.StartupWords, this._channel.LocalAddress);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
         {
-            _logger.LogInformation("TcpServerHost is stoping...");
-            await _channel.CloseAsync();
-            var quietPeriod = TimeSpan.FromMilliseconds(_options.QuietPeriod);
-            var shutdownTimeout = TimeSpan.FromMilliseconds(_options.ShutdownTimeout);
-            await _workerGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
-            await _bossGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
-            _logger.LogInformation("TcpServerHost is stoped!");
+            this._logger.LogInformation("TcpServerHost is stoping...");
+            await this._channel.CloseAsync();
+            var quietPeriod = TimeSpan.FromMilliseconds(this._options.QuietPeriod);
+            var shutdownTimeout = TimeSpan.FromMilliseconds(this._options.ShutdownTimeout);
+            await this._workerGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
+            await this._bossGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
+            this._logger.LogInformation("TcpServerHost is stoped!");
             //TODO:Close Client?
         }
     }

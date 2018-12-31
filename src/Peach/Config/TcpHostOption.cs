@@ -20,6 +20,8 @@ namespace Peach.Config
         public bool UseLibuv { get; set; } = true;
 
         public string SpecialAddress { get; set; } = "127.0.0.1";
+
+        public string StartupWords { get; set; } = "TcpServerHost bind at {bindAddress}";
     }
 
     public enum AddressBindType

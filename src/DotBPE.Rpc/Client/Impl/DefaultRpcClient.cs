@@ -27,10 +27,10 @@ namespace DotBPE.Rpc.Client
             )
         {
             //_clientOptions = clientOptions.Value ?? new RpcClientOptions();
-            _serviceRouter = serviceRouter;
-            _transportFactory = transportFactory;
-            _handler = handler;
-            _logger = logger;
+            this._serviceRouter = serviceRouter;
+            this._transportFactory = transportFactory;
+            this._handler = handler;
+            this._logger = logger;
         }
 
 
@@ -38,25 +38,25 @@ namespace DotBPE.Rpc.Client
 
         public Task CloseAsync(CancellationToken cancellationToken)
         {
-            return _transportFactory.CloseAllTransports(cancellationToken);
+            return this._transportFactory.CloseAllTransports(cancellationToken);
         }
 
         public async Task SendAsync(AmpMessage message)
         {
-            var point =  _serviceRouter.FindRouterPoint(message.MethodIdentifier);
+            var point = this._serviceRouter.FindRouterPoint(message.MethodIdentifier);
 
             if (point == null)
             {
-                _logger.LogError("route point not found !");
+                this._logger.LogError("route point not found !");
                 ErrorResponse(message);
                 return;
             }
             if(point.RoutePointType != RoutePointType.Remote){
-                _logger.LogError("route error");
+                this._logger.LogError("route error");
                 ErrorResponse(message);
                 return;
             }
-            var transport = await _transportFactory.CreateTransport(point.RemoteAddress);
+            var transport = await this._transportFactory.CreateTransport(point.RemoteAddress);
             await transport.SendAsync(message);
         }
 
@@ -68,7 +68,7 @@ namespace DotBPE.Rpc.Client
         {
             var rsp = AmpMessage.CreateResponseMessage(message.ServiceId, message.MessageId);
             rsp.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
-            _handler.RaiseReceive(rsp);
+            this._handler.RaiseReceive(rsp);
         }
     }
 }

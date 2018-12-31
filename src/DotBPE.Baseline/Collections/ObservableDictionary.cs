@@ -10,41 +10,41 @@ namespace DotBPE.Baseline.Collections
 
         public ObservableDictionary()
         {
-            _dictionary = new Dictionary<TKey, TValue>();
+            this._dictionary = new Dictionary<TKey, TValue>();
         }
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary)
         {
-            _dictionary = new Dictionary<TKey, TValue>(dictionary);
+            this._dictionary = new Dictionary<TKey, TValue>(dictionary);
         }
 
         public ObservableDictionary(IEqualityComparer<TKey> comparer)
         {
-            _dictionary = new Dictionary<TKey, TValue>(comparer);
+            this._dictionary = new Dictionary<TKey, TValue>(comparer);
         }
 
         public ObservableDictionary(IDictionary<TKey, TValue> dictionary, IEqualityComparer<TKey> comparer)
         {
-            _dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
+            this._dictionary = new Dictionary<TKey, TValue>(dictionary, comparer);
         }
 
         public void Add(TKey key, TValue value)
         {
-            _dictionary.Add(key, value);
+            this._dictionary.Add(key, value);
 
             OnChanged(new ChangedEventArgs<KeyValuePair<TKey, TValue>>(new KeyValuePair<TKey, TValue>(key, value), ChangedAction.Add));
         }
 
         public void Add(KeyValuePair<TKey, TValue> item)
         {
-            _dictionary.Add(item);
+            this._dictionary.Add(item);
 
             OnChanged(new ChangedEventArgs<KeyValuePair<TKey, TValue>>(item, ChangedAction.Add));
         }
 
         public bool Remove(TKey key)
         {
-            bool success = _dictionary.Remove(key);
+            bool success = this._dictionary.Remove(key);
 
             if (success)
                 OnChanged(new ChangedEventArgs<KeyValuePair<TKey, TValue>>(new KeyValuePair<TKey, TValue>(key, default(TValue)), ChangedAction.Remove));
@@ -54,7 +54,7 @@ namespace DotBPE.Baseline.Collections
 
         public bool Remove(KeyValuePair<TKey, TValue> item)
         {
-            bool success = _dictionary.Remove(item);
+            bool success = this._dictionary.Remove(item);
 
             if (success)
                 OnChanged(new ChangedEventArgs<KeyValuePair<TKey, TValue>>(item, ChangedAction.Remove));
@@ -64,66 +64,66 @@ namespace DotBPE.Baseline.Collections
 
         public void Clear()
         {
-            _dictionary.Clear();
+            this._dictionary.Clear();
 
             OnChanged(new ChangedEventArgs<KeyValuePair<TKey, TValue>>(new KeyValuePair<TKey, TValue>(), ChangedAction.Clear));
         }
 
         public bool ContainsKey(TKey key)
         {
-            return _dictionary.ContainsKey(key);
+            return this._dictionary.ContainsKey(key);
         }
 
         public bool Contains(KeyValuePair<TKey, TValue> item)
         {
-            return _dictionary.Contains(item);
+            return this._dictionary.Contains(item);
         }
 
         public bool TryGetValue(TKey key, out TValue value)
         {
-            return _dictionary.TryGetValue(key, out value);
+            return this._dictionary.TryGetValue(key, out value);
         }
 
         public void CopyTo(KeyValuePair<TKey, TValue>[] array, int arrayIndex)
         {
-            _dictionary.CopyTo(array, arrayIndex);
+            this._dictionary.CopyTo(array, arrayIndex);
         }
 
         public ICollection<TKey> Keys
         {
-            get { return _dictionary.Keys; }
+            get { return this._dictionary.Keys; }
         }
 
         public ICollection<TValue> Values
         {
-            get { return _dictionary.Values; }
+            get { return this._dictionary.Values; }
         }
 
         public int Count
         {
-            get { return _dictionary.Count; }
+            get { return this._dictionary.Count; }
         }
 
         public bool IsReadOnly
         {
-            get { return _dictionary.IsReadOnly; }
+            get { return this._dictionary.IsReadOnly; }
         }
 
         public TValue this[TKey key]
         {
-            get { return _dictionary[key]; }
+            get { return this._dictionary[key]; }
             set
             {
                 ChangedAction action = ContainsKey(key) ? ChangedAction.Update : ChangedAction.Add;
 
-                _dictionary[key] = value;
+                this._dictionary[key] = value;
                 OnChanged(new ChangedEventArgs<KeyValuePair<TKey, TValue>>(new KeyValuePair<TKey, TValue>(key, value), action));
             }
         }
 
         public IEnumerator<KeyValuePair<TKey, TValue>> GetEnumerator()
         {
-            return _dictionary.GetEnumerator();
+            return this._dictionary.GetEnumerator();
         }
 
         IEnumerator IEnumerable.GetEnumerator()

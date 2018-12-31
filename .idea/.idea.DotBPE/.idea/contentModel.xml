@@ -1,13 +1,15 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ContentModelStore">
-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/netcoreapp1.0/xunit.runner.reporters.netcoreapp10.dll" t="Include" />
-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/netcoreapp1.0/xunit.runner.utility.netcoreapp10.dll" t="Include" />
-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.0/build/netcoreapp1.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/netcoreapp1.0/xunit.runner.reporters.netcoreapp10.dll" t="Include" />
-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/netcoreapp1.0/xunit.runner.utility.netcoreapp10.dll" t="Include" />
-    <e p="$USER_HOME$/.nuget/packages/xunit.runner.visualstudio/2.4.1/build/netcoreapp1.0/xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
-    <e p="$PROJECT_DIR$" t="IncludeFlat">
+    <e p="C:\Users\xuanye\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\netcoreapp1.0\xunit.runner.reporters.netcoreapp10.dll" t="Include" />
+    <e p="C:\Users\xuanye\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\netcoreapp1.0\xunit.runner.utility.netcoreapp10.dll" t="Include" />
+    <e p="C:\Users\xuanye\.nuget\packages\xunit.runner.visualstudio\2.4.0\build\netcoreapp1.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
+    <e p="C:\Users\xuanye\.nuget\packages\xunit.runner.visualstudio\2.4.1\build\netcoreapp1.0\xunit.runner.reporters.netcoreapp10.dll" t="Include" />
+    <e p="C:\Users\xuanye\.nuget\packages\xunit.runner.visualstudio\2.4.1\build\netcoreapp1.0\xunit.runner.utility.netcoreapp10.dll" t="Include" />
+    <e p="C:\Users\xuanye\.nuget\packages\xunit.runner.visualstudio\2.4.1\build\netcoreapp1.0\xunit.runner.visualstudio.dotnetcore.testadapter.dll" t="Include" />
+    <e p="C:\Users\xuanye\.Rider2018.3\system\extResources" t="IncludeRecursive" />
+    <e p="C:\Users\xuanye\.Rider2018.3\system\resharper-host\local\Transient\ReSharperHost\v183\SolutionCaches\_DotBPE.1413260640.00" t="ExcludeRecursive" />
+    <e p="F:\work\github\dotbpe" t="IncludeFlat">
       <e p="DotBPE.sln" t="IncludeFlat" />
       <e p="packages" t="ExcludeRecursive" />
       <e p="samples" t="Include">
@@ -38,6 +40,10 @@
         <e p="MathService.Definition" t="IncludeRecursive">
           <e p="bin" t="ExcludeRecursive" />
           <e p="Entities.cs" t="Include" />
+          <e p="ExtraCallFooMathService.cs" t="Include" />
+          <e p="FooService.cs" t="Include" />
+          <e p="IFooService.cs" t="Include" />
+          <e p="IMathService.cs" t="Include" />
           <e p="MathService.cs" t="Include" />
           <e p="MathService.Definition.csproj" t="IncludeRecursive" />
           <e p="obj" t="ExcludeRecursive">
@@ -331,7 +337,5 @@
         </e>
       </e>
     </e>
-    <e p="$USER_HOME$/Library/Caches/Rider2018.3/extResources" t="IncludeRecursive" />
-    <e p="$USER_HOME$/Library/Caches/Rider2018.3/resharper-host/local/Transient/ReSharperHost/v183/SolutionCaches/_DotBPE.1788006186.00" t="ExcludeRecursive" />
   </component>
 </project>
