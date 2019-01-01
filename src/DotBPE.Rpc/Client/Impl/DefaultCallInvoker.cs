@@ -1,12 +1,10 @@
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Protocol;
-using DotBPE.Rpc.Server;
 using Microsoft.Extensions.Logging;
+using DotBPE.Rpc.Diagnostics;
 
 namespace DotBPE.Rpc.Client
 {
@@ -20,8 +18,8 @@ namespace DotBPE.Rpc.Client
 
         private readonly ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>> _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
-        private static int INVOKER_SEQ = 0;
-        private static object lockObj = new object();
+        private static int INVOKER_SEQ ;
+        //private static object lockObj = new object();
 
         public DefaultCallInvoker(
             IClientMessageHandler<AmpMessage> handler,
@@ -39,42 +37,45 @@ namespace DotBPE.Rpc.Client
         }
 
         /// <summary>
-        /// 调用返回
+        /// server response
         /// </summary>
         /// <param name="sender"></param>
-        /// <param name="e"></param>
+        /// <param name="message"></param>
         private void _handler_OnReceived(object sender, AmpMessage message)
         {
             if (message.InvokeMessageType == InvokeMessageType.Response)
             {
                 //处理消息
-                MessageRecieved(message);
+                MessageReceived(message);
             }
         }
 
         /// <summary>
-        /// TODO:记录审计日志
+        /// Async Call
         /// </summary>
         /// <param name="request"></param>
-        /// <param name="timeOut"></param>
+        /// <param name="timeout"></param>
         /// <returns></returns>
-        private async Task<AmpMessage> AsyncCallInner(AmpMessage request, int timeOut = 3000)
+        private async Task<AmpMessage> AsyncCallInner(AmpMessage request, int timeout = 3000)
         {
+            DotBPEDiagnosticListenerExtensions.Listener.ClientSendRequest(request);
             AutoSetSequence(request);
-            this._logger.LogInformation("new request id={0},type={1}", request.Id,request.InvokeMessageType);
+            this._logger.LogDebug("new request id={0},type={1}", request.Id,request.InvokeMessageType);
 
             if (request.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse)
             {
                 await SendAsync(request);
-                return AmpMessage.CreateRequestMessage(request.ServiceId, request.MessageId);
+                var rsp = AmpMessage.CreateRequestMessage(request.ServiceId, request.MessageId);
+                DotBPEDiagnosticListenerExtensions.Listener.ClientReceiveResponse(request,rsp);
+                return rsp;
             }
 
-            var cts = new CancellationTokenSource(timeOut);
+            var cts = new CancellationTokenSource(timeout);
             //timeout callback
-            using(cts.Token.Register(() => TimeOutCallBack(request.Id), useSynchronizationContext : false))
+            using(cts.Token.Register(() => TimeOutCallBack(request.Id), false))
             {
                 //register callback
-                var callbackTask = RegisterResultCallbackAsync(request.Id, timeOut);
+                var callbackTask = RegisterResultCallbackAsync(request.Id);
 
                 //async call
                 await SendAsync(request);
@@ -82,6 +83,7 @@ namespace DotBPE.Rpc.Client
                 //get return message
                 var rsp = await callbackTask;
 
+                DotBPEDiagnosticListenerExtensions.Listener.ClientReceiveResponse(request,rsp);
                 return rsp;
             }
         }
@@ -107,13 +109,14 @@ namespace DotBPE.Rpc.Client
             return result;
         }
 
-        public async Task<RpcResult<TResult>> AsyncCall<T, TResult>(string callName, ushort serviceId, ushort messageId, T req, int timeOut = 3000)
+        public async Task<RpcResult<TResult>> AsyncCall<T, TResult>(string callName, ushort serviceId, ushort messageId,
+            T req, int timeout = 3000)
         {
             RpcResult<TResult> result = new RpcResult<TResult>();
-            var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId, false);
+            var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId);
             reqMessage.FriendlyServiceName = callName;
             reqMessage.Data = this._serializer.Serialize(req);
-            var rsp = await AsyncCallInner(reqMessage);
+            var rsp = await AsyncCallInner(reqMessage,timeout);
             if (rsp != null)
             {
                 result.Code = rsp.Code;
@@ -134,7 +137,7 @@ namespace DotBPE.Rpc.Client
 
         private async Task<bool> SendAsync(AmpMessage request)
         {
-            bool success = false;
+            bool success ;
             try
             {
                 //发送
@@ -145,17 +148,18 @@ namespace DotBPE.Rpc.Client
             {
                 success = false;
                 ErrorCallBack(request.Id);
-                this._logger.LogError(exception, "error occor:");
+                this._logger.LogError(exception, "error occ:");
+                DotBPEDiagnosticListenerExtensions.Listener.ClientException(request,exception);
             }
             return success;
         }
 
-        private void MessageRecieved(AmpMessage message)
+        private void MessageReceived(AmpMessage message)
         {
 
             if (message.ServiceId == 0 && message.MessageId == 0)
             {
-                this._logger.LogTrace("recieved heart beat");
+                this._logger.LogTrace("received heart beat");
                 return;
             }
 
@@ -170,7 +174,7 @@ namespace DotBPE.Rpc.Client
                 }
                 else
                 {
-                    this._logger.LogError(string.Format("server response error msg ,id={0},code={1},", message.Id, message.Code));
+                    this._logger.LogError($"server response error msg ,id={message.Id},code={message.Code},");
                 }
             }
             else
@@ -188,8 +192,7 @@ namespace DotBPE.Rpc.Client
 
         private void TimeOutCallBack(string id)
         {
-            TaskCompletionSource<AmpMessage> task;
-            if (this._resultDictionary.TryRemove(id, out task))
+            if (this._resultDictionary.TryRemove(id, out var task))
             {
                 var message = AmpMessage.CreateResponseMessage(id);
                 message.Code = RpcErrorCodes.CODE_TIMEOUT;
@@ -208,8 +211,8 @@ namespace DotBPE.Rpc.Client
             {
                 return;
             }
-            TaskCompletionSource<AmpMessage> task;
-            if (this._resultDictionary.TryRemove(id, out task))
+
+            if (this._resultDictionary.TryRemove(id, out var task))
             {
                 var message = AmpMessage.CreateResponseMessage(id);
                 message.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
@@ -222,7 +225,7 @@ namespace DotBPE.Rpc.Client
             }
         }
 
-        private Task<AmpMessage> RegisterResultCallbackAsync(string id, int timeOut)
+        private Task<AmpMessage> RegisterResultCallbackAsync(string id)
         {
             var tcs = new TaskCompletionSource<AmpMessage>();
 

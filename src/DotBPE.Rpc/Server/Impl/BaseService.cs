@@ -86,7 +86,7 @@ namespace DotBPE.Rpc.Server.Impl
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        public override async Task<AmpMessage> ProcessAsync(AmpMessage req)
+        protected override async Task<AmpMessage> ProcessAsync(AmpMessage req)
         {
             //TODO:添加服务端诊断代码
             var resMsg = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);

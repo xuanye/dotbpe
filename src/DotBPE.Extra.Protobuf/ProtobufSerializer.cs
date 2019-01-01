@@ -11,7 +11,7 @@ namespace DotBPE.Extra
     public class ProtobufSerializer : ISerializer
     {
         static ConcurrentDictionary<Type, MessageParser> PARSER_CACHE = new ConcurrentDictionary<Type, MessageParser>();
-        static Type BaseType = typeof(IMessage);
+        private static readonly Type BaseType = typeof(IMessage);
 
         public T Deserialize<T>(byte[] data)
         {
@@ -37,8 +37,7 @@ namespace DotBPE.Extra
 
         public object Deserialize(byte[] data, Type messageType)
         {
-            MessageParser parser;
-            if (!PARSER_CACHE.TryGetValue(messageType,out parser))
+            if (!PARSER_CACHE.TryGetValue(messageType,out var parser))
             {
                 parser = FindMessageParser(messageType);
                 PARSER_CACHE.TryAdd(messageType, parser);
@@ -56,11 +55,7 @@ namespace DotBPE.Extra
             if (BaseType.IsAssignableFrom(messageType) && messageType.IsClass)
             {
                 IMessage message =item as IMessage;
-                if(message == null)
-                {
-                    return new byte[0];
-                }
-                return message.ToByteArray();
+                return message == null ? new byte[0] : message.ToByteArray();
             }
             throw new Rpc.Exceptions.RpcException("Message is not a Protobuf Message");
         }
