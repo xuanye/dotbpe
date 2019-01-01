@@ -66,3 +66,4 @@ cache/
 *.lnk
 *.Production.json
 .idea/
+workspace.xml

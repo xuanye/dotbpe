@@ -23,10 +23,13 @@ namespace DotBPE.Extra
         private readonly IServiceRouter _serviceRouter;
         private readonly MethodInfo _AsyncCaller1;
         private readonly MethodInfo _AsyncCaller2;
+
+        private readonly IClientAduitLogger _aduitLogger;
         public ClientInterceptor(
             ICallInvoker callInvoker,
             IServiceRouter serviceRouter,
             IServiceActorLocator<AmpMessage> actorLocator
+            //IClientAduitLogger aduitLogger =null
         )
         {
             this._callInvoker = callInvoker;
@@ -35,7 +38,9 @@ namespace DotBPE.Extra
 
             this._actorLocator = actorLocator;
             this._serviceRouter = serviceRouter;
+            //this._aduitLogger = aduitLogger?? NullClientAduitLogger.Instance;
         }
+
 
         public void Intercept(IInvocation invocation)
         {
@@ -43,7 +48,38 @@ namespace DotBPE.Extra
             string cacheKey = $"{serviceNameArr[serviceNameArr.Length-1]}.{invocation.Method.Name}";
 
             var req = invocation.Arguments[0];
+            var meta = GetInvokeMeta(cacheKey, invocation);
 
+
+            object ret = null;
+            if (meta.IsLocal)
+            {
+                ret = meta.LocalActor.Invoke(meta.MessageId, invocation.Arguments);
+                return;
+            }
+            else
+            {
+                if (meta.WithNoResponse)
+                {
+                    // AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
+                    ret = meta.InvokeMethod.Invoke(this._callInvoker,
+                        new [] { cacheKey, meta.ServiceId, meta.MessageId, req });
+                }
+                else
+                {
+                    //AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000)
+                    object timeout = invocation.Arguments.Length > 1 ? invocation.Arguments[1] : 3000;
+                    ret = meta.InvokeMethod.Invoke(this._callInvoker,
+                        new [] { cacheKey, meta.ServiceId, meta.MessageId, req, timeout });
+                }
+            }
+
+            invocation.ReturnValue = ret;
+        }
+
+        private InvokeMeta GetInvokeMeta(string cacheKey, IInvocation invocation)
+        {
+            var req = invocation.Arguments[0];
             if (!META_CACHE.TryGetValue(cacheKey, out var meta))
             {
                 var service = invocation.Method.DeclaringType.GetCustomAttribute(typeof(RpcServiceAttribute), false);
@@ -52,7 +88,7 @@ namespace DotBPE.Extra
                     throw new RpcException("RpcServiceAttribute Not Found");
                 }
                 var method = invocation.Method.GetCustomAttribute(typeof(RpcMethodAttribute), false);
-               if (method == null)
+                if (method == null)
                 {
                     throw new RpcException("RpcMethodAttribute Not Found");
                 }
@@ -94,31 +130,15 @@ namespace DotBPE.Extra
                         meta.InvokeMethod = this._AsyncCaller2.MakeGenericMethod(req.GetType(), meta.ResultType);
                     }
                 }
-                else{
+                else
+                {
                     meta.LocalActor = this._actorLocator.LocateServiceActor($"{meta.ServiceId}${meta.MessageId}");
                 }
 
                 META_CACHE.TryAdd(cacheKey, meta);
             }
-            if(meta.IsLocal){
-                invocation.ReturnValue =  meta.LocalActor.Invoke(meta.MessageId,invocation.Arguments);
-                return ;
-            }
-            if (meta.WithNoResponse)
-            {
-                // AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
-                invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker,
-                    new[] { cacheKey, meta.ServiceId, meta.MessageId, req });
-            }
-            else
-            {
-                //AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000)
-                object timeout = invocation.Arguments.Length > 1 ? invocation.Arguments[1] : 3000;
-                invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker,
-                    new[] {cacheKey, meta.ServiceId, meta.MessageId, req, timeout});
-            }
+            return meta;
         }
-
         private bool IsLocalCall(ushort serviceId, ushort messageId)
         {
             string key = $"{serviceId}${messageId}";
