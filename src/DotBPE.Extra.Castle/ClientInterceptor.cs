@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
+using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server;
 
@@ -15,8 +16,8 @@ namespace DotBPE.Extra
     {
         private readonly ICallInvoker _callInvoker;
 
-        private static ConcurrentDictionary<string, InvokeMeta> META_CACHE = new ConcurrentDictionary<string, InvokeMeta>();
-        private static ConcurrentDictionary<string, bool> CACHE_LOCALCALL = new ConcurrentDictionary<string, bool>();
+        private static readonly ConcurrentDictionary<string, InvokeMeta> META_CACHE = new ConcurrentDictionary<string, InvokeMeta>();
+        private static readonly ConcurrentDictionary<string, bool> CACHE_LOCAL_CALL = new ConcurrentDictionary<string, bool>();
 
         private readonly IServiceActorLocator<AmpMessage> _actorLocator;
         private readonly IServiceRouter _serviceRouter;
@@ -45,33 +46,31 @@ namespace DotBPE.Extra
 
             if (!META_CACHE.TryGetValue(cacheKey, out var meta))
             {
-                var service = invocation.Method.DeclaringType.GetCustomAttributes(typeof(RpcServiceAttribute), false).FirstOrDefault();
+                var service = invocation.Method.DeclaringType.GetCustomAttribute(typeof(RpcServiceAttribute), false);
                 if (service == null)
                 {
-                    throw new Rpc.Exceptions.RpcException("RpcServiceAttribute Not Found");
+                    throw new RpcException("RpcServiceAttribute Not Found");
                 }
-                var methods = invocation.Method.GetCustomAttributes(typeof(RpcMethodAttribute), false);
-                var method = methods.FirstOrDefault();
-                if (method == null)
+                var method = invocation.Method.GetCustomAttribute(typeof(RpcMethodAttribute), false);
+               if (method == null)
                 {
-                    throw new Rpc.Exceptions.RpcException("RpcMethodAttribute Not Found");
+                    throw new RpcException("RpcMethodAttribute Not Found");
                 }
                 var sAttr = service as RpcServiceAttribute;
                 var mAttr = method as RpcMethodAttribute;
-                meta = new InvokeMeta() { ServiceId = sAttr.ServiceId, MessageId = mAttr.MessageId };
+                meta = new InvokeMeta { ServiceId = sAttr.ServiceId, MessageId = mAttr.MessageId };
 
                 meta.IsLocal = IsLocalCall(meta.ServiceId, meta.MessageId);
                 if (!meta.IsLocal)
                 {
                     var returnType = invocation.Method.ReturnType;
-                    Type innerType = null;
                     if (returnType == typeof(Task))
                     {
                         meta.WithNoResponse = true;
                     }
                     else if (returnType.BaseType == typeof(Task)) //Task<RpcResult>
                     {
-                        innerType = returnType.GetProperty("Result").PropertyType;
+                        var innerType = returnType.GetProperty("Result").PropertyType;
                         if (innerType == typeof(RpcResult))
                         {
                             meta.ResultType = null;
@@ -83,7 +82,7 @@ namespace DotBPE.Extra
                     }
                     else
                     {
-                        throw new Rpc.Exceptions.RpcException("ReturnType must be Task or Task<RpcResult<T>>");
+                        throw new RpcException("ReturnType must be Task or Task<RpcResult<T>>");
                     }
 
                     if (meta.WithNoResponse || meta.ResultType == null)
@@ -108,35 +107,29 @@ namespace DotBPE.Extra
             if (meta.WithNoResponse)
             {
                 // AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
-                invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req });
+                invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker,
+                    new[] { cacheKey, meta.ServiceId, meta.MessageId, req });
             }
             else
             {
                 //AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000)
-                if (invocation.Arguments.Length > 1)
-                {
-                    invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, invocation.Arguments[1] });
-                }
-                else
-                {
-                    invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker, new object[] { cacheKey, meta.ServiceId, meta.MessageId, req, 3000 });
-                }
-            }          
+                object timeout = invocation.Arguments.Length > 1 ? invocation.Arguments[1] : 3000;
+                invocation.ReturnValue = meta.InvokeMethod.Invoke(this._callInvoker,
+                    new[] {cacheKey, meta.ServiceId, meta.MessageId, req, timeout});
+            }
         }
 
         private bool IsLocalCall(ushort serviceId, ushort messageId)
         {
             string key = $"{serviceId}${messageId}";
-            if (CACHE_LOCALCALL.TryGetValue(key, out var isLocal))
+            if (CACHE_LOCAL_CALL.TryGetValue(key, out var isLocal))
             {
                 return isLocal;
             }
-            else
-            {
-                var point = this._serviceRouter.FindRouterPoint(key);
-                isLocal = point.RoutePointType == RoutePointType.Local;
-                CACHE_LOCALCALL.TryAdd(key, isLocal);
-            }
+
+            var point = this._serviceRouter.FindRouterPoint(key);
+            isLocal = point.RoutePointType == RoutePointType.Local;
+            CACHE_LOCAL_CALL.TryAdd(key, isLocal);
             return isLocal;
         }
 

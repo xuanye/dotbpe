@@ -11,7 +11,7 @@ namespace DotBPE.Rpc.Server
 {
     public class DefaultServiceActorLocator : IServiceActorLocator<AmpMessage>
     {
-        static ConcurrentDictionary<string, IServiceActor<AmpMessage>> ACTOR_CACHE = new ConcurrentDictionary<string, IServiceActor<AmpMessage>>();
+        static readonly ConcurrentDictionary<string, IServiceActor<AmpMessage>> ACTOR_CACHE = new ConcurrentDictionary<string, IServiceActor<AmpMessage>>();
         static readonly HeartbeatActor HeartbeatActor = new HeartbeatActor();
         private readonly ILogger<DefaultServiceActorLocator> _logger;
         public DefaultServiceActorLocator(IServiceProvider serviceProvider)
@@ -24,7 +24,7 @@ namespace DotBPE.Rpc.Server
         private void Initialize(IServiceProvider serviceProvider)
         {
             var actorList = serviceProvider.GetServices<IServiceActor<AmpMessage>>();
-            if (actorList != null && actorList.Count() >0)
+            if (actorList != null && actorList.Any())
             {
                 foreach (var actor in actorList)
                 {

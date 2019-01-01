@@ -72,5 +72,5 @@ namespace DotBPE.Extra.Castle.Tests
         Task<RpcResult> FooNoRsponse(int a);
     }
 
-   
+
 }

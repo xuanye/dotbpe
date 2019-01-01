@@ -8,10 +8,10 @@ namespace DotBPE.Rpc.Client
 {
 
     public interface ICallInvoker
-    { 
+    {
 
         Task<RpcResult> AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
 
-        Task<RpcResult<TResult>> AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000) ;
+        Task<RpcResult<TResult>> AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeout = 3000) ;
     }
 }

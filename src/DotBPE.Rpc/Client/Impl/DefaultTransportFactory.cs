@@ -13,7 +13,7 @@ namespace DotBPE.Rpc.Client
 {
     public class DefaultTransportFactory : ITransportFactory<AmpMessage>
     {
-        ConcurrentDictionary<EndPoint, ITransport<AmpMessage>> TRANSPORT_CACHE = new ConcurrentDictionary<EndPoint, ITransport<AmpMessage>>();
+        readonly ConcurrentDictionary<EndPoint, ITransport<AmpMessage>> TRANSPORT_CACHE = new ConcurrentDictionary<EndPoint, ITransport<AmpMessage>>();
 
         private readonly ISocketClient<AmpMessage> _socket;
         private readonly IClientMessageHandler<AmpMessage> _handler;
@@ -56,17 +56,17 @@ namespace DotBPE.Rpc.Client
 
         private void _socket_OnError(object sender, Peach.EventArgs.ErrorEventArgs<AmpMessage> e)
         {
-          
+
         }
 
         private void _socket_OnDisconnected(object sender, Peach.EventArgs.DisconnectedEventArgs<AmpMessage> e)
         {
-           
+
         }
 
         private void _socket_OnConnected(object sender, Peach.EventArgs.ConnectedEventArgs<AmpMessage> e)
         {
-          
+
         }
 
         #endregion
@@ -75,7 +75,7 @@ namespace DotBPE.Rpc.Client
         {
             if (this.TRANSPORT_CACHE.TryRemove(endpoint, out var transport))
             {
-                await transport.CloseAsync(CancellationToken.None).AnyContext();              
+                await transport.CloseAsync(CancellationToken.None).AnyContext();
             }
         }
 
@@ -86,7 +86,7 @@ namespace DotBPE.Rpc.Client
                 return transport;
             }
             var context = await this._socket.ConnectAsync(endpoint);
-            transport = new DefaultTransport(endpoint, context);
+            transport = new DefaultTransport(context);
             this.TRANSPORT_CACHE.AddOrUpdate(endpoint, transport, (k, old) => {
                 //Dispose
                 old.CloseAsync(CancellationToken.None).AnyContext();
@@ -103,7 +103,7 @@ namespace DotBPE.Rpc.Client
                 await transport.CloseAsync(CancellationToken.None).AnyContext();
             }
 
-            this.TRANSPORT_CACHE.Clear(); 
+            this.TRANSPORT_CACHE.Clear();
         }
     }
 }

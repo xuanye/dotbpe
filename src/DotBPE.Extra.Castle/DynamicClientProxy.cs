@@ -18,25 +18,14 @@ namespace DotBPE.Extra
             this._provider = provider;
         }
 
-        protected IInterceptor ClientInterceptor
-        {
-            get
-            {
-                if(this._interceptor == null)
-                {
-                    this._interceptor = this._provider.GetRequiredService<ClientInterceptor>();
-                }
-                return this._interceptor;
-            }
-        }
+        protected IInterceptor ClientInterceptor =>
+            this._interceptor ??
+            (this._interceptor = this._provider.GetRequiredService<ClientInterceptor>());
 
         public TService Create<TService>() where TService : class
         {
-           return this._generator.CreateInterfaceProxyWithoutTarget<TService>(ClientInterceptor);
+            //TODO:CACHE？
+            return this._generator.CreateInterfaceProxyWithoutTarget<TService>(ClientInterceptor);
         }
-
-       
     }
-
-  
 }

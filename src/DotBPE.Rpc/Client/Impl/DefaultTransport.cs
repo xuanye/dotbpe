@@ -16,7 +16,7 @@ namespace DotBPE.Rpc.Client
     public class DefaultTransport : ITransport<AmpMessage>
     {
         private readonly ISocketContext<AmpMessage> _context;
-        public DefaultTransport(System.Net.EndPoint endpoint, ISocketContext<AmpMessage> context) 
+        public DefaultTransport(ISocketContext<AmpMessage> context)
         {
             this._context = context;
             Id = ObjectId.GenerateNewId().ToString();
@@ -26,7 +26,7 @@ namespace DotBPE.Rpc.Client
 
         public Task CloseAsync(CancellationToken cancellationToken)
         {
-            return this._context.Channel.CloseAsync();          
+            return this._context.Channel.CloseAsync();
         }
 
         public Task SendAsync(AmpMessage request)
