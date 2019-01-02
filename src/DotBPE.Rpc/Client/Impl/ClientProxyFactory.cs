@@ -35,6 +35,7 @@ namespace DotBPE.Rpc.Client
             container.AddSingleton<IClientMessageHandler<AmpMessage>, DefaultClientMessageHandler>();
             container.AddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient>();
             container.AddSingleton<ITransportFactory<AmpMessage>, DefaultTransportFactory>();
+            container.TryAddSingleton<IClientAuditLoggerFactory,DefaultClientAuditLoggerFactory>();
             container.TryAddSingleton<IRouterPolicy, RoundrobinPolicy>();
             container.Configure<RpcClientOptions>(x => { });
             container.AddLogging();

@@ -70,14 +70,6 @@ namespace DotBPE.Rpc.Server
         /// <returns></returns>
         protected abstract Task<AmpMessage> ProcessAsync(AmpMessage req);
 
-        /// <summary>
-        /// local call
-        /// </summary>
-        /// <param name="messageId"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        public abstract object Invoke(ushort messageId,params object[] args);
-
 
         /// <summary>
         /// 发送服务端意外错误的消息

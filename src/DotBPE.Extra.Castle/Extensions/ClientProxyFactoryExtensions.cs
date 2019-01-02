@@ -7,7 +7,6 @@ namespace DotBPE.Extra
         public static IClientProxyFactory UseCastleDynamicProxy(this IClientProxyFactory @this)
         {
             return @this.AddDependencyServices(services => { services.AddDynamicClientProxy(); });
-
         }
 
     }

@@ -131,7 +131,10 @@ namespace DotBPE.Rpc
             services.TryAddSingleton<IClientMessageHandler<AmpMessage>, DefaultClientMessageHandler>();
             services.TryAddSingleton<IRouterPolicy, RoundrobinPolicy>();
             services.TryAddSingleton<IServiceRouter, DefaultServiceRouter>();
+            services.TryAddSingleton<IClientAuditLoggerFactory, DefaultClientAuditLoggerFactory>();
+            services.TryAddSingleton<IRequestAuditLoggerFactory, DefaultRequestAuditLoggerFactory>();
             services.TryAddSingleton<ITransportFactory<AmpMessage>, DefaultTransportFactory>();
+
 
             return services;
         }

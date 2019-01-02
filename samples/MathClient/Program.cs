@@ -31,9 +31,9 @@ namespace Math.Client
 
             var mathService = proxy.Create<IMathService>();
 
-            var i = 1;
+            var i = 0;
             var random = new Random();
-            while (i++ < 100)
+            while (i++ < 1000)
             {
                 var req = new SumReq {A = random.Next(100000), B = random.Next(100000)};
                 var result = mathService.SumAsync(req).Result;
