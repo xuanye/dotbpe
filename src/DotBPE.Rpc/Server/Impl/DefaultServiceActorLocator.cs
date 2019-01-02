@@ -11,7 +11,7 @@ namespace DotBPE.Rpc.Server
 {
     public class DefaultServiceActorLocator : IServiceActorLocator<AmpMessage>
     {
-        static readonly ConcurrentDictionary<string, IServiceActor<AmpMessage>> ACTOR_CACHE = new ConcurrentDictionary<string, IServiceActor<AmpMessage>>();
+        private readonly ConcurrentDictionary<string, IServiceActor<AmpMessage>> ACTOR_CACHE = new ConcurrentDictionary<string, IServiceActor<AmpMessage>>();
         static readonly HeartbeatActor HeartbeatActor = new HeartbeatActor();
         private readonly ILogger<DefaultServiceActorLocator> _logger;
         public DefaultServiceActorLocator(IServiceProvider serviceProvider)
@@ -48,18 +48,38 @@ namespace DotBPE.Rpc.Server
                 //心跳消息
                 return HeartbeatActor;
             }
+
             string[] path = servicePath.Split('$');
             string serviceKey = $"{path[0]}$0";
 
-            if (ACTOR_CACHE.TryGetValue(serviceKey, out var serviceActor))
+            var actor = GetFromCache(servicePath);
+            if (actor != null)
+            {
+                return actor;
+            }
+            actor = GetFromCache(serviceKey);
+
+            if (actor != null)
+            {
+                return actor;
+            }
+
+            return GetNotFoundActor();
+        }
+
+        protected virtual IServiceActor<AmpMessage> GetFromCache(string cacheKey)
+        {
+            if (ACTOR_CACHE.TryGetValue(cacheKey,out var serviceActor))
             {
                 return serviceActor;
             }
 
-            if (ACTOR_CACHE.TryGetValue(servicePath,out serviceActor))
-            {
-                return serviceActor;
-            }
+            return null;
+
+        }
+
+        protected virtual IServiceActor<AmpMessage> GetNotFoundActor()
+        {
             return NotFoundServiceActor.Default;
         }
     }

@@ -74,7 +74,7 @@ namespace DotBPE.Rpc.Server.Impl
                 typeof(RpcServiceAttribute), false) as RpcServiceAttribute;
             if (serviceAttribute == null)
             {
-                throw  new AggregateException($"Miss RpcServiceAttribute at {serviceType}");
+                throw new InvalidOperationException($"Miss RpcServiceAttribute at {serviceType}");
             }
 
             return serviceAttribute;
@@ -88,7 +88,6 @@ namespace DotBPE.Rpc.Server.Impl
         /// <returns></returns>
         protected override async Task<AmpMessage> ProcessAsync(AmpMessage req)
         {
-            //TODO:添加服务端诊断代码
             var resMsg = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
             resMsg.Sequence = req.Sequence;
             string key = $"{req.ServiceId}${req.MessageId}";
@@ -106,15 +105,19 @@ namespace DotBPE.Rpc.Server.Impl
                 object retVal;
                 if (parameterInfos.Length == 2)
                 {
+                    var newArgs = new object[2];
+                    newArgs[0] = arg1;
+
                     if (parameterInfos[1].ParameterType == typeof(bool))
                     {
-                        retVal = m.Invoke(this, new[] {arg1, withResponse});
+                        newArgs[1] = withResponse;
                     }
                     else
                     {
-                        retVal = m.Invoke(this,
-                            new[] {arg1, parameterInfos[1].HasDefaultValue ? parameterInfos[1].DefaultValue : 3000});
+                        newArgs[1] = parameterInfos[1].HasDefaultValue ? parameterInfos[1].DefaultValue : 3000;
+
                     }
+                    retVal = m.Invoke(this,newArgs);
                 }
                 else
                 {
@@ -174,28 +177,5 @@ namespace DotBPE.Rpc.Server.Impl
             return resMsg;
         }
 
-        #region  IRpcService Method
-
-        /// <summary>
-        /// Local Call
-        /// </summary>
-        /// <param name="messageId"></param>
-        /// <param name="args"></param>
-        /// <returns></returns>
-        /// <exception cref="RpcException"></exception>
-        public override object Invoke(ushort messageId, params object[] args)
-        {
-            //TODO:添加诊断的代码
-            var key = $"{ServiceId}${messageId}";
-
-            if (METHOD_CACHE.TryGetValue(key, out var m))
-            {
-                return m.Invoke(this, args);
-            }
-
-            throw new RpcException($"service method not found {key}");
-        }
-
-        #endregion
     }
 }

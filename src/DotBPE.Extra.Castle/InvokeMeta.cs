@@ -9,14 +9,9 @@ namespace DotBPE.Extra
     {
         public ushort ServiceId { get; set; }
         public ushort MessageId { get; set; }
-
         public bool WithNoResponse { get; set; }
-
         public Type ResultType { get; set; }
-
         public MethodInfo InvokeMethod { get; set; }
 
-        public bool IsLocal{get;set;}
-        public IServiceActor<AmpMessage> LocalActor {get;set;}
     }
 }

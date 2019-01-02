@@ -14,11 +14,7 @@ namespace DotBPE.Rpc.Server
 
         public string Category => "Default";
 
-        public object Invoke(ushort messageId,params object[] args)
-        {
-            return Task.CompletedTask;
-        }
-
+    
         public Task ReceiveAsync(ISocketContext<AmpMessage> context, AmpMessage message)
         {
             message.InvokeMessageType = InvokeMessageType.Response;

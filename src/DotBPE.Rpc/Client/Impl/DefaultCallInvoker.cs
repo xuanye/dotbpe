@@ -88,7 +88,7 @@ namespace DotBPE.Rpc.Client
             }
         }
 
-        public async Task<RpcResult> AsyncCallWithOutResponse<T>(string callName, ushort serviceId, ushort messageId, T req)
+        public async Task<RpcResult> AsyncNotify<T>(string callName, ushort serviceId, ushort messageId, T req)
         {
             RpcResult result = new RpcResult();
 
@@ -109,7 +109,7 @@ namespace DotBPE.Rpc.Client
             return result;
         }
 
-        public async Task<RpcResult<TResult>> AsyncCall<T, TResult>(string callName, ushort serviceId, ushort messageId,
+        public async Task<RpcResult<TResult>> AsyncRequest<T, TResult>(string callName, ushort serviceId, ushort messageId,
             T req, int timeout = 3000)
         {
             RpcResult<TResult> result = new RpcResult<TResult>();
