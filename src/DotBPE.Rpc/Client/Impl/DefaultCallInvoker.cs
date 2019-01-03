@@ -5,6 +5,8 @@ using System.Threading.Tasks;
 using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.Logging;
 using DotBPE.Rpc.Diagnostics;
+using DotBPE.Rpc.Exceptions;
+using DotNetty.Transport.Channels;
 
 namespace DotBPE.Rpc.Client
 {
@@ -143,6 +145,12 @@ namespace DotBPE.Rpc.Client
                 //发送
                 await this._rpcClient.SendAsync(request);
                 success = true;
+            }
+            catch (ClosedChannelException closedEx)
+            {
+                this._logger.LogError(closedEx, "send message error,channel closed,{messageId}", request.Id);
+                DotBPEDiagnosticListenerExtensions.Listener.ClientException( request, closedEx);
+                throw new RpcCommunicationException($"send message error,channel closed,{request.Id}",closedEx);
             }
             catch (Exception exception)
             {

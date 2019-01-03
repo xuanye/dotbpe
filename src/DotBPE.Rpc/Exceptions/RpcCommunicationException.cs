@@ -13,10 +13,11 @@ using System;
 
 namespace DotBPE.Rpc.Exceptions
 {
+    /// <inheritdoc />
     /// <summary>
     /// RPC通信异常类
     /// </summary>
-    /// <seealso cref="System.Exception" />
+    /// <seealso cref="T:System.Exception" />
     public class RpcCommunicationException : Exception
     {
         public RpcCommunicationException()
