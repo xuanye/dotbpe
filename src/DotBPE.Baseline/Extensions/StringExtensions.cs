@@ -1564,7 +1564,7 @@ namespace DotBPE.Baseline.Extensions
         public static string FormatWith(this string format, params object[] args)
         {
             if (format == null)
-                throw new ArgumentNullException("format");
+                throw new ArgumentNullException(nameof(format));
 
             return string.Format(format, args);
         }

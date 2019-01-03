@@ -43,7 +43,9 @@ namespace DotBPE.Rpc.Server.Impl
         protected string GroupName { get; }
 
 
-
+        /// <summary>
+        ///  Default serializer from IOC container
+        /// </summary>
         protected ISerializer Serializer =>
             this._serializer ??
             (this._serializer = Environment.ServiceProvider.GetRequiredService<ISerializer>());

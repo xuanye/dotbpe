@@ -12,7 +12,6 @@ namespace DotBPE.Rpc.Server
         public static NotFoundServiceActor Default = new NotFoundServiceActor();
 
         public string Id => "NotFoundServiceActor";
-        public string Category => "Default";
 
 
         public async Task ReceiveAsync(ISocketContext<AmpMessage> context, AmpMessage message)

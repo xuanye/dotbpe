@@ -29,13 +29,12 @@ namespace DotBPE.Rpc.Server
             }
 
             var actor = this._actorLocator.LocateServiceActor(message.MethodIdentifier);
-            if (actor == null) // 找不到对应的执行程序
-            {
-                this._logger.LogError("the service actor is not found,MethodId={methodIdentifier}", message.MethodIdentifier);
-                return NotFoundServiceActor.Default.ReceiveAsync(context,message);
-            }
+            if (actor != null)
+                return actor.ReceiveAsync(context, message);
 
-            return actor.ReceiveAsync(context, message);
+
+            this._logger.LogError("the service actor is not found,MethodId={methodIdentifier}", message.MethodIdentifier);
+            return NotFoundServiceActor.Default.ReceiveAsync(context,message);
 
         }
     }

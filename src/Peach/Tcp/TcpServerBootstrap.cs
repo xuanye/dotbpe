@@ -139,7 +139,7 @@ namespace Peach.Tcp
                 this._channel = await bootstrap.BindAsync(IPAddress.Parse(this._options.SpecialAddress), this._options.Port);
             }
 
-            this._logger.LogInformation(this._options.StartupWords, this._channel.LocalAddress);
+            Console.Write(this._options.StartupWords, this._channel.LocalAddress);
         }
 
         public async Task StopAsync(CancellationToken cancellationToken)
@@ -151,7 +151,7 @@ namespace Peach.Tcp
             await this._workerGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
             await this._bossGroup.ShutdownGracefullyAsync(quietPeriod, shutdownTimeout);
             this._logger.LogInformation("TcpServerHost is stoped!");
-            //TODO:Close Client?
+            //NOTE:Close Client?
         }
     }
 }

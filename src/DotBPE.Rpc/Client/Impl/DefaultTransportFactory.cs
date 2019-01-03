@@ -39,7 +39,7 @@ namespace DotBPE.Rpc.Client
         /// <param name="e"></param>
         private void _socket_OnIdleState(object sender, Peach.EventArgs.IdleStateEventArgs<AmpMessage> e)
         {
-            e.Context.SendAsync(AmpMessage.HEARBEAT);
+            e.Context.SendAsync(AmpMessage.HEART_BEAT);
         }
 
         /// <summary>

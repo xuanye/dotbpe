@@ -3,6 +3,7 @@ using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.Rpc.Server
 {
+    /// <inheritdoc />
     public class DefaultRequestAuditLoggerFactory:IRequestAuditLoggerFactory
     {
 
@@ -19,25 +20,29 @@ namespace DotBPE.Rpc.Server
             return logger;
         }
 
-        public class NullRequestAuditLogger : IRequestAuditLogger
+
+    }
+
+    /// <inheritdoc />
+    public class NullRequestAuditLogger : IRequestAuditLogger
+    {
+        public static readonly NullRequestAuditLogger Instance = new NullRequestAuditLogger();
+
+
+        public string MethodFullName { get; }
+
+        public void SetParameter(object parameter)
         {
-            public static readonly NullRequestAuditLogger Instance = new NullRequestAuditLogger();
+        }
 
+        public void SetReturnValue(object retVal)
+        {
+        }
 
-            public string MethodFullName { get; }
+        public void Dispose()
+        {
 
-            public void SetParameter(object parameter)
-            {
-            }
-
-            public void SetReturnValue(object retVal)
-            {
-            }
-
-            public void Dispose()
-            {
-
-            }
         }
     }
+
 }
