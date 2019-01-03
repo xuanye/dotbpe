@@ -1,5 +1,7 @@
 using System.Net;
+using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server.Impl;
 using DotNetty.Transport.Channels;
@@ -17,11 +19,7 @@ namespace DotBPE.Rpc.Tests.Server
         {
             IServiceCollection container = new ServiceCollection();
             container.AddLogging();
-
-            var serializer = new Mock<ISerializer>();
-
-            container.AddSingleton(typeof(ISerializer), serializer.Object);
-
+            container.AddSingleton<ISerializer, JsonSerializer>();
             Internal.Environment.SetServiceProvider( container.BuildServiceProvider());
         }
 
@@ -46,14 +44,49 @@ namespace DotBPE.Rpc.Tests.Server
             var context2 = new MockContext();
 
             var reqMessage = AmpMessage.CreateRequestMessage(100, 1);
+            reqMessage.Data= new byte[0];
             await fooService.ReceiveAsync(context1, reqMessage);
 
-            Assert.Equal(0, context1.ReceiveCode);
+            Assert.NotNull(context1.ResponseMessage);
+            Assert.Equal(0, context1.ResponseMessage.Code);
 
-            reqMessage = AmpMessage.CreateRequestMessage(100, 2);
+            reqMessage = AmpMessage.CreateRequestMessage(100, 2000);
             await fooService.ReceiveAsync(context2, reqMessage);
 
-            Assert.Equal(RpcErrorCodes.CODE_SERVICE_NOT_FOUND, context2.ReceiveCode);
+            Assert.NotNull(context2.ResponseMessage);
+            Assert.Equal(RpcErrorCodes.CODE_SERVICE_NOT_FOUND, context2.ResponseMessage.Code);
+        }
+
+
+        [Fact]
+        public async Task BaseServiceProcessCallTest()
+        {
+            ISerializer serializer = new JsonSerializer();
+            var fooService = new FooService();
+            Assert.Equal("100$0", fooService.Id);
+
+
+            var req = new FooReq {FooWord = "hello dotbpe"};
+
+            var context1 = new MockContext();
+
+            var reqMessage = AmpMessage.CreateRequestMessage(100, 2);
+            reqMessage.Version = 1;
+            reqMessage.CodecType = CodecType.JSON;
+            reqMessage.Sequence = 1;
+            reqMessage.Data = serializer.Serialize(req);
+
+            await fooService.ReceiveAsync(context1, reqMessage);
+
+            Assert.NotNull(context1.ResponseMessage);
+            Assert.Equal(0, context1.ResponseMessage.Code);
+
+            Assert.NotNull(context1.ResponseMessage.Data);
+
+            FooRes res = serializer.Deserialize<FooRes>(context1.ResponseMessage.Data);
+            Assert.NotNull(res);
+
+            Assert.Equal(req.FooWord,res.RetFooWord);
         }
 
     }
@@ -65,6 +98,11 @@ namespace DotBPE.Rpc.Tests.Server
         {
             return Task.FromResult(new RpcResult());
         }
+
+        public Task<RpcResult<FooRes>> Foo2Async(FooReq req)
+        {
+            return Task.FromResult(new RpcResult<FooRes>{ Data = new FooRes { RetFooWord = req.FooWord}});
+        }
     }
 
 
@@ -73,13 +111,23 @@ namespace DotBPE.Rpc.Tests.Server
     {
         [RpcMethod(1)]
         Task<RpcResult> Foo1Async(FooReq req);
+
+        [RpcMethod(2)]
+        Task<RpcResult<FooRes>> Foo2Async(FooReq req);
     }
 
+    [DataContract]
     public class FooReq
     {
-        private string FooWord { get; set; }
+        [DataMember(Order = 1,Name = "foo_word")]
+        public string FooWord { get; set; }
     }
-
+    [DataContract]
+    public class FooRes
+    {
+        [DataMember(Order = 1,Name = "ret_foo_word")]
+        public string RetFooWord { get; set; }
+    }
 
     public class MockContext : ISocketContext<AmpMessage>
     {
@@ -90,11 +138,11 @@ namespace DotBPE.Rpc.Tests.Server
         public bool Active { get; }
 
 
-        public int ReceiveCode { get; private set; }
+        public AmpMessage ResponseMessage { get; private set; }
 
-        public Task SendAsync(AmpMessage message)
+        public Task SendAsync(AmpMessage resMsg)
         {
-            this.ReceiveCode = message.Code;
+            ResponseMessage = resMsg;
             return Task.CompletedTask;
         }
     }

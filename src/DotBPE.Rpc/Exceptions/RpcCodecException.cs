@@ -2,6 +2,9 @@ using System;
 
 namespace DotBPE.Rpc.Exceptions
 {
+    /// <summary>
+    /// codec exception
+    /// </summary>
     public class RpcCodecException : Exception
     {
         public RpcCodecException()

@@ -20,7 +20,7 @@ namespace DotBPE.Rpc.Tests.Server
            IServiceCollection container = new ServiceCollection();
 
            container.AddLogging();
-           container.BindServices(actors => { actors.Add(actor1.Object);actors.Add(actor2.Object); });
+           container.BindServices(actors => { actors.Add(actor1.Object).Add(actor2.Object); });
 
            var provider = container.BuildServiceProvider();
 
