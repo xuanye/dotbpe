@@ -25,8 +25,7 @@ namespace DotBPE.Rpc.Server
 
 
         /// <summary>
-        /// 处理接收消息
-        /// TODO: 处理审计日志的问题
+        /// process receive message from remote client
         /// </summary>
         /// <param name="context"></param>
         /// <param name="message"></param>

@@ -8,7 +8,7 @@ namespace DotBPE.Rpc.Protocol
     public class AmpMessage : InvokeMessage, Peach.Messaging.IMessage
     {
 
-        public static AmpMessage HEARBEAT = CreateRequestMessage(0,0,true);
+        public static AmpMessage HEART_BEAT = CreateRequestMessage(0,0,true);
 
         /// <summary>
         /// 第一个版本为18个字节头固定长度
@@ -44,7 +44,7 @@ namespace DotBPE.Rpc.Protocol
         public override int Length {
             get
             {
-                int hl = Version == 0 ? VERSION_0_HEAD_LENGTH : VERSION_1_HEAD_LENGTH;
+                var hl = Version == 0 ? VERSION_0_HEAD_LENGTH : VERSION_1_HEAD_LENGTH;
                 return hl + Data.Length;
             }
         }
@@ -52,13 +52,7 @@ namespace DotBPE.Rpc.Protocol
         /// <summary>
         /// 消息标识
         /// </summary>
-        public string Id
-        {
-            get
-            {
-                return $"{ServiceId}|{MessageId}|{Sequence}";
-            }
-        }
+        public string Id => $"{ServiceId}|{MessageId}|{Sequence}";
 
 
         /// <summary>
@@ -66,7 +60,7 @@ namespace DotBPE.Rpc.Protocol
         /// </summary>
         public ushort MessageId { get; set; }
 
-        public override string MethodIdentifier { get { return $"{ServiceId}${MessageId}"; } }
+        public override string MethodIdentifier => $"{ServiceId}${MessageId}";
 
         /// <summary>
         /// 请求的序列号
@@ -78,7 +72,7 @@ namespace DotBPE.Rpc.Protocol
         /// </summary>
         public ushort ServiceId { get; set; }
 
-        public override string ServiceIdentifier { get { return $"{ServiceId}$0"; } }
+        public override string ServiceIdentifier => $"{ServiceId}$0";
 
         /// <summary>
         /// 协议版本0/1
@@ -90,12 +84,15 @@ namespace DotBPE.Rpc.Protocol
 
         public static AmpMessage CreateRequestMessage(ushort serviceId,ushort messageId,bool withOutResponse =false)
         {
-            AmpMessage msg = new AmpMessage();
-            msg.ServiceId = serviceId;
-            msg.MessageId = messageId;
-            msg.Version = 0;
-            msg.CodecType = 0;
-            msg.InvokeMessageType = withOutResponse? InvokeMessageType.InvokeWithoutResponse: InvokeMessageType.Request;
+            AmpMessage msg = new AmpMessage
+            {
+                ServiceId = serviceId,
+                MessageId = messageId,
+                Version = 0,
+                CodecType = 0,
+                InvokeMessageType =
+                    withOutResponse ? InvokeMessageType.InvokeWithoutResponse : InvokeMessageType.Request
+            };
             return msg;
         }
 
@@ -103,7 +100,7 @@ namespace DotBPE.Rpc.Protocol
         public static AmpMessage CreateResponseMessage(string requestId)
         {
             var data = requestId.Split('|');
-            AmpMessage message = new AmpMessage()
+            AmpMessage message = new AmpMessage
             {
                 ServiceId = ushort.Parse(data[0]),
                 MessageId = ushort.Parse(data[1]),
@@ -114,7 +111,7 @@ namespace DotBPE.Rpc.Protocol
 
         public static AmpMessage CreateResponseMessage(ushort serviceId, ushort messageId)
         {
-            AmpMessage message = new AmpMessage()
+            AmpMessage message = new AmpMessage
             {
                 ServiceId = serviceId,
                 MessageId = messageId,

@@ -13,7 +13,7 @@ namespace DotBPE.Rpc.Protocol
     /// </summary>
     public class AmpProtocol : IProtocol<AmpMessage>
     {
-        static ProtocolMeta AMP_PROTOCOL_META = new ProtocolMeta
+        static readonly ProtocolMeta AMP_PROTOCOL_META = new ProtocolMeta
         {
             InitialBytesToStrip = 0, //读取时需要跳过的字节数
             LengthAdjustment = -5, //包实际长度的纠正，如果包长包括包头和包体，则要减去Length之前的部分
@@ -50,34 +50,37 @@ namespace DotBPE.Rpc.Protocol
             }
         }
 
-        public void PackHeartBeat(IBufferWriter writer)
-        {
-            AmpMessage message = new AmpMessage();
-            message.ServiceId = 0;
-            message.MessageId = 0;
-        }
-
         public AmpMessage Parse(IBufferReader reader)
         {
             if (reader.ReadableBytes == 0)
             {
                 return null;
             }
-            AmpMessage msg = new AmpMessage();
+            var msg = new AmpMessage();
             msg.Version = reader.ReadByte();
 
             int headLength= AmpMessage.VERSION_0_HEAD_LENGTH;
-            if (msg.Version == 0 && reader.ReadableBytes < AmpMessage.VERSION_0_HEAD_LENGTH - 1)
+            if (msg.Version == 0 )
             {
                 headLength = AmpMessage.VERSION_0_HEAD_LENGTH;
-                throw new RpcCodecException($"decode error ,ReadableBytes={reader.ReadableBytes+1},HEAD_LENGTH={AmpMessage.VERSION_0_HEAD_LENGTH}");
+                if (reader.ReadableBytes < AmpMessage.VERSION_0_HEAD_LENGTH - 1)
+                {
+                    throw new RpcCodecException($"decode error ,ReadableBytes={reader.ReadableBytes+1},HEAD_LENGTH={AmpMessage.VERSION_0_HEAD_LENGTH}");
+                }
             }
-            if (msg.Version == 1 && reader.ReadableBytes < AmpMessage.VERSION_1_HEAD_LENGTH - 1)
+            else if (msg.Version == 1 )
             {
                 headLength = AmpMessage.VERSION_1_HEAD_LENGTH;
-                throw new RpcCodecException($"decode error ,ReadableBytes={reader.ReadableBytes+1},HEAD_LENGTH={AmpMessage.VERSION_1_HEAD_LENGTH}");
+                if (reader.ReadableBytes < AmpMessage.VERSION_1_HEAD_LENGTH - 1)
+                {
+                    throw new RpcCodecException($"decode error ,ReadableBytes={reader.ReadableBytes+1},HEAD_LENGTH={AmpMessage.VERSION_1_HEAD_LENGTH}");
+                }
             }
-                        
+            else
+            {
+                throw new RpcCodecException($"decode error ,{msg.Version} is not support");
+            }
+
             int length = reader.ReadInt();
             msg.Sequence = reader.ReadInt();
             byte type = reader.ReadByte();
@@ -94,7 +97,7 @@ namespace DotBPE.Rpc.Protocol
             else
             {
                 msg.CodecType = CodecType.Protobuf;
-            }           
+            }
 
             int left = length - headLength;
             if (left > 0)
@@ -108,5 +111,5 @@ namespace DotBPE.Rpc.Protocol
             }
             return msg;
         }
-    }  
+    }
 }

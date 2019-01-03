@@ -27,16 +27,16 @@ namespace Peach.Tcp
 
         private readonly TcpClientOption _clientOption;
 
-        private readonly ConcurrentDictionary<EndPoint, SocketContext<TMessage>> channels 
+        private readonly ConcurrentDictionary<EndPoint, SocketContext<TMessage>> channels
             = new ConcurrentDictionary<EndPoint, SocketContext<TMessage>>();
 
-       
+
         public TcpClient(IOptions<TcpClientOption> clientOption,IProtocol<TMessage> protocol)
             :this(clientOption.Value, protocol)
         {
-            
+
         }
-        public TcpClient(IProtocol<TMessage> protocol) 
+        public TcpClient(IProtocol<TMessage> protocol)
             : this(new TcpClientOption(), protocol)
         {
 
@@ -49,7 +49,7 @@ namespace Peach.Tcp
             InitBootstrap();
         }
 
-       
+
         #region Init
 
         /// <summary>
@@ -157,8 +157,7 @@ namespace Peach.Tcp
 
         public async Task<ISocketContext<TMessage>> ConnectAsync(EndPoint endPoint)
         {
-            SocketContext<TMessage> context = null;
-            if (this.channels.TryGetValue(endPoint, out context)
+            if (this.channels.TryGetValue(endPoint, out var context)
                 && context.Active)
             {
                 return context;
@@ -182,12 +181,6 @@ namespace Peach.Tcp
             this.channels.Clear();
             await this._group.ShutdownGracefullyAsync(TimeSpan.FromMilliseconds(quietPeriodMS), TimeSpan.FromMilliseconds(shutdownTimeoutMS));
         }
-
-        public void Receive(ISocketContext<TMessage> context, TMessage msg)
-        {
-            throw new NotImplementedException();
-        }
-
         #endregion
     }
 }
