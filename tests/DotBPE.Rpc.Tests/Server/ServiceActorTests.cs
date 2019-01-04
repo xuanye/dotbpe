@@ -1,13 +1,8 @@
-using System.Net;
-using System.Runtime.Serialization;
 using System.Threading.Tasks;
+using DotBPE.Extra;
 using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Protocol;
-using DotBPE.Rpc.Server.Impl;
-using DotNetty.Transport.Channels;
 using Microsoft.Extensions.DependencyInjection;
-using Moq;
-using Peach;
 using Xunit;
 
 namespace DotBPE.Rpc.Tests.Server
@@ -91,59 +86,4 @@ namespace DotBPE.Rpc.Tests.Server
 
     }
 
-
-    public class FooService : BaseService<IFooService>, IFooService
-    {
-        public Task<RpcResult> Foo1Async(FooReq req)
-        {
-            return Task.FromResult(new RpcResult());
-        }
-
-        public Task<RpcResult<FooRes>> Foo2Async(FooReq req)
-        {
-            return Task.FromResult(new RpcResult<FooRes>{ Data = new FooRes { RetFooWord = req.FooWord}});
-        }
-    }
-
-
-    [RpcService(100, GroupName = "mock")]
-    public interface IFooService
-    {
-        [RpcMethod(1)]
-        Task<RpcResult> Foo1Async(FooReq req);
-
-        [RpcMethod(2)]
-        Task<RpcResult<FooRes>> Foo2Async(FooReq req);
-    }
-
-    [DataContract]
-    public class FooReq
-    {
-        [DataMember(Order = 1,Name = "foo_word")]
-        public string FooWord { get; set; }
-    }
-    [DataContract]
-    public class FooRes
-    {
-        [DataMember(Order = 1,Name = "ret_foo_word")]
-        public string RetFooWord { get; set; }
-    }
-
-    public class MockContext : ISocketContext<AmpMessage>
-    {
-        public string Id { get; }
-        public IPEndPoint LocalEndPoint { get; }
-        public IPEndPoint RemoteEndPoint { get; }
-        public IChannel Channel { get; }
-        public bool Active { get; }
-
-
-        public AmpMessage ResponseMessage { get; private set; }
-
-        public Task SendAsync(AmpMessage resMsg)
-        {
-            ResponseMessage = resMsg;
-            return Task.CompletedTask;
-        }
-    }
 }

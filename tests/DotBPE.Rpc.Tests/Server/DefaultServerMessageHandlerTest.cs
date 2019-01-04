@@ -32,4 +32,6 @@ namespace DotBPE.Rpc.Tests.Server
             return handler.ReceiveAsync(null, AmpMessage.CreateRequestMessage(1, 1));
         }
     }
+
+
 }

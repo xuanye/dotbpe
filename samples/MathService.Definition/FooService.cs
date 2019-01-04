@@ -8,9 +8,7 @@ namespace MathService.Definition
     {
         public Task<RpcResult<FooRes>> FooAsync(FooReq req)
         {
-            RpcResult<FooRes> result = new RpcResult<FooRes>();
-            result.Data = new FooRes();
-            result.Data.RetWord = req.FooWord;
+            RpcResult<FooRes> result = new RpcResult<FooRes> {Data = new FooRes {RetWord = req.FooWord}};
             return Task.FromResult(result);
         }
     }

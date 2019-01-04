@@ -1,10 +1,4 @@
-using DotBPE.Rpc.Codec;
-using DotBPE.Rpc.Protocol;
-using MessagePack;
-using System;
-using System.Collections.Generic;
 using System.Runtime.Serialization;
-using System.Text;
 
 namespace MathService.Definition
 {

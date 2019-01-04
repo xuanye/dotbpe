@@ -90,13 +90,13 @@ namespace DotBPE.Rpc.Client
             }
         }
 
-        public async Task<RpcResult> AsyncNotify<T>(string callName, ushort serviceId, ushort messageId, T req)
+        public async Task<RpcResult> AsyncNotify<T>(string callName,string groupName, ushort serviceId, ushort messageId, T req)
         {
             RpcResult result = new RpcResult();
 
             var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId, true);
             reqMessage.FriendlyServiceName = callName;
-
+            reqMessage.ServiceGroupName = groupName;
             reqMessage.Data = this._serializer.Serialize(req);
             var rsp = await AsyncCallInner(reqMessage);
             if (rsp != null)
@@ -111,12 +111,13 @@ namespace DotBPE.Rpc.Client
             return result;
         }
 
-        public async Task<RpcResult<TResult>> AsyncRequest<T, TResult>(string callName, ushort serviceId, ushort messageId,
+        public async Task<RpcResult<TResult>> AsyncRequest<T, TResult>(string callName,string groupName, ushort serviceId, ushort messageId,
             T req, int timeout = 3000)
         {
             RpcResult<TResult> result = new RpcResult<TResult>();
             var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId);
             reqMessage.FriendlyServiceName = callName;
+            reqMessage.ServiceGroupName = groupName;
             reqMessage.Data = this._serializer.Serialize(req);
             var rsp = await AsyncCallInner(reqMessage,timeout);
             if (rsp != null)

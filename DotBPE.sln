@@ -31,6 +31,8 @@ Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathService", "samples\Math
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "MathClient", "samples\MathClient\MathClient.csproj", "{A1CDF5F1-3499-43D9-A365-39EA0733EBB2}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBPE.Extra.JsonNet", "src\DotBPE.Extra.JsonNet\DotBPE.Extra.JsonNet.csproj", "{D9302E75-08FD-4E63-A338-DAF4DF4DFD85}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -81,6 +83,10 @@ Global
 		{A1CDF5F1-3499-43D9-A365-39EA0733EBB2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{A1CDF5F1-3499-43D9-A365-39EA0733EBB2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{A1CDF5F1-3499-43D9-A365-39EA0733EBB2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D9302E75-08FD-4E63-A338-DAF4DF4DFD85}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D9302E75-08FD-4E63-A338-DAF4DF4DFD85}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D9302E75-08FD-4E63-A338-DAF4DF4DFD85}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D9302E75-08FD-4E63-A338-DAF4DF4DFD85}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -97,6 +103,7 @@ Global
 		{12B266A7-0863-4065-B739-84001FA549B2} = {C88E5785-665B-446D-A811-38E8EA84D59A}
 		{03FE9838-B11C-4E02-84D6-AE63A7E53FB8} = {C88E5785-665B-446D-A811-38E8EA84D59A}
 		{A1CDF5F1-3499-43D9-A365-39EA0733EBB2} = {C88E5785-665B-446D-A811-38E8EA84D59A}
+		{D9302E75-08FD-4E63-A338-DAF4DF4DFD85} = {02381A10-08FD-11E9-83FD-7DC2C1B049B2}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96FD52AC-7DCC-41EB-87E6-C84D43E8CD1A}

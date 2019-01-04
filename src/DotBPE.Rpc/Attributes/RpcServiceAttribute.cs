@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DotBPE.Rpc
 {
-    [AttributeUsage(AttributeTargets.Interface , AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Interface)]
     public class RpcServiceAttribute : Attribute
     {
         public RpcServiceAttribute()

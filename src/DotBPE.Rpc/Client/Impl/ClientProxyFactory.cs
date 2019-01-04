@@ -19,14 +19,19 @@ namespace DotBPE.Rpc.Client
             this._container = container;
         }
 
-        public static IClientProxyFactory Create()
-        {
-            var container = new ServiceCollection();
-            return Create(container);
-        }
 
-        public static IClientProxyFactory Create(IServiceCollection container)
+        /// <summary>
+        /// create client proxy factor
+        /// </summary>
+        /// <param name="container">if container is null container will be create new instance inside</param>
+        /// <returns></returns>
+        public static IClientProxyFactory Create(IServiceCollection container =null)
         {
+            if (container == null)
+            {
+                container = new ServiceCollection();
+            }
+
             container.AddSingleton<IProtocol<AmpMessage>, AmpProtocol>();
             container.AddSingleton<IServiceRouter, DefaultServiceRouter>();
             container.AddSingleton<ISocketClient<AmpMessage>, RpcSocketClient>();
@@ -40,20 +45,37 @@ namespace DotBPE.Rpc.Client
             container.Configure<RpcClientOptions>(x => { });
             container.AddLogging();
             container.AddOptions();
+
             return new ClientProxyFactory(container);
         }
 
+        /// <summary>
+        /// configure some options
+        /// </summary>
+        /// <param name="configureOptions"></param>
+        /// <typeparam name="TOption"></typeparam>
+        /// <returns></returns>
         public IClientProxyFactory Configure<TOption>(Action<TOption> configureOptions) where TOption : class
         {
             this._container.Configure(configureOptions);
             return this;
         }
 
+        /// <summary>
+        /// add other dependency services
+        /// </summary>
+        /// <param name="configServicesDelegate"></param>
+        /// <returns></returns>
         public IClientProxyFactory AddDependencyServices(Action<IServiceCollection> configServicesDelegate)
         {
             configServicesDelegate(this._container);
             return this;
         }
+
+        /// <summary>
+        /// get client proxy  instance
+        /// </summary>
+        /// <returns></returns>
         public IClientProxy GetProxyInstance()
         {
             if (this._provider == null)

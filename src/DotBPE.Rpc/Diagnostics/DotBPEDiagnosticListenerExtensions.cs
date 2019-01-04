@@ -62,9 +62,9 @@ namespace DotBPE.Rpc.Diagnostics
 
         public static void ClientSendRequest(this DiagnosticListener listener, AmpMessage request)
         {
-            if (listener.IsEnabled(DotBPEDiagnosticServiceActorReceiveRequest))
+            if (listener.IsEnabled(DotBPEDiagnosticClientSendRequest))
             {
-                listener.Write(DotBPEDiagnosticServiceActorReceiveRequest, new
+                listener.Write(DotBPEDiagnosticClientSendRequest, new
                 {
                     Request = request
                 });
@@ -73,9 +73,9 @@ namespace DotBPE.Rpc.Diagnostics
 
         public static void ClientReceiveResponse(this DiagnosticListener listener, AmpMessage request,AmpMessage response)
         {
-            if (listener.IsEnabled(DotBPEDiagnosticServiceActorSendResponse))
+            if (listener.IsEnabled(DotBPEDiagnosticClientReceiveResponse))
             {
-                listener.Write(DotBPEDiagnosticServiceActorSendResponse, new
+                listener.Write(DotBPEDiagnosticClientReceiveResponse, new
                 {
                     Request = request,
                     Response = response
@@ -85,9 +85,9 @@ namespace DotBPE.Rpc.Diagnostics
 
         public static void ClientException(this DiagnosticListener listener,AmpMessage request,Exception exception)
         {
-            if (listener.IsEnabled(DotBPEDiagnosticServiceActorException))
+            if (listener.IsEnabled(DotBPEDiagnosticClientException))
             {
-                listener.Write(DotBPEDiagnosticServiceActorException, new
+                listener.Write(DotBPEDiagnosticClientException, new
                 {
                     Request = request,
                     Exception = exception

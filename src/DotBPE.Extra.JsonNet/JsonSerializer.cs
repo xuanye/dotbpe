@@ -1,8 +1,9 @@
 using System;
 using System.Text;
+using DotBPE.Rpc;
 using Newtonsoft.Json;
 
-namespace DotBPE.Rpc.Codec
+namespace DotBPE.Extra
 {
     public class JsonSerializer:ISerializer
     {

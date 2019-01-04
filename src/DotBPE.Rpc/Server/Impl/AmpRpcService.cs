@@ -1,11 +1,8 @@
 using DotBPE.Baseline.Extensions;
 using DotBPE.Rpc.Protocol;
-using DotBPE.Rpc.Server;
 using Microsoft.Extensions.Logging;
 using Peach;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Server
@@ -25,7 +22,7 @@ namespace DotBPE.Rpc.Server
 
         public override void OnReceive(ISocketContext<AmpMessage> context, AmpMessage msg)
         {
-            this._logger.LogInformation("receive message {id}", msg.Id);
+            this._logger.LogDebug("receive message {id}", msg.Id);
             Task.Run(async () =>
             {
                 await this._messageHandler.ReceiveAsync(context, msg);

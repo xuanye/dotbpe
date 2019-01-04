@@ -1,15 +1,12 @@
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Client.RouterPolicy;
 using DotBPE.Rpc.Hosting;
-using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Peach;
-using Peach.Tcp;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using DotBPE.Rpc.Config;
+using DotBPE.Rpc.Server;
 using Peach.Config;
 
 namespace DotBPE.Rpc
@@ -32,7 +29,7 @@ namespace DotBPE.Rpc
                     o.SpecialAddress = specialAddress;
                 });
                 services.AddScoped<IHostedService, RpcHostedService>();
-                services.AddSingleton<IServerBootstrap, TcpServerBootstrap<AmpMessage>>();
+                services.AddSingleton<IServerBootstrap, AmpTcpServerBootstrap>();
                 services.AddDotBPE();
             });
         }

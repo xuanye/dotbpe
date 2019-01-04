@@ -9,6 +9,8 @@ namespace DotBPE.Extra
     {
         public ushort ServiceId { get; set; }
         public ushort MessageId { get; set; }
+
+        public string ServiceGroupName { get; set; }
         public bool WithNoResponse { get; set; }
         public Type ResultType { get; set; }
         public MethodInfo InvokeMethod { get; set; }

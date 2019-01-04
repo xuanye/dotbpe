@@ -70,7 +70,7 @@ namespace DotBPE.Extra
             }
             var sAttr = service as RpcServiceAttribute;
 
-            var servicePath = $"{sAttr.ServiceId}${spacialMessageId}";
+            var servicePath = $"{sAttr.ServiceId}${spacialMessageId};{sAttr.GroupName}";
 
             var isLocal = IsLocalCall(servicePath);
 

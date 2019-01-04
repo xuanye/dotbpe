@@ -21,7 +21,7 @@ namespace Peach.Config
 
         public string SpecialAddress { get; set; } = "127.0.0.1";
 
-        public string StartupWords { get; set; } = "TcpServerHost bind at {0}";
+        public string StartupWords { get; set; } = "TcpServerHost bind at {0} \r\n";
     }
 
     public enum AddressBindType
