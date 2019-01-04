@@ -81,6 +81,9 @@ namespace DotBPE.Rpc.Protocol
 
 
         public string FriendlyServiceName { get;set;}
+        public string ServiceGroupName { get; set; }
+
+        public string MessageRoutePath => $"{MethodIdentifier};{ServiceGroupName}";
 
         public static AmpMessage CreateRequestMessage(ushort serviceId,ushort messageId,bool withOutResponse =false)
         {

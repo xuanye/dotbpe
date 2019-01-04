@@ -12,7 +12,6 @@ namespace DotBPE.Rpc.Config
 
         public List<MessageIdentifierOption> Messages { get; set; } = new List<MessageIdentifierOption>();
 
-        public Dictionary<string, List<ushort>> CategoryServiceMap { get; set; } = new Dictionary<string, List<ushort>>();
     }
 
     public class CategoryIdentifierOption

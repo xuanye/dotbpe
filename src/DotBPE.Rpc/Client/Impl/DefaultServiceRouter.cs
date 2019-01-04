@@ -20,7 +20,7 @@ namespace DotBPE.Rpc.Client
         private readonly IRouterPolicy _policy;
         private readonly Dictionary<string, List<IRouterPoint>> SERVICE_CACHE = new Dictionary<string, List<IRouterPoint>>();
 
-        private readonly Dictionary<string, string> SERVICE_CATEGORY_MAP = new Dictionary<string, string>();
+
 
         public DefaultServiceRouter(
             IOptions<RouterPointOptions> routeOptions,
@@ -36,8 +36,7 @@ namespace DotBPE.Rpc.Client
         {
             InitializeMessages();
             InitializeServices();
-            InitializeCategorys();
-            InitializeServiceCategoryMap();
+            InitializeCategory();
         }
 
         private void InitializeMessages()
@@ -69,7 +68,7 @@ namespace DotBPE.Rpc.Client
                 }
             }
         }
-        private void InitializeCategorys()
+        private void InitializeCategory()
         {
             if (this._routeOptions.Categories != null && this._routeOptions.Categories.Any())
             {
@@ -84,37 +83,14 @@ namespace DotBPE.Rpc.Client
             }
         }
 
-        private void InitializeServiceCategoryMap()
-        {
-            if (this._routeOptions.CategoryServiceMap != null && this._routeOptions.CategoryServiceMap.Any())
-            {
-                foreach (var kv in this._routeOptions.CategoryServiceMap)
-                {
-                    foreach(var s in kv.Value)
-                    {
-                        AddMap(s, kv.Key);
-                    }
-                }
-            }
-        }
 
-        private void AddMap(ushort service,string category)
-        {
-            string key = service.ToString();
-            if (this.SERVICE_CATEGORY_MAP.ContainsKey(key))
-            {
-                this.SERVICE_CATEGORY_MAP[key] = category;
-            }
-            else
-            {
-                this.SERVICE_CATEGORY_MAP.Add(key, category);
-            }
-        }
+
+
 
         private void AddRouter(string key,int weight, List<EndPoint> remoteAddress)
         {
             var ls = remoteAddress.ConvertAll<IRouterPoint>(
-                                x => new RouterPoint()
+                                x => new RouterPoint
                                 {
                                     RemoteAddress = x,
                                     RoutePointType = RoutePointType.Remote,
@@ -136,11 +112,14 @@ namespace DotBPE.Rpc.Client
 
         public IRouterPoint FindRouterPoint(string servicePath)
         {
-            IRouterPoint point = new RouterPoint() {  RoutePointType = RoutePointType.Local };
+            IRouterPoint point = new RouterPoint {  RoutePointType = RoutePointType.Local };
 
-            string[] keys = servicePath.Split('$');
-            string keyService = keys[0]+"$0";
-            string keyMessage = servicePath;
+
+            var parts = servicePath.Split(';');
+
+            var keys = parts[0].Split('$');
+            var keyService = keys[0]+"$0";
+            var keyMessage = servicePath;
 
 
             if (this.SERVICE_CACHE.ContainsKey(keyMessage))
@@ -155,7 +134,13 @@ namespace DotBPE.Rpc.Client
                 return point;
             }
 
-            string keyCategory = GetCategory(keys[0]);
+
+            var keyCategory = parts.Length == 2 ? parts[1] : "default";
+            if (string.IsNullOrEmpty(keyCategory))
+            {
+                keyCategory = "default";
+            }
+
             //默认配置
             if (this.SERVICE_CACHE.ContainsKey(keyCategory))
             {
@@ -171,13 +156,6 @@ namespace DotBPE.Rpc.Client
             return this._policy.Select(serviceKey, remoteAddresses);
         }
 
-        private string GetCategory(string serviceId)
-        {
-            if (this.SERVICE_CATEGORY_MAP.ContainsKey(serviceId))
-            {
-                return this.SERVICE_CATEGORY_MAP[serviceId];
-            }
-            return "default";
-        }
+
     }
 }

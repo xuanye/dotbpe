@@ -53,14 +53,14 @@ namespace DotBPE.Extra
                 {
                     // AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
                     ret = meta.InvokeMethod.Invoke(this._callInvoker,
-                        new [] { cacheKey, meta.ServiceId, meta.MessageId, req });
+                        new [] { cacheKey,meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req });
                 }
                 else
                 {
                     //AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000)
                     object timeout = invocation.Arguments.Length > 1 ? invocation.Arguments[1] : 3000;
                     ret = meta.InvokeMethod.Invoke(this._callInvoker,
-                        new [] { cacheKey, meta.ServiceId, meta.MessageId, req, timeout });
+                        new [] { cacheKey,meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req, timeout });
                 }
 
                 invocation.ReturnValue = ret;
@@ -88,7 +88,10 @@ namespace DotBPE.Extra
                 }
                 var sAttr = service as RpcServiceAttribute;
                 var mAttr = method as RpcMethodAttribute;
-                meta = new InvokeMeta { ServiceId = sAttr.ServiceId, MessageId = mAttr.MessageId };
+                meta = new InvokeMeta
+                {
+                    ServiceId = sAttr.ServiceId, MessageId = mAttr.MessageId,ServiceGroupName = sAttr.GroupName
+                };
 
                 var returnType = invocation.Method.ReturnType;
                 if (returnType == typeof(Task))
@@ -126,8 +129,5 @@ namespace DotBPE.Extra
 
             return meta;
         }
-
-
-
     }
 }

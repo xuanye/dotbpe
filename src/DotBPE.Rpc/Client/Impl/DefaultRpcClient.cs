@@ -43,7 +43,7 @@ namespace DotBPE.Rpc.Client
 
         public async Task SendAsync(AmpMessage message)
         {
-            var point = this._serviceRouter.FindRouterPoint(message.MethodIdentifier);
+            var point = this._serviceRouter.FindRouterPoint(message.MessageRoutePath);
 
             if (point == null)
             {
