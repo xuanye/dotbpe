@@ -1,0 +1,36 @@
+{
+    "note": "发顺丰的撒地方犯得上啊",
+    "incomes": [{
+        "income_id": 1,
+        "title": "工资",
+        "icon": "wallet",
+        "currency": "CNY",
+        "period": "MONTH",
+        "amount": "20000",
+        "converted": "NaN"
+    }],
+    "expenses": [{
+        "expense_id": 1,
+        "title": "停车费",
+        "icon": "auto",
+        "currency": "CNY",
+        "period": "MONTH",
+        "amount": "350",
+        "converted": "NaN"
+    }, {
+        "expense_id": 2,
+        "title": "餐费",
+        "icon": "cart",
+        "currency": "CNY",
+        "period": "MONTH",
+        "amount": "400",
+        "converted": "NaN"
+    }],
+    "saving": {
+        "amount": 400000,
+        "capitalization": false,
+        "deposit": true,
+        "currency": "USD",
+        "interest": "5"
+    }
+}

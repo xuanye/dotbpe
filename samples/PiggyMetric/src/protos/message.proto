@@ -1,0 +1,79 @@
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "PiggyMetrics.Common";
+option optimize_for = SPEED;
+
+message VoidReq{
+
+}
+message VoidRsp{
+    int32 status =1;
+    string message = 2;
+}
+message FindAccountReq {
+    string current=1;
+}
+message AccountRsp{
+    int32 status =1;
+    string message = 2;
+    Account data =3;
+}
+
+
+message UserReq{
+    string account = 1;
+    string password = 2;
+}
+message Account {
+    string name =1;
+    string create_time =2;
+    string last_seen_time =3;
+    string note = 4;
+
+    repeated Item incomes= 5;
+    repeated Item expenses= 6;
+    Saving saving = 7;
+}
+message AccountReq {
+    string current =1;
+    string create_time =2;
+    string last_seen_time =3;
+    string note = 4;
+
+    repeated Item incomes= 5;
+    repeated Item expenses= 6;
+    Saving saving = 7;
+}
+
+message Item{
+    string title = 1;
+    double amount = 2;
+    Currency currency = 3;
+    TimePeriod period =4;
+    string icon = 5;
+    double converted = 6;
+}
+
+message Saving{
+    double amount =  1;
+    Currency currency =2;
+    double interest=3;
+    bool deposit =4;
+    bool capitalization = 5;
+}
+
+enum TimePeriod{
+    TPNONE=0;
+    YEAR=1;
+    QUARTER=2;
+    MONTH=3;
+    DAY=4;
+    HOUR=5;
+}
+enum Currency {
+    CYNONE = 0;
+    USD = 1;
+    RUB = 2;
+    EUR = 3;
+}
