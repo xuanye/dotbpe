@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <Folder Include="Diagnostics\" />
-    <Folder Include="ServiceDiscovery\" />
+    <Folder Include="RegistryAndDiscovery\" />
   </ItemGroup>
 
   <ItemGroup>

@@ -56,22 +56,13 @@ namespace DotBPE.Rpc
             return services;
         }
 
-        public static IServiceCollection ScanBindServices(this IServiceCollection services,string pluginDirName
-            ,IConfiguration configuration,params  string[] categories)
-        {
-            return services.ScanBindServices(configuration, "*", pluginDirName, categories);
-        }
-        public static IServiceCollection ScanBindServices(this IServiceCollection services
-            ,IConfiguration configuration,string ddlPrefix,params  string[] categories)
-        {
-            return services.ScanBindServices(configuration, ddlPrefix, "", categories);
-        }
+
         public static IServiceCollection ScanBindServices(this IServiceCollection services,IConfiguration configuration
-            ,string dllPrefix,string pluginDirName ,params string[] categories)
+            ,string dllPrefix ,params string[] categories)
         {
             string BaseDirectory = Internal.Environment.GetAppBasePath();
 
-            var dllFiles = Directory.GetFiles(string.Concat(BaseDirectory,pluginDirName), $"{dllPrefix}.dll");
+            var dllFiles = Directory.GetFiles(string.Concat(BaseDirectory,""), $"{dllPrefix}.dll");
             List<Assembly> assemblies = new List<Assembly>();
             foreach (var file in dllFiles)
             {
@@ -111,6 +102,23 @@ namespace DotBPE.Rpc
             return services;
         }
 
+        #region Route Policy
+
+        public static IServiceCollection AddRandomPolicy(this IServiceCollection services)
+        {
+            return services.AddSingleton<IRouterPolicy, RandomPolicy>();
+        }
+
+        public static IServiceCollection AddWeightedRoundRobinPolicy(this IServiceCollection services)
+        {
+            return services.AddSingleton<IRouterPolicy, WeightedRoundRobinPolicy>();
+        }
+
+        #endregion
+
+
+
+        #region  Private Method
         private static IServiceCollection AddAmpProtocol(this IServiceCollection services)
         {
             services.AddSingleton<IProtocol<AmpMessage>, AmpProtocol>();
@@ -138,6 +146,10 @@ namespace DotBPE.Rpc
 
             return services;
         }
+        #endregion
+
+
+
 
     }
 }

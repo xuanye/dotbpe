@@ -1,11 +1,10 @@
-using DotBPE.Rpc.Client;
-using DotBPE.Rpc.Client.RouterPolicy;
 using DotBPE.Rpc.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using Peach;
 using System;
 using DotBPE.Rpc.Config;
+using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server;
 using Peach.Config;
 
@@ -35,13 +34,32 @@ namespace DotBPE.Rpc
         }
 
         #region register services
-        public static IHostBuilder BindServices(this IHostBuilder builder, Action<IServiceCollection> configureDelegate)
+
+        public static IHostBuilder BindService<TService>(this IHostBuilder builder)
+            where  TService:class,IServiceActor<AmpMessage>
         {
-            return builder.ConfigureServices(services =>
-            {
-                services.AddSingleton<IRouterPolicy, RandomPolicy>();
-            });
+            return builder.ConfigureServices(services => { services.BindService<TService>(); });
         }
+
+
+        public static IHostBuilder BindServices(this IHostBuilder builder,Action<ServiceActorCollection> serviceConfigureAction)
+        {
+            return builder.ConfigureServices(services => { services.BindServices(serviceConfigureAction); });
+        }
+
+
+        public static IHostBuilder ScanBindServices(this IHostBuilder builder,string dllPrefix
+            ,params string[] groupNames)
+        {
+            return builder.ConfigureServices((context,services) =>
+                {
+                    services.ScanBindServices(context.Configuration, dllPrefix, groupNames);
+                });
+
+        }
+
+
+
         #endregion
 
 
@@ -50,7 +68,7 @@ namespace DotBPE.Rpc
         {
             return builder.ConfigureServices(services =>
             {
-                services.AddSingleton<IRouterPolicy, RandomPolicy>();
+                services.AddRandomPolicy();
             });
         }
 
@@ -58,7 +76,7 @@ namespace DotBPE.Rpc
         {
             return builder.ConfigureServices(services =>
             {
-                services.AddSingleton<IRouterPolicy, WeightedRoundRobinPolicy>();
+                services.AddWeightedRoundRobinPolicy();
             });
         }
         #endregion
