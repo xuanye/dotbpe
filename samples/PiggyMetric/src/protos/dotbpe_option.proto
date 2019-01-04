@@ -1,0 +1,29 @@
+
+// [START declaration]
+syntax = "proto3";
+package dotbpe;
+// [END declaration]
+
+// [START csharp_declaration]
+option csharp_namespace = "DotBPE.ProtoBuf";
+// [END csharp_declaration]
+
+import "google/protobuf/descriptor.proto";
+
+//扩展服务
+extend google.protobuf.ServiceOptions {
+  int32 service_id = 51001;
+  bool disable_generic_service_client = 51003; //是否生成客户端代码
+  bool disable_generic_service_server = 51004; //是否生成服务端代码
+}
+extend google.protobuf.MethodOptions {
+  int32 message_id = 51002;
+}
+
+extend google.protobuf.FileOptions {
+  bool disable_generic_services_client = 51003; //是否生成客户端代码
+  bool disable_generic_services_server = 51004; //是否生成服务端代码
+  bool generic_markdown_doc = 51005; //是否生成文档
+  bool generic_objectfactory = 51006; //是否生成文档
+  //bool bpe_http_client = 51006; //是否是HTTPClient;
+}

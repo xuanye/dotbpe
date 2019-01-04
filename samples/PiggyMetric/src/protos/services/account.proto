@@ -1,0 +1,30 @@
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "PiggyMetrics.Common";
+option optimize_for = SPEED;
+
+
+
+import public "dotbpe_option.proto";
+import public "message.proto";
+
+option (generic_objectfactory) = true;
+
+
+service AccountService{
+    option (service_id)= 1001 ;//设定服务ID
+
+    rpc FindByName (FindAccountReq) returns (AccountRsp){
+        option (message_id)= 1 ;//设定消息ID
+    };
+
+    rpc Create (UserReq) returns (AccountRsp){
+        option (message_id)= 2 ;
+    };
+
+    rpc Save (AccountReq) returns (VoidRsp){
+        option (message_id)= 3 ;
+    };
+}
+
