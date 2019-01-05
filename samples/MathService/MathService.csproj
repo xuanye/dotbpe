@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <OutputType>Exe</OutputType>
@@ -11,6 +11,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DotBPE.Extra.Castle\DotBPE.Extra.Castle.csproj" />
+    <ProjectReference Include="..\..\src\DotBPE.Extra.Consul\DotBPE.Extra.Consul.csproj" />
     <ProjectReference Include="..\MathService.Definition\MathService.Definition.csproj" />
   </ItemGroup>
 

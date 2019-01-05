@@ -10,7 +10,10 @@ namespace DotBPE.Rpc.Config
         public RpcServerOptions()
         {
             this.StartupWords = "DotBPE Server bind at {0}\r\n";
+            this.AppName = "dotbpe";
         }
+
+
 
     }
 }

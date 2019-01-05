@@ -24,7 +24,7 @@ namespace DotBPE.Rpc.Tests.Server
         {
             var fooService = new FooService();
 
-            Assert.Equal("100$0", fooService.Id);
+            Assert.Equal("100.0", fooService.Id);
         }
 
         [Fact]
@@ -32,7 +32,7 @@ namespace DotBPE.Rpc.Tests.Server
         {
             var fooService = new FooService();
 
-            Assert.Equal("100$0", fooService.Id);
+            Assert.Equal("100.0", fooService.Id);
 
 
             var context1 = new MockContext();
@@ -58,7 +58,7 @@ namespace DotBPE.Rpc.Tests.Server
         {
             ISerializer serializer = new JsonSerializer();
             var fooService = new FooService();
-            Assert.Equal("100$0", fooService.Id);
+            Assert.Equal("100.0", fooService.Id);
 
 
             var req = new FooReq {FooWord = "hello dotbpe"};

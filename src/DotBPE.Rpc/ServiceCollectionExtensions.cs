@@ -10,8 +10,10 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using System.Text;
 using DotBPE.Rpc.Server.Impl;
+using DotBPE.Rpc.ServiceDiscovery;
 using Microsoft.Extensions.Configuration;
 
 namespace DotBPE.Rpc
@@ -26,6 +28,11 @@ namespace DotBPE.Rpc
             services.AddAmpProtocol();
             services.AddDefaultImpl();
             return services;
+        }
+        public static IServiceCollection AddDefaultRegisterService(this IServiceCollection services)
+        {
+             services.TryAddSingleton<IServiceRegister, DefaultServiceRegister>();
+             return services;
         }
 
         public static IServiceCollection BindService<TService>(this IServiceCollection services)
@@ -104,13 +111,23 @@ namespace DotBPE.Rpc
 
         #region Route Policy
 
+        public static IServiceCollection AddDiscoveryServiceRouter(this IServiceCollection services)
+        {
+            services.Remove(ServiceDescriptor.Singleton(typeof(IServiceRouter)));
+            return services.AddSingleton<IServiceRouter, DiscoveryServiceRouter>();
+
+        }
+
         public static IServiceCollection AddRandomPolicy(this IServiceCollection services)
         {
+            services.Remove(ServiceDescriptor.Singleton(typeof(IRouterPolicy)));
             return services.AddSingleton<IRouterPolicy, RandomPolicy>();
         }
 
+
         public static IServiceCollection AddWeightedRoundRobinPolicy(this IServiceCollection services)
         {
+            services.Remove(ServiceDescriptor.Singleton(typeof(IRouterPolicy)));
             return services.AddSingleton<IRouterPolicy, WeightedRoundRobinPolicy>();
         }
 
@@ -146,6 +163,8 @@ namespace DotBPE.Rpc
 
             return services;
         }
+
+
         #endregion
 
 

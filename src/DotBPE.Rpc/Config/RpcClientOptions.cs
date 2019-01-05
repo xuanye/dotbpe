@@ -6,5 +6,6 @@ namespace DotBPE.Rpc.Config
 {
     public class RpcClientOptions:Peach.Config.TcpClientOption
     {
+        public string AppName { get; set; } = "dotbpe";
     }
 }

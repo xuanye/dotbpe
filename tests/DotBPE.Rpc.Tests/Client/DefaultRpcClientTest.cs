@@ -16,11 +16,11 @@ namespace DotBPE.Rpc.Tests.Client
 
             var router = new Mock<IServiceRouter>();
             router.Setup(x => x.FindRouterPoint(It.IsAny<string>())).Returns(
-                new RouterPoint
-                {
-                    RoutePointType = RoutePointType.Remote
+             Task.FromResult<IRouterPoint>(new RouterPoint
+             {
+                 RoutePointType = RoutePointType.Remote
 
-                });
+             }));
 
             var transport = new Mock<ITransport<AmpMessage>>();
             transport.Setup(x => x.SendAsync(It.IsAny<AmpMessage>())).Returns(Task.CompletedTask);

@@ -9,6 +9,7 @@ namespace DotBPE.Rpc.Client
 
         IClientProxyFactory AddDependencyServices(Action<IServiceCollection> configServicesDelegate);
 
+
         IClientProxyFactory Configure<TOption>(Action<TOption> configureOptions) where TOption : class;
 
     }
