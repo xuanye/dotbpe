@@ -10,7 +10,7 @@ namespace DotBPE.Extra
 {
     public class ProtobufSerializer : ISerializer
     {
-        static ConcurrentDictionary<Type, MessageParser> PARSER_CACHE = new ConcurrentDictionary<Type, MessageParser>();
+        static readonly ConcurrentDictionary<Type, MessageParser> PARSER_CACHE = new ConcurrentDictionary<Type, MessageParser>();
         private static readonly Type BaseType = typeof(IMessage);
 
         public T Deserialize<T>(byte[] data)

@@ -92,6 +92,7 @@ namespace DotBPE.Extra
             else
             {
                 proxy = this._generator.CreateInterfaceProxyWithoutTarget<TService>(RemoteCallInterceptor);
+                TYPE_CACHE.TryAdd(cacheKey,proxy);
             }
 
             return proxy;
