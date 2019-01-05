@@ -6,6 +6,7 @@ using System.Collections.Concurrent;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
+using DotBPE.Rpc.Exceptions;
 
 namespace DotBPE.Rpc.Server
 {
@@ -49,14 +50,38 @@ namespace DotBPE.Rpc.Server
                 return HeartbeatActor;
             }
 
-            string[] path = servicePath.Split('$');
-            string serviceKey = $"{path[0]}$0";
+            string[] path = servicePath.Split('.');
 
-            var actor = GetFromCache(servicePath);
+            string serviceId = string.Empty;
+            string messageId =  string.Empty;
+
+            if (path.Length == 2)
+            {
+                serviceId = path[0];
+                messageId = path[1];
+            }
+            else if (path.Length == 3)
+            {
+                serviceId = path[1];
+                messageId = path[2];
+            }
+            else
+            {
+                this._logger.LogError("服务路径错误:{servicePath}",servicePath);
+                throw  new RpcException($"服务路径错误:{servicePath}");
+            }
+
+
+            string serviceKey = $"{serviceId}.0";
+            string messageKey = $"{serviceId}.{messageId}";
+
+            var actor = GetFromCache(messageKey);
             if (actor != null)
             {
                 return actor;
             }
+
+
             actor = GetFromCache(serviceKey);
 
             if (actor != null)

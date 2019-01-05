@@ -10,6 +10,7 @@ namespace DotBPE.Rpc.Server
     public interface IServiceActor<TMessage> :IRpcService where TMessage : IMessage
     {
         string Id { get; }
+        string GroupName { get; }
 
         Task ReceiveAsync(ISocketContext<TMessage> context, TMessage message);
     }

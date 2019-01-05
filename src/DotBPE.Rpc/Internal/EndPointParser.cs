@@ -8,7 +8,7 @@ namespace DotBPE.Rpc.Internal
 {
     public static class EndPointParser
     {
-        public static EndPoint ParseEndPointFromString(string address)
+        public static IPEndPoint ParseEndPointFromString(string address)
         {
             if (string.IsNullOrEmpty(address))
             {
@@ -32,14 +32,13 @@ namespace DotBPE.Rpc.Internal
 
         public static string ParseEndPointToString(EndPoint endpoint)
         {
-            IPEndPoint ip = endpoint as IPEndPoint;
-            if (ip != null)
+            if (endpoint is IPEndPoint ip)
             {
                 if (ip.Address.IsIPv4MappedToIPv6)
                 {
-                    return ip.Address.MapToIPv4().ToString() + ":" + ip.Port;
+                    return ip.Address.MapToIPv4() + ":" + ip.Port;
                 }
-                return ip.Address.ToString() + ":" + ip.Port;
+                return ip.Address + ":" + ip.Port;
             }
             if (endpoint != null)
             {
@@ -48,11 +47,13 @@ namespace DotBPE.Rpc.Internal
             return "";
         }
 
-        public static List<EndPoint> ParseEndPointListFromString(string remoteAddress)
+
+
+        public static List<IPEndPoint> ParseEndPointListFromString(string remoteAddress)
         {
             Preconditions.CheckArgument(!string.IsNullOrEmpty(remoteAddress), $"服务地址配置错误：{remoteAddress}");
             string[] arr_address = remoteAddress.Split(',');
-            List<EndPoint> list = new List<EndPoint>();
+            List<IPEndPoint> list = new List<IPEndPoint>();
             for (int i = 0; i < arr_address.Length; i++)
             {
                 list.Add(ParseEndPointFromString(arr_address[i]));
@@ -62,8 +63,7 @@ namespace DotBPE.Rpc.Internal
 
         public static string ParseEndPointToIPString(EndPoint endpoint)
         {
-            IPEndPoint ip = endpoint as IPEndPoint;
-            if (ip != null)
+            if (endpoint is IPEndPoint ip)
             {
                 if (ip.Address.IsIPv4MappedToIPv6)
                 {

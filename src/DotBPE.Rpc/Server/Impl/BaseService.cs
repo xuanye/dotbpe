@@ -37,10 +37,7 @@ namespace DotBPE.Rpc.Server.Impl
         /// </summary>
         protected ushort ServiceId { get; }
 
-        /// <summary>
-        /// service group name
-        /// </summary>
-        protected string GroupName { get; }
+
 
 
         /// <summary>
@@ -50,7 +47,11 @@ namespace DotBPE.Rpc.Server.Impl
             this._serializer ??
             (this._serializer = Environment.ServiceProvider.GetRequiredService<ISerializer>());
 
-        public override string Id => $"{ServiceId}$0";
+        public override string Id => $"{ServiceId}.0";
+        /// <summary>
+        /// service group name
+        /// </summary>
+        public override string GroupName { get; } = "default";
 
         #endregion
 

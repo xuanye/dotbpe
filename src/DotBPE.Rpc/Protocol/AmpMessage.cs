@@ -60,7 +60,7 @@ namespace DotBPE.Rpc.Protocol
         /// </summary>
         public ushort MessageId { get; set; }
 
-        public override string MethodIdentifier => $"{ServiceId}${MessageId}";
+        public override string MethodIdentifier => $"{ServiceId}.{MessageId}";
 
         /// <summary>
         /// 请求的序列号
@@ -72,7 +72,7 @@ namespace DotBPE.Rpc.Protocol
         /// </summary>
         public ushort ServiceId { get; set; }
 
-        public override string ServiceIdentifier => $"{ServiceId}$0";
+        public override string ServiceIdentity => $"{ServiceId}.0";
 
         /// <summary>
         /// 协议版本0/1
@@ -81,9 +81,9 @@ namespace DotBPE.Rpc.Protocol
 
 
         public string FriendlyServiceName { get;set;}
-        public string ServiceGroupName { get; set; }
+        public string ServiceGroupName { get; set; } ="default";
 
-        public string MessageRoutePath => $"{MethodIdentifier};{ServiceGroupName}";
+        public string MessageRoutePath => $"{ServiceGroupName}.{MethodIdentifier}";
 
         public static AmpMessage CreateRequestMessage(ushort serviceId,ushort messageId,bool withOutResponse =false)
         {

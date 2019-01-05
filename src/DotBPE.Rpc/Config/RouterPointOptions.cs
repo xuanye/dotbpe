@@ -6,7 +6,7 @@ namespace DotBPE.Rpc.Config
 {
     public class RouterPointOptions
     {
-        public List<CategoryIdentifierOption> Categories { get; set; } = new List<CategoryIdentifierOption>();
+        public List<GroupIdentifierOption> Categories { get; set; } = new List<GroupIdentifierOption>();
 
         public List<ServiceIdentifierOption> Services { get; set; } = new List<ServiceIdentifierOption>();
 
@@ -14,9 +14,9 @@ namespace DotBPE.Rpc.Config
 
     }
 
-    public class CategoryIdentifierOption
+    public class GroupIdentifierOption
     {
-        public string Category { get; set; }
+        public string GroupName { get; set; }
         public string RemoteAddress { get; set; }
         public int Weight { get; set; } = 1;
     }

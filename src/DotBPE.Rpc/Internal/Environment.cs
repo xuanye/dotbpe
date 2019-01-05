@@ -1,8 +1,6 @@
 using Microsoft.Extensions.Logging;
 using Peach.Infrastructure;
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotBPE.Rpc.Internal
 {
@@ -39,7 +37,8 @@ namespace DotBPE.Rpc.Internal
 
         public static string GetAppBasePath()
         {
-            return AppDomain.CurrentDomain.BaseDirectory;
+            return AppContext.BaseDirectory;
+            //return AppDomain.CurrentDomain.BaseDirectory;
         }
     }
 }

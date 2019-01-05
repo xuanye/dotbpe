@@ -5,6 +5,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Exceptions;
+using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
@@ -70,14 +71,16 @@ namespace DotBPE.Extra
             }
             var sAttr = service as RpcServiceAttribute;
 
-            var servicePath = $"{sAttr.ServiceId}${spacialMessageId};{sAttr.GroupName}";
+            var serviceIdentity = InternalHelper.FormatServiceIdentity(sAttr.GroupName,sAttr.ServiceId, spacialMessageId);
+            // $"{sAttr.ServiceId}${spacialMessageId};{sAttr.GroupName}";
+            var servicePath= InternalHelper.FormatServicePath(sAttr.ServiceId, spacialMessageId);
 
-            var isLocal = IsLocalCall(servicePath);
+            var isLocal = IsLocalCall(serviceIdentity);
 
             TService proxy;
             if (isLocal)
             {
-                var actor = this.ActorLocator.LocateServiceActor(servicePath);
+                var actor = ActorLocator.LocateServiceActor(servicePath);
                 if (!(actor is TService realService))
                 {
                     throw new InvalidOperationException($"{serviceType.FullName} not  implement class");
@@ -95,9 +98,13 @@ namespace DotBPE.Extra
 
         }
 
-        private bool IsLocalCall(string servicePath)
+        private bool IsLocalCall(string serviceIdentity)
         {
-            var point = this.ServiceRouter.FindRouterPoint(servicePath);
+            var point = ServiceRouter.FindRouterPoint(serviceIdentity).GetAwaiter().GetResult();
+            if (point == null)
+            {
+                return true;
+            }
             return point.RoutePointType == RoutePointType.Local;
         }
 

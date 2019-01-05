@@ -13,7 +13,7 @@ namespace DotBPE.Rpc.Protocol
         /// <summary>
         /// 服务识别符,定位到某个服务
         /// </summary>
-        public abstract string ServiceIdentifier { get; }
+        public abstract string ServiceIdentity { get; }
 
         /// <summary>
         /// 方法识别符，定位到某个方法

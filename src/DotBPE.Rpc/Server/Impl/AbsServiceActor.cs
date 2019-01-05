@@ -23,6 +23,7 @@ namespace DotBPE.Rpc.Server
 
         public abstract string Id { get; }
 
+        public abstract string GroupName { get; }
 
         /// <summary>
         /// process receive message from remote client

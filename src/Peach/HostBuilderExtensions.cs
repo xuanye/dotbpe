@@ -3,16 +3,18 @@ using Peach.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using Peach.Config;
 
 namespace Peach
 {
     public static class HostBuilderExtensions
     {
-        public static IHostBuilder UseTcpServer<TMessage>(this IHostBuilder builder) where TMessage:IMessage
+        public static IHostBuilder UseTcpServer<TMessage>(this IHostBuilder builder)
+            where TMessage:IMessage
         {
-            builder.ConfigureServices(sevices =>
+            builder.ConfigureServices(services =>
             {
-                sevices.AddTcpServer<TMessage>();
+                services.AddTcpServer<TMessage>();
             });
             return builder;
         }

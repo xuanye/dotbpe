@@ -11,6 +11,6 @@ namespace DotBPE.Rpc.Client
     /// </summary>
     public interface IServiceRouter
     {
-        IRouterPoint FindRouterPoint(string servicePath);
+        Task<IRouterPoint> FindRouterPoint(string servicePath);
     }
 }

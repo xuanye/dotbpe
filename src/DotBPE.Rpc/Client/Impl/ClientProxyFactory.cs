@@ -5,6 +5,7 @@ using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Logging;
 using Peach;
 using Peach.Protocol;
 
@@ -41,6 +42,7 @@ namespace DotBPE.Rpc.Client
             container.AddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient>();
             container.AddSingleton<ITransportFactory<AmpMessage>, DefaultTransportFactory>();
             container.TryAddSingleton<IClientAuditLoggerFactory,DefaultClientAuditLoggerFactory>();
+            container.TryAddSingleton<IRequestAuditLoggerFactory,DefaultRequestAuditLoggerFactory>();
             container.TryAddSingleton<IRouterPolicy, RoundrobinPolicy>();
             container.Configure<RpcClientOptions>(x => { });
             container.AddLogging();
@@ -48,6 +50,7 @@ namespace DotBPE.Rpc.Client
 
             return new ClientProxyFactory(container);
         }
+
 
         /// <summary>
         /// configure some options

@@ -1,8 +1,9 @@
-using DotBPE.Rpc.Protocol;
 using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
+using DotBPE.Rpc.Config;
+using DotBPE.Rpc.ServiceDiscovery;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Options;
 
 namespace DotBPE.Rpc.Client
 {
@@ -11,9 +12,39 @@ namespace DotBPE.Rpc.Client
     /// </summary>
     public class DiscoveryServiceRouter : IServiceRouter
     {
-        public IRouterPoint FindRouterPoint(string servicePath)
+        private readonly IServiceDiscoveryProvider _discoveryProvider;
+
+
+        private readonly string _appName;
+        public DiscoveryServiceRouter(IServiceDiscoveryProvider discoveryProvider,IServiceProvider provider)
         {
-            throw new NotImplementedException();
+            this._discoveryProvider = discoveryProvider;
+
+            var clientOptions = provider.GetService<IOptions<RpcClientOptions>>();
+
+            this._appName = clientOptions?.Value != null ?
+                clientOptions.Value.AppName : new RpcClientOptions().AppName;
+
+        }
+
+        public Task<IRouterPoint> FindRouterPoint(string servicePath)
+        {
+
+            var serviceIdentity = ConvertServiceIdentityFromServicePath(servicePath);
+            //TODO: cache it?
+            return _discoveryProvider.LookupServiceDefaultEndPointAsync(serviceIdentity);
+        }
+
+        /// <summary>
+        /// 通过服务路径来获取服务标识，默认为服务分组标识
+        /// </summary>
+        /// <param name="servicePath"></param>
+        /// <returns></returns>
+        protected virtual string ConvertServiceIdentityFromServicePath(string servicePath)
+        {
+            string[] parts = servicePath.Split('.');
+
+            return $"{this._appName}-{parts[0]}";
         }
     }
 }

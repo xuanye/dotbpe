@@ -12,10 +12,10 @@ namespace DotBPE.Rpc.Tests.Server
         public void LocateServiceActorTest()
         {
             var actor1 = new Mock<IServiceActor<AmpMessage>>();
-            actor1.Setup(x => x.Id).Returns("actor1");
+            actor1.Setup(x => x.Id).Returns("actor1.0");
 
             var actor2 = new Mock<IServiceActor<AmpMessage>>();
-            actor2.Setup(x => x.Id).Returns("actor2");
+            actor2.Setup(x => x.Id).Returns("actor2.0");
 
            IServiceCollection container = new ServiceCollection();
 
@@ -26,8 +26,8 @@ namespace DotBPE.Rpc.Tests.Server
 
            DefaultServiceActorLocator locator = new DefaultServiceActorLocator(provider);
 
-           var locatorActor1= locator.LocateServiceActor("actor1");
-           var locatorActor2= locator.LocateServiceActor("actor2");
+           var locatorActor1= locator.LocateServiceActor("actor1.0");
+           var locatorActor2= locator.LocateServiceActor("actor2.0");
 
            Assert.Same(actor1.Object,locatorActor1);
 

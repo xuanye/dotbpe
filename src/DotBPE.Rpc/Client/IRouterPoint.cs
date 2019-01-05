@@ -7,7 +7,7 @@ namespace DotBPE.Rpc.Client
 {
     public interface IRouterPoint
     {
-        EndPoint RemoteAddress { get;  }
+        IPEndPoint RemoteAddress { get;  }
         RoutePointType RoutePointType { get;  }
         /// <summary>
         /// 权重
@@ -20,7 +20,6 @@ namespace DotBPE.Rpc.Client
     public enum RoutePointType
     {
         Local,
-        Remote,
-        Smart
+        Remote
     }
 }
