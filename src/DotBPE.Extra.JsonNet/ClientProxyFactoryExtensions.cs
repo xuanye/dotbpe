@@ -4,9 +4,9 @@ namespace DotBPE.Extra
 {
     public static class ClientProxyFactoryExtensions
     {
-        public static IClientProxyFactory UseJsonNet(this IClientProxyFactory @this)
+        public static IClientProxyFactory UseJsonNetSerializer(this IClientProxyFactory @this)
         {
-            return @this.AddDependencyServices(services => { services.AddJsonNet(); });
+            return @this.AddDependencyServices(services => { services.AddJsonNetSerializer(); });
 
         }
 

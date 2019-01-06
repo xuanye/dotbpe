@@ -4,9 +4,9 @@ namespace DotBPE.Extra
 {
     public static class ClientProxyFactoryExtensions
     {
-        public static IClientProxyFactory UseProtobuf(this IClientProxyFactory @this)
+        public static IClientProxyFactory UseProtobufSerializer(this IClientProxyFactory @this)
         {
-            return @this.AddDependencyServices(services => { services.AddProtobuf(); });
+            return @this.AddDependencyServices(services => { services.AddProtobufSerializer(); });
 
         }
 

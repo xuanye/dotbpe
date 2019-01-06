@@ -5,6 +5,7 @@ namespace DotBPE.Gateway
     [Flags]
     public enum RestfulVerb
     {
+        UnKnown =0,
         Get = 1,
         Post =2,
         Put = 4,

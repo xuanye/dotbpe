@@ -18,7 +18,7 @@ namespace Math.Client
             var factory = ClientProxyFactory.Create()
                 .UseCastleDynamicProxy()
                 .ConfigureLogging(logger =>logger.AddConsole())
-                .UseMessagePack()
+                .UseMessagePackSerializer()
                 .UseDefaultChannel($"{IPUtility.GetLocalIntranetIP().MapToIPv4()}:5566");
 
 
@@ -27,7 +27,7 @@ namespace Math.Client
             var factory = ClientProxyFactory.Create()
                 .ConfigureLogging(logger =>logger.AddConsole())
                 .UseCastleDynamicProxy()
-                .UseMessagePack()
+                .UseMessagePackSerializer()
                 .UseConsulDnsServiceDiscovery(); //默认配置 localhost
                 */
 

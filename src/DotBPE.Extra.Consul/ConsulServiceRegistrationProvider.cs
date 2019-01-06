@@ -13,6 +13,7 @@ namespace DotBPE.Extra
         private readonly IConsulClient _consul;
         private readonly Action<IRouterPoint, List<AgentServiceCheck>> _serviceCheckAction;
 
+
         public ConsulServiceRegistrationProvider(IConsulClient consul,
             Action<IRouterPoint,List<AgentServiceCheck>> serviceCheckAction =null)
         {

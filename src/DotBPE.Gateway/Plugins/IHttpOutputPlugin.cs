@@ -1,11 +1,12 @@
 using System.Threading.Tasks;
+using DotBPE.Rpc.BestPractice;
 using Microsoft.AspNetCore.Http;
 
 namespace DotBPE.Gateway
 {
     //格式化输出接口
-    public interface IHttpOutputPlugin<in T>:IHttpPlugin where T: class
+    public interface IHttpOutputPlugin:IHttpPlugin
     {
-        Task<bool> OutputAsync(HttpRequest req, HttpResponse res, T msg, HttpRouteOptions routeOption);
+        Task<bool> OutputAsync(HttpRequest req, HttpResponse res, IJsonResult msg, RouteItem routeItem);
     }
 }

@@ -6,7 +6,7 @@ namespace DotBPE.Gateway
 {
     public interface IHttpPostParsePlugin : IHttpPlugin
     {
-        Task<bool> PostParseAsync(HttpRequest req, HttpResponse res, IHttpRequestData dictData, HttpRouteOptions routeOption);
+        Task<bool> PostParseAsync(HttpRequest req, HttpResponse res, IHttpRequestData dictData, RouteItem routeItem);
     }
 
 }

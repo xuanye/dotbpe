@@ -4,9 +4,9 @@ namespace DotBPE.Extra
 {
     public static class HostBuilderExtensions
     {
-        public static IHostBuilder UseMessagePack(this IHostBuilder @this)
+        public static IHostBuilder UseMessagePackSerializer(this IHostBuilder @this)
         {
-            return @this.ConfigureServices(services => services.AddMessagePack());
+            return @this.ConfigureServices(services => services.AddMessagePackSerializer());
         }
 
     }
