@@ -1,4 +1,7 @@
+using DotBPE.Rpc.Internal;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 
 namespace DotBPE.Gateway
 {
@@ -6,6 +9,9 @@ namespace DotBPE.Gateway
     {
         public static IApplicationBuilder UseGateway(this IApplicationBuilder builder)
         {
+            var loggerFactory = builder.ApplicationServices.GetService<ILoggerFactory>();
+            Environment.SetServiceProvider(builder.ApplicationServices);
+            Environment.SetLoggerFactory(loggerFactory);
 
             builder.UseMiddleware<GatewayMiddleware>();
 

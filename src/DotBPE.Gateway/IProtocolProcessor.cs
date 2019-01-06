@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Http;
 
 namespace DotBPE.Gateway
 {
-    public interface IPipeline
+    public interface IProtocolProcessor
     {
         Task<bool> Invoke(HttpContext context);
     }

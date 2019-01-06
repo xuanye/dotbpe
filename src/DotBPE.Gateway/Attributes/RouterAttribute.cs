@@ -5,14 +5,18 @@ namespace DotBPE.Gateway
     public class RouterAttribute:Attribute
     {
 
-        public RouterAttribute(string pattern,RestfulVerb acceptVerb= RestfulVerb.Any)
+        public RouterAttribute(string path,RestfulVerb acceptVerb= RestfulVerb.Any)
         {
-            this.RoutePattern = pattern;
+            this.Path = Path;
             this.AcceptVerb = acceptVerb;
         }
 
-        public string RoutePattern { get; }
+
+        public string Category { get; set; }
+        public string Path { get; }
 
         public RestfulVerb AcceptVerb { get;  }
+        public  Type PluginType { get; set; }
+
     }
 }

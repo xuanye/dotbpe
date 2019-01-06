@@ -5,11 +5,10 @@ namespace DotBPE.Extra
 {
     public static class ServiceCollectionExtensions
     {
-        public static IServiceCollection AddProtobuf(this IServiceCollection services)
+        public static IServiceCollection AddProtobufSerializer(this IServiceCollection services)
         {
             return services
                 .AddSingleton<ISerializer, ProtobufSerializer>();
-
 
         }
     }

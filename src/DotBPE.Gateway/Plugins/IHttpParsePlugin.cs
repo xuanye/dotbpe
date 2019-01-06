@@ -18,7 +18,7 @@ namespace DotBPE.Gateway
         /// <param name="dictData"></param>
         /// <param name="routeOption"></param>
         /// <returns></returns>
-        Task<bool> ParseAsync(HttpRequest req, HttpResponse res, IHttpRequestData dictData, HttpRouteOptions routeOption);
+        Task<bool> ParseAsync(HttpRequest req, HttpResponse res, IHttpRequestData dictData,RouteItem routeItem);
     }
 
 }

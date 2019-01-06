@@ -16,7 +16,7 @@ namespace MathService
             var builder = new HostBuilder()
              .UseRpcServer()
              .UseCastleDynamicProxy()
-             .UseMessagePack()
+             .UseMessagePackSerializer()
              .BindService<Definition.MathService>()
              //.BindServices(services => { services.Add<Definition.MathService>();})
              .ConfigureLogging(
