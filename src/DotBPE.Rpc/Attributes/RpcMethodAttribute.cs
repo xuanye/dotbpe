@@ -4,7 +4,7 @@ using System.Text;
 
 namespace DotBPE.Rpc
 {
-    [AttributeUsage(AttributeTargets.Method, AllowMultiple = false, Inherited = true)]
+    [AttributeUsage(AttributeTargets.Method)]
     public class RpcMethodAttribute : Attribute
     {
         public RpcMethodAttribute()
@@ -17,5 +17,8 @@ namespace DotBPE.Rpc
         }
 
         public ushort MessageId { get; set; }
+
     }
+
+
 }
