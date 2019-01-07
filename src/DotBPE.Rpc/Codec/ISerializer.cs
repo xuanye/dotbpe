@@ -15,5 +15,7 @@ namespace DotBPE.Rpc
 
         byte[] Serialize(object item);
 
+        byte CodecType { get; }
+
     }
 }

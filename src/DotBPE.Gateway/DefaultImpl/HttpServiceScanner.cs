@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using Microsoft.Extensions.DependencyInjection;
@@ -18,6 +19,7 @@ namespace DotBPE.Gateway
 
         private readonly MethodInfo _proxyCreate;
 
+        private readonly ushort specialMessageId = 0;
         public HttpServiceScanner(
             IClientProxy proxy,
             IServiceProvider provider,
@@ -32,26 +34,36 @@ namespace DotBPE.Gateway
         }
         public HttpRouteOptions Scan(string dllPrefix="*",params string[] categories)
         {
+            this._logger.LogInformation(dllPrefix);
+
             HttpRouteOptions options = new HttpRouteOptions();
 
             string basePath = Rpc.Internal.Environment.GetAppBasePath();
 
             var dllFiles = Directory.GetFiles(string.Concat(basePath, ""), $"{dllPrefix}.dll");
 
+
+            this._logger.LogInformation("dll count={0}",dllFiles.Length);
+
             List<Assembly> assemblies = new List<Assembly>();
             foreach (var file in dllFiles)
             {
+
                 assemblies.Add(Assembly.LoadFrom(file));
             }
+
+            this._logger.LogInformation("assembly count={0}", assemblies.Count);
 
             foreach (var a in assemblies)
             {
                 //Console.WriteLine(a.FullName);
                 foreach (var type in a.GetTypes())
                 {
+
                     if (!type.IsInterface)
                        continue;
 
+                    this._logger.LogInformation(type.FullName);
                     var sAttr = type.GetCustomAttribute<RpcServiceAttribute>();
                     if (sAttr == null)
                         continue;
@@ -64,7 +76,7 @@ namespace DotBPE.Gateway
 
         private void AddRpcService(Type type, RpcServiceAttribute sAttr, HttpRouteOptions options,params string[] categories)
         {
-            var methods = type.GetMethods(BindingFlags.Public);
+            var methods = type.GetMethods();
             foreach (var m in methods)
             {
                 var mAttr = m.GetCustomAttribute<RpcMethodAttribute>();
@@ -98,10 +110,14 @@ namespace DotBPE.Gateway
                 AcceptVerb = rAttr.AcceptVerb,
                 Category = rAttr.Category,
                 InvokeMethod = m,
-                InvokeService = this._proxyCreate.MakeGenericMethod(type).Invoke(this._proxy, new object[0]),
                 MessageId = mAttr.MessageId,
                 ServiceId = sAttr.ServiceId
             };
+
+            //special MessageId;
+            var args = new object[] {this.specialMessageId};
+
+            item.InvokeService = this._proxyCreate.MakeGenericMethod(type).Invoke(this._proxy, args);
 
             if (rAttr.PluginType != null )
             {

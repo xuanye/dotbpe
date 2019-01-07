@@ -46,5 +46,7 @@ namespace DotBPE.Extra
             var json = JsonConvert.SerializeObject(item);
             return Encoding.UTF8.GetBytes(json);
         }
+
+        public byte CodecType => (byte)Rpc.Codec.CodecType.JSON;
     }
 }

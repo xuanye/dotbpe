@@ -1,6 +1,7 @@
 using System.IO;
 using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Protocol;
+using Moq;
 using Xunit;
 
 namespace DotBPE.Rpc.Tests.Protocol
@@ -18,7 +19,10 @@ namespace DotBPE.Rpc.Tests.Protocol
             src.CodecType = CodecType.MessagePack;
             src.Data = new byte[]{1,2,3,4,5,6,7,8,9,0};
 
-            AmpProtocol protocol = new AmpProtocol();
+            var serializer = new Mock<ISerializer>();
+            serializer.SetupGet(x => x.CodecType).Returns((byte) CodecType.MessagePack);
+
+            AmpProtocol protocol = new AmpProtocol(serializer.Object);
 
             MemoryStream stream = new MemoryStream();
 

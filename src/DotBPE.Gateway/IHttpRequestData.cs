@@ -4,7 +4,7 @@ namespace DotBPE.Gateway
 {
     public interface IHttpRequestData
     {
-        ushort ServiceId { get; }
+        int ServiceId { get; }
 
         ushort MessageId { get; }
 

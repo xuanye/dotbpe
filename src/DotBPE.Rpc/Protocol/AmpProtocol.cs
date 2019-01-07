@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.Serialization.Json;
 using System.Text;
 using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Exceptions;
@@ -13,6 +14,13 @@ namespace DotBPE.Rpc.Protocol
     /// </summary>
     public class AmpProtocol : IProtocol<AmpMessage>
     {
+        private readonly ISerializer _serializer;
+
+        public AmpProtocol(ISerializer serializer)
+        {
+            this._serializer = serializer;
+        }
+
         static readonly ProtocolMeta AMP_PROTOCOL_META = new ProtocolMeta
         {
             InitialBytesToStrip = 0, //读取时需要跳过的字节数
@@ -34,14 +42,24 @@ namespace DotBPE.Rpc.Protocol
             writer.WriteInt(message.Length);
             writer.WriteInt(message.Sequence);
             writer.WriteByte((byte)message.InvokeMessageType);
-            writer.WriteUShort(message.ServiceId);
+
+            if (message.Version == 0)
+            {
+                writer.WriteUShort((ushort)message.ServiceId);
+            }
+            else
+            {
+                writer.WriteInt(message.ServiceId);
+            }
+
+
             writer.WriteUShort(message.MessageId);
 
             writer.WriteInt(message.Code);
 
             if(message.Version == 1)
             {
-                writer.WriteByte((byte)message.CodecType);
+                writer.WriteByte(_serializer.CodecType);
             }
 
             if (message.Data != null)
@@ -56,10 +74,10 @@ namespace DotBPE.Rpc.Protocol
             {
                 return null;
             }
-            var msg = new AmpMessage();
-            msg.Version = reader.ReadByte();
 
-            int headLength= AmpMessage.VERSION_0_HEAD_LENGTH;
+            var msg = new AmpMessage {Version = reader.ReadByte()};
+
+            int headLength;
             if (msg.Version == 0 )
             {
                 headLength = AmpMessage.VERSION_0_HEAD_LENGTH;
@@ -81,17 +99,25 @@ namespace DotBPE.Rpc.Protocol
                 throw new RpcCodecException($"decode error ,{msg.Version} is not support");
             }
 
-            int length = reader.ReadInt();
+            var length = reader.ReadInt();
             msg.Sequence = reader.ReadInt();
-            byte type = reader.ReadByte();
+            var type = reader.ReadByte();
             msg.InvokeMessageType = (InvokeMessageType)Enum.ToObject(typeof(InvokeMessageType), type);
-            msg.ServiceId = reader.ReadUShort();
+
+
+            msg.ServiceId = msg.Version == 0 ? reader.ReadUShort() : reader.ReadInt();
+
+
             msg.MessageId = reader.ReadUShort();
             msg.Code = reader.ReadInt();
 
             if (msg.Version == 1)
             {
                 byte codeType = reader.ReadByte();
+                if (codeType != this._serializer.CodecType)
+                {
+                    throw  new RpcCodecException($"CodecType:{codeType} is not Match {this._serializer.CodecType}");
+                }
                 msg.CodecType = (CodecType)Enum.ToObject(typeof(CodecType), codeType);
             }
             else

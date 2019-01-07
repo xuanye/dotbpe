@@ -5,7 +5,7 @@ namespace DotBPE.Gateway
 {
     public class HttpRequestData:IHttpRequestData
     {
-        public ushort ServiceId { get; set; }
+        public int ServiceId { get; set; }
         public ushort MessageId { get; set; }
         public IDictionary<string, string> QueryOrFormData { get;  } = new Dictionary<string, string>();
         public string RawBody { get; set; }

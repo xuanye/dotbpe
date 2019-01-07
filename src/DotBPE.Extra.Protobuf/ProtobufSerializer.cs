@@ -59,5 +59,7 @@ namespace DotBPE.Extra
             }
             throw new Rpc.Exceptions.RpcException("Message is not a Protobuf Message");
         }
+
+        public byte CodecType => (byte)Rpc.Codec.CodecType.Protobuf;
     }
 }

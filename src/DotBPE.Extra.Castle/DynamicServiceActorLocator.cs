@@ -1,5 +1,9 @@
 using System;
 using System.Collections.Concurrent;
+using System.ComponentModel.Design;
+using System.Linq;
+using System.Reflection;
+using Castle.Core.Internal;
 using Castle.DynamicProxy;
 using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server;
@@ -45,7 +49,16 @@ namespace DotBPE.Extra
             {
                 return null;
             }
-            var proxy = this._generator.CreateInterfaceProxyWithTarget(actor, ActorInterceptor);
+
+            var interfaces = actor.GetType().GetInterfaces().FindAll(x=> x !=typeof(IServiceActor<AmpMessage>));
+            //actor 真实的实现实现类 ，actor:IAService,IServiceActor<AmpMessage>
+            var proxy = (IServiceActor<AmpMessage>)this._generator.CreateInterfaceProxyWithTarget(
+                typeof(IServiceActor<AmpMessage>)
+                ,interfaces.ToArray()
+                ,actor
+                , ActorInterceptor);
+
+            //var proxy = this._generator.CreateInterfaceProxyWithTarget(actor, ActorInterceptor);
             DY_ACTOR_CACHE.TryAdd(cacheKey, proxy);
             return proxy;
         }

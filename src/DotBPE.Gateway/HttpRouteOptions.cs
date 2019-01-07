@@ -10,7 +10,7 @@ namespace DotBPE.Gateway
 
     public class RouteItem
     {
-        public ushort ServiceId { get; set; }
+        public int ServiceId { get; set; }
         public ushort MessageId { get; set; }
         public string Category { get; set; }
 

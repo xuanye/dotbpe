@@ -7,10 +7,8 @@ using System.Threading.Tasks;
 using DotBPE.Baseline.Extensions;
 using DotBPE.Rpc;
 using DotBPE.Rpc.BestPractice;
-using DotBPE.Rpc.Client;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
 
 
 namespace DotBPE.Gateway
@@ -87,14 +85,15 @@ namespace DotBPE.Gateway
                 return hasRes;
             }
             var parameters = router.InvokeMethod.GetParameters();
-            if (parameters.Length !=1 || parameters.Length !=2)
+            if (parameters.Length !=1 && parameters.Length !=2)
             {
                 res.StatusCode = (int)HttpStatusCode.InternalServerError;
                 await res.WriteAsync("parameters length not match");
                 this._logger.LogError("parameters length not match");
                 return true;
             }
-            var reqType = parameters[0].GetType();
+
+            var reqType = parameters[0].ParameterType;
             try
             {
                 object invokeParam = ParseInvokeParameter(requestData,reqType);
@@ -215,10 +214,37 @@ namespace DotBPE.Gateway
                 return this._jsonParser.FromJson(requestData.RawBody, reqType);
             }
 
+            return ParseParameterFromDictionary(reqType, requestData.QueryOrFormData);
+            /**
             var json = this._jsonParser.ToJson(requestData.QueryOrFormData);
+
+            //this._logger.LogInformation("{1}==========================\r\n{0}",json,reqType.FullName);
             return this._jsonParser.FromJson(json, reqType);
+            */
         }
 
+        protected virtual object ParseParameterFromDictionary(Type reqType,IDictionary<string,string> dictData)
+        {
+            object obj = Activator.CreateInstance(reqType);
+
+            var properties = reqType.GetProperties();
+
+            foreach (var property in properties)
+            {
+                if (!property.CanWrite || property.PropertyType.IsClass)
+                {
+                    continue;
+                }
+
+                var name = property.Name.ToLower();
+                if (dictData.ContainsKey(name))
+                {
+                    property.SetValue(obj, Convert.ChangeType(dictData[name], property.PropertyType), null);
+                }
+            }
+
+            return obj;
+        }
 
         protected virtual Task<bool> BeforeAsyncCall(HttpRequest req, HttpResponse res, HttpRequestData requestData)
         {
@@ -254,7 +280,7 @@ namespace DotBPE.Gateway
             {
                 res.StatusCode = (int)HttpStatusCode.InternalServerError;
                 await res.WriteAsync("InternalServerError:" + ex.Message);
-                _logger.LogError(ex, "转换HTTP请求到RPC请求出错");
+                _logger.LogError(ex, "cast http request to rpc error");
                 return true;
             }
 
@@ -400,10 +426,11 @@ namespace DotBPE.Gateway
         {
             foreach (var key in form.Keys)
             {
-                if (routeData.ContainsKey(key))
-                    routeData[key] = form[key];
+                var lowKey = key.ToLower();
+                if (routeData.ContainsKey(lowKey))
+                    routeData[lowKey] = form[lowKey];
                 else
-                    routeData.Add(key, form[key]);
+                    routeData.Add(lowKey, form[lowKey]);
             }
         }
 
@@ -411,10 +438,11 @@ namespace DotBPE.Gateway
         {
             foreach (var key in query.Keys)
             {
-                if (routeData.ContainsKey(key))
-                    routeData[key] = query[key];
+                var lowKey = key.ToLower();
+                if (routeData.ContainsKey(lowKey))
+                    routeData[lowKey] = query[lowKey];
                 else
-                    routeData.Add(key, query[key]);
+                    routeData.Add(lowKey, query[lowKey]);
             }
         }
 
