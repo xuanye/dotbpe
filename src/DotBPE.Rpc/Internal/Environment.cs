@@ -1,6 +1,7 @@
 using Microsoft.Extensions.Logging;
 using Peach.Infrastructure;
 using System;
+using DotBPE.Rpc.Codec;
 
 namespace DotBPE.Rpc.Internal
 {
@@ -40,5 +41,6 @@ namespace DotBPE.Rpc.Internal
             return AppContext.BaseDirectory;
             //return AppDomain.CurrentDomain.BaseDirectory;
         }
+
     }
 }

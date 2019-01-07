@@ -9,7 +9,7 @@ namespace DotBPE.Gateway
         /// <summary>
         /// 请求ID字段
         /// </summary>
-        public const string REQUEST_ID_FIELD_NAME = "x_request_id";
+        public const string REQUEST_ID_FIELD_NAME = "xrequestid";
 
         /// <summary>
         /// 用户标识字段
@@ -19,7 +19,7 @@ namespace DotBPE.Gateway
         /// <summary>
         /// CLIENT_IP字段
         /// </summary>
-        public const string CLIENT_IP_FIELD_NAME = "client_ip";
+        public const string CLIENT_IP_FIELD_NAME = "clientip";
 
         /// <summary>
         /// 消息中可以提取的返回码字段

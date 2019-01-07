@@ -7,7 +7,7 @@ namespace DotBPE.Extra
 {
     public class InvokeMeta
     {
-        public ushort ServiceId { get; set; }
+        public int ServiceId { get; set; }
         public ushort MessageId { get; set; }
 
         public string ServiceGroupName { get; set; }

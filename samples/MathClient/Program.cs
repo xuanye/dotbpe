@@ -16,7 +16,7 @@ namespace Math.Client
 
             /* default route  */
             var factory = ClientProxyFactory.Create()
-                .UseCastleDynamicProxy()
+                .UseCastleDynamicClientProxy()
                 .ConfigureLogging(logger =>logger.AddConsole())
                 .UseMessagePackSerializer()
                 .UseDefaultChannel($"{IPUtility.GetLocalIntranetIP().MapToIPv4()}:5566");

@@ -27,5 +27,7 @@ namespace DotBPE.Extra
         {
             return MessagePack.MessagePackSerializer.NonGeneric.Serialize(item.GetType(),item);
         }
+
+        public byte CodecType => (byte)Rpc.Codec.CodecType.MessagePack;
     }
 }

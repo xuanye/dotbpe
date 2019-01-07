@@ -81,9 +81,10 @@ namespace DotBPE.Extra
             if (isLocal)
             {
                 var actor = ActorLocator.LocateServiceActor(servicePath);
+
                 if (!(actor is TService realService))
                 {
-                    throw new InvalidOperationException($"{serviceType.FullName} not  implement class");
+                    throw new InvalidOperationException($"{serviceType.FullName} has no implementation class");
                 }
                 proxy = this._generator.CreateInterfaceProxyWithTarget(realService, LocalInvokeInterceptor);
                 TYPE_CACHE.TryAdd(cacheKey,proxy);

@@ -5,6 +5,7 @@
     <PackageTags>microservice,dotnet,peach,rpc,dotbpe</PackageTags>
     <Copyright>Xuanye @ 2017-2019</Copyright>
     <Version>2.0.0</Version>
+    <PackageIconUrl>https://raw.githubusercontent.com/dotbpe/dotbpe/master/icon.png</PackageIconUrl>
   </PropertyGroup>
 
   <ItemGroup>

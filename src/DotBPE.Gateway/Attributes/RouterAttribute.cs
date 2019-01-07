@@ -7,7 +7,7 @@ namespace DotBPE.Gateway
 
         public RouterAttribute(string path,RestfulVerb acceptVerb= RestfulVerb.Any)
         {
-            this.Path = Path;
+            this.Path = path;
             this.AcceptVerb = acceptVerb;
         }
 

@@ -6,7 +6,19 @@ namespace DotBPE.Extra
     {
         public static IHostBuilder UseCastleDynamicProxy(this IHostBuilder @this)
         {
-            return @this.ConfigureServices(services => services.AddDynamicClientProxy());
+            return @this.ConfigureServices(services =>
+            {
+                services.AddDynamicClientProxy().AddDynamicServiceProxy();
+            });
+        }
+
+        public static IHostBuilder UseCastleDynamicClientProxy(this IHostBuilder @this)
+        {
+            return @this.ConfigureServices(services => { services.AddDynamicClientProxy(); });
+        }
+        public static IHostBuilder UseCastleDynamicServiceProxy(this IHostBuilder @this)
+        {
+            return @this.ConfigureServices(services => { services.AddDynamicServiceProxy(); });
         }
 
     }

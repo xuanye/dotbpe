@@ -69,6 +69,8 @@ namespace DotBPE.Extra
                         i.Exception(invocation,ex);
                     });
                 }
+
+                throw ex;
             }
             finally
             {
@@ -76,7 +78,7 @@ namespace DotBPE.Extra
                 {
                     this.Interceptor.ForEach(i =>
                     {
-                        i.Before(invocation);
+                        i.After(invocation);
                     });
                 }
             }

@@ -35,7 +35,7 @@ namespace DotBPE.Rpc.Server.Impl
         /// <summary>
         /// service id
         /// </summary>
-        protected ushort ServiceId { get; }
+        protected int ServiceId { get; }
 
 
 
@@ -43,7 +43,7 @@ namespace DotBPE.Rpc.Server.Impl
         /// <summary>
         ///  Default serializer from IOC container
         /// </summary>
-        protected ISerializer Serializer =>
+        private ISerializer Serializer =>
             this._serializer ??
             (this._serializer = Environment.ServiceProvider.GetRequiredService<ISerializer>());
 

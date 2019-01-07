@@ -8,7 +8,7 @@ namespace DotBPE.Rpc.Protocol
     public class AmpMessage : InvokeMessage, Peach.Messaging.IMessage
     {
 
-        public static AmpMessage HEART_BEAT = CreateRequestMessage(0,0,true);
+        public static readonly AmpMessage HEART_BEAT = CreateRequestMessage(0,0,true);
 
         /// <summary>
         /// 第一个版本为18个字节头固定长度
@@ -17,7 +17,7 @@ namespace DotBPE.Rpc.Protocol
         /// <summary>
         /// 加强版本则为19个字节头固定长度
         /// </summary>
-        public const int VERSION_1_HEAD_LENGTH = 19;
+        public const int VERSION_1_HEAD_LENGTH = 21;
 
 
         /// <summary>
@@ -33,13 +33,7 @@ namespace DotBPE.Rpc.Protocol
         /// </summary>
         public byte[] Data { get; set; }
 
-        public override bool IsHeartBeat
-        {
-            get
-            {
-                return ServiceId == 0 && MessageId == 0;
-            }
-        }
+        public override bool IsHeartBeat => ServiceId == 0 && MessageId == 0;
 
         public override int Length {
             get
@@ -70,7 +64,7 @@ namespace DotBPE.Rpc.Protocol
         /// <summary>
         /// 调用服务的唯一服务号 确定哪个服务
         /// </summary>
-        public ushort ServiceId { get; set; }
+        public int ServiceId { get; set; }
 
         public override string ServiceIdentity => $"{ServiceId}.0";
 
@@ -85,13 +79,13 @@ namespace DotBPE.Rpc.Protocol
 
         public string MessageRoutePath => $"{ServiceGroupName}.{MethodIdentifier}";
 
-        public static AmpMessage CreateRequestMessage(ushort serviceId,ushort messageId,bool withOutResponse =false)
+        public static AmpMessage CreateRequestMessage(int serviceId,ushort messageId,bool withOutResponse =false)
         {
             AmpMessage msg = new AmpMessage
             {
                 ServiceId = serviceId,
                 MessageId = messageId,
-                Version = 0,
+                Version = 1,
                 CodecType = 0,
                 InvokeMessageType =
                     withOutResponse ? InvokeMessageType.InvokeWithoutResponse : InvokeMessageType.Request
@@ -105,14 +99,14 @@ namespace DotBPE.Rpc.Protocol
             var data = requestId.Split('|');
             AmpMessage message = new AmpMessage
             {
-                ServiceId = ushort.Parse(data[0]),
+                ServiceId = int.Parse(data[0]),
                 MessageId = ushort.Parse(data[1]),
                 InvokeMessageType = InvokeMessageType.Response
             };
             return message;
         }
 
-        public static AmpMessage CreateResponseMessage(ushort serviceId, ushort messageId)
+        public static AmpMessage CreateResponseMessage(int serviceId, ushort messageId)
         {
             AmpMessage message = new AmpMessage
             {
