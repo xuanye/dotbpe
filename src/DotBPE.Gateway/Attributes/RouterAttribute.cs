@@ -16,7 +16,27 @@ namespace DotBPE.Gateway
         public string Path { get; }
 
         public RestfulVerb AcceptVerb { get;  }
-        public  Type PluginType { get; set; }
 
+        public string PluginName { get; set; }
+
+
+        private Type _PluginType;
+        public Type PluginType
+        {
+            get
+            {
+                if (!string.IsNullOrEmpty(PluginName))
+                {
+                    if (_PluginType != null)
+                    {
+                        return this._PluginType;
+                    }
+                    this._PluginType =Type.GetType(this.PluginName);
+                    return this._PluginType;
+                }
+
+                return null;
+            }
+        }
     }
 }

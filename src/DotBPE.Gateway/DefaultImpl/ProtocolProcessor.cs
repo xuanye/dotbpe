@@ -13,6 +13,7 @@ using Microsoft.Extensions.Logging;
 
 namespace DotBPE.Gateway
 {
+    /// <inheritdoc />
     public class ProtocolProcessor:IProtocolProcessor
     {
         private readonly IJsonParser _jsonParser;
@@ -20,7 +21,7 @@ namespace DotBPE.Gateway
         private readonly ILogger _logger;
         private readonly HttpRouteOptions _routeOptions;
 
-        private static ConcurrentDictionary<string, RouteItem> ROUTER_CACHE
+        private static readonly ConcurrentDictionary<string, RouteItem> ROUTER_CACHE
             = new ConcurrentDictionary<string, RouteItem>();
 
         static readonly Dictionary<string,RestfulVerb> VerbsCache = new Dictionary<string, RestfulVerb>()
@@ -190,12 +191,32 @@ namespace DotBPE.Gateway
                     dataVal = dataProp.GetValue(result);
                 }
                 resMsg.Data = dataVal;
+                ExtractMessage(resMsg, dataVal);
                 return resMsg;
             }
 
             resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
             resMsg.Message = "INTERNAL_ERROR";
             return resMsg;
+        }
+
+
+        /// <summary>
+        /// Extract Return Message
+        /// </summary>
+        /// <param name="result"></param>
+        /// <param name="innerData"></param>
+        protected virtual void ExtractMessage(IJsonResult result, object innerData)
+        {
+            if (innerData != null)
+            {
+                var p = innerData.GetType().GetProperty("ReturnMessage");
+                if (p != null && p.PropertyType == typeof(string))
+                {
+                    var objValue = p.GetValue(innerData);
+                    result.Message = objValue != null ? objValue.ToString() : "";
+                }
+            }
         }
 
         protected virtual IJsonResult CreateJsonResult()
@@ -231,14 +252,16 @@ namespace DotBPE.Gateway
 
             foreach (var property in properties)
             {
-                if (!property.CanWrite || property.PropertyType.IsClass)
+                if (!property.CanWrite )
                 {
                     continue;
                 }
 
                 var name = property.Name.ToLower();
+                //this._logger.LogInformation("{0}=-----------",name);
                 if (dictData.ContainsKey(name))
                 {
+                    //this._logger.LogInformation("{0}={1}",name,dictData[name]);
                     property.SetValue(obj, Convert.ChangeType(dictData[name], property.PropertyType), null);
                 }
             }
