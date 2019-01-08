@@ -23,7 +23,7 @@ namespace Math.Client
 
 
 
-            /* Service Discovery
+            /* service discovery route
             var factory = ClientProxyFactory.Create()
                 .ConfigureLogging(logger =>logger.AddConsole())
                 .UseCastleDynamicProxy()

@@ -21,18 +21,20 @@ namespace GreeterHttpService
         public void ConfigureServices(IServiceCollection services)
         {
             //添加路由信息
-            services.BindService<GreeterService>();
-            services.AddGateway("GreeterHttpService");
-            services.AddMessagePackSerializer();
-            services.AddJsonNetParser();
-            services.AddDynamicClientProxy();
-            services.AddDynamicServiceProxy();
+            services.BindService<GreeterService>(); //bindService
+
+            services.AddGateway("GreeterHttpService"); //add gateway and auto scan router infos
+
+            services.AddMessagePackSerializer(); //message pack serializer
+            services.AddJsonNetParser(); // http result json parser
+            services.AddDynamicClientProxy(); // aop client
+            services.AddDynamicServiceProxy(); // aop service
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
-            //使用网关
+            //use gateway middleware
             app.UseGateway();
         }
     }
