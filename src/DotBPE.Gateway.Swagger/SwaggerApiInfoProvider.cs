@@ -21,12 +21,8 @@ namespace DotBPE.Gateway.Swagger
             this._httpScanner = httpScanner;
         }
 
-        public void ScanApiInfo(Action<SwaggerConfig> configAction =null)
+        public void ScanApiInfo(SwaggerConfig config)
         {
-            SwaggerConfig config = new SwaggerConfig();
-
-            configAction?.Invoke(config);
-
             _resolver = new XmlCommentResolver(config.XmlComments);
             //所有路由信息
             var routeOptions = this._httpScanner.GetRuntimeRouteOptions();
