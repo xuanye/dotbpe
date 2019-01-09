@@ -19,6 +19,8 @@ namespace DotBPE.Gateway
 
         private readonly MethodInfo _proxyCreate;
 
+        private HttpRouteOptions _options;
+
         private readonly ushort specialMessageId = 0;
         public HttpServiceScanner(
             IClientProxy proxy,
@@ -36,7 +38,7 @@ namespace DotBPE.Gateway
         {
             this._logger.LogInformation(dllPrefix);
 
-            HttpRouteOptions options = new HttpRouteOptions();
+            _options = new HttpRouteOptions();
 
             string basePath = Rpc.Internal.Environment.GetAppBasePath();
 
@@ -68,12 +70,16 @@ namespace DotBPE.Gateway
                     if (sAttr == null)
                         continue;
 
-                    AddRpcService(type, sAttr, options,categories);
+                    AddRpcService(type, sAttr, _options,categories);
                 }
             }
-            return options;
+            return _options;
         }
 
+        public HttpRouteOptions GetRuntimeRouteOptions()
+        {
+            return _options;
+        }
         private void AddRpcService(Type type, RpcServiceAttribute sAttr, HttpRouteOptions options,params string[] categories)
         {
             var methods = type.GetMethods();
