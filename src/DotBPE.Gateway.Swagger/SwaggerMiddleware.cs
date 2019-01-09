@@ -26,6 +26,7 @@ namespace DotBPE.Gateway.Swagger
             if (!this._handlerPath.Equals(context.Request.Path, StringComparison.CurrentCultureIgnoreCase))
             {
                 await this._next(context);
+                return;
             }
 
             string json = this._provider.GetSwaggerApiJson();

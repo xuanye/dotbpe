@@ -6,6 +6,7 @@ using DotBPE.Extra;
 using DotBPE.Gateway;
 using DotBPE.Gateway.Swagger;
 using DotBPE.Gateway.Swagger.Generator;
+using DotBPE.Gateway.SwaggerUI;
 using DotBPE.Rpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
@@ -55,6 +56,8 @@ namespace GreeterHttpService
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 config.IncludeXmlComments(xmlPath);
             });
+
+            app.UseSwaggerUI(config => { config.RoutePrefix = "/swagger"; });
             //use gateway middleware
             app.UseGateway();
         }
