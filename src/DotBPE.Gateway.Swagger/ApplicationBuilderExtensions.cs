@@ -6,16 +6,18 @@ namespace DotBPE.Gateway.Swagger
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseSwagger(this IApplicationBuilder builder,string handlerPath="/swagger", Action<SwaggerConfig> configAction =null)
+        public static IApplicationBuilder UseSwagger(this IApplicationBuilder builder,Action<SwaggerConfig> configAction =null)
         {
 
             builder.ApplicationServices.GetRequiredService<IProtocolProcessor>();
 
             var swagger = builder.ApplicationServices.GetRequiredService<ISwaggerApiInfoProvider>();
+            SwaggerConfig config = new SwaggerConfig();
+            configAction?.Invoke(config);
 
-            swagger.ScanApiInfo(configAction);
+            swagger.ScanApiInfo(config);
 
-            builder.UseMiddleware<SwaggerMiddleware>(handlerPath);
+            builder.UseMiddleware<SwaggerMiddleware>(config.RoutePath);
 
             return builder;
         }

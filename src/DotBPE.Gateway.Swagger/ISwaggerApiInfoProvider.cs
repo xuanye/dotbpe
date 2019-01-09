@@ -5,7 +5,7 @@ namespace DotBPE.Gateway.Swagger
 {
     public interface ISwaggerApiInfoProvider
     {
-        void ScanApiInfo(Action<SwaggerConfig> configAction);
+        void ScanApiInfo(SwaggerConfig config);
 
         string GetSwaggerApiJson();
     }

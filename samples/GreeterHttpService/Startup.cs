@@ -41,9 +41,10 @@ namespace GreeterHttpService
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
-            app.UseSwagger("/swagger", config =>
+            app.UseSwagger( config =>
             {
-                config.ApiInfo = new SwaggerApiInfo()
+                config.RoutePath = "/v2/swagger.json";
+                config.ApiInfo = new SwaggerApiInfo
                 {
                     Title = "GreetingService",
                     Description = "测试Swagger",
