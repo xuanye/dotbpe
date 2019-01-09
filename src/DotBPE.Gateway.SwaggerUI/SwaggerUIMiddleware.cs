@@ -20,7 +20,7 @@ namespace DotBPE.Gateway.SwaggerUI
 {
     public class SwaggerUIMiddleware
     {
-        private const string EmbeddedFileNamespace = "DotBPE.Gateway.SwaggerUI.node_modules.dotbpe_swagger_ui";
+        private const string EmbeddedFileNamespace = "DotBPE.Gateway.SwaggerUI.swagger_ui";
 
        private readonly SwaggerUIOptions _options;
         private readonly StaticFileMiddleware _staticFileMiddleware;
@@ -95,7 +95,7 @@ namespace DotBPE.Gateway.SwaggerUI
 
         private IDictionary<string, string> GetIndexArguments()
         {
-            return new Dictionary<string, string>()
+            return new Dictionary<string, string>
             {
                 { "%(DocumentTitle)", _options.DocumentTitle }
             };

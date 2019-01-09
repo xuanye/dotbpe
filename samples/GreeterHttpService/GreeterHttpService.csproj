@@ -11,6 +11,7 @@
       <ProjectReference Include="..\..\src\DotBPE.Extra.Castle\DotBPE.Extra.Castle.csproj" />
       <ProjectReference Include="..\..\src\DotBPE.Extra.JsonNet\DotBPE.Extra.JsonNet.csproj" />
       <ProjectReference Include="..\..\src\DotBPE.Extra.MessagePack\DotBPE.Extra.MessagePack.csproj" />
+      <ProjectReference Include="..\..\src\DotBPE.Gateway.SwaggerUI\DotBPE.Gateway.SwaggerUI.csproj" />
       <ProjectReference Include="..\..\src\DotBPE.Gateway.Swagger\DotBPE.Gateway.Swagger.csproj" />
       <ProjectReference Include="..\..\src\DotBPE.Gateway\DotBPE.Gateway.csproj" />
       <ProjectReference Include="..\..\src\DotBPE.Rpc\DotBPE.Rpc.csproj" />
