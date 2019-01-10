@@ -48,7 +48,7 @@
 .put{background-color: #c5862b;}
 
 .delete_font{color: #999999;}
-.get_font{color: #0f6ab4;}
+
 .head_font{color: #ffd20f;}
 .options_font{color: #0f6ab4;}
 .patch_font{color: #D38042;}
@@ -74,6 +74,11 @@
 .layui-layout-admin .layui-side {width: 300px !important;}
 .layui-body{left:300px !important;}
 .layui-this a cite{color:#fff !important; }
+
+.layui-nav a cite { font-size: 14px}
+
+.layui-nav a cite.description{font-size: 12px;}
+
 .layui-nav-tree .layui-nav-child, .layui-nav-tree .layui-nav-child a:hover {
     background-color: #41444c !important;
     color: #f2f2f2 !important;

@@ -20,8 +20,8 @@ function getContextPath() {
 
 $(function () {
     $.ajax({
-        url: "/v2/swagger.json",
-// 	        url : "http://petstore.swagger.io/v2/swagger.json",
+        url: __SwaggerJsonPath__  || "/v2/swagger.json",
+        //url : "http://petstore.swagger.io/v2/swagger.json",
         dataType: "json",
         type: "get",
         async: false,
@@ -151,7 +151,7 @@ function getRefName(val) {
 
 //测试按钮，获取数据
 function getData(operationId) {
-    var path = contextPath + $("[m_operationId='" + operationId + "']").attr("path");
+    var path =  $("[m_operationId='" + operationId + "']").attr("path");
     //path 参数
     $("[p_operationId='" + operationId + "'][in='path']").each(function (index, domEle) {
         var k = $(domEle).attr("name");

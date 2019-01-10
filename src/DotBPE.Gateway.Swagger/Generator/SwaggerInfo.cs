@@ -15,6 +15,9 @@ namespace DotBPE.Gateway.Swagger.Generator
         [DataMember(Name = "schemes")]
         public string[] Schemes { get; set; } = {"http"};
 
+        [DataMember(Name = "tags")]
+        public List<SwaggerTag> Tags { get; set; }
+
         [DataMember(Name = "host")]
         public string Host { get; set; }
 
@@ -32,7 +35,15 @@ namespace DotBPE.Gateway.Swagger.Generator
     }
 
 
+    [DataContract]
+    public class SwaggerTag
+    {
+        [DataMember(Name = "name")]
+        public string Name { get; set; }
 
+        [DataMember(Name = "description")]
+        public string Description { get; set; }
+    }
 
 
 

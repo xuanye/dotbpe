@@ -31,13 +31,14 @@ namespace DotBPE.Gateway.Swagger
             SwaggerInfo swagger = new SwaggerInfo
             {
                 Host = config.Host,
-                Info = config.ApiInfo??new SwaggerApiInfo(),
+                Info = config.ApiInfo ?? new SwaggerApiInfo(),
                 BasePath = config.BasePath,
                 Paths = new Dictionary<string, Dictionary<string, SwaggerMethod>>(),
-                Definitions = new Dictionary<string, SwaggerDefinition>()
+                Definitions = new Dictionary<string, SwaggerDefinition>(),
+                Tags = new List<SwaggerTag>()
             };
 
-            ProcessPaths(swagger.Paths, routeOptions, swagger.Definitions);
+            ProcessPaths(swagger.Paths,swagger.Tags, routeOptions, swagger.Definitions);
 
             var settings = new JsonSerializerSettings
             {
@@ -49,18 +50,31 @@ namespace DotBPE.Gateway.Swagger
         }
 
         private void ProcessPaths(Dictionary<string, Dictionary<string, SwaggerMethod>> swaggerPaths,
-            HttpRouteOptions routeOptions,Dictionary<string, SwaggerDefinition> definitions)
+            List<SwaggerTag> tags,HttpRouteOptions routeOptions,Dictionary<string, SwaggerDefinition> definitions)
         {
             routeOptions.Items.ForEach(item =>
             {
                 var path = CreateSwaggerMethod(item.AcceptVerb);
+
+                var tagName = item.InvokeMethod.DeclaringType.Name.Substring(1);
+
+                if (!tags.Exists(x => x.Name == tagName))
+                {
+                    tags.Add(new SwaggerTag
+                    {
+                        Name = item.InvokeMethod.DeclaringType.Name.Substring(1),
+                        Description =  this._resolver.GetTypeComment(item.InvokeMethod.DeclaringType)
+                    });
+                }
+
+
                 path.Tags = new List<string> {
-                    item.Category??"default",
-                    this._resolver.GetTypeComment(item.InvokeMethod.DeclaringType)
-                    ,item.InvokeMethod.DeclaringType.Name
+                    //item.Category??"default",
+                    //this._resolver.GetTypeComment(item.InvokeMethod.DeclaringType)
+                    tagName
                 };
 
-                path.Summary = _resolver.GetMethodComment(item.InvokeMethod);
+                path.Summary =GetSummary(item) ;
 
                 string verb;
                 //path.Summary = item.AcceptVerb.ToString();
@@ -77,7 +91,11 @@ namespace DotBPE.Gateway.Swagger
                     verb = "post";
                 }
 
-                path.Description =  path.Summary;
+                path.OperationId = item.InvokeMethod.Name.EndsWith("Async")?
+                    item.InvokeMethod.Name.Substring(0, item.InvokeMethod.Name.Length-5):
+                    item.InvokeMethod.Name;
+
+                path.Description = this._resolver.GetMethodComment(item.InvokeMethod);
 
                 path.Parameters = new List<SwaggerApiParameters>();
 
@@ -89,6 +107,11 @@ namespace DotBPE.Gateway.Swagger
 
                 swaggerPaths.Add(item.Path,new Dictionary<string, SwaggerMethod> {{verb,path}});
             });
+        }
+
+        private string GetSummary(RouteItem item)
+        {
+            return $"{item.ServiceId}.{item.MessageId} - {item.InvokeService.GetType().Name}.{item.InvokeMethod.Name}";
         }
 
         private void ProcessResponses(Dictionary<string, SwaggerApiResponse> pathResponses,
