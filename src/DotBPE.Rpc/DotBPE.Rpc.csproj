@@ -16,6 +16,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
+    <PackageReference Include="Peach" Version="0.1.2" />
   </ItemGroup>
 
   <ItemGroup>
@@ -25,7 +26,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\DotBPE.Baseline\DotBPE.Baseline.csproj" />
-    <ProjectReference Include="..\Peach\Peach.csproj" />
   </ItemGroup>
 
 </Project>

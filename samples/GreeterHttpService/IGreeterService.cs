@@ -23,6 +23,7 @@ namespace GreeterHttpService
     }
 
 
+    /// <inheritdoc />
     public class GreeterService : BaseService<IGreeterService>, IGreeterService
     {
         public Task<RpcResult<SayHelloRes>> SayHelloAsync(SayHelloReq req)
