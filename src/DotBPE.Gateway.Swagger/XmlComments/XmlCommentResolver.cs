@@ -44,7 +44,11 @@ namespace DotBPE.Gateway.Swagger
 
             foreach ( XmlNode node in members)
             {
-                MEMBER_CACHE.Add(node.Attributes["name"].Value,node.SelectSingleNode(SummaryTag).InnerXml.Replace("\r\n","").Trim());
+                string comment = node.SelectSingleNode(SummaryTag)?.InnerXml.Replace("\r\n", "").Trim();
+                if (!string.IsNullOrEmpty(comment))
+                {
+                    MEMBER_CACHE.Add(node.Attributes["name"].Value,comment);
+                }
             }
         }
 

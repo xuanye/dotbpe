@@ -91,9 +91,10 @@ namespace DotBPE.Gateway.Swagger
                     verb = "post";
                 }
 
-                path.OperationId = item.InvokeMethod.Name.EndsWith("Async")?
+                string invokeName = item.InvokeMethod.Name.EndsWith("Async")?
                     item.InvokeMethod.Name.Substring(0, item.InvokeMethod.Name.Length-5):
                     item.InvokeMethod.Name;
+                path.OperationId = invokeName;
 
                 path.Description = this._resolver.GetMethodComment(item.InvokeMethod);
 
@@ -111,7 +112,7 @@ namespace DotBPE.Gateway.Swagger
 
         private string GetSummary(RouteItem item)
         {
-            return $"{item.ServiceId}.{item.MessageId} - {item.InvokeService.GetType().Name}.{item.InvokeMethod.Name}";
+            return $"{item.ServiceId}.{item.MessageId} - {item.InvokeMethod.DeclaringType.Name.Substring(1)}.{item.InvokeMethod.Name}";
         }
 
         private void ProcessResponses(Dictionary<string, SwaggerApiResponse> pathResponses,

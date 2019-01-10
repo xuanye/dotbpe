@@ -28,6 +28,7 @@ namespace GreeterHttpService
         {
             //添加路由信息
             services.BindService<GreeterService>(); //bindService
+            services.BindService<SwaggerSampleService>();
 
             services.AddGateway("GreeterHttpService"); //add gateway and auto scan router infos
 
