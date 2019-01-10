@@ -1,3 +1,4 @@
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -48,8 +49,9 @@ namespace DotBPE.Gateway.SwaggerUI
             var httpMethod = httpContext.Request.Method;
             var path = httpContext.Request.Path.Value;
 
+            string pattern = $"^{_options.RoutePrefix}/?$";
             // If the RoutePrefix is requested (with or without trailing slash), redirect to index URL
-            if (httpMethod == "GET" && Regex.IsMatch(path, $"^/{_options.RoutePrefix}/?$"))
+            if (httpMethod == "GET" && Regex.IsMatch(path,pattern ))
             {
                 // Use relative redirect to support proxy environments
                 var relativeRedirectPath = path.EndsWith("/")
@@ -60,7 +62,7 @@ namespace DotBPE.Gateway.SwaggerUI
                 return;
             }
 
-            if (httpMethod == "GET" && Regex.IsMatch(path, $"/{_options.RoutePrefix}/?index.html"))
+            if (httpMethod == "GET" && Regex.IsMatch(path, $"{_options.RoutePrefix}/?index.html"))
             {
                 await RespondWithIndexHtml(httpContext.Response);
                 return;
@@ -80,6 +82,8 @@ namespace DotBPE.Gateway.SwaggerUI
             response.StatusCode = 200;
             response.ContentType = "text/html";
 
+
+
             using (var stream = _options.IndexStream())
             {
                 // Inject arguments before writing to response
@@ -97,21 +101,12 @@ namespace DotBPE.Gateway.SwaggerUI
         {
             return new Dictionary<string, string>
             {
-                { "%(DocumentTitle)", _options.DocumentTitle }
+                { "%(DocumentTitle)", _options.DocumentTitle },
+                { "%(SwaggerJsonPath)", _options.SwaggerJsonPath }
             };
         }
 
-        private string SerializeToJson(object obj)
-        {
-            return JsonConvert.SerializeObject(obj, new JsonSerializerSettings
-            {
-                ContractResolver = new CamelCasePropertyNamesContractResolver(),
-                Converters = new[] { new StringEnumConverter(true) },
-                NullValueHandling = NullValueHandling.Ignore,
-                Formatting = Formatting.None,
-                StringEscapeHandling = StringEscapeHandling.EscapeHtml
-            });
-        }
+
 
         private StaticFileMiddleware CreateStaticFileMiddleware(
             RequestDelegate next,
@@ -121,8 +116,8 @@ namespace DotBPE.Gateway.SwaggerUI
         {
             var staticFileOptions = new StaticFileOptions
             {
-                RequestPath = string.IsNullOrEmpty(options.RoutePrefix) ? string.Empty : $"/{options.RoutePrefix}",
-                FileProvider = new EmbeddedFileProvider(typeof(SwaggerUIMiddleware).GetTypeInfo().Assembly, EmbeddedFileNamespace),
+                RequestPath = string.IsNullOrEmpty(options.RoutePrefix) ? string.Empty : $"{options.RoutePrefix}",
+                FileProvider = new EmbeddedFileProvider(typeof(SwaggerUIMiddleware).GetTypeInfo().Assembly, EmbeddedFileNamespace)
             };
 
             return new StaticFileMiddleware(next, hostingEnv, Options.Create(staticFileOptions), loggerFactory);

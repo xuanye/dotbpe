@@ -9,6 +9,6 @@
 		<PackageReference Include="Newtonsoft.Json" Version="12.0.1" />
     </ItemGroup>
  <ItemGroup>
-    <EmbeddedResource Include="swagger-ui/**/*" />
+    <EmbeddedResource Include="swagger_ui/**/*" />
   </ItemGroup>
 </Project>

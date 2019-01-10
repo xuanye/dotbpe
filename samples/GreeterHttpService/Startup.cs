@@ -44,7 +44,7 @@ namespace GreeterHttpService
         {
             app.UseSwagger( config =>
             {
-                config.RoutePath = "/v2/swagger.json";
+                //config.RoutePath = "/v2/swagger.json";
                 config.ApiInfo = new SwaggerApiInfo
                 {
                     Title = "GreetingService",
@@ -57,6 +57,7 @@ namespace GreeterHttpService
                 config.IncludeXmlComments(xmlPath);
             });
 
+            //app.UseStaticFiles();
             app.UseSwaggerUI(config => { config.RoutePrefix = "/swagger"; });
             //use gateway middleware
             app.UseGateway();
