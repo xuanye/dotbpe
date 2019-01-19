@@ -1,0 +1,58 @@
+syntax = "proto3";
+package dotbpe;
+
+option csharp_namespace = "PiggyMetrics.Common";
+option optimize_for = SPEED;
+
+
+import public "dotbpe_option.proto";
+import public "message.proto";
+
+option (generic_objectfactory) = true;
+
+service StatisticService{
+    option (service_id)= 1003 ;//设定服务ID
+
+    rpc UpdateStatistics (AccountReq) returns (VoidRsp){
+        option (message_id)= 1 ;
+    };
+
+    rpc FindByAccount (FindAccountReq) returns (StatRsp){
+        option (message_id)= 2 ;
+    };
+}
+
+
+
+
+message StatRsp{
+    int32 status =1;
+    string message = 2;
+    repeated DataPoint data_point = 3;
+}
+
+
+message ItemMetric{
+    string title = 1;
+    double amount = 2;
+}
+
+message DataPoint{
+    string account =1;
+    string date = 2;
+    repeated ItemMetric incomes = 3;
+    repeated ItemMetric expenses = 4;
+    repeated DataPointStat stat = 5;
+}
+
+message DataPointStat{
+    StatMetric stat_metric = 1;
+    double amount =  2;
+}
+
+enum StatMetric{
+    SMNONE = 0;
+    INCOME = 1;
+    EXPENSE = 2;
+    SAVING = 3;
+}
