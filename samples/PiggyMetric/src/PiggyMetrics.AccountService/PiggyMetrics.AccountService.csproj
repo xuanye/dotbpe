@@ -1,0 +1,34 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp1.1</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <None Update="dotbpe.config.json">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+    <None Update="nlog.config">
+      <CopyToPublishDirectory>PreserveNewest</CopyToPublishDirectory>
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PiggyMetrics.Common\PiggyMetrics.Common.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="DotBPE" Version="0.1.46-alpha" />
+    <PackageReference Include="Vulcan.DataAccess" Version="0.1.8-alpha" />
+    <PackageReference Include="Consul" Version="0.7.2.3" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="Impl\" />
+    <Folder Include="Repository\" />
+  </ItemGroup>
+
+</Project>

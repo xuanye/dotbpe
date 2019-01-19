@@ -1,0 +1,8 @@
+﻿{
+    "consul":{
+        "server":"http://127.0.0.1:8500"
+    },
+    "hostAddress":"127.0.0.1:6206",
+    "multiplexCount":5,
+    "appName":"PiggyMetrics"
+}

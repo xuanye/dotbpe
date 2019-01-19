@@ -1,0 +1,53 @@
+{
+    "DbOption": {
+        "AccountDbConStr": "server=127.0.0.1;port=3306;database=PiggyMetrics;uid=root;pwd=Welcome@123;charset=utf8;Connection Timeout=18000;",
+        "AuthDbConStr": "server=127.0.0.1;port=3306;database=PiggyMetrics;uid=root;pwd=Welcome@123;charset=utf8;Connection Timeout=18000;",
+        "StatDbConStr": "server=127.0.0.1;port=3306;database=PiggyMetrics;uid=root;pwd=Welcome@123;charset=utf8;Connection Timeout=18000;"
+    },
+    "RouterOption": {
+        "Routers": [{
+                "Path": "accounts/",
+                "Method": "get",
+                "ServiceId": 1001,
+                "MessageId": 1,
+                "NeedAuth":true
+            },
+            {
+                "Path": "accounts/",
+                "Method": "post",
+                "ServiceId": 1001,
+                "MessageId": 2,
+                "NeedAuth":false
+            },
+            {
+                "Path": "accounts/",
+                "Method": "put",
+                "ServiceId": 1001,
+                "MessageId": 3,
+                "NeedAuth":true
+            },
+            {
+                "Path": "statistics/",
+                "Method": "get",
+                "ServiceId": 1003,
+                "MessageId": 2,
+                "NeedAuth":true
+            },
+            {
+                "Path": "statistics/",
+                "Method": "put",
+                "ServiceId": 1003,
+                "MessageId": 1,
+                "NeedAuth":true
+            },
+            {
+                "Path": "auth/login",
+                "Method": "post",
+                "ServiceId": 1002,
+                "MessageId": 2,
+                "NeedAuth":false
+            }
+        ]
+    }
+
+}
