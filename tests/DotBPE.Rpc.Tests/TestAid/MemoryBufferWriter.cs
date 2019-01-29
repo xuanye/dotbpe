@@ -3,9 +3,9 @@ using Peach.Buffer;
 
 namespace DotBPE.Rpc.Tests
 {
-    public class MemoryBufferWriter:IBufferWriter
+    public class MemoryBufferWriter : IBufferWriter
     {
-        private readonly BinaryWriter  _writer;
+        private readonly BinaryWriter _writer;
 
         public MemoryBufferWriter(MemoryStream stream)
         {

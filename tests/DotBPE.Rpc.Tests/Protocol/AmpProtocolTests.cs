@@ -8,29 +8,28 @@ namespace DotBPE.Rpc.Tests.Protocol
 {
     public class AmpProtocolTests
     {
-
         [Fact]
         public void PackAndUnPackTest()
         {
-            AmpMessage src = AmpMessage.CreateRequestMessage(1,1);
+            var src = AmpMessage.CreateRequestMessage(1, 1);
             src.Version = 1;
             src.Code = 100;
             src.Sequence = 11;
             src.CodecType = CodecType.MessagePack;
-            src.Data = new byte[]{1,2,3,4,5,6,7,8,9,0};
+            src.Data = new byte[] {1, 2, 3, 4, 5, 6, 7, 8, 9, 0};
 
             var serializer = new Mock<ISerializer>();
             serializer.SetupGet(x => x.CodecType).Returns((byte) CodecType.MessagePack);
 
-            AmpProtocol protocol = new AmpProtocol(serializer.Object);
+            var protocol = new AmpProtocol(serializer.Object);
 
-            MemoryStream stream = new MemoryStream();
+            var stream = new MemoryStream();
 
             var writer = new MemoryBufferWriter(stream);
 
-            protocol.Pack(writer,src);
+            protocol.Pack(writer, src);
 
-            Assert.Equal(AmpMessage.VERSION_1_HEAD_LENGTH+10,stream.Length);
+            Assert.Equal(AmpMessage.VERSION_1_HEAD_LENGTH + 10, stream.Length);
 
             var reader = new MemoryBufferReader(stream);
 
@@ -38,13 +37,12 @@ namespace DotBPE.Rpc.Tests.Protocol
 
             Assert.NotNull(dist);
 
-            Assert.Equal(src.Id,dist.Id);
-            Assert.Equal(src.Version,dist.Version);
-            Assert.Equal(src.Code,dist.Code);
-            Assert.Equal(src.Sequence,dist.Sequence);
-            Assert.Equal(src.CodecType,dist.CodecType);
-            Assert.Equal(src.Data.Length,dist.Data.Length);
+            Assert.Equal(src.Id, dist.Id);
+            Assert.Equal(src.Version, dist.Version);
+            Assert.Equal(src.Code, dist.Code);
+            Assert.Equal(src.Sequence, dist.Sequence);
+            Assert.Equal(src.CodecType, dist.CodecType);
+            Assert.Equal(src.Data.Length, dist.Data.Length);
         }
-
     }
 }
