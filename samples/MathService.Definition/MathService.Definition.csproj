@@ -3,7 +3,7 @@
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
 	<GenerateDocumentationFile>true</GenerateDocumentationFile>
-	<NoWarn>$(NoWarn);1591</NoWarn>
+	<NoWarn>$(NoWarn);1591</NoWarn>	
   </PropertyGroup>
 
   <ItemGroup>
@@ -12,6 +12,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DotBPE.Extra.MessagePack\DotBPE.Extra.MessagePack.csproj" />
+    <ProjectReference Include="..\..\src\DotBPE.Gateway\DotBPE.Gateway.csproj" />
     <ProjectReference Include="..\..\src\DotBPE.Rpc\DotBPE.Rpc.csproj" />
   </ItemGroup>
 
