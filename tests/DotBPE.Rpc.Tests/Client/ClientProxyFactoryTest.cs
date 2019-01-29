@@ -8,43 +8,6 @@ namespace DotBPE.Rpc.Tests.Client
 {
     public class ClientProxyFactoryTest
     {
-
-        [Fact]
-        public void BuildFactoryWithoutError()
-        {
-           var clientProxy = new Mock<IClientProxy>();
-           var proxy=  ClientProxyFactory.Create()
-               .AddDependencyServices(services => { services.AddSingleton(clientProxy.Object); })
-               .GetProxyInstance();
-
-           Assert.NotNull(proxy);
-        }
-
-        [Fact]
-        public void ConfigureTest()
-        {
-            IServiceCollection container = new ServiceCollection();
-
-            var factory = ClientProxyFactory.Create(container);
-
-            factory.Configure<FooOptions>(o => {
-                o.Option1 = "111";
-                o.Option2 = 222;
-            });
-
-
-            var provider = container.BuildServiceProvider();
-
-            var options = provider.GetRequiredService<IOptions<FooOptions>>();
-
-            Assert.NotNull(options);
-            Assert.NotNull(options.Value);
-
-            Assert.Equal("111",options.Value.Option1);
-            Assert.Equal(222,options.Value.Option2);
-        }
-
-
         [Fact]
         public void AddDependencyServicesTest()
         {
@@ -61,10 +24,42 @@ namespace DotBPE.Rpc.Tests.Client
             var fooService = provider.GetRequiredService<IFooService>();
 
             Assert.NotNull(fooService);
+        }
 
+        [Fact]
+        public void BuildFactoryWithoutError()
+        {
+            var clientProxy = new Mock<IClientProxy>();
+            var proxy = ClientProxyFactory.Create()
+                .AddDependencyServices(services => { services.AddSingleton(clientProxy.Object); })
+                .GetProxyInstance();
+
+            Assert.NotNull(proxy);
+        }
+
+        [Fact]
+        public void ConfigureTest()
+        {
+            IServiceCollection container = new ServiceCollection();
+
+            var factory = ClientProxyFactory.Create(container);
+
+            factory.Configure<FooOptions>(o =>
+            {
+                o.Option1 = "111";
+                o.Option2 = 222;
+            });
+
+
+            var provider = container.BuildServiceProvider();
+
+            var options = provider.GetRequiredService<IOptions<FooOptions>>();
+
+            Assert.NotNull(options);
+            Assert.NotNull(options.Value);
+
+            Assert.Equal("111", options.Value.Option1);
+            Assert.Equal(222, options.Value.Option2);
         }
     }
-
-
-
 }

@@ -4,10 +4,10 @@ using Peach.Buffer;
 
 namespace DotBPE.Rpc.Tests
 {
-    public class MemoryBufferReader:IBufferReader
+    public class MemoryBufferReader : IBufferReader
     {
+        private readonly BinaryReader _reader;
 
-        private readonly BinaryReader  _reader;
         public MemoryBufferReader(MemoryStream stream)
         {
             stream.Position = 0;
@@ -26,7 +26,7 @@ namespace DotBPE.Rpc.Tests
 
         public long ReadLong()
         {
-            return _reader.ReadInt64();
+            return this._reader.ReadInt64();
         }
 
         public double ReadDouble()
@@ -36,8 +36,8 @@ namespace DotBPE.Rpc.Tests
 
         public void ReadBytes(byte[] dist)
         {
-            var temp  = this._reader.ReadBytes(dist.Length);
-            Buffer.BlockCopy(temp,0,dist,0,temp.Length);
+            var temp = this._reader.ReadBytes(dist.Length);
+            Buffer.BlockCopy(temp, 0, dist, 0, temp.Length);
         }
 
         public char ReadChar()

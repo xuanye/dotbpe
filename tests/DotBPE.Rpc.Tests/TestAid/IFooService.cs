@@ -1,5 +1,4 @@
 using System.Threading.Tasks;
-using DotBPE.Rpc.Tests.Server;
 
 namespace DotBPE.Rpc.Tests
 {
@@ -12,5 +11,4 @@ namespace DotBPE.Rpc.Tests
         [RpcMethod(2)]
         Task<RpcResult<FooRes>> Foo2Async(FooReq req);
     }
-
 }
