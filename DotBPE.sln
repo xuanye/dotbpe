@@ -41,6 +41,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBPE.Gateway.Swagger", "s
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "DotBPE.Gateway.SwaggerUI", "src\DotBPE.Gateway.SwaggerUI\DotBPE.Gateway.SwaggerUI.csproj", "{CEF4E169-7265-4125-9ED4-A454F5AEBCA1}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MathHttpClient", "samples\MathHttpClient\MathHttpClient.csproj", "{DEC066E2-3E18-40E0-AA94-8D67FE34E51C}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -111,6 +113,10 @@ Global
 		{CEF4E169-7265-4125-9ED4-A454F5AEBCA1}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{CEF4E169-7265-4125-9ED4-A454F5AEBCA1}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{CEF4E169-7265-4125-9ED4-A454F5AEBCA1}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DEC066E2-3E18-40E0-AA94-8D67FE34E51C}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DEC066E2-3E18-40E0-AA94-8D67FE34E51C}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DEC066E2-3E18-40E0-AA94-8D67FE34E51C}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DEC066E2-3E18-40E0-AA94-8D67FE34E51C}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -132,6 +138,7 @@ Global
 		{ECAD0192-1643-4876-AAE4-D39A507DAACC} = {C88E5785-665B-446D-A811-38E8EA84D59A}
 		{483F2C5D-5998-4905-8995-7169495CE8CD} = {02381A10-08FD-11E9-83FD-7DC2C1B049B2}
 		{CEF4E169-7265-4125-9ED4-A454F5AEBCA1} = {02381A10-08FD-11E9-83FD-7DC2C1B049B2}
+		{DEC066E2-3E18-40E0-AA94-8D67FE34E51C} = {C88E5785-665B-446D-A811-38E8EA84D59A}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {96FD52AC-7DCC-41EB-87E6-C84D43E8CD1A}

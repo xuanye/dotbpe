@@ -14,7 +14,7 @@ namespace DotBPE.Rpc.Client
         /// <param name="req">req obj</param>
         /// <typeparam name="T">message type</typeparam>
         /// <returns>call result</returns>
-        Task<RpcResult> AsyncNotify<T>(string callName,string groupName,ushort serviceId,ushort messageId,T req);
+        Task<RpcResult> AsyncNotify<T>(string callName,string groupName,int serviceId,ushort messageId,T req);
 
         /// <summary>
         /// async call and wait for response
@@ -26,6 +26,6 @@ namespace DotBPE.Rpc.Client
         /// <typeparam name="TResult">result data type</typeparam>
         /// <returns>call result with data</returns>
         Task<RpcResult<TResult>> AsyncRequest<T,TResult>(string callName,string groupName,
-            ushort serviceId, ushort messageId,T req, int timeout = 3000) ;
+            int serviceId, ushort messageId,T req, int timeout = 3000) ;
     }
 }
