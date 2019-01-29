@@ -1,6 +1,7 @@
 ﻿using System.Threading;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Logging;
 
 
 namespace GreeterHttpService
@@ -17,6 +18,7 @@ namespace GreeterHttpService
             WebHost.CreateDefaultBuilder(args)
                 .UseUrls("http://*:5560") //HTTP绑定在6200端口
                 .UseStartup<Startup>()
+                .ConfigureLogging(builder => { builder.SetMinimumLevel(LogLevel.Warning); })
                 .Build();
     }
 }

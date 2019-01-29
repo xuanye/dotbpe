@@ -1,11 +1,7 @@
-using System;
-using System.Threading;
 using System.Threading.Tasks;
 using DotBPE.Extra;
 using DotBPE.Rpc.Client;
-using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.Logging.Abstractions;
-using Moq;
 using Xunit;
 
 namespace DotBPE.Rpc.Tests.Client
@@ -28,20 +24,20 @@ namespace DotBPE.Rpc.Tests.Client
             var serializer = new JsonSerializer();
             var logger = NullLogger<DefaultCallInvoker>.Instance;
 
-            var invoker = new DefaultCallInvoker(handler,client,serializer,logger);
+            var invoker = new DefaultCallInvoker(handler, client, serializer, logger);
 
             var req = new FooReq {FooWord = "hello dotbpe"};
 
-            var result = await invoker.AsyncNotify("FooService.Foo","default", 100,1,req);
+            var result = await invoker.AsyncNotify("FooService.Foo", "default", 100, 1, req);
 
             Assert.NotNull(result);
-            Assert.Equal(0,result.Code);
+            Assert.Equal(0, result.Code);
             Assert.NotNull(client.ReceiveMessage);
 
-            Assert.Equal(100,client.ReceiveMessage.ServiceId);
-            Assert.Equal(1,client.ReceiveMessage.MessageId);
+            Assert.Equal(100, client.ReceiveMessage.ServiceId);
+            Assert.Equal(1, client.ReceiveMessage.MessageId);
 
-            Assert.Equal("FooService.Foo",client.ReceiveMessage.FriendlyServiceName);
+            Assert.Equal("FooService.Foo", client.ReceiveMessage.FriendlyServiceName);
         }
 
         [Fact]
@@ -56,24 +52,21 @@ namespace DotBPE.Rpc.Tests.Client
             var serializer = new JsonSerializer();
             var handler = new DefaultClientMessageHandler();
 
-            var client = new MockRpcClient2(serializer,handler);
+            var client = new MockRpcClient2(serializer, handler);
             var logger = NullLogger<DefaultCallInvoker>.Instance;
 
-            var invoker = new DefaultCallInvoker(handler,client,serializer,logger);
+            var invoker = new DefaultCallInvoker(handler, client, serializer, logger);
 
-            var req = new FooReq { FooWord = "hello dotbpe" };
+            var req = new FooReq {FooWord = "hello dotbpe"};
 
-            var result = await invoker.AsyncRequest<FooReq,FooRes>("FooService.Foo","default",100,1,req);
+            var result = await invoker.AsyncRequest<FooReq, FooRes>("FooService.Foo", "default", 100, 1, req);
 
             Assert.NotNull(result);
-            Assert.Equal(0,result.Code);
+            Assert.Equal(0, result.Code);
 
 
             Assert.NotNull(result.Data);
-            Assert.Equal(req.FooWord,result.Data.RetFooWord);
+            Assert.Equal(req.FooWord, result.Data.RetFooWord);
         }
     }
-
-
-
 }

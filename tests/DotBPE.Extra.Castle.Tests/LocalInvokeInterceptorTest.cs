@@ -1,13 +1,6 @@
-using System;
-using Xunit;
-using Castle.DynamicProxy;
-using DotBPE.Rpc;
 using System.Threading.Tasks;
-using DotBPE.Rpc.Client;
-using DotBPE.Rpc.Protocol;
-using DotBPE.Rpc.Server;
-using Moq;
-using Peach;
+using DotBPE.Rpc;
+using Xunit;
 
 namespace DotBPE.Extra.Castle.Tests
 {
@@ -74,6 +67,4 @@ namespace DotBPE.Extra.Castle.Tests
         [RpcMethod(2)]
         Task<RpcResult> FooNoRsponse(int a);
     }
-
-
 }

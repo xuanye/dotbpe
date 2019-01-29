@@ -1,6 +1,7 @@
 using System.Threading.Tasks;
 using DotBPE.Extra;
 using DotBPE.Rpc.Codec;
+using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
@@ -9,13 +10,12 @@ namespace DotBPE.Rpc.Tests.Server
 {
     public class ServiceActorTests
     {
-
         public ServiceActorTests()
         {
             IServiceCollection container = new ServiceCollection();
             container.AddLogging();
             container.AddSingleton<ISerializer, JsonSerializer>();
-            Internal.Environment.SetServiceProvider( container.BuildServiceProvider());
+            Environment.SetServiceProvider(container.BuildServiceProvider());
         }
 
 
@@ -25,31 +25,6 @@ namespace DotBPE.Rpc.Tests.Server
             var fooService = new FooService();
 
             Assert.Equal("100.0", fooService.Id);
-        }
-
-        [Fact]
-        public async Task BaseServiceReceiveTest()
-        {
-            var fooService = new FooService();
-
-            Assert.Equal("100.0", fooService.Id);
-
-
-            var context1 = new MockContext();
-            var context2 = new MockContext();
-
-            var reqMessage = AmpMessage.CreateRequestMessage(100, 1);
-            reqMessage.Data= new byte[0];
-            await fooService.ReceiveAsync(context1, reqMessage);
-
-            Assert.NotNull(context1.ResponseMessage);
-            Assert.Equal(0, context1.ResponseMessage.Code);
-
-            reqMessage = AmpMessage.CreateRequestMessage(100, 2000);
-            await fooService.ReceiveAsync(context2, reqMessage);
-
-            Assert.NotNull(context2.ResponseMessage);
-            Assert.Equal(RpcErrorCodes.CODE_SERVICE_NOT_FOUND, context2.ResponseMessage.Code);
         }
 
 
@@ -78,12 +53,35 @@ namespace DotBPE.Rpc.Tests.Server
 
             Assert.NotNull(context1.ResponseMessage.Data);
 
-            FooRes res = serializer.Deserialize<FooRes>(context1.ResponseMessage.Data);
+            var res = serializer.Deserialize<FooRes>(context1.ResponseMessage.Data);
             Assert.NotNull(res);
 
-            Assert.Equal(req.FooWord,res.RetFooWord);
+            Assert.Equal(req.FooWord, res.RetFooWord);
         }
 
-    }
+        [Fact]
+        public async Task BaseServiceReceiveTest()
+        {
+            var fooService = new FooService();
 
+            Assert.Equal("100.0", fooService.Id);
+
+
+            var context1 = new MockContext();
+            var context2 = new MockContext();
+
+            var reqMessage = AmpMessage.CreateRequestMessage(100, 1);
+            reqMessage.Data = new byte[0];
+            await fooService.ReceiveAsync(context1, reqMessage);
+
+            Assert.NotNull(context1.ResponseMessage);
+            Assert.Equal(0, context1.ResponseMessage.Code);
+
+            reqMessage = AmpMessage.CreateRequestMessage(100, 2000);
+            await fooService.ReceiveAsync(context2, reqMessage);
+
+            Assert.NotNull(context2.ResponseMessage);
+            Assert.Equal(RpcErrorCodes.CODE_SERVICE_NOT_FOUND, context2.ResponseMessage.Code);
+        }
+    }
 }

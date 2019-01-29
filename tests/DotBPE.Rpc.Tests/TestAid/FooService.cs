@@ -1,6 +1,5 @@
 using System.Threading.Tasks;
 using DotBPE.Rpc.Server.Impl;
-using DotBPE.Rpc.Tests.Server;
 
 namespace DotBPE.Rpc.Tests
 {
@@ -13,7 +12,7 @@ namespace DotBPE.Rpc.Tests
 
         public Task<RpcResult<FooRes>> Foo2Async(FooReq req)
         {
-            return Task.FromResult(new RpcResult<FooRes>{ Data = new FooRes { RetFooWord = req.FooWord}});
+            return Task.FromResult(new RpcResult<FooRes> {Data = new FooRes {RetFooWord = req.FooWord}});
         }
     }
 }
