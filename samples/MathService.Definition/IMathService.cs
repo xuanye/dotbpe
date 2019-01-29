@@ -1,4 +1,5 @@
 using System.Threading.Tasks;
+using DotBPE.Gateway;
 using DotBPE.Rpc;
 
 namespace MathService.Definition
@@ -14,7 +15,7 @@ namespace MathService.Definition
         /// </summary>
         /// <param name="req">请求参数req</param>
         /// <returns>返回值Res</returns>
-        [RpcMethod(1)]
+        [RpcMethod(1),Router("/api/math/sum")]
         Task<RpcResult<SumRes>> SumAsync(SumReq req);
     }
 }
