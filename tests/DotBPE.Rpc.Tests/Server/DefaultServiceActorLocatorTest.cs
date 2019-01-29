@@ -17,22 +17,21 @@ namespace DotBPE.Rpc.Tests.Server
             var actor2 = new Mock<IServiceActor<AmpMessage>>();
             actor2.Setup(x => x.Id).Returns("actor2.0");
 
-           IServiceCollection container = new ServiceCollection();
+            IServiceCollection container = new ServiceCollection();
 
-           container.AddLogging();
-           container.BindServices(actors => { actors.Add(actor1.Object).Add(actor2.Object); });
+            container.AddLogging();
+            container.BindServices(actors => { actors.Add(actor1.Object).Add(actor2.Object); });
 
-           var provider = container.BuildServiceProvider();
+            var provider = container.BuildServiceProvider();
 
-           DefaultServiceActorLocator locator = new DefaultServiceActorLocator(provider);
+            var locator = new DefaultServiceActorLocator(provider);
 
-           var locatorActor1= locator.LocateServiceActor("actor1.0");
-           var locatorActor2= locator.LocateServiceActor("actor2.0");
+            var locatorActor1 = locator.LocateServiceActor("actor1.0");
+            var locatorActor2 = locator.LocateServiceActor("actor2.0");
 
-           Assert.Same(actor1.Object,locatorActor1);
+            Assert.Same(actor1.Object, locatorActor1);
 
-           Assert.Same(actor2.Object,locatorActor2);
-
+            Assert.Same(actor2.Object, locatorActor2);
         }
     }
 }

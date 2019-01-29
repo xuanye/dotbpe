@@ -27,11 +27,9 @@ namespace DotBPE.Rpc.Tests.Server
 
             var logger = NullLogger<DefaultServerMessageHandler>.Instance;
 
-            var handler = new DefaultServerMessageHandler(actorLocator.Object,logger);
+            var handler = new DefaultServerMessageHandler(actorLocator.Object, logger);
 
             return handler.ReceiveAsync(null, AmpMessage.CreateRequestMessage(1, 1));
         }
     }
-
-
 }
