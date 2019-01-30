@@ -1,0 +1,14 @@
+<Project>
+	<PropertyGroup>
+	    <RpcPackageVersion>2.0.0</RpcPackageVersion>
+        <BaselinePackageVersion>1.0.0</BaselinePackageVersion>
+        <ExtraCastlePackageVersion>1.0.0</ExtraCastlePackageVersion>
+        <ExtraConsulPackageVersion>1.0.0</ExtraConsulPackageVersion>
+        <ExtraJsonNetPackageVersion>1.0.0</ExtraJsonNetPackageVersion>
+        <ExtraMessagePackPackageVersion>1.0.0</ExtraMessagePackPackageVersion>
+        <ExtraProtobufPackageVersion>1.0.0</ExtraProtobufPackageVersion>
+        <GatewayPackageVersion>2.0.0</GatewayPackageVersion>
+        <GatewaySwaggerPackageVersion>1.0.0</GatewaySwaggerPackageVersion>
+        <GatewaySwaggerUIPackageVersion>1.0.0</GatewaySwaggerUIPackageVersion>
+	</PropertyGroup>
+</Project>
