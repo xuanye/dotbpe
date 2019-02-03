@@ -33,10 +33,10 @@ namespace DotBPE.Gateway
                 IJsonParser jsonParser = p.GetRequiredService<IJsonParser>();
                 ILogger logger = p.GetRequiredService<ILoggerFactory>().CreateLogger<IProtocolProcessor>();
                 IHttpMetricFactory metricFactory = p.GetRequiredService<IHttpMetricFactory>();
-
+                var parsers = p.GetServices<IAdditionalHttpParser>();
                 var scanner = p.GetRequiredService<IHttpServiceScanner>();
                 var options = scanner.Scan(dllPrefix,categories);
-                return new ProtocolProcessor(jsonParser,metricFactory,options,logger);
+                return new ProtocolProcessor(jsonParser,metricFactory,options, parsers, logger);
             });
 
             return services;

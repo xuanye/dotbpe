@@ -23,17 +23,24 @@ namespace DotBPE.Rpc
             actorTypes.ForEach(
                 t =>
                 {
-                    var tAttr = t.GetCustomAttribute(typeof(RpcServiceAttribute),false) ;
-                    if (tAttr == null)
-                    {
-                        return;
-                    }
-
-                    var rpcOption = tAttr as RpcServiceAttribute;
-                    if (categories == null || EnumerableExtensions.IndexOf(categories, rpcOption.GroupName) >= 0)
+                    if ( categories == null || categories.Length == 0)
                     {
                         services.AddSingleton(serviceType, t);
                     }
+                    else
+                    {
+                        var tAttr = t.GetCustomAttribute(typeof(RpcServiceAttribute), true);
+                        if (tAttr == null)
+                        {
+                            return;
+                        }
+
+                        var rpcOption = tAttr as RpcServiceAttribute;
+                        if (EnumerableExtensions.IndexOf(categories, rpcOption.GroupName) >= 0)
+                        {
+                            services.AddSingleton(serviceType, t);
+                        }
+                    }                   
 
                 });
         }

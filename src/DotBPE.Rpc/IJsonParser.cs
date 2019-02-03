@@ -10,6 +10,6 @@ namespace DotBPE.Rpc
 
         object FromJson(string json, Type type);
 
-        T FromJson<T>(string json);
+        T FromJson<T>(string json) where T : class;
     }
 }

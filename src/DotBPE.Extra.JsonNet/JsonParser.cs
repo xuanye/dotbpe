@@ -26,7 +26,7 @@ namespace DotBPE.Extra
             return JsonConvert.DeserializeObject(json, type,settings);
         }
 
-        public T FromJson<T>(string json)
+        public T FromJson<T>(string json) where T : class
         {
             return JsonConvert.DeserializeObject<T>(json,settings);
         }

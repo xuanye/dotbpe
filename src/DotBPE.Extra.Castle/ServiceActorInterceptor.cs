@@ -1,11 +1,13 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Reflection;
 using Castle.DynamicProxy;
 using DotBPE.Baseline.Extensions;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Server;
+using DotBPE.Rpc.Server.Impl;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.Extra
@@ -13,12 +15,16 @@ namespace DotBPE.Extra
     public class ServiceActorInterceptor:IInterceptor
     {
 
-        private readonly IEnumerable<IRpcServiceInterceptor> Interceptor;
+        private readonly IEnumerable<IRpcServiceInterceptor> _interceptors;
         private readonly IRequestAuditLoggerFactory _requestAuditLoggerFactory;
+
+        private readonly IContextAccessor _contextAccessor;
 
         public ServiceActorInterceptor(IServiceProvider provider)
         {
-            Interceptor = provider.GetServices<IRpcServiceInterceptor>() ?? new IRpcServiceInterceptor[0];
+            this._interceptors = provider.GetServices<IRpcServiceInterceptor>() ?? new IRpcServiceInterceptor[0];
+
+            this._contextAccessor = provider.GetService<IContextAccessor>();
 
             this._requestAuditLoggerFactory = provider.GetRequiredService<IRequestAuditLoggerFactory>();
         }
@@ -34,8 +40,16 @@ namespace DotBPE.Extra
             }
 
             var serviceNameArr = invocation.Method.DeclaringType.FullName.Split('.');
-            string methodFullName = $"{serviceNameArr[serviceNameArr.Length-1]}.{invocation.Method.Name}";
+            var methodFullName = $"{serviceNameArr[serviceNameArr.Length-1]}.{invocation.Method.Name}";
 
+            if (this._contextAccessor != null)
+            {
+                if (this._contextAccessor.CallContext == null)
+                {
+                    this._contextAccessor.CallContext = new CallContext();
+                }
+                this._contextAccessor.CallContext.AddDef();
+            }
             using (var logger = this._requestAuditLoggerFactory.GetLogger(methodFullName))
             {
                 logger.SetParameter(invocation.Arguments[0]);
@@ -44,13 +58,15 @@ namespace DotBPE.Extra
 
                 logger.SetReturnValue(invocation.ReturnValue);
             }
+
+            this._contextAccessor?.CallContext.CloseDef();
         }
 
         private void Process(IInvocation invocation)
         {
-            if (this.Interceptor.Any())
+            if (this._interceptors.Any())
             {
-                this.Interceptor.ForEach(i =>
+                this._interceptors.ForEach(i =>
                 {
                     i.Before(invocation);
                 });
@@ -62,9 +78,9 @@ namespace DotBPE.Extra
             }
             catch (Exception ex)
             {
-                if (this.Interceptor.Any())
+                if (this._interceptors.Any())
                 {
-                    this.Interceptor.ForEach(i =>
+                    this._interceptors.ForEach(i =>
                     {
                         i.Exception(invocation,ex);
                     });
@@ -74,9 +90,9 @@ namespace DotBPE.Extra
             }
             finally
             {
-                if (this.Interceptor.Any())
+                if (this._interceptors.Any())
                 {
-                    this.Interceptor.ForEach(i =>
+                    this._interceptors.ForEach(i =>
                     {
                         i.After(invocation);
                     });
