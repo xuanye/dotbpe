@@ -12,7 +12,7 @@ namespace DotBPE.Gateway
         }
 
 
-        public string Category { get; set; }
+        public string Category { get; set; } = "default";
         public string Path { get; }
 
         public RestfulVerb AcceptVerb { get;  }

@@ -11,5 +11,13 @@ namespace DotBPE.Extra
                 .AddSingleton<ISerializer, ProtobufSerializer>();
 
         }
+
+        public static IServiceCollection AddProtobufSerializerAndJsonParser(this IServiceCollection services)
+        {
+            return services
+                .AddSingleton<ISerializer, ProtobufSerializer>()
+                .AddSingleton<IJsonParser, JsonParser>();
+
+        }
     }
 }

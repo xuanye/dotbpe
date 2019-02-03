@@ -20,7 +20,7 @@ namespace DotBPE.Gateway
         private readonly IHttpMetricFactory _metricFactory;
         private readonly ILogger _logger;
         private readonly HttpRouteOptions _routeOptions;
-
+        private readonly IEnumerable<IAdditionalHttpParser> _parsers;
         private static readonly ConcurrentDictionary<string, RouteItem> ROUTER_CACHE
             = new ConcurrentDictionary<string, RouteItem>();
 
@@ -37,12 +37,14 @@ namespace DotBPE.Gateway
             IJsonParser jsonParser,
             IHttpMetricFactory metricFactory,
             HttpRouteOptions routeOptions,
+            IEnumerable<IAdditionalHttpParser> parsers,
             ILogger logger)
         {
             this._jsonParser = jsonParser;
             this._metricFactory = metricFactory;
             this._logger = logger;
             this._routeOptions = routeOptions;
+            this._parsers = parsers;
         }
 
 
@@ -80,7 +82,7 @@ namespace DotBPE.Gateway
                 return hasRes;
             }
 
-            hasRes = await BeforeAsyncCall(req, res, requestData);
+            hasRes = await BeforeAsyncCall(req, res, requestData, router);
             if (hasRes)
             {
                 return hasRes;
@@ -269,9 +271,21 @@ namespace DotBPE.Gateway
             return obj;
         }
 
-        protected virtual Task<bool> BeforeAsyncCall(HttpRequest req, HttpResponse res, HttpRequestData requestData)
+        protected virtual async Task<bool> BeforeAsyncCall(HttpRequest req, HttpResponse res, HttpRequestData requestData, RouteItem routeItem)
         {
-            return Task.FromResult(false);
+            if(_parsers != null)
+            {
+                foreach(var parser in this._parsers)
+                {
+                    var ret= await parser.ParseAsync(req, res, requestData, routeItem);
+                    if (ret)
+                    {
+                        return ret;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private async Task<bool> ParseRequestAsync(HttpRequest req, HttpResponse res,HttpRequestData requestData,RouteItem router)

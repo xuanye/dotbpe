@@ -1,13 +1,12 @@
+using DotBPE.Rpc;
+using DotBPE.Rpc.Client;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using System.Runtime.CompilerServices;
-using DotBPE.Rpc;
-using DotBPE.Rpc.Client;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 
 namespace DotBPE.Gateway
 {
@@ -65,7 +64,7 @@ namespace DotBPE.Gateway
                     if (!type.IsInterface)
                        continue;
 
-                    this._logger.LogInformation(type.FullName);
+                    //this._logger.LogInformation(type.FullName);
                     var sAttr = type.GetCustomAttribute<RpcServiceAttribute>();
                     if (sAttr == null)
                         continue;
@@ -102,7 +101,10 @@ namespace DotBPE.Gateway
                 }
                 else
                 {
-                    AddHttpServiceRouter(type,m, sAttr, mAttr, rAttr, options);
+                    if( "default".Equals(rAttr.Category, StringComparison.OrdinalIgnoreCase))
+                    {
+                        AddHttpServiceRouter(type, m, sAttr, mAttr, rAttr, options);
+                    }                    
                 }
             }
         }
@@ -131,7 +133,7 @@ namespace DotBPE.Gateway
             }
             options.Items.Add(item);
 
-            _logger.LogInformation("url:{0},verb:{1},service:{2},method:{3}",
+            _logger.LogDebug("url:{0},verb:{1},service:{2},method:{3}",
                 item.Path,item.AcceptVerb,type.Name.Split('.').Last(),m.Name);
 
         }

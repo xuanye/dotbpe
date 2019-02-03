@@ -1,12 +1,10 @@
-using System.Collections.Concurrent;
-using System.Reflection;
-using System.Threading.Tasks;
 using Castle.DynamicProxy;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Exceptions;
-using DotBPE.Rpc.Protocol;
-using DotBPE.Rpc.Server;
+using System.Collections.Concurrent;
+using System.Reflection;
+using System.Threading.Tasks;
 
 namespace DotBPE.Extra
 {
@@ -52,13 +50,18 @@ namespace DotBPE.Extra
                 if (meta.WithNoResponse)
                 {
                     // AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
-                    ret = meta.InvokeMethod.Invoke(this._callInvoker,
+                    ret = meta.InvokeMethod.Invoke(this._callInvoker, 
                         new [] { cacheKey,meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req });
                 }
                 else
                 {
                     //AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000)
-                    object timeout = invocation.Arguments.Length > 1 ? invocation.Arguments[1] : 3000;
+                    var arguments = meta.InvokeMethod.GetParameters();
+                   
+                    object timeout = invocation.Arguments.Length > 1 ?
+                        invocation.Arguments[1] :
+                        arguments[1].HasDefaultValue ? arguments[1].DefaultValue : 3000;
+                   
                     ret = meta.InvokeMethod.Invoke(this._callInvoker,
                         new [] { cacheKey,meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req, timeout });
                 }
