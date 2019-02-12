@@ -1,8 +1,0 @@
-language: csharp
-mono: none
-dotnet: 2.1.4
-dist: trusty
-solution: ./src/DotBPE.sln
-
-script:
-  - bash ./scripts/publish/build.sh

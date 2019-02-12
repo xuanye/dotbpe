@@ -1,11 +1,7 @@
 using DotBPE.Rpc;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Server.Impl;
 using Microsoft.Extensions.Logging;
-using DotBPE.Rpc.Client;
 
 namespace MathService.Definition
 {

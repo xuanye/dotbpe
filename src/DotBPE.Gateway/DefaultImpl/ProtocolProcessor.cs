@@ -20,7 +20,8 @@ namespace DotBPE.Gateway
         private readonly IHttpMetricFactory _metricFactory;
         private readonly ILogger _logger;
         private readonly HttpRouteOptions _routeOptions;
-
+        private readonly IEnumerable<IAdditionalHttpParser> _parsers;
+        private readonly RpcGatewayOptions _gatewayOptions;
         private static readonly ConcurrentDictionary<string, RouteItem> ROUTER_CACHE
             = new ConcurrentDictionary<string, RouteItem>();
 
@@ -37,12 +38,16 @@ namespace DotBPE.Gateway
             IJsonParser jsonParser,
             IHttpMetricFactory metricFactory,
             HttpRouteOptions routeOptions,
+            IEnumerable<IAdditionalHttpParser> parsers,
+            RpcGatewayOptions gatewayOptions,
             ILogger logger)
         {
             this._jsonParser = jsonParser;
             this._metricFactory = metricFactory;
             this._logger = logger;
             this._routeOptions = routeOptions;
+            this._parsers = parsers;
+            this._gatewayOptions = gatewayOptions;
         }
 
 
@@ -80,7 +85,14 @@ namespace DotBPE.Gateway
                 return hasRes;
             }
 
-            hasRes = await BeforeAsyncCall(req, res, requestData);
+            //数据收集成功后，需要收集一些额外的数据
+            hasRes = await ParsePostRequestAsync(req, res, router, requestData);
+            if (hasRes)
+            {
+                return hasRes;
+            }
+
+            hasRes = await BeforeAsyncCall(req, res, requestData, router);
             if (hasRes)
             {
                 return hasRes;
@@ -124,10 +136,29 @@ namespace DotBPE.Gateway
 
         }
 
+        private async Task<bool> ParsePostRequestAsync(HttpRequest req, HttpResponse res, RouteItem router, HttpRequestData requestData)
+        {
+            bool result = false;
+            IHttpPostParsePlugin plugin = null;
+            if (router.Plugin != null && router.Plugin is IHttpPostParsePlugin)
+            {
+                plugin = router.Plugin as IHttpPostParsePlugin;
+            }
+
+            if (plugin != null)
+            {
+                result = await plugin.PostParseAsync(req, res, requestData, router);
+                return result;
+            }
+
+            return result;
+        }
+
         private async Task<bool> ProcessOutput(HttpRequest req, HttpResponse res,RouteItem routeItem, object retVal)
         {
             var resMsg = await GetJsonResult(retVal);
             SetContentType(req, res, resMsg);
+           
 
             //输出前置处理
             if (routeItem.Plugin is IHttpPostProcessPlugin postPlugin)
@@ -144,8 +175,31 @@ namespace DotBPE.Gateway
                 var ret = await outputPlugin.OutputAsync(req, res, resMsg, routeItem);
                 return ret;
             }
-
-            await res.WriteAsync(this._jsonParser.ToJson(resMsg));
+            //response
+            await res.WriteAsync("{\"");
+            await res.WriteAsync(this._gatewayOptions.WrapperCodeFieldName);
+            await res.WriteAsync("\":");
+            await res.WriteAsync(resMsg.Code.ToString());
+            await res.WriteAsync(",\"");
+            await res.WriteAsync(this._gatewayOptions.WrapperMessageFieldName);
+            await res.WriteAsync("\":\"");
+            await res.WriteAsync(resMsg.Message ?? "");
+            await res.WriteAsync("\"");
+            if (resMsg.Data != null)
+            {
+                string dataJson = this._jsonParser.ToJson(resMsg.Data);
+                await res.WriteAsync(",\"");
+                await res.WriteAsync(this._gatewayOptions.WrapperDataFieldName);
+                await res.WriteAsync("\":");
+                await res.WriteAsync(dataJson);
+            }
+            else
+            {
+                await res.WriteAsync(",\"");
+                await res.WriteAsync(this._gatewayOptions.WrapperDataFieldName);
+                await res.WriteAsync("\":null");               
+            }  
+            await res.WriteAsync("}");         
             return true;
 
         }
@@ -169,10 +223,12 @@ namespace DotBPE.Gateway
             }
 
 
-            if (tType.IsGenericType)
+            if (tType.IsGenericType )
             {
                 var retTask = retVal as Task;
                 await retTask.AnyContext();
+
+                
 
                 var resultProp = retValType.GetProperty("Result");
                 if (resultProp == null)
@@ -183,6 +239,16 @@ namespace DotBPE.Gateway
                 }
 
                 object result = resultProp.GetValue(retVal);
+
+
+                var codeProp = tType.GetProperty("Code");
+                if (codeProp == null)
+                {
+                    resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
+                    resMsg.Message = "type error";
+                    return resMsg;
+                }
+                resMsg.Code = (int)codeProp.GetValue(result);
 
                 object dataVal = null;
                 var dataProp = tType.GetProperty("Data");
@@ -261,17 +327,46 @@ namespace DotBPE.Gateway
                 //this._logger.LogInformation("{0}=-----------",name);
                 if (dictData.ContainsKey(name))
                 {
-                    //this._logger.LogInformation("{0}={1}",name,dictData[name]);
-                    property.SetValue(obj, Convert.ChangeType(dictData[name], property.PropertyType), null);
+                    string value = dictData[name];
+                    if(string.IsNullOrEmpty(value))
+                    {
+                        if (property.PropertyType == typeof(string))
+                            property.SetValue(obj, "", null);
+
+                        continue;
+                    }                    
+                                    
+                    if (property.PropertyType.IsEnum)
+                    {
+                        var enumValue = Enum.Parse(property.PropertyType, value);
+                        property.SetValue(obj, enumValue, null);
+                    }
+                    else
+                    {
+                        property.SetValue(obj, Convert.ChangeType(value, property.PropertyType), null);
+                    }
+                    
                 }
             }
 
             return obj;
         }
 
-        protected virtual Task<bool> BeforeAsyncCall(HttpRequest req, HttpResponse res, HttpRequestData requestData)
+        protected virtual async Task<bool> BeforeAsyncCall(HttpRequest req, HttpResponse res, HttpRequestData requestData, RouteItem routeItem)
         {
-            return Task.FromResult(false);
+            if(_parsers != null)
+            {
+                foreach(var parser in this._parsers)
+                {
+                    var ret= await parser.ParseAsync(req, res, requestData, routeItem);
+                    if (ret)
+                    {
+                        return ret;
+                    }
+                }
+            }
+
+            return false;
         }
 
         private async Task<bool> ParseRequestAsync(HttpRequest req, HttpResponse res,HttpRequestData requestData,RouteItem router)

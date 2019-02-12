@@ -39,7 +39,14 @@ namespace DotBPE.Rpc.Protocol
             get
             {
                 var hl = Version == 0 ? VERSION_0_HEAD_LENGTH : VERSION_1_HEAD_LENGTH;
-                return hl + Data.Length;
+                if(Data == null)
+                {
+                    return hl;
+                }
+                else
+                {
+                    return hl + Data.Length;
+                }               
             }
         }
 
@@ -101,6 +108,8 @@ namespace DotBPE.Rpc.Protocol
             {
                 ServiceId = int.Parse(data[0]),
                 MessageId = ushort.Parse(data[1]),
+                Version = 1,
+                CodecType = 0,
                 InvokeMessageType = InvokeMessageType.Response
             };
             return message;
@@ -112,6 +121,8 @@ namespace DotBPE.Rpc.Protocol
             {
                 ServiceId = serviceId,
                 MessageId = messageId,
+                Version = 1,
+                CodecType = 0,
                 InvokeMessageType = InvokeMessageType.Response
             };
             return message;

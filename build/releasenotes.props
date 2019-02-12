@@ -1,0 +1,47 @@
+<Project>
+	<PropertyGroup>
+		<BaselinePackageNotes>
+        1. 整合常用帮助类，发布到nuget.
+        </BaselinePackageNotes>
+        <RpcPackageNotes>
+        1. 重构框架，分离通信相关的代码
+        2. 支持本地和远端服务自动调度
+        3. 服务注册和发现（可选）
+        4. 支持多种路由方式（可选）
+        5. 支持依赖注入和AOP
+        6. 支持服务分组
+        7. 轻量级的Http网关
+        8. 支持多种服务声明方式，接口或者服务描述文件
+        9.  多种序列化方式:Protobuf、MessagePack、JSON
+        </RpcPackageNotes>
+        <ExtraCastlePackageNotes>
+        1. 使用Castle实现客户端代理类
+        2. 实现AOP接口定义
+        </ExtraCastlePackageNotes>
+        <ExtraConsulPackageNotes>
+        1. 实现服务注册功能
+        2. 实现基于DNSClient的服务发现功能
+        </ExtraConsulPackageNotes>
+        <ExtraJsonNetPackageNotes>
+        1. 实现JSON.NET的编解码实现
+        2. 实现将消息体序列化成JSON格式，用于HttpApi
+        </ExtraJsonNetPackageNotes>
+        <ExtraMessagePackPackageNotes>
+        1. 实现MessagePack的协议编码实现
+        </ExtraMessagePackPackageNotes>
+
+        <ExtraProtobufPackageNotes>
+        1. 实现Google Protobuf的协议编码实现
+        </ExtraProtobufPackageNotes>
+        <GatewayPackageNotes>
+        1. 实现Http协议和Amp协议的转换
+        2. 支持拦截器机制，支持对输入输出在各阶段进行必要的拦截和转换
+        </GatewayPackageNotes>
+        <GatewaySwaggerPackageNotes>
+        1. 为HttpGateway 集成Swagger接口帮助，并自动扫描接口定义生成文档信息
+        </GatewaySwaggerPackageNotes>
+        <GatewaySwaggerUIPackageNotes>
+        1. 为HttpGateway 集成SwaggerUI
+        </GatewaySwaggerUIPackageNotes>
+	</PropertyGroup>
+</Project>

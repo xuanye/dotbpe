@@ -2,6 +2,7 @@ using DotBPE.Rpc;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Options;
 
 namespace DotBPE.Gateway
 {
@@ -33,10 +34,12 @@ namespace DotBPE.Gateway
                 IJsonParser jsonParser = p.GetRequiredService<IJsonParser>();
                 ILogger logger = p.GetRequiredService<ILoggerFactory>().CreateLogger<IProtocolProcessor>();
                 IHttpMetricFactory metricFactory = p.GetRequiredService<IHttpMetricFactory>();
-
+                var parsers = p.GetServices<IAdditionalHttpParser>();
                 var scanner = p.GetRequiredService<IHttpServiceScanner>();
                 var options = scanner.Scan(dllPrefix,categories);
-                return new ProtocolProcessor(jsonParser,metricFactory,options,logger);
+
+                var gatewayOptions = p.GetService<IOptions<RpcGatewayOptions>>();
+                return new ProtocolProcessor(jsonParser,metricFactory,options, parsers, gatewayOptions.Value??new RpcGatewayOptions(), logger);
             });
 
             return services;
