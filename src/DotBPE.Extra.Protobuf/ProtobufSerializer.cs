@@ -15,6 +15,10 @@ namespace DotBPE.Extra
 
         public T Deserialize<T>(byte[] data)
         {
+            if (data == null)
+            {
+                return default(T);
+            }
             var messageType = typeof(T);
             return (T)Deserialize( data,messageType);
         }
@@ -28,15 +32,22 @@ namespace DotBPE.Extra
         {
             if (BaseType.IsAssignableFrom(messageType) && messageType.IsClass)
             {
-               var descriptorType = messageType.GetProperty("Descriptor").PropertyType;
-               var parserType = descriptorType.GetProperty("Parser").PropertyType;
-               return (MessageParser)Activator.CreateInstance(parserType);
+
+                var property = messageType.GetProperty("Parser");
+                if(property != null)
+                {
+                    return (MessageParser)property.GetValue(null);
+                }
             }
             throw new Rpc.Exceptions.RpcException("Message is not a Protobuf Message");
         }
 
         public object Deserialize(byte[] data, Type messageType)
         {
+            if(data == null)
+            {
+                return null;
+            }
             if (!PARSER_CACHE.TryGetValue(messageType,out var parser))
             {
                 parser = FindMessageParser(messageType);

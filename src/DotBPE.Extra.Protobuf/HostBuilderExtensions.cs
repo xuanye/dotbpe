@@ -4,10 +4,19 @@ namespace DotBPE.Extra
 {
     public static class HostBuilderExtensions
     {
-        public static IHostBuilder UseProtobufSerializer(this IHostBuilder @this)
+        public static IHostBuilder UseProtobufSerializer(this IHostBuilder @this, bool useJsonParser = false)
         {
-            return @this.ConfigureServices(services => services.AddProtobufSerializer());
+            return @this.ConfigureServices(services =>
+            {
+                if (useJsonParser)
+                {
+                    services.AddProtobufSerializerAndJsonParser();
+                }
+                else
+                {
+                    services.AddProtobufSerializer();
+                }
+            });
         }
-
     }
 }

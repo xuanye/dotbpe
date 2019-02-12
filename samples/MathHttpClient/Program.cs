@@ -1,4 +1,4 @@
-﻿using System;
+using System;
 using System.Threading;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
@@ -18,7 +18,7 @@ namespace MathHttpClient
             WebHost.CreateDefaultBuilder(args)
                 .UseUrls("http://*:5561") //HTTP绑定在6200端口
                 .UseStartup<Startup>()
-                .ConfigureLogging(builder => { builder.SetMinimumLevel(LogLevel.Warning); })
+                .ConfigureLogging(builder => { builder.SetMinimumLevel(LogLevel.Information); })
                 .Build();
     }
 }
