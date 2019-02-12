@@ -5,10 +5,12 @@ using System.Threading.Tasks;
 using DotBPE.Baseline.Extensions;
 using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Exceptions;
+using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
+using Peach;
 using Environment = DotBPE.Rpc.Internal.Environment;
 
 namespace DotBPE.Rpc.Server.Impl
@@ -48,6 +50,14 @@ namespace DotBPE.Rpc.Server.Impl
             this._serializer ??
             (this._serializer = Environment.ServiceProvider.GetRequiredService<ISerializer>());
 
+
+        private IRequestAuditLoggerFactory _auditLoggerFactory;
+
+        private IRequestAuditLoggerFactory AuditLoggerFactory =>
+            this._auditLoggerFactory ??
+            (this._auditLoggerFactory = Environment.ServiceProvider.GetRequiredService<IRequestAuditLoggerFactory>());
+
+
         public override string Id => $"{ServiceId}.0";
         /// <summary>
         /// service group name
@@ -65,8 +75,7 @@ namespace DotBPE.Rpc.Server.Impl
                 if (tt == null)
                 {
                     continue;
-                }
-
+                }             
                 var methodAttr = tt as RpcMethodAttribute;
                 METHOD_CACHE.TryAdd($"{ServiceId}${methodAttr.MessageId}", method);
             }
@@ -85,12 +94,29 @@ namespace DotBPE.Rpc.Server.Impl
 
         }
 
+        private Task<RpcResult<object>> InvokeInner(MethodInfo method, ISocketContext<AmpMessage> context, params object[] args)
+        {
+            var serviceNameArr = method.DeclaringType.Name.Split('`');
+            var methodFullName = $"{serviceNameArr[0]}.{method.Name}";
+
+            //TODO:这里可以做服务端拦截 
+            using (var logger = this.AuditLoggerFactory.GetLogger(methodFullName))
+            {
+                logger.SetParameter(args[0]);
+                logger.SetContext(new RpcContext() { LocalAddress = context.LocalEndPoint,RemoteAddress = context.RemoteEndPoint });              
+                object retVal = method.Invoke(this, args);
+                var result = InternalHelper.DrillDownResponseObj(retVal);
+                logger.SetReturnValue(result);
+                return result;
+            }          
+        }
+
         /// <summary>
         ///  Remote Call
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        protected override async Task<AmpMessage> ProcessAsync(AmpMessage req)
+        protected override async Task<AmpMessage> ProcessAsync(ISocketContext<AmpMessage> context, AmpMessage req)
         {
             var resMsg = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
             resMsg.Sequence = req.Sequence;
@@ -108,7 +134,7 @@ namespace DotBPE.Rpc.Server.Impl
                 object arg1 = Serializer.Deserialize(req.Data, parameterInfos[0].ParameterType);
                 bool withResponse = req.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse;
 
-                object retVal;
+                RpcResult<object> retVal;
                 if (parameterInfos.Length == 2)
                 {
                     var newArgs = new object[2];
@@ -121,68 +147,26 @@ namespace DotBPE.Rpc.Server.Impl
                     else
                     {
                         newArgs[1] = parameterInfos[1].HasDefaultValue ? parameterInfos[1].DefaultValue : 3000;
-
                     }
-                    retVal = m.Invoke(this,newArgs);
+
+                    retVal = await InvokeInner(m, context, newArgs);
                 }
                 else
                 {
-                    retVal = m.Invoke(this, new[] {arg1});
-                }
+                    retVal = await InvokeInner(m, context, arg1);
+                }              
 
-                var retValType = retVal.GetType();
-                if (retValType == typeof(Task))
+                if(retVal == null)
                 {
+                    resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
                     return resMsg;
                 }
 
-                var tType = retValType.GenericTypeArguments[0];
-                if (tType == typeof(RpcResult))
+                resMsg.Code = retVal.Code;
+                if(retVal.Data != null)
                 {
-                    Task<RpcResult> retTask = retVal as Task<RpcResult>;
-                    var result = await retTask;
-                    resMsg.Code = result.Code;
-                }
-                else if (tType.IsGenericType)
-                {
-                    Task retTask = retVal as Task;
-                    await retTask.AnyContext();
-
-                    var resultProp = retValType.GetProperty("Result");
-                    if (resultProp == null)
-                    {
-                        resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
-                        return resMsg;
-                    }
-
-                    object result = resultProp.GetValue(retVal);
-
-                    object dataVal = null;
-                    var dataProp = tType.GetProperty("Data");
-                    if (dataProp != null)
-                    {
-                        dataVal = dataProp.GetValue(result);
-                    }
-
-                    var codeProp = tType.GetProperty("Code");
-                    if (codeProp == null)
-                    {
-                        resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;                       
-                        return resMsg;
-                    }
-
-                    resMsg.Code = (int)codeProp.GetValue(result);
-
-                    if (dataVal != null)
-                    {
-                        resMsg.Data = Serializer.Serialize(dataVal);
-                    }
-                }
-                else
-                {
-                    resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
-                    //LOG Error;
-                }
+                    resMsg.Data = Serializer.Serialize(retVal.Data);
+                }               
             }
             else
             {

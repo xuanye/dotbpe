@@ -34,16 +34,20 @@ namespace DotBPE.Extra
 
         public void Intercept(IInvocation invocation)
         {
-            var serviceNameArr = invocation.Method.DeclaringType.FullName.Split('.');
-            string cacheKey = $"{serviceNameArr[serviceNameArr.Length-1]}.{invocation.Method.Name}";
+           
+
+            var serviceNameArr = invocation.Method.DeclaringType.Name.Split('`');
+            var methodFullName = $"{serviceNameArr[0]}.{invocation.Method.Name}";
+
+
             var req = invocation.Arguments[0];
 
 
-            using (var logger = this._auditLoggerFactory.GetLogger(cacheKey))
+            using (var logger = this._auditLoggerFactory.GetLogger(methodFullName))
             {
                 logger.SetParameter(invocation.Arguments[0]);
 
-                var meta = GetInvokeMeta(cacheKey, invocation);
+                var meta = GetInvokeMeta(methodFullName, invocation);
 
                 object ret;
 
@@ -51,7 +55,7 @@ namespace DotBPE.Extra
                 {
                     // AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
                     ret = meta.InvokeMethod.Invoke(this._callInvoker, 
-                        new [] { cacheKey,meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req });
+                        new [] { methodFullName, meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req });
                 }
                 else
                 {
@@ -63,7 +67,7 @@ namespace DotBPE.Extra
                         arguments[1].HasDefaultValue ? arguments[1].DefaultValue : 3000;
                    
                     ret = meta.InvokeMethod.Invoke(this._callInvoker,
-                        new [] { cacheKey,meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req, timeout });
+                        new [] { methodFullName, meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req, timeout });
                 }
 
                 invocation.ReturnValue = ret;

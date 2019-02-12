@@ -1,3 +1,5 @@
+using DotBPE.Rpc.Protocol;
+using Peach;
 using System;
 
 namespace DotBPE.Rpc.Server
@@ -6,6 +8,7 @@ namespace DotBPE.Rpc.Server
     {
         string MethodFullName { get; }
 
+        void SetContext(IRpcContext context);
         void SetParameter(object parameter);
         void SetReturnValue(object retVal);
     }

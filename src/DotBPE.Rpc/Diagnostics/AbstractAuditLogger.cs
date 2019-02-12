@@ -3,13 +3,21 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using DotBPE.Baseline.Extensions;
+using DotBPE.Rpc.Internal;
+using DotBPE.Rpc.Protocol;
+using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using Peach;
 
 namespace DotBPE.Rpc
 {
     public abstract class AbstractAuditLogger : IDisposable
     {
+
+        public IRpcContext Context { get; set; }
+        public abstract string MethodFullName { get;}
+
         protected class AuditLogEntity
         {
             public object Request { get; set; }
@@ -21,6 +29,8 @@ namespace DotBPE.Rpc
             public long ElapsedMS { get; set; }
 
             public string MethodFullName { get; set; }
+
+            public IRpcContext Context { get; set; }
 
             public ILogger Writer { get; set; }
 
@@ -57,24 +67,8 @@ namespace DotBPE.Rpc
                 return _formatter;
             }
         }
-
-        private static ISerializer _Serializer;
-        private static ISerializer Serializer
-        {
-            get
-            {
-                if (_Serializer == null)
-                {
-                    if (Internal.Environment.ServiceProvider != null)
-                    {
-                        _Serializer = Internal.Environment.ServiceProvider.GetService<ISerializer>();
-                    }
-                }
-                return _Serializer;
-            }
-        }
-
-        private static void AddAuditLog(ILogger writer, IAuditLoggerFormat format, AuditLogType logType,  object req, object rsp, long elapsedMS)
+     
+        private static void AddAuditLog(IRpcContext context,ILogger writer, IAuditLoggerFormat format, AuditLogType logType,string methodName,  object req, object rsp, long elapsedMS)
         {
             if (writer == null || format == null)
             {
@@ -82,11 +76,12 @@ namespace DotBPE.Rpc
             }
 
             var entity = new AuditLogEntity{
-
+                MethodFullName = methodName,
                 Request = req,
                 Response = rsp,
                 ElapsedMS = elapsedMS,
                 Writer = writer,
+                Context =  context, 
                 Formatter = format,
                 LogType = logType
             };
@@ -119,8 +114,8 @@ namespace DotBPE.Rpc
                 {
                     if (log.Formatter != null && log.Writer != null)
                     {
-                        var realRet =  await DrillDownResponseObj(log.Response);
-                        var logText = log.Formatter.Format(log.LogType,log.MethodFullName, log.Request, realRet, log.ElapsedMS);
+                        var realRet =  await DrillDownResponseObj(log.Response);                      
+                        var logText = log.Formatter.Format(log.Context,log.LogType,log.MethodFullName, log.Request, realRet, log.ElapsedMS);
                         if (!string.IsNullOrEmpty(logText))
                         {
                             log.Writer.LogInformation(logText);
@@ -136,53 +131,9 @@ namespace DotBPE.Rpc
             _isRunning = false;
         }
 
-        private static async Task<RpcResult<object>> DrillDownResponseObj(object retVal)
+        private static Task<RpcResult<object>> DrillDownResponseObj(object retVal)
         {
-            var result = new RpcResult<object>();
-            var retValType = retVal.GetType();
-            if (retValType == typeof(Task))
-            {
-                return result;
-            }
-
-
-            var tType = retValType.GenericTypeArguments[0];
-            if (tType == typeof(RpcResult))
-            {
-                var retTask = retVal as Task<RpcResult>;
-                var tmp = await retTask;
-                result.Code = tmp.Code;
-                return result;
-            }
-
-            if (tType.IsGenericType)
-            {
-                Task retTask = retVal as Task;
-                await retTask.AnyContext();
-
-                var resultProp = retValType.GetProperty("Result");
-                if (resultProp == null)
-                {
-                    result.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
-                    return result;
-                }
-
-                object realVal = resultProp.GetValue(retVal);
-
-                object dataVal = null;
-                var dataProp = tType.GetProperty("Data");
-                if (dataProp != null)
-                {
-                    dataVal = dataProp.GetValue(realVal);
-                }
-
-                if (dataVal != null)
-                {
-                    result.Data = Serializer.Serialize(dataVal);
-                }
-            }
-
-            return null;
+            return InternalHelper.DrillDownResponseObj(retVal);
         }
 
         public void Dispose()
@@ -191,7 +142,7 @@ namespace DotBPE.Rpc
             long es = _sw.ElapsedMilliseconds;
             if (this._req != null && this._rsp != null)
             {
-                AddAuditLog(GetTypeLogger(), GetLoggerFormat(), GetAuditLogType(),  this._req, this._rsp, es);
+                AddAuditLog(this.Context,GetTypeLogger(), GetLoggerFormat(), GetAuditLogType(),this.MethodFullName,  this._req, this._rsp, es);
             }
             _sw = null;
         }
