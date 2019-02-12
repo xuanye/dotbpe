@@ -6,7 +6,7 @@ namespace DotBPE.Gateway
 {
     public class HttpRouteOptions
     {
-        public List<RouteItem> Items { get; } = new List<RouteItem>();
+        public List<RouteItem> Items { get; } = new List<RouteItem>();    
     }
 
     public class RouteItem

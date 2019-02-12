@@ -1,3 +1,4 @@
+using DotBPE.Rpc.BestPractice;
 using System;
 
 namespace DotBPE.Rpc
@@ -10,6 +11,6 @@ namespace DotBPE.Rpc
 
         object FromJson(string json, Type type);
 
-        T FromJson<T>(string json) where T : class;
+        T FromJson<T>(string json) where T : class;       
     }
 }

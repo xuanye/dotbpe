@@ -7,6 +7,7 @@ using Microsoft.Extensions.Logging;
 using DotBPE.Rpc.Diagnostics;
 using DotBPE.Rpc.Exceptions;
 using DotNetty.Transport.Channels;
+using DotBPE.Rpc.Codec;
 
 namespace DotBPE.Rpc.Client
 {
@@ -97,6 +98,7 @@ namespace DotBPE.Rpc.Client
             var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId, true);
             reqMessage.FriendlyServiceName = callName;
             reqMessage.ServiceGroupName = groupName;
+            reqMessage.CodecType = (CodecType)Enum.ToObject(typeof(CodecType), this._serializer.CodecType);
             reqMessage.Data = this._serializer.Serialize(req);
             var rsp = await AsyncCallInner(reqMessage);
             if (rsp != null)
@@ -118,6 +120,7 @@ namespace DotBPE.Rpc.Client
             var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId);
             reqMessage.FriendlyServiceName = callName;
             reqMessage.ServiceGroupName = groupName;
+            reqMessage.CodecType = (CodecType)Enum.ToObject(typeof(CodecType), this._serializer.CodecType);
             reqMessage.Data = this._serializer.Serialize(req);
             var rsp = await AsyncCallInner(reqMessage,timeout);
             if (rsp != null)

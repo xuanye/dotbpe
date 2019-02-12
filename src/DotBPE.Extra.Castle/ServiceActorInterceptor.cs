@@ -32,13 +32,15 @@ namespace DotBPE.Extra
 
         public void Intercept(IInvocation invocation)
         {
+            /*
+             * commet by xuanye
             var method = invocation.Method.GetCustomAttribute(typeof(RpcMethodAttribute), true);
             if (method == null)
             {
                 invocation.Proceed();
                 return;
             }
-
+            */
             var serviceNameArr = invocation.Method.DeclaringType.FullName.Split('.');
             var methodFullName = $"{serviceNameArr[serviceNameArr.Length-1]}.{invocation.Method.Name}";
 

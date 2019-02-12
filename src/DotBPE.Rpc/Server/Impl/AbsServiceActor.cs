@@ -9,6 +9,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Environment = DotBPE.Rpc.Internal.Environment;
 using DotBPE.Rpc.Diagnostics;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.Rpc.Server
 {
@@ -17,7 +18,14 @@ namespace DotBPE.Rpc.Server
         private ILogger _logger;
         protected ILogger Logger
         {
-            get => this._logger ?? NullLogger.Instance;
+            get
+            {
+                if(this._logger == null)
+                {
+                    this._logger = Environment.ServiceProvider.GetRequiredService<ILogger<AbsServiceActor>>();
+                }
+                return this._logger;
+            }
             set => this._logger = value;
         }
 

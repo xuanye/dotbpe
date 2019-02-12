@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading.Tasks;
 using DotBPE.Baseline.Extensions;
+using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.DependencyInjection;
@@ -93,6 +94,8 @@ namespace DotBPE.Rpc.Server.Impl
         {
             var resMsg = AmpMessage.CreateResponseMessage(req.ServiceId, req.MessageId);
             resMsg.Sequence = req.Sequence;
+            resMsg.CodecType = (CodecType)Enum.ToObject(typeof(CodecType), Serializer.CodecType);
+
             string key = $"{req.ServiceId}${req.MessageId}";
             if (METHOD_CACHE.TryGetValue(key, out var m))
             {
@@ -160,6 +163,15 @@ namespace DotBPE.Rpc.Server.Impl
                     {
                         dataVal = dataProp.GetValue(result);
                     }
+
+                    var codeProp = tType.GetProperty("Code");
+                    if (codeProp == null)
+                    {
+                        resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;                       
+                        return resMsg;
+                    }
+
+                    resMsg.Code = (int)codeProp.GetValue(result);
 
                     if (dataVal != null)
                     {
