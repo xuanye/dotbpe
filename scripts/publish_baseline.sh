@@ -10,6 +10,7 @@ fi
 
 mkdir -p $artifactsFolder
 
+dotnet build ./src/DotBPE.Baseline/DotBPE.Baseline.csproj -c Release
 
 dotnet pack ./src/DotBPE.Baseline/DotBPE.Baseline.csproj -c Release -o ../../$artifactsFolder
 

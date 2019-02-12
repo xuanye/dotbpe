@@ -10,6 +10,8 @@ fi
 
 mkdir -p $artifactsFolder
 
+dotnet restore ./DotBPE.sln
+dotnet build ./DotBPE.sln -c Release
 
 dotnet pack ./src/DotBPE.Baseline/DotBPE.Baseline.csproj -c Release -o ../../$artifactsFolder
 dotnet pack ./src/DotBPE.Extra.Castle/DotBPE.Extra.Castle.csproj -c Release -o ../../$artifactsFolder
