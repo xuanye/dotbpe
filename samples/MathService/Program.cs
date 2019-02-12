@@ -5,6 +5,9 @@ using Microsoft.Extensions.Logging;
 using DotBPE.Rpc;
 using DotBPE.Extra;
 using DotBPE.Rpc.Internal;
+using Microsoft.Extensions.DependencyInjection;
+using DotBPE.Rpc.Server;
+using DotBPE.Rpc.Client;
 
 namespace MathService
 {
@@ -17,8 +20,14 @@ namespace MathService
              .UseRpcServer()
              .UseCastleDynamicProxy()
              .UseMessagePackSerializer()
-             .BindService<Definition.MathService>()
-             //.BindServices(services => { services.Add<Definition.MathService>();})
+             //.BindService<Definition.MathService>()
+             .BindServices(services => { services.Add<Definition.ExtraCallFooMathService>().Add<Definition.FooService>();})
+             .ConfigureServices(s =>
+             {
+                 s.AddSingleton<IAuditLoggerFormat, AuditLoggerFormat>();
+                 s.AddSingleton<IRequestAuditLoggerFactory, RequestAuditLoggerFactory>();
+                 s.AddSingleton<IClientAuditLoggerFactory, ClientAuditLoggerFactory>();
+             })
              .ConfigureLogging(
                  logger =>
                  {

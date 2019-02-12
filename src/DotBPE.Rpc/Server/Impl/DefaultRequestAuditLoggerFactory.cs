@@ -43,6 +43,11 @@ namespace DotBPE.Rpc.Server
         {
 
         }
+
+        public void SetContext(IRpcContext context)
+        {
+           
+        }
     }
 
 }

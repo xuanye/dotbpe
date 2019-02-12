@@ -43,10 +43,8 @@ namespace DotBPE.Rpc.Protocol
                 {
                     return hl;
                 }
-                else
-                {
-                    return hl + Data.Length;
-                }               
+
+                return hl + this.Data.Length;
             }
         }
 

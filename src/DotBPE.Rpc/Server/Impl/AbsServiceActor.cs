@@ -48,7 +48,7 @@ namespace DotBPE.Rpc.Server
                 DotBPEDiagnosticListenerExtensions.Listener.ServiceActorReceiveRequest(context, message);
 
                 Logger.LogDebug("Receive message,Id={0}", message.Id);
-                rsp = await ProcessAsync(message);
+                rsp = await ProcessAsync(context, message);
                 rsp.Sequence = message.Sequence; //通讯请求序列
 
                 await context.SendAsync(rsp);
@@ -76,7 +76,7 @@ namespace DotBPE.Rpc.Server
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        protected abstract Task<AmpMessage> ProcessAsync(AmpMessage req);
+        protected abstract Task<AmpMessage> ProcessAsync(ISocketContext<AmpMessage> context, AmpMessage req);
 
 
         /// <summary>

@@ -17,18 +17,21 @@ namespace DotBPE.Rpc.Client
         readonly ConcurrentDictionary<EndPoint, ITransport<AmpMessage>> TRANSPORT_CACHE = new ConcurrentDictionary<EndPoint, ITransport<AmpMessage>>();
 
         private readonly ISocketClient<AmpMessage> _socket;
+        private readonly ISerializer _serializer;
         private readonly IClientMessageHandler<AmpMessage> _handler;
         private readonly ILogger<DefaultTransportFactory> _logger;
 
-        static SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
+        static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
 
         public DefaultTransportFactory(
             ISocketClient<AmpMessage> socket,
+            ISerializer serializer,
             IClientMessageHandler<AmpMessage> handler,
             ILogger<DefaultTransportFactory> logger
             )
         {
             this._socket = socket;
+            this._serializer = serializer;
             this._handler = handler;
             this._logger = logger;
             this._socket.OnIdleState += _socket_OnIdleState;
@@ -48,6 +51,7 @@ namespace DotBPE.Rpc.Client
         /// <param name="e"></param>
         private void _socket_OnIdleState(object sender, Peach.EventArgs.IdleStateEventArgs<AmpMessage> e)
         {
+            this._logger.LogTrace("send heart beat");
             e.Context.SendAsync(AmpMessage.HEART_BEAT);
         }
 
@@ -58,7 +62,7 @@ namespace DotBPE.Rpc.Client
         /// <param name="e"></param>
         private void _socket_OnReceived(object sender, Peach.EventArgs.MessageReceivedEventArgs<AmpMessage> e)
         {
-         
+
             this._logger.LogDebug("receive message ,id={0} ,code = {1}",e.Message.Id,e.Message.Code);
             this._handler.RaiseReceive(e.Message);
         }
@@ -67,7 +71,7 @@ namespace DotBPE.Rpc.Client
 
         private void _socket_OnError(object sender, Peach.EventArgs.ErrorEventArgs<AmpMessage> e)
         {
-            this._logger.LogError("-------------------_socket_OnError---------------------");
+            this._logger.LogError("-------------------client:error occ---------------------");
             this._logger.LogError(e.Error,e.Error.Message);
         }
 
@@ -77,14 +81,14 @@ namespace DotBPE.Rpc.Client
             CloseTransportAsync(ConvertIPV4EndPoint(e.Context.RemoteEndPoint)).AnyContext();
 #pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
 
-            this._logger.LogInformation("-------------------_socket_OnDisconnected---------------------");
+            this._logger.LogInformation("-------------------client:connection is disconnected---------------------");
             this._logger.LogInformation(e.Context.Id);
         }
 
         private void _socket_OnConnectedAsync(object sender, Peach.EventArgs.ConnectedEventArgs<AmpMessage> e)
         {
-            this._logger.LogInformation("-------------------_socket_OnConnected---------------------");
-            this._logger.LogInformation(e.Context.Id);          
+            this._logger.LogInformation("-------------------client:connection is connected---------------------");
+            this._logger.LogInformation(e.Context.Id);
         }
 
         private EndPoint ConvertIPV4EndPoint(IPEndPoint endpoint)
@@ -133,7 +137,7 @@ namespace DotBPE.Rpc.Client
                 //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
                 //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
                 semaphoreSlim.Release();
-            }           
+            }
         }
 
         public async Task CloseAllTransports(CancellationToken cancellationToken)

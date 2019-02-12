@@ -1,4 +1,4 @@
-﻿using DotBPE.Extra;
+using DotBPE.Extra;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Config;

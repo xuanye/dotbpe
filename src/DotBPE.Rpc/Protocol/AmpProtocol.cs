@@ -28,7 +28,7 @@ namespace DotBPE.Rpc.Protocol
             LengthFieldLength = 4, //长度字段的字节数 整型为4个字节
             LengthFieldOffset = 1, //长度属性的起始（偏移）位
             MaxFrameLength = int.MaxValue,
-            HeartbeatInterval = 60 * 1000 // 30秒没消息发一个心跳包
+            HeartbeatInterval = 30 * 1000 // 30秒没消息发一个心跳包
         };
 
         public ProtocolMeta GetProtocolMeta()
