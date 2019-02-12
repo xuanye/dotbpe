@@ -10,6 +10,7 @@ fi
 
 mkdir -p $artifactsFolder
 
+dotnet build ./src/DotBPE.Gateway.SwaggerUI/DotBPE.Gateway.SwaggerUI.csproj -c Release
 
 dotnet pack ./src/DotBPE.Gateway.SwaggerUI/DotBPE.Gateway.SwaggerUI.csproj -c Release -o ../../$artifactsFolder
 

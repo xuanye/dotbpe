@@ -15,6 +15,10 @@ namespace DotBPE.Extra
 
         public T Deserialize<T>(byte[] data)
         {
+            if (data == null)
+            {
+                return default(T);
+            }
             var messageType = typeof(T);
             return (T)Deserialize( data,messageType);
         }
@@ -40,6 +44,10 @@ namespace DotBPE.Extra
 
         public object Deserialize(byte[] data, Type messageType)
         {
+            if(data == null)
+            {
+                return null;
+            }
             if (!PARSER_CACHE.TryGetValue(messageType,out var parser))
             {
                 parser = FindMessageParser(messageType);

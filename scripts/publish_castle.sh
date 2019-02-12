@@ -10,6 +10,7 @@ fi
 
 mkdir -p $artifactsFolder
 
+dotnet build ./src/DotBPE.Extra.Castle/DotBPE.Extra.Castle.csproj -c Release
 
 dotnet pack ./src/DotBPE.Extra.Castle/DotBPE.Extra.Castle.csproj -c Release -o ../../$artifactsFolder
 

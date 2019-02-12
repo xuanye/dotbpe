@@ -10,7 +10,7 @@ fi
 
 mkdir -p $artifactsFolder
 
-
+dotnet build ./src/DotBPE.Gateway.Swagger/DotBPE.Gateway.Swagger.csproj -c Release
 dotnet pack ./src/DotBPE.Gateway.Swagger/DotBPE.Gateway.Swagger.csproj -c Release -o ../../$artifactsFolder
 
 dotnet nuget push ./$artifactsFolder/DotBPE.Gateway.Swagger.*.nupkg -k $NUGET_KEY -s https://www.nuget.org
