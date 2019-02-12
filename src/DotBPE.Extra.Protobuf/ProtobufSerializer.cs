@@ -28,9 +28,12 @@ namespace DotBPE.Extra
         {
             if (BaseType.IsAssignableFrom(messageType) && messageType.IsClass)
             {
-               var descriptorType = messageType.GetProperty("Descriptor").PropertyType;
-               var parserType = descriptorType.GetProperty("Parser").PropertyType;
-               return (MessageParser)Activator.CreateInstance(parserType);
+
+                var property = messageType.GetProperty("Parser");
+                if(property != null)
+                {
+                    return (MessageParser)property.GetValue(null);
+                }
             }
             throw new Rpc.Exceptions.RpcException("Message is not a Protobuf Message");
         }

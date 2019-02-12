@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Concurrent;
 using DotBPE.Rpc;
+using DotBPE.Rpc.BestPractice;
 using Google.Protobuf;
 
 namespace DotBPE.Extra
@@ -15,15 +16,18 @@ namespace DotBPE.Extra
         {
             if (BaseType.IsAssignableFrom(messageType) && messageType.IsClass)
             {
-                var descriptorType = messageType.GetProperty("Descriptor").PropertyType;
-                var parserType = descriptorType.GetProperty("Parser").PropertyType;
-                return (MessageParser)Activator.CreateInstance(parserType);
+                var property = messageType.GetProperty("Parser");
+                if (property != null)
+                {
+                    return (MessageParser)property.GetValue(null);
+                }
             }
             throw new Rpc.Exceptions.RpcException("Message is not a Protobuf Message");
         }
 
         public string ToJson(object item)
         {
+            
             if(item is IMessage message)
             {
                 return AmpJsonFormatter.Format(message);
@@ -33,6 +37,8 @@ namespace DotBPE.Extra
 
         public string ToJson<T>(T item) where T : class
         {
+          
+
             if (item is IMessage message)
             {
                 return AmpJsonFormatter.Format(message);
@@ -55,5 +61,6 @@ namespace DotBPE.Extra
             var type = typeof(T);
             return (T)FromJson(json, type);
         }
+       
     }
 }
