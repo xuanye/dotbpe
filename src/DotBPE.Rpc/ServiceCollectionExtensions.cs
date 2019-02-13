@@ -8,8 +8,12 @@ using Peach;
 using Peach.Protocol;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel.Design;
 using System.IO;
+using System.Net;
 using System.Reflection;
+using System.Runtime.CompilerServices;
+using DotBPE.Rpc.BestPractice;
 using DotBPE.Rpc.ServiceDiscovery;
 using Microsoft.Extensions.Configuration;
 
@@ -26,6 +30,11 @@ namespace DotBPE.Rpc
             services.AddDefaultImpl();
             return services;
         }
+        /// <summary>
+        /// 注册默认的服务注册器，只有在启用服务注册和发现机制时才有用
+        /// </summary>
+        /// <param name="services"></param>
+        /// <returns></returns>
         public static IServiceCollection AddDefaultRegisterService(this IServiceCollection services)
         {
              services.TryAddSingleton<IServiceRegister, DefaultServiceRegister>();
@@ -61,6 +70,14 @@ namespace DotBPE.Rpc
         }
 
 
+        /// <summary>
+        /// 通过扫描绑定所有服务
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configuration"></param>
+        /// <param name="dllPrefix"></param>
+        /// <param name="categories"></param>
+        /// <returns></returns>
         public static IServiceCollection ScanBindServices(this IServiceCollection services,IConfiguration configuration
             ,string dllPrefix ,params string[] categories)
         {
@@ -105,6 +122,28 @@ namespace DotBPE.Rpc
             }
             return services;
         }
+
+        /// <summary>
+        /// 注册RPC反射调用器，用于利用已知serviceId和messageId获取服务的定义信息
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="dllPrefix">需要扫描的DLL前缀</param>
+        /// <param name="filter">过滤</param>
+        /// <returns></returns>
+        public static IServiceCollection ScanAddRpcInvokerReflection(this IServiceCollection services,string dllPrefix,
+            Func<Type, RpcServiceAttribute, bool> filter = null)
+        {
+            return services.AddSingleton<IRpcInvokerReflection>(p =>
+            {
+                var proxy = p.GetRequiredService<IClientProxy>();
+
+                var invokerRef = new DefaultRpcInvokerReflection(proxy);
+                invokerRef.Scan(dllPrefix,filter);
+                return invokerRef;
+            });
+        }
+
+
 
         #region Route Policy
 

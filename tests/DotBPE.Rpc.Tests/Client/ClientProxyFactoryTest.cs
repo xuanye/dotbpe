@@ -32,7 +32,7 @@ namespace DotBPE.Rpc.Tests.Client
             var clientProxy = new Mock<IClientProxy>();
             var proxy = ClientProxyFactory.Create()
                 .AddDependencyServices(services => { services.AddSingleton(clientProxy.Object); })
-                .GetProxyInstance();
+                .GetClientProxy();
 
             Assert.NotNull(proxy);
         }

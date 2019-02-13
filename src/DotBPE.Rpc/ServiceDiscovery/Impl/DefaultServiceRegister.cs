@@ -35,7 +35,7 @@ namespace DotBPE.Rpc.ServiceDiscovery
             this._logger = logger;
             this._optionValues = options.Value;
 
-            _localBindAddress = new IPEndPoint(GetBindAddress(),this._optionValues.Port);
+            this._localBindAddress = new IPEndPoint(GetBindAddress(),this._optionValues.Port);
         }
 
 
@@ -62,7 +62,7 @@ namespace DotBPE.Rpc.ServiceDiscovery
            {
                foreach (var kv in this.CACHE_POINT)
                {
-                   string id = kv.Key+"@"+ EndPointParser.ParseEndPointToString(kv.Value.RemoteAddress);
+                   var id = kv.Key+"@"+ EndPointParser.ParseEndPointToString(kv.Value.RemoteAddress);
                    await this._registrationProvider.RegisterServiceAsync(id,kv.Key,kv.Value);
                }
            }
@@ -75,7 +75,7 @@ namespace DotBPE.Rpc.ServiceDiscovery
             {
                 foreach (var kv in this.CACHE_POINT)
                 {
-                    string id = kv.Key+"@"+ EndPointParser.ParseEndPointToString(kv.Value.RemoteAddress);
+                    var id = kv.Key+"@"+ EndPointParser.ParseEndPointToString(kv.Value.RemoteAddress);
                     await this._registrationProvider.DeregisterServiceAsync(id);
                 }
             }
@@ -84,7 +84,7 @@ namespace DotBPE.Rpc.ServiceDiscovery
 
         private IPAddress GetBindAddress()
         {
-            IPAddress address = IPAddress.Parse("127.0.0.1");
+            var address = IPAddress.Parse("127.0.0.1");
 
             switch (_optionValues.BindType)
             {
