@@ -31,7 +31,7 @@ namespace Math.Client
                 .UseConsulDnsServiceDiscovery(); //默认配置 localhost
                 */
 
-            var proxy = factory.GetProxyInstance();
+            var proxy = factory.GetClientProxy();
 
             var mathService = proxy.Create<IMathService>();
 

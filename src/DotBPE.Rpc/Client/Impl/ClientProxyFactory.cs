@@ -64,6 +64,16 @@ namespace DotBPE.Rpc.Client
             return this;
         }
 
+        public TService GetService<TService>() where TService : class
+        {
+            if (this._provider == null)
+            {
+                this._provider = this._container.BuildServiceProvider();
+            }
+
+            return this._provider.GetService<TService>();
+        }
+
         /// <summary>
         /// add other dependency services
         /// </summary>
@@ -79,13 +89,9 @@ namespace DotBPE.Rpc.Client
         /// get client proxy  instance
         /// </summary>
         /// <returns></returns>
-        public IClientProxy GetProxyInstance()
+        public IClientProxy GetClientProxy()
         {
-            if (this._provider == null)
-            {
-                this._provider = this._container.BuildServiceProvider();
-            }
-            return this._provider.GetRequiredService<IClientProxy>();
+            return GetService<IClientProxy>();
         }
     }
 }

@@ -3,6 +3,7 @@ using Castle.DynamicProxy;
 
 namespace DotBPE.Extra
 {
+    /*
     public interface IRpcServiceInterceptor
     {
         void Before(IInvocation invocation);
@@ -11,4 +12,5 @@ namespace DotBPE.Extra
 
         void Exception(IInvocation invocation, Exception ex);
     }
+    */
 }
