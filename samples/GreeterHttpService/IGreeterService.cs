@@ -30,6 +30,7 @@ namespace GreeterHttpService
         {
             var result = new RpcResult<SayHelloRes>
             {
+                Code = -10040040,
                 Data = new SayHelloRes {Greeting = $"Hello {req.Name},{req.Id}!"}
             };
 

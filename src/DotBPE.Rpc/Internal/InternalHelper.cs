@@ -63,7 +63,7 @@ namespace DotBPE.Rpc.Internal
                     return result;
                 }
 
-                result.Code = (int)codeProp.GetValue(result);
+                result.Code = (int)codeProp.GetValue(realVal);
 
                 if (dataVal != null)
                 {
