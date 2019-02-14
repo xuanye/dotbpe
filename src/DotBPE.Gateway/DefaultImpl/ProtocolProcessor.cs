@@ -158,7 +158,7 @@ namespace DotBPE.Gateway
         {
             var resMsg = await GetJsonResult(retVal);
             SetContentType(req, res, resMsg);
-           
+
 
             //输出前置处理
             if (routeItem.Plugin is IHttpPostProcessPlugin postPlugin)
@@ -197,9 +197,9 @@ namespace DotBPE.Gateway
             {
                 await res.WriteAsync(",\"");
                 await res.WriteAsync(this._gatewayOptions.WrapperDataFieldName);
-                await res.WriteAsync("\":null");               
-            }  
-            await res.WriteAsync("}");         
+                await res.WriteAsync("\":{}");
+            }
+            await res.WriteAsync("}");
             return true;
 
         }
@@ -228,7 +228,7 @@ namespace DotBPE.Gateway
                 var retTask = retVal as Task;
                 await retTask.AnyContext();
 
-                
+
 
                 var resultProp = retValType.GetProperty("Result");
                 if (resultProp == null)
@@ -334,8 +334,8 @@ namespace DotBPE.Gateway
                             property.SetValue(obj, "", null);
 
                         continue;
-                    }                    
-                                    
+                    }
+
                     if (property.PropertyType.IsEnum)
                     {
                         var enumValue = Enum.Parse(property.PropertyType, value);
@@ -345,7 +345,7 @@ namespace DotBPE.Gateway
                     {
                         property.SetValue(obj, Convert.ChangeType(value, property.PropertyType), null);
                     }
-                    
+
                 }
             }
 
