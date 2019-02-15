@@ -296,12 +296,13 @@ namespace DotBPE.Gateway
 
         protected virtual object ParseInvokeParameter(HttpRequestData requestData, Type reqType)
         {
+            object req = null;
             if (!string.IsNullOrEmpty(requestData.RawBody))
             {
-                return this._jsonParser.FromJson(requestData.RawBody, reqType);
+                req = this._jsonParser.FromJson(requestData.RawBody, reqType);
             }
 
-            return ParseParameterFromDictionary(reqType, requestData.QueryOrFormData);
+            return ParseParameterFromDictionary(req,reqType, requestData.QueryOrFormData);
             /**
             var json = this._jsonParser.ToJson(requestData.QueryOrFormData);
 
@@ -310,9 +311,9 @@ namespace DotBPE.Gateway
             */
         }
 
-        protected virtual object ParseParameterFromDictionary(Type reqType,IDictionary<string,string> dictData)
+        protected virtual object ParseParameterFromDictionary(object obj,Type reqType,IDictionary<string,string> dictData)
         {
-            object obj = Activator.CreateInstance(reqType);
+             obj = obj??Activator.CreateInstance(reqType);
 
             var properties = reqType.GetProperties();
 
