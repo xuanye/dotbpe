@@ -353,6 +353,7 @@ namespace DotBPE.Gateway
             return obj;
         }
 
+
         protected virtual async Task<bool> BeforeAsyncCall(HttpRequest req, HttpResponse res, HttpRequestData requestData, RouteItem routeItem)
         {
             if(_parsers != null)
@@ -545,11 +546,11 @@ namespace DotBPE.Gateway
         {
             foreach (var key in form.Keys)
             {
-                var lowKey = key.ToLower();
+                var lowKey = ToFriendlyKey(key);
                 if (routeData.ContainsKey(lowKey))
-                    routeData[lowKey] = form[lowKey];
+                    routeData[lowKey] = form[key];
                 else
-                    routeData.Add(lowKey, form[lowKey]);
+                    routeData.Add(lowKey, form[key]);
             }
         }
 
@@ -557,12 +558,20 @@ namespace DotBPE.Gateway
         {
             foreach (var key in query.Keys)
             {
-                var lowKey = key.ToLower();
+                var lowKey = ToFriendlyKey(key);
                 if (routeData.ContainsKey(lowKey))
-                    routeData[lowKey] = query[lowKey];
+                    routeData[lowKey] = query[key];
                 else
-                    routeData.Add(lowKey, query[lowKey]);
+                    routeData.Add(lowKey, query[key]);
             }
+        }
+
+
+        private static string ToFriendlyKey(string key)
+        {
+            var parts = key.ToLower().Split('_');
+
+            return string.Join("", parts);
         }
 
 
