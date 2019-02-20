@@ -10,7 +10,7 @@ namespace DotBPE.Rpc.Server
 {
     public class HeartbeatActor : IServiceActor<AmpMessage>
     {
-        public string Id => "0$0";
+        public string Id => "0.0";
 
         public string GroupName { get; } = "default";
 
