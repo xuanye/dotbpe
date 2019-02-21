@@ -3,6 +3,7 @@ using DotBPE.Extra;
 using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocol;
+using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
@@ -15,6 +16,7 @@ namespace DotBPE.Rpc.Tests.Server
             IServiceCollection container = new ServiceCollection();
             container.AddLogging();
             container.AddSingleton<ISerializer, JsonSerializer>();
+            container.AddSingleton<IRequestAuditLoggerFactory, DefaultRequestAuditLoggerFactory>();
             Environment.SetServiceProvider(container.BuildServiceProvider());
         }
 
