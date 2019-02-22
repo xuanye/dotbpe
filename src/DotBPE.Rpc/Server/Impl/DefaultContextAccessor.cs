@@ -1,6 +1,6 @@
 using System.Threading;
 
-namespace DotBPE.Rpc.Server.Impl
+namespace DotBPE.Rpc.Server
 {
     public class DefaultContextAccessor:IContextAccessor
     {
