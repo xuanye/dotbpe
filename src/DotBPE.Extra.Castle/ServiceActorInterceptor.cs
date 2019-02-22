@@ -1,13 +1,7 @@
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Reflection;
 using Castle.DynamicProxy;
-using DotBPE.Baseline.Extensions;
-using DotBPE.Rpc;
 using DotBPE.Rpc.Server;
-using DotBPE.Rpc.Server.Impl;
+
 using Microsoft.Extensions.DependencyInjection;
 
 namespace DotBPE.Extra
@@ -41,10 +35,6 @@ namespace DotBPE.Extra
             try
             {
                 invocation.Proceed();
-            }
-            catch
-            {
-                throw;
             }
             finally
             {

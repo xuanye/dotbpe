@@ -17,7 +17,7 @@ namespace DotBPE.Rpc.Client
         readonly ConcurrentDictionary<EndPoint, ITransport<AmpMessage>> TRANSPORT_CACHE = new ConcurrentDictionary<EndPoint, ITransport<AmpMessage>>();
 
         private readonly ISocketClient<AmpMessage> _socket;
-        private readonly ISerializer _serializer;
+
         private readonly IClientMessageHandler<AmpMessage> _handler;
         private readonly ILogger<DefaultTransportFactory> _logger;
 
@@ -25,13 +25,11 @@ namespace DotBPE.Rpc.Client
 
         public DefaultTransportFactory(
             ISocketClient<AmpMessage> socket,
-            ISerializer serializer,
             IClientMessageHandler<AmpMessage> handler,
             ILogger<DefaultTransportFactory> logger
             )
         {
             this._socket = socket;
-            this._serializer = serializer;
             this._handler = handler;
             this._logger = logger;
             this._socket.OnIdleState += _socket_OnIdleState;

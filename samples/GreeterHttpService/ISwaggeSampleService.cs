@@ -3,7 +3,7 @@ using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using DotBPE.Gateway;
 using DotBPE.Rpc;
-using DotBPE.Rpc.Server.Impl;
+using DotBPE.Rpc.Server;
 
 namespace GreeterHttpService
 {

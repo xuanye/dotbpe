@@ -1,6 +1,6 @@
 using System.Collections.Generic;
 
-namespace DotBPE.Rpc.Server.Impl
+namespace DotBPE.Rpc.Server
 {
     public class CallContext:ICallContext
     {

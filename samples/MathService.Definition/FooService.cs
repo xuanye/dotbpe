@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
 using DotBPE.Rpc;
-using DotBPE.Rpc.Server.Impl;
+using DotBPE.Rpc.Server;
 
 namespace MathService.Definition
 {

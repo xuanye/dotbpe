@@ -3,7 +3,6 @@ using System.Threading.Tasks;
 using DotBPE.Gateway;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Server;
-using DotBPE.Rpc.Server.Impl;
 
 namespace GreeterHttpService
 {
@@ -30,7 +29,7 @@ namespace GreeterHttpService
         {
             var result = new RpcResult<SayHelloRes>
             {
-                Code = -10040040,
+                Code = 0,
                 Data = new SayHelloRes {Greeting = $"Hello {req.Name},{req.Id}!"}
             };
 

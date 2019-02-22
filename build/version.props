@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<RpcPackageVersion>2.0.5</RpcPackageVersion>
+		<RpcPackageVersion>2.0.6</RpcPackageVersion>
 		<BaselinePackageVersion>1.0.0</BaselinePackageVersion>
 		<ExtraCastlePackageVersion>1.0.2</ExtraCastlePackageVersion>
 		<ExtraConsulPackageVersion>1.0.0</ExtraConsulPackageVersion>

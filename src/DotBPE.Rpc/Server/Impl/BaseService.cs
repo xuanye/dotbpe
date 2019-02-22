@@ -2,18 +2,15 @@ using System;
 using System.Collections.Concurrent;
 using System.Reflection;
 using System.Threading.Tasks;
-using DotBPE.Baseline.Extensions;
 using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Logging.Abstractions;
 using Peach;
 using Environment = DotBPE.Rpc.Internal.Environment;
 
-namespace DotBPE.Rpc.Server.Impl
+namespace DotBPE.Rpc.Server
 {
     public class BaseService<TInterFace> : AbsServiceActor where TInterFace : class
     {
@@ -75,7 +72,7 @@ namespace DotBPE.Rpc.Server.Impl
                 if (tt == null)
                 {
                     continue;
-                }             
+                }
                 var methodAttr = tt as RpcMethodAttribute;
                 METHOD_CACHE.TryAdd($"{ServiceId}${methodAttr.MessageId}", method);
             }
@@ -99,16 +96,16 @@ namespace DotBPE.Rpc.Server.Impl
             var serviceNameArr = method.DeclaringType.Name.Split('`');
             var methodFullName = $"{serviceNameArr[0]}.{method.Name}";
 
-            //TODO:这里可以做服务端拦截 
+            //TODO:这里可以做服务端拦截
             using (var logger = this.AuditLoggerFactory.GetLogger(methodFullName))
             {
                 logger.SetParameter(args[0]);
-                logger.SetContext(new RpcContext() { LocalAddress = context.LocalEndPoint,RemoteAddress = context.RemoteEndPoint });              
+                logger.SetContext(new RpcContext() { LocalAddress = context.LocalEndPoint,RemoteAddress = context.RemoteEndPoint });
                 object retVal = method.Invoke(this, args);
                 var result = InternalHelper.DrillDownResponseObj(retVal);
                 logger.SetReturnValue(result);
                 return result;
-            }          
+            }
         }
 
         /// <summary>
@@ -154,7 +151,7 @@ namespace DotBPE.Rpc.Server.Impl
                 else
                 {
                     retVal = await InvokeInner(m, context, arg1);
-                }              
+                }
 
                 if(retVal == null)
                 {
@@ -166,7 +163,7 @@ namespace DotBPE.Rpc.Server.Impl
                 if(retVal.Data != null)
                 {
                     resMsg.Data = Serializer.Serialize(retVal.Data);
-                }               
+                }
             }
             else
             {
