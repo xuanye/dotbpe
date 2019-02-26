@@ -79,16 +79,23 @@ namespace DotBPE.Gateway.Swagger
                 string verb;
                 //path.Summary = item.AcceptVerb.ToString();
                 if (item.AcceptVerb == RestfulVerb.Any || item.AcceptVerb == RestfulVerb.Get
-                    || item.AcceptVerb != RestfulVerb.UnKnown)
+                    || item.AcceptVerb == RestfulVerb.UnKnown)
                 {
 
                     //path.Consumes = new List<string> {"application/json"};
                     verb = "get";
                 }
-                else
+                else if (item.AcceptVerb == RestfulVerb.Put || item.AcceptVerb == RestfulVerb.Post
+                                                            || item.AcceptVerb == RestfulVerb.Patch ||
+                                                            item.AcceptVerb == RestfulVerb.Delete)
                 {
                     path.Consumes = new List<string> {"application/x-www-form-urlencoded","application/json"};
-                    verb = "post";
+                    verb = item.AcceptVerb.ToString().ToLower();
+                }
+                else
+                {
+                    //path.Consumes = new List<string> {"application/x-www-form-urlencoded","application/json"};
+                    verb = item.AcceptVerb.ToString().ToLower();
                 }
 
                 string invokeName = item.InvokeMethod.Name.EndsWith("Async")?
