@@ -46,7 +46,6 @@ namespace DotBPE.Gateway.Swagger.Generator
     public class SwaggerPostMethod:SwaggerMethod
     {
 
-
     }
     [DataContract]
     public class SwaggerPutMethod:SwaggerMethod

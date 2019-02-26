@@ -37,13 +37,13 @@ namespace GreeterHttpService
             services.AddDynamicClientProxy(); // aop client
             services.AddDynamicServiceProxy(); // aop service
 
-            //services.AddSwagger();
+            services.AddSwagger();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
-            /*
+
             app.UseSwagger( config =>
             {
                 //config.RoutePath = "/v2/swagger.json";
@@ -58,9 +58,9 @@ namespace GreeterHttpService
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
                 config.IncludeXmlComments(xmlPath);
             });
-            */
-            //app.UseStaticFiles();
-            //app.UseSwaggerUI(config => { config.RoutePrefix = "/swagger"; });
+
+            app.UseStaticFiles();
+            app.UseSwaggerUI(config => { config.RoutePrefix = "/swagger"; });
             //use gateway middleware
             app.UseGateway();
         }
