@@ -2,7 +2,7 @@
 	<PropertyGroup>
 		<RpcPackageVersion>2.0.6</RpcPackageVersion>
 		<BaselinePackageVersion>1.0.0</BaselinePackageVersion>
-		<ExtraCastlePackageVersion>1.0.2</ExtraCastlePackageVersion>
+		<ExtraCastlePackageVersion>1.0.3</ExtraCastlePackageVersion>
 		<ExtraConsulPackageVersion>1.0.0</ExtraConsulPackageVersion>
 		<ExtraJsonNetPackageVersion>1.0.0</ExtraJsonNetPackageVersion>
 		<ExtraMessagePackPackageVersion>1.0.0</ExtraMessagePackPackageVersion>
