@@ -100,7 +100,7 @@ namespace DotBPE.Rpc.Server
             using (var logger = this.AuditLoggerFactory.GetLogger(methodFullName))
             {
                 logger.SetParameter(args[0]);
-                logger.SetContext(new RpcContext() { LocalAddress = context.LocalEndPoint,RemoteAddress = context.RemoteEndPoint });
+                logger.SetContext(new RpcContext { LocalAddress = context.LocalEndPoint,RemoteAddress = context.RemoteEndPoint });
                 object retVal = method.Invoke(this, args);
                 var result = InternalHelper.DrillDownResponseObj(retVal);
                 logger.SetReturnValue(result);

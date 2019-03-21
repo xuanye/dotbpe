@@ -15,7 +15,7 @@ namespace DotBPE.Rpc.Protocol
         /// </summary>
         public const int VERSION_0_HEAD_LENGTH = 18;
         /// <summary>
-        /// 加强版本则为19个字节头固定长度
+        /// 加强版本则为21个字节头固定长度
         /// </summary>
         public const int VERSION_1_HEAD_LENGTH = 21;
 

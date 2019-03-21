@@ -20,10 +20,10 @@ namespace DotBPE.Rpc.Server
         {
             get
             {
-                if(this._logger == null)
-                {
-                    this._logger = Environment.ServiceProvider.GetRequiredService<ILogger<AbsServiceActor>>();
-                }
+                if (this._logger != null) return this._logger;
+
+                var loggerFactory = Environment.ServiceProvider.GetRequiredService<ILoggerFactory>();
+                this._logger = loggerFactory.CreateLogger(GetType());
                 return this._logger;
             }
             set => this._logger = value;
