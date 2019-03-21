@@ -69,6 +69,11 @@ namespace DotBPE.Rpc
             return services;
         }
 
+        public static IServiceCollection ScanBindServices(this IServiceCollection services, IConfiguration configuration
+            , string dllPrefix, params string[] categories)
+        {
+            return services.ScanBindServices(configuration, dllPrefix, true, categories);
+        }
 
         /// <summary>
         /// 通过扫描绑定所有服务
@@ -79,7 +84,7 @@ namespace DotBPE.Rpc
         /// <param name="categories"></param>
         /// <returns></returns>
         public static IServiceCollection ScanBindServices(this IServiceCollection services,IConfiguration configuration
-            ,string dllPrefix ,params string[] categories)
+            ,string dllPrefix,bool scanAddDependency ,params string[] categories)
         {
             string BaseDirectory = Internal.Environment.GetAppBasePath();
 
@@ -101,7 +106,7 @@ namespace DotBPE.Rpc
                 //Console.WriteLine(a.FullName);
                 foreach (var t in a.GetTypes())
                 {
-                    if (serviceRegistryType.IsAssignableFrom(t) && t.IsClass) //t 实现了某接口
+                    if (scanAddDependency && serviceRegistryType.IsAssignableFrom(t) && t.IsClass) //t 实现了某接口
                     {
                         registryTypes.Add(t);
                     }

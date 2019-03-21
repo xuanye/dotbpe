@@ -8,7 +8,7 @@ namespace DotBPE.Extra
     {
         private readonly IClientAuditLoggerFactory _clientAuditLogger;
         private readonly IRequestAuditLoggerFactory _requestAuditLogger;
-      
+
         public LocalInvokeInterceptor(IClientAuditLoggerFactory clientAuditLogger, IRequestAuditLoggerFactory requestAuditLogger)
         {
             this._clientAuditLogger = clientAuditLogger;

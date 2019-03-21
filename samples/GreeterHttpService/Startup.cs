@@ -30,6 +30,9 @@ namespace GreeterHttpService
             services.BindService<GreeterService>(); //bindService
             services.BindService<SwaggerSampleService>();
 
+
+            //services.ScanBindServices(Configuration, "GreeterHttpService*", "default");
+
             services.AddGateway("GreeterHttpService"); //add gateway and auto scan router infos
 
             services.AddMessagePackSerializer(); //message pack serializer

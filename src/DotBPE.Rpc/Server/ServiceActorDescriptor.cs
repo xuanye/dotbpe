@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
 using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server;
@@ -29,20 +30,26 @@ namespace DotBPE.Rpc
                     }
                     else
                     {
-                        var tAttr = t.GetCustomAttribute(typeof(RpcServiceAttribute), true);
-                        if (tAttr == null)
+                        RpcServiceAttribute attr = null;
+                        foreach (var interfaceType in t.GetInterfaces())
                         {
-                            return;
+                            attr = interfaceType.GetCustomAttribute<RpcServiceAttribute>();
+                            if (attr != null)
+                            {
+                                break;
+                            }
                         }
 
-                        var rpcOption = tAttr as RpcServiceAttribute;
-                        if (EnumerableExtensions.IndexOf(categories, rpcOption.GroupName) >= 0)
+                        if (attr == null) return;
+
+                        if (EnumerableExtensions.IndexOf(categories, attr.GroupName) >= 0)
                         {
                             services.AddSingleton(serviceType, t);
                         }
-                    }                   
+                    }
 
                 });
         }
+
     }
 }

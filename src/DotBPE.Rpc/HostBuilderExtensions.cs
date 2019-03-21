@@ -51,13 +51,22 @@ namespace DotBPE.Rpc
             return builder.ConfigureServices(services => { services.BindServices(serviceConfigureAction); });
         }
 
-
         public static IHostBuilder ScanBindServices(this IHostBuilder builder,string dllPrefix
             ,params string[] groupNames)
         {
             return builder.ConfigureServices((context,services) =>
+            {
+                services.ScanBindServices(context.Configuration, dllPrefix,true, groupNames);
+            });
+
+        }
+
+        public static IHostBuilder ScanBindServices(this IHostBuilder builder,string dllPrefix,bool scanAddDependency
+            ,params string[] groupNames)
+        {
+            return builder.ConfigureServices((context,services) =>
                 {
-                    services.ScanBindServices(context.Configuration, dllPrefix, groupNames);
+                    services.ScanBindServices(context.Configuration, dllPrefix,scanAddDependency, groupNames);
                 });
 
         }
