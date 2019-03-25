@@ -2,12 +2,12 @@ using System;
 using System.Collections.Concurrent;
 using System.Threading;
 using System.Threading.Tasks;
-using DotBPE.Rpc.Protocol;
-using Microsoft.Extensions.Logging;
+using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Diagnostics;
 using DotBPE.Rpc.Exceptions;
+using DotBPE.Rpc.Protocol;
 using DotNetty.Transport.Channels;
-using DotBPE.Rpc.Codec;
+using Microsoft.Extensions.Logging;
 
 namespace DotBPE.Rpc.Client
 {
@@ -18,10 +18,9 @@ namespace DotBPE.Rpc.Client
         private readonly ILogger<DefaultCallInvoker> _logger;
         private readonly ISerializer _serializer;
 
-
         private readonly ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>> _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
-        private static int INVOKER_SEQ ;
+        private static int INVOKER_SEQ;
         //private static object lockObj = new object();
 
         public DefaultCallInvoker(
@@ -63,13 +62,13 @@ namespace DotBPE.Rpc.Client
         {
             DotBPEDiagnosticListenerExtensions.Listener.ClientSendRequest(request);
             AutoSetSequence(request);
-            this._logger.LogDebug("new request id={0},type={1}", request.Id,request.InvokeMessageType);
+            this._logger.LogDebug("new request id={0},type={1}", request.Id, request.InvokeMessageType);
 
             if (request.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse)
             {
                 await SendAsync(request);
                 var rsp = AmpMessage.CreateRequestMessage(request.ServiceId, request.MessageId);
-                DotBPEDiagnosticListenerExtensions.Listener.ClientReceiveResponse(request,rsp);
+                DotBPEDiagnosticListenerExtensions.Listener.ClientReceiveResponse(request, rsp);
                 return rsp;
             }
 
@@ -86,19 +85,19 @@ namespace DotBPE.Rpc.Client
                 //get return message
                 var rsp = await callbackTask;
 
-                DotBPEDiagnosticListenerExtensions.Listener.ClientReceiveResponse(request,rsp);
+                DotBPEDiagnosticListenerExtensions.Listener.ClientReceiveResponse(request, rsp);
                 return rsp;
             }
         }
 
-        public async Task<RpcResult> AsyncNotify<T>(string callName,string groupName, int serviceId, ushort messageId, T req)
+        public async Task<RpcResult> AsyncNotify<T>(string callName, string groupName, int serviceId, ushort messageId, T req)
         {
             RpcResult result = new RpcResult();
 
             var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId, true);
             reqMessage.FriendlyServiceName = callName;
             reqMessage.ServiceGroupName = groupName;
-            reqMessage.CodecType = (CodecType)Enum.ToObject(typeof(CodecType), this._serializer.CodecType);
+            reqMessage.CodecType = (CodecType) Enum.ToObject(typeof(CodecType), this._serializer.CodecType);
             reqMessage.Data = this._serializer.Serialize(req);
             var rsp = await AsyncCallInner(reqMessage);
             if (rsp != null)
@@ -113,16 +112,16 @@ namespace DotBPE.Rpc.Client
             return result;
         }
 
-        public async Task<RpcResult<TResult>> AsyncRequest<T, TResult>(string callName,string groupName, int serviceId, ushort messageId,
+        public async Task<RpcResult<TResult>> AsyncRequest<T, TResult>(string callName, string groupName, int serviceId, ushort messageId,
             T req, int timeout = 3000)
         {
             RpcResult<TResult> result = new RpcResult<TResult>();
             var reqMessage = AmpMessage.CreateRequestMessage(serviceId, messageId);
             reqMessage.FriendlyServiceName = callName;
             reqMessage.ServiceGroupName = groupName;
-            reqMessage.CodecType = (CodecType)Enum.ToObject(typeof(CodecType), this._serializer.CodecType);
+            reqMessage.CodecType = (CodecType) Enum.ToObject(typeof(CodecType), this._serializer.CodecType);
             reqMessage.Data = this._serializer.Serialize(req);
-            var rsp = await AsyncCallInner(reqMessage,timeout);
+            var rsp = await AsyncCallInner(reqMessage, timeout);
             if (rsp != null)
             {
                 result.Code = rsp.Code;
@@ -139,11 +138,9 @@ namespace DotBPE.Rpc.Client
             return result;
         }
 
-
-
         private async Task<bool> SendAsync(AmpMessage request)
         {
-            bool success ;
+            bool success;
             try
             {
                 //发送
@@ -153,15 +150,15 @@ namespace DotBPE.Rpc.Client
             catch (ClosedChannelException closedEx)
             {
                 this._logger.LogError(closedEx, "send message error,channel closed,{messageId}", request.Id);
-                DotBPEDiagnosticListenerExtensions.Listener.ClientException( request, closedEx);
-                throw new RpcCommunicationException($"send message error,channel closed,{request.Id}",closedEx);
+                DotBPEDiagnosticListenerExtensions.Listener.ClientException(request, closedEx);
+                throw new RpcCommunicationException($"send message error,channel closed,{request.Id}", closedEx);
             }
             catch (Exception exception)
             {
                 success = false;
                 ErrorCallBack(request.Id);
                 this._logger.LogError(exception, "error occ:");
-                DotBPEDiagnosticListenerExtensions.Listener.ClientException(request,exception);
+                DotBPEDiagnosticListenerExtensions.Listener.ClientException(request, exception);
             }
             return success;
         }
