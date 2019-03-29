@@ -11,6 +11,9 @@ namespace DotBPE.Gateway.Swagger
         public string BasePath { get; set; } = "/";
         public List<string> XmlComments { get;  } = new List<string>();
 
+
+        public List<string> IngoreFields { get; } = new List<string>{"Identity","ClientIp","XRequestId"};
+
         public string RoutePath { get; set; } = "/v2/swagger.json";
 
         public void IncludeXmlComments(string xmlPath)

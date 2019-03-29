@@ -38,7 +38,7 @@ namespace DotBPE.Gateway.Swagger
                 Tags = new List<SwaggerTag>()
             };
 
-            ProcessPaths(swagger.Paths,swagger.Tags, routeOptions, swagger.Definitions);
+            ProcessPaths(swagger.Paths,swagger.Tags, routeOptions, swagger.Definitions,config);
 
             var settings = new JsonSerializerSettings
             {
@@ -50,7 +50,7 @@ namespace DotBPE.Gateway.Swagger
         }
 
         private void ProcessPaths(Dictionary<string, Dictionary<string, SwaggerMethod>> swaggerPaths,
-            List<SwaggerTag> tags,HttpRouteOptions routeOptions,Dictionary<string, SwaggerDefinition> definitions)
+            List<SwaggerTag> tags,HttpRouteOptions routeOptions,Dictionary<string, SwaggerDefinition> definitions,SwaggerConfig config)
         {
             routeOptions.Items.ForEach(item =>
             {
@@ -107,11 +107,11 @@ namespace DotBPE.Gateway.Swagger
 
                 path.Parameters = new List<SwaggerApiParameters>();
 
-                ProcessParameters(item.AcceptVerb ,path.Parameters, item.InvokeMethod.GetParameters(),definitions);
+                ProcessParameters(item.AcceptVerb ,path.Parameters, item.InvokeMethod.GetParameters(),definitions,config);
 
                 path.Responses = new Dictionary<string, SwaggerApiResponse>();
 
-                ProcessResponses(path.Responses, item.InvokeMethod.ReturnParameter,definitions);
+                ProcessResponses(path.Responses, item.InvokeMethod.ReturnParameter,definitions,config);
 
                 swaggerPaths.Add(item.Path,new Dictionary<string, SwaggerMethod> {{verb,path}});
             });
@@ -123,7 +123,7 @@ namespace DotBPE.Gateway.Swagger
         }
 
         private void ProcessResponses(Dictionary<string, SwaggerApiResponse> pathResponses,
-            ParameterInfo invokeMethodReturnParameter,Dictionary<string, SwaggerDefinition> definitions)
+            ParameterInfo invokeMethodReturnParameter,Dictionary<string, SwaggerDefinition> definitions,SwaggerConfig config)
         {
             //Task<RpcResult>
             if (!invokeMethodReturnParameter.ParameterType.IsGenericType)
@@ -141,17 +141,24 @@ namespace DotBPE.Gateway.Swagger
             SwaggerApiResponse apiResponse = new SwaggerApiResponse
             {
                 Description = this._resolver.GetTypeComment(innerType),
-                Schema = GetSwaggerItemSchema(innerType,definitions)
+                Schema = GetSwaggerItemSchema(innerType,definitions,config)
             };
 
             pathResponses.Add("200",apiResponse);
 
-            CreateSwaggerDefinition(innerType.Name, innerType, definitions);
+            //Console.WriteLine(innerType.FullName);
+            //Console.WriteLine("---------------------------------------------------");
+            CreateSwaggerDefinition(innerType.Name, innerType, definitions,config);
         }
 
-        private void CreateSwaggerDefinition(string name,Type definitionType,Dictionary<string, SwaggerDefinition> definitions)
+        private void CreateSwaggerDefinition(string name,Type definitionType,Dictionary<string, SwaggerDefinition> definitions,SwaggerConfig config)
         {
             if (definitions.ContainsKey(name))
+            {
+                return;
+            }
+
+            if ("Type".Equals(name))
             {
                 return;
             }
@@ -163,7 +170,7 @@ namespace DotBPE.Gateway.Swagger
             };
 
 
-            var properties = definitionType.GetProperties();
+            var properties = definitionType.GetProperties( BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly );
 
             properties.ForEach(p =>
             {
@@ -179,12 +186,29 @@ namespace DotBPE.Gateway.Swagger
                 else if(p.PropertyType.IsArray && p.PropertyType.HasElementType)
                 {
                     pd.Type = "array";
-                    pd.Items = GetSwaggerItemSchema(p.PropertyType.GetElementType(),definitions);
+                    pd.Items = GetSwaggerItemSchema(p.PropertyType.GetElementType(),definitions,config);
+                }
+                else if(
+                    typeof(System.Collections.ICollection).IsAssignableFrom(p.PropertyType)
+                    ||   typeof(System.Collections.IEnumerable).IsAssignableFrom(p.PropertyType)
+                    )
+                {
+
+                    if (p.PropertyType.IsGenericType)
+                    {
+                        pd.Type = "array";
+                        pd.Items = GetSwaggerItemSchema(p.PropertyType.GenericTypeArguments[0],definitions,config);
+                    }
+                    else
+                    {
+                        pd.Type = "array";
+                    }
                 }
                 else
                 {
+                    //Console.WriteLine(p.PropertyType.Name);
                     pd.Ref = "#/definitions/" + p.PropertyType.Name;
-                    CreateSwaggerDefinition(p.PropertyType.Name, p.PropertyType, definitions);
+                    CreateSwaggerDefinition(p.PropertyType.Name, p.PropertyType, definitions,config);
                 }
 
                 definition.Properties.Add(p.Name.ToCamelCase(),pd);
@@ -194,13 +218,18 @@ namespace DotBPE.Gateway.Swagger
         }
 
         private void ProcessParameters(RestfulVerb verb,List<SwaggerApiParameters> pathParameters, ParameterInfo[] getParameters
-            ,Dictionary<string, SwaggerDefinition> definitions)
+            ,Dictionary<string, SwaggerDefinition> definitions,SwaggerConfig config)
         {
             var parameter = getParameters[0];
-            var properties = parameter.ParameterType.GetProperties();
+            var properties = parameter.ParameterType.GetProperties(BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly);
 
             properties.ForEach(p =>
             {
+                if (config.IngoreFields.Contains(p.Name))
+                {
+                    return;
+                }
+
                 SwaggerApiParameters apiParameter = new SwaggerApiParameters
                 {
                     Name = p.Name.ToCamelCase(),
@@ -215,14 +244,14 @@ namespace DotBPE.Gateway.Swagger
                 else
                 {
                     apiParameter.In = verb == RestfulVerb.Any || verb == RestfulVerb.Get ? "query" : "body";
-                    apiParameter.Schema = GetSwaggerItemSchema(p.PropertyType,definitions);
+                    apiParameter.Schema = GetSwaggerItemSchema(p.PropertyType,definitions,config);
                 }
                 pathParameters.Add(apiParameter);
             });
 
         }
 
-        private SwaggerItemSchema GetSwaggerItemSchema(Type type,Dictionary<string, SwaggerDefinition> definitions)
+        private SwaggerItemSchema GetSwaggerItemSchema(Type type,Dictionary<string, SwaggerDefinition> definitions,SwaggerConfig config)
         {
 
             if (type.IsArray && type.HasElementType)
@@ -232,13 +261,13 @@ namespace DotBPE.Gateway.Swagger
                 {
                     Ref = "#/definitions/"+type.GetElementType().Name
                 });
-                CreateSwaggerDefinition(type.GetElementType().Name,type.GetElementType(),definitions);
+                CreateSwaggerDefinition(type.GetElementType().Name,type.GetElementType(),definitions,config);
                 return arrayItem;
             }
 
             SwaggerSingleItemSchema singleItem = new SwaggerSingleItemSchema {Ref = "#/definitions/" + type.Name};
 
-            CreateSwaggerDefinition(type.Name,type,definitions);
+            CreateSwaggerDefinition(type.Name,type,definitions,config);
 
             return singleItem;
         }

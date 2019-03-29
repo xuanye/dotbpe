@@ -74,7 +74,7 @@ namespace DotBPE.Gateway
 
             if (router == null) //not match any router
             {
-                this._logger.LogWarning("[{0}:{1}] does not match any router",req.Path,req.Method);
+                _logger.LogWarning("[{2}][{0}:{1}] does not match any router",req.Path,req.Method,req.GetUserIp());
                 return false;
             }
 

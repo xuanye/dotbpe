@@ -31,7 +31,7 @@
         2. 支持拦截器机制，支持对输入输出在各阶段进行必要的拦截和转换
         </GatewayPackageNotes>
         <GatewaySwaggerPackageNotes>
-        1. 为HttpGateway 集成Swagger接口帮助，并自动扫描接口定义生成文档信息
+        1. 修复生成Protobuf消息时解析出错的问题
         </GatewaySwaggerPackageNotes>
         <GatewaySwaggerUIPackageNotes>
         1. 为HttpGateway 集成SwaggerUI

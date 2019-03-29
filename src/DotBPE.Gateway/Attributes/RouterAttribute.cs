@@ -2,13 +2,14 @@ using System;
 
 namespace DotBPE.Gateway
 {
+    [AttributeUsage(AttributeTargets.Method)]
     public class RouterAttribute:Attribute
     {
 
         public RouterAttribute(string path,RestfulVerb acceptVerb= RestfulVerb.Any)
         {
-            this.Path = path;
-            this.AcceptVerb = acceptVerb;
+            Path = path;
+            AcceptVerb = acceptVerb;
         }
 
 
@@ -29,10 +30,10 @@ namespace DotBPE.Gateway
                 {
                     if (_PluginType != null)
                     {
-                        return this._PluginType;
+                        return _PluginType;
                     }
-                    this._PluginType =Type.GetType(this.PluginName);
-                    return this._PluginType;
+                    _PluginType =Type.GetType(PluginName);
+                    return _PluginType;
                 }
 
                 return null;
