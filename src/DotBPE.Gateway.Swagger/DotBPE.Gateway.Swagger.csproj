@@ -16,9 +16,9 @@
     <PackageLicense>https://raw.githubusercontent.com/dotbpe/dotbpe/master/LICENSE</PackageLicense>
     <RepositoryUrl>https://github.com/dotbpe/dotbpe.git</RepositoryUrl>
     <RepositoryType>git</RepositoryType>
-    <PackageReleaseNotes>
-      $(GatewaySwaggerPackageNotes)
-    </PackageReleaseNotes>
+    <PackageReleaseNotes>1. 为HttpGateway 集成Swagger接口帮助，并自动扫描接口定义生成文档信息
+        
+</PackageReleaseNotes>
   </PropertyGroup>
 
     <ItemGroup>
