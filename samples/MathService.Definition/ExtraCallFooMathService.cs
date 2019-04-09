@@ -21,7 +21,7 @@ namespace MathService.Definition
             result.Data.Total = req.A + req.B;
 
             var fooService = this._clientProxy.Create<IFooService>();
-            var fooResult = await fooService.FooAsync(new FooReq() { FooWord="Foo" });
+            var fooResult = await fooService.FooAsync(new FooReq { FooWord="Foo" });
 
             if(fooResult.Code != 0)
             {

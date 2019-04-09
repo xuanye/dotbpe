@@ -1,3 +1,5 @@
+using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
 using DotBPE.Gateway;
@@ -30,9 +32,10 @@ namespace GreeterHttpService
             var result = new RpcResult<SayHelloRes>
             {
                 Code = 0,
-                Data = new SayHelloRes {Greeting = $"Hello {req.Name},{req.Id}!"}
+                Data = new SayHelloRes {Greeting = $"Hello {req.Name},{req.Id}!" , ReturnMessage = "测试换行符\n"}
             };
 
+            //throw  new Exception("测试异常");
             return Task.FromResult(result);
         }
     }
@@ -77,5 +80,14 @@ namespace GreeterHttpService
         /// </summary>
          [DataMember(Order = 10,Name = "greeting")]
          public string Greeting { get; set; }
+
+        public List<SampleData> List { get; } = new List<SampleData>();
+    }
+
+    [DataContract]
+    public class SampleData
+    {
+        [DataMember(Order = 1,Name = "list")]
+        public List<SampleData> Children { get; } = new List<SampleData>();
     }
 }

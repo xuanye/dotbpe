@@ -38,6 +38,7 @@ namespace DotBPE.Rpc.Internal
             if (tType.IsGenericType)
             {
                 Task retTask = retVal as Task;
+
                 await retTask.AnyContext();
 
                 var resultProp = retValType.GetProperty("Result");

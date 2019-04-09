@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.Text;
 
 namespace DotBPE.Rpc.Client.RouterPolicy
 {
@@ -11,20 +9,17 @@ namespace DotBPE.Rpc.Client.RouterPolicy
 
         public IRouterPoint Select(string serviceKey, List<IRouterPoint> remoteAddresses)
         {
-            var index = 0;
-            if(!ROUND_CACHE.TryGetValue(serviceKey,out index))
+            if (!ROUND_CACHE.TryGetValue(serviceKey, out int index))
             {
                 ROUND_CACHE.TryAdd(serviceKey, index);
             }
             else
             {
-                ROUND_CACHE.TryUpdate(serviceKey, index+1,index);
-                index = index + 1;
+                ROUND_CACHE.TryUpdate(serviceKey, index + 1, index);
+                index++;
             }
-            if(index > remoteAddresses.Count - 1)
-            {
-                index = 0;
-            }
+            index %= remoteAddresses.Count;
+            
             return remoteAddresses[index];
         }
     }
