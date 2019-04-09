@@ -3,6 +3,7 @@ using System.Collections.Concurrent;
 using System.Diagnostics;
 using System.Threading.Tasks;
 using DotBPE.Baseline.Extensions;
+using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server;
@@ -67,7 +68,7 @@ namespace DotBPE.Rpc
                 return _formatter;
             }
         }
-     
+
         private static void AddAuditLog(IRpcContext context,ILogger writer, IAuditLoggerFormat format, AuditLogType logType,string methodName,  object req, object rsp, long elapsedMS)
         {
             if (writer == null || format == null)
@@ -81,7 +82,7 @@ namespace DotBPE.Rpc
                 Response = rsp,
                 ElapsedMS = elapsedMS,
                 Writer = writer,
-                Context =  context, 
+                Context =  context,
                 Formatter = format,
                 LogType = logType
             };
@@ -99,11 +100,12 @@ namespace DotBPE.Rpc
             }
             _isRunning = true;
 
-            Task.Factory.StartNew(WriteLog, TaskCreationOptions.LongRunning);
+            Task.Factory.StartNew(WriteLog, TaskCreationOptions.LongRunning).ConfigureAwait(false);
         }
 
         private static async Task WriteLog()
         {
+            await  Task.Delay(3000);
             while (!logDict.IsEmpty)
             {
                 if (!logDict.TryDequeue(out var log))
@@ -114,7 +116,7 @@ namespace DotBPE.Rpc
                 {
                     if (log.Formatter != null && log.Writer != null)
                     {
-                        var realRet =  await DrillDownResponseObj(log.Response);                      
+                        var realRet =  await DrillDownResponseObj(log.Response);
                         var logText = log.Formatter.Format(log.Context,log.LogType,log.MethodFullName, log.Request, realRet, log.ElapsedMS);
                         if (!string.IsNullOrEmpty(logText))
                         {

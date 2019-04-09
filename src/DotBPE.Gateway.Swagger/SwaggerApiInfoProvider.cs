@@ -169,6 +169,7 @@ namespace DotBPE.Gateway.Swagger
                 Properties =new Dictionary<string, SwaggerPropertyDefinition>()
             };
 
+            definitions.Add(name,definition);
 
             var properties = definitionType.GetProperties( BindingFlags.Instance | BindingFlags.Public | BindingFlags.DeclaredOnly );
 
@@ -214,7 +215,7 @@ namespace DotBPE.Gateway.Swagger
                 definition.Properties.Add(p.Name.ToCamelCase(),pd);
             });
 
-            definitions.Add(name,definition);
+
         }
 
         private void ProcessParameters(RestfulVerb verb,List<SwaggerApiParameters> pathParameters, ParameterInfo[] getParameters
@@ -262,6 +263,32 @@ namespace DotBPE.Gateway.Swagger
                     Ref = "#/definitions/"+type.GetElementType().Name
                 });
                 CreateSwaggerDefinition(type.GetElementType().Name,type.GetElementType(),definitions,config);
+                return arrayItem;
+            }
+
+            if (
+                typeof(System.Collections.ICollection).IsAssignableFrom(type)
+                || typeof(System.Collections.IEnumerable).IsAssignableFrom(type)
+            )
+            {
+                SwaggerArrayItemSchema arrayItem = new SwaggerArrayItemSchema();
+
+                if (type.IsGenericType)
+                {
+                    arrayItem.Items.Add(new SwaggerSingleItemSchema
+                    {
+                        Ref = "#/definitions/"+type.GenericTypeArguments[0].Name
+                    });
+                    CreateSwaggerDefinition(type.GenericTypeArguments[0].Name,type.GenericTypeArguments[0],definitions,config);
+
+                }
+                else
+                {
+                    arrayItem.Items.Add(new SwaggerSingleItemSchema
+                    {
+                        Ref = "#/definitions/Object"
+                    });
+                }
                 return arrayItem;
             }
 

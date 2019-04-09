@@ -175,6 +175,7 @@ namespace DotBPE.Gateway
                 var ret = await outputPlugin.OutputAsync(req, res, resMsg, routeItem);
                 return ret;
             }
+
             //response
             await res.WriteAsync("{\"");
             await res.WriteAsync(this._gatewayOptions.WrapperCodeFieldName);
@@ -183,7 +184,15 @@ namespace DotBPE.Gateway
             await res.WriteAsync(",\"");
             await res.WriteAsync(this._gatewayOptions.WrapperMessageFieldName);
             await res.WriteAsync("\":\"");
-            await res.WriteAsync(resMsg.Message ?? "");
+            if (!string.IsNullOrEmpty(resMsg.Message))
+            {
+                await res.WriteAsync(resMsg.Message.Replace("\n","\\n"));
+            }
+            else
+            {
+                await res.WriteAsync("");
+            }
+
             await res.WriteAsync("\"");
             if (resMsg.Data != null)
             {

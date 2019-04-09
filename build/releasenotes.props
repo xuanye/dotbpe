@@ -4,7 +4,7 @@
         1. 整合常用帮助类，发布到nuget.
         </BaselinePackageNotes>
         <RpcPackageNotes>
-        1. 修复ScanBindServices的bug
+        1. 修复客户端轮询时的bug
     
         </RpcPackageNotes>
         <ExtraCastlePackageNotes>
@@ -27,8 +27,7 @@
         1. 实现Google Protobuf的协议编码实现
         </ExtraProtobufPackageNotes>
         <GatewayPackageNotes>
-        1. 实现Http协议和Amp协议的转换
-        2. 支持拦截器机制，支持对输入输出在各阶段进行必要的拦截和转换
+        1. 修复returnMessage中包含特殊符号的问题，但是并不完美
         </GatewayPackageNotes>
         <GatewaySwaggerPackageNotes>
         1. 修复生成Protobuf消息时解析出错的问题

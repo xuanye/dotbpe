@@ -12,8 +12,8 @@ namespace DotBPE.Rpc.Client.RouterPolicy
 
         public IRouterPoint Select(string serviceKey, List<IRouterPoint> remoteAddresses)
         {
-            var index = 0;
             var max = TotalWeight(remoteAddresses);
+            int index;
             if (!ROUND_CACHE.TryGetValue(serviceKey, out index))
             {
                 ROUND_CACHE.TryAdd(serviceKey, index);
@@ -22,10 +22,10 @@ namespace DotBPE.Rpc.Client.RouterPolicy
             else
             {
                 ROUND_CACHE.TryUpdate(serviceKey, index + 1, index);
-                index = index + 1;
+                index++;
             }
 
-            if(index == max)
+            if (index == max)
             {
                 index = 0;
                 return remoteAddresses[index];
@@ -48,7 +48,7 @@ namespace DotBPE.Rpc.Client.RouterPolicy
         private static int TotalWeight(List<IRouterPoint> remoteAddresses)
         {
             int total = 0;
-            if (remoteAddresses.Any())
+            if (remoteAddresses.Count > 0)
             {
                 for(var i = 0; i < remoteAddresses.Count; i++)
                 {
