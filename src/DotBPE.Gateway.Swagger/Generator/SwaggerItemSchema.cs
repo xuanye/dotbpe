@@ -24,6 +24,6 @@ namespace DotBPE.Gateway.Swagger.Generator
         public string Type { get; } = "array";
 
         [DataMember(Name = "items")]
-        public List<SwaggerItemSchema> Items { get; set; }
+        public List<SwaggerItemSchema> Items { get; set; } = new List<SwaggerItemSchema>();
     }
 }

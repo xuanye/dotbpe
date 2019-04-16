@@ -30,7 +30,7 @@
         1. 修复returnMessage中包含特殊符号的问题，但是并不完美
         </GatewayPackageNotes>
         <GatewaySwaggerPackageNotes>
-        1. 修复生成Protobuf消息时解析出错的问题
+        1. 修复相同path不同method的请求方法不能正确加载的问题
         </GatewaySwaggerPackageNotes>
         <GatewaySwaggerUIPackageNotes>
         1. 为HttpGateway 集成SwaggerUI

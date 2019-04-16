@@ -113,7 +113,18 @@ namespace DotBPE.Gateway.Swagger
 
                 ProcessResponses(path.Responses, item.InvokeMethod.ReturnParameter,definitions,config);
 
-                swaggerPaths.Add(item.Path,new Dictionary<string, SwaggerMethod> {{verb,path}});
+                if (!swaggerPaths.ContainsKey(item.Path))
+                {
+                    swaggerPaths.Add(item.Path, new Dictionary<string, SwaggerMethod> { { verb, path } });
+                }
+                else {
+                    var pathItem = swaggerPaths[item.Path];
+                    if (!pathItem.ContainsKey(verb))
+                    {
+                        pathItem.Add(verb, path);
+                    }
+                }                   
+               
             });
         }
 
