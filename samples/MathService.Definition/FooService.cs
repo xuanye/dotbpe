@@ -1,7 +1,7 @@
 using System;
 using System.Threading.Tasks;
-using DotBPE.Rpc;
-using DotBPE.Rpc.Server;
+using Tomato.Rpc;
+using Tomato.Rpc.Server;
 
 namespace MathService.Definition
 {
