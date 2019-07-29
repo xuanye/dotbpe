@@ -1,5 +1,5 @@
 using System.Threading.Tasks;
-using DotBPE.Rpc;
+using Tomato.Rpc;
 
 namespace MathService.Definition
 {
