@@ -12,10 +12,10 @@ namespace Tomato.Rpc.Server
     {
         public AmpTcpServerBootstrap(
             ISocketService<AmpMessage> socketService,
-            IProtocol<AmpMessage> protocol,
+            IChannelHandlerPipeline handlerPipeline,
             ILoggerFactory loggerFactory,
             IOptions<RpcServerOptions> hostOption = null)
-            : base(socketService, protocol, loggerFactory, hostOption)
+            : base(socketService, handlerPipeline, loggerFactory, hostOption)
         {
         }
     }

@@ -33,7 +33,7 @@ namespace Tomato.Rpc.Client
                 container = new ServiceCollection();
             }
 
-            container.AddSingleton<IProtocol<AmpMessage>, AmpProtocol>();
+            container.AddSingleton<IChannelHandlerPipeline, AmpChannelHandlerPipeline>();
             container.AddSingleton<IServiceRouter, DefaultServiceRouter>();
             container.AddSingleton<ISocketClient<AmpMessage>, RpcSocketClient>();
             container.AddSingleton<IServiceActorLocator<AmpMessage>, DefaultServiceActorLocator>();
