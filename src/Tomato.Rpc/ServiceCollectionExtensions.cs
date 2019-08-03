@@ -179,7 +179,7 @@ namespace Tomato.Rpc
         #region  Private Method
         private static IServiceCollection AddAmpProtocol(this IServiceCollection services)
         {
-            services.AddSingleton<IProtocol<AmpMessage>, AmpProtocol>();
+            services.AddSingleton<IChannelHandlerPipeline, AmpChannelHandlerPipeline>();
             services.AddSingleton<ISocketClient<AmpMessage>, RpcSocketClient>();
             services.AddSingleton<ISocketService<AmpMessage>, AmpRpcService>();
             return services;
