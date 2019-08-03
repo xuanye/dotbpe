@@ -1,4 +1,4 @@
-﻿<Project Sdk="Microsoft.NET.Sdk">
+<Project Sdk="Microsoft.NET.Sdk">
 
   <PropertyGroup>
     <TargetFramework>netstandard2.0</TargetFramework>
@@ -11,9 +11,9 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DotBPE.Extra.MessagePack\DotBPE.Extra.MessagePack.csproj" />
-    <ProjectReference Include="..\..\src\DotBPE.Gateway\DotBPE.Gateway.csproj" />
-    <ProjectReference Include="..\..\src\DotBPE.Rpc\DotBPE.Rpc.csproj" />
+    <ProjectReference Include="..\..\src\Tomato.Extra.MessagePack\Tomato.Extra.MessagePack.csproj" />
+    <ProjectReference Include="..\..\src\Tomato.Gateway\Tomato.Gateway.csproj" />
+    <ProjectReference Include="..\..\src\Tomato.Rpc\Tomato.Rpc.csproj" />
   </ItemGroup>
 
 </Project>

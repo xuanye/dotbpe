@@ -10,8 +10,8 @@ fi
 
 mkdir -p $artifactsFolder
 
-dotnet build ./src/DotBPE.Extra.Consul/DotBPE.Extra.Consul.csproj -c Release
+dotnet build ./src/Tomato.Extra.Consul/Tomato.Extra.Consul.csproj -c Release
 
-dotnet pack ./src/DotBPE.Extra.Consul/DotBPE.Extra.Consul.csproj -c Release -o ../../$artifactsFolder
+dotnet pack ./src/Tomato.Extra.Consul/Tomato.Extra.Consul.csproj -c Release -o ../../$artifactsFolder
 
-dotnet nuget push ./$artifactsFolder/DotBPE.Extra.Consul.*.nupkg -k $NUGET_KEY -s https://www.nuget.org
+dotnet nuget push ./$artifactsFolder/Tomato.Extra.Consul.*.nupkg -k $NUGET_KEY -s https://www.nuget.org

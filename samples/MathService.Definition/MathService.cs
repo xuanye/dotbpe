@@ -1,6 +1,6 @@
-using DotBPE.Rpc;
+using Tomato.Rpc;
 using System.Threading.Tasks;
-using DotBPE.Rpc.Server;
+using Tomato.Rpc.Server;
 using Microsoft.Extensions.Logging;
 
 namespace MathService.Definition
