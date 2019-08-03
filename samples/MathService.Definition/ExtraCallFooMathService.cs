@@ -1,7 +1,7 @@
 using System.Threading.Tasks;
-using DotBPE.Rpc;
-using DotBPE.Rpc.Client;
-using DotBPE.Rpc.Server;
+using Tomato.Rpc;
+using Tomato.Rpc.Client;
+using Tomato.Rpc.Server;
 using Microsoft.Extensions.Logging;
 
 namespace MathService.Definition
@@ -21,7 +21,7 @@ namespace MathService.Definition
             result.Data.Total = req.A + req.B;
 
             var fooService = this._clientProxy.Create<IFooService>();
-            var fooResult = await fooService.FooAsync(new FooReq() { FooWord="Foo" });
+            var fooResult = await fooService.FooAsync(new FooReq { FooWord="Foo" });
 
             if(fooResult.Code != 0)
             {

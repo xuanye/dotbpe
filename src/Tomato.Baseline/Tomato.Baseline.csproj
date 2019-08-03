@@ -1,0 +1,23 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <Import Project="../../build/version.props" />
+  <Import Project="../../build/releasenotes.props" />
+  <PropertyGroup>
+    <TargetFramework>netstandard2.0</TargetFramework>
+    <Version>$(BaselinePackageVersion)</Version>
+    <Owners>Xuanye Wong</Owners>
+    <Authors>Xuanye Wong</Authors>
+      <PackageTags>microservice,dotnet,peach,rpc,tomato,baseline</PackageTags>
+      <PackageIconUrl>https://raw.githubusercontent.com/xuanye/tomato/master/icon.png</PackageIconUrl>
+      <Title>tomato.rpc is a lightweight and high performance, easy to learn rpc framework</Title>
+      <Description>tomato.rpc is a lightweight and high performance, easy to learn rpc framework</Description>
+      <PackageProjectUrl>https://github.com/xuanye/tomato</PackageProjectUrl>
+      <PackageLicense>https://raw.githubusercontent.com/xuanye/tomato/master/LICENSE</PackageLicense>
+      <RepositoryUrl>https://github.com/xuanye/tomato.git</RepositoryUrl>
+      <RepositoryType>git</RepositoryType>
+
+    <PackageReleaseNotes>
+      $(BaselinePackageNotes)
+    </PackageReleaseNotes>
+  </PropertyGroup>
+
+</Project>

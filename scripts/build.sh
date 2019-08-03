@@ -10,5 +10,5 @@ fi
 
 mkdir -p $artifactsFolder
 
-dotnet restore ./DotBPE.sln
-dotnet build ./DotBPE.sln -c Release
+dotnet restore ./tomato.sln
+dotnet build ./tomato.sln -c Release
