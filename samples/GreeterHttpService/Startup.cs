@@ -2,12 +2,12 @@
 using System;
 using System.IO;
 using System.Reflection;
-using Tomato.Extra;
-using Tomato.Gateway;
-using Tomato.Gateway.Swagger;
-using Tomato.Gateway.Swagger.Generator;
-using Tomato.Gateway.SwaggerUI;
-using Tomato.Rpc;
+using DotBPE.Extra;
+using DotBPE.Gateway;
+using DotBPE.Gateway.Swagger;
+using DotBPE.Gateway.Swagger.Generator;
+using DotBPE.Gateway.SwaggerUI;
+using DotBPE.Rpc;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
@@ -36,7 +36,7 @@ namespace GreeterHttpService
             services.AddGateway("GreeterHttpService"); //add gateway and auto scan router infos
 
             services.AddMessagePackSerializer(); //message pack serializer
-            services.AddJsonNetParser(); // http result json parser
+            services.AddTextJsonParser(); // http result json parser
             services.AddDynamicClientProxy(); // aop client
             services.AddDynamicServiceProxy(); // aop service
 
@@ -54,7 +54,7 @@ namespace GreeterHttpService
                 {
                     Title = "GreetingService",
                     Description = "测试Swagger",
-                    Version = "1.0"
+                    Version = "2.0.0"
                 };
 
                 var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";

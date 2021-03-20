@@ -1,31 +1,30 @@
-using Consul;
-using Tomato.Baseline.Extensions;
+
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
-using Tomato.Rpc;
-using Tomato.Extra;
-using Tomato.Rpc.Internal;
+using DotBPE.Rpc;
+using DotBPE.Extra;
 using Microsoft.Extensions.DependencyInjection;
-using Tomato.Rpc.Server;
-using Tomato.Rpc.Client;
+using DotBPE.Rpc.Server;
+using DotBPE.Rpc.Client;
 
 namespace MathService
 {
     static class Program
     {
         static void Main(string[] args)
-        {
-            /* */
+        {            
+         
             var builder = new HostBuilder()
              .UseRpcServer()
              .UseCastleDynamicProxy()
              .UseMessagePackSerializer()
-                          /*.BindService<Definition.MathService>()
-
-              * 这段用于测试审计日志*/
-              .BindServices(services => { services.Add<Definition.ExtraCallFooMathService>().Add<Definition.FooService>();})
+             /*
+              * .BindService<Definition.MathService>()            
+              */
+             .BindServices(services => { services.Add<Definition.ExtraCallFooMathService>().Add<Definition.FooService>();})
              .ConfigureServices(s =>
              {
+                 //这段用于测试审计日志
                  s.AddSingleton<IAuditLoggerFormat, AuditLoggerFormat>();
                  s.AddSingleton<IRequestAuditLoggerFactory, RequestAuditLoggerFactory>();
                  s.AddSingleton<IClientAuditLoggerFactory, ClientAuditLoggerFactory>();

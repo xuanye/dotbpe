@@ -10,8 +10,8 @@ fi
 
 mkdir -p $artifactsFolder
 
-dotnet build ./src/Tomato.Gateway.SwaggerUI/Tomato.Gateway.SwaggerUI.csproj -c Release
+dotnet build ./src/DotBPE.Gateway.SwaggerUI/DotBPE.Gateway.SwaggerUI.csproj -c Release
 
-dotnet pack ./src/Tomato.Gateway.SwaggerUI/Tomato.Gateway.SwaggerUI.csproj -c Release -o ../../$artifactsFolder
+dotnet pack ./src/DotBPE.Gateway.SwaggerUI/DotBPE.Gateway.SwaggerUI.csproj -c Release -o $artifactsFolder
 
-dotnet nuget push ./$artifactsFolder/Tomato.Gateway.SwaggerUI.*.nupkg -k $NUGET_KEY -s https://www.nuget.org
+dotnet nuget push ./$artifactsFolder/DotBPE.Gateway.SwaggerUI.*.nupkg -k $NUGET_KEY -s https://www.nuget.org

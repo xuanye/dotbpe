@@ -11,8 +11,8 @@ fi
 mkdir -p $artifactsFolder
 
 
-dotnet build ./src/Tomato.Gateway/Tomato.Gateway.csproj -c Release
+dotnet build ./src/DotBPE.Gateway/DotBPE.Gateway.csproj -c Release
 
-dotnet pack ./src/Tomato.Gateway/Tomato.Gateway.csproj -c Release -o ../../$artifactsFolder
+dotnet pack ./src/DotBPE.Gateway/DotBPE.Gateway.csproj -c Release -o $artifactsFolder
 
-dotnet nuget push ./$artifactsFolder/Tomato.Gateway.*.nupkg -k $NUGET_KEY -s https://www.nuget.org
+dotnet nuget push ./$artifactsFolder/DotBPE.Gateway.*.nupkg -k $NUGET_KEY -s https://www.nuget.org
