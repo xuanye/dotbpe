@@ -15,7 +15,7 @@ namespace DotBPE.Extra
 
         public object Deserialize(byte[] data, Type type)
         {
-            return MessagePack.MessagePackSerializer.NonGeneric.Deserialize(type, data);
+            return MessagePack.MessagePackSerializer.Deserialize(type, data);
         }
 
         public byte[] Serialize<T>(T item)
@@ -25,7 +25,7 @@ namespace DotBPE.Extra
 
         public byte[] Serialize(object item)
         {
-            return MessagePack.MessagePackSerializer.NonGeneric.Serialize(item.GetType(),item);
+            return MessagePack.MessagePackSerializer.Serialize(item.GetType(),item);
         }
 
         public byte CodecType => (byte)Rpc.Codec.CodecType.MessagePack;

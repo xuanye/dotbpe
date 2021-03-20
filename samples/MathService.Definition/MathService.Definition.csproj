@@ -7,10 +7,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="MessagePack" Version="1.7.3.4" />
-  </ItemGroup>
-
-  <ItemGroup>
     <ProjectReference Include="..\..\src\DotBPE.Extra.MessagePack\DotBPE.Extra.MessagePack.csproj" />
     <ProjectReference Include="..\..\src\DotBPE.Gateway\DotBPE.Gateway.csproj" />
     <ProjectReference Include="..\..\src\DotBPE.Rpc\DotBPE.Rpc.csproj" />
