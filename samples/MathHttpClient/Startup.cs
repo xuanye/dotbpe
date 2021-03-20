@@ -1,6 +1,6 @@
-using Tomato.Extra;
-using Tomato.Gateway;
-using Tomato.Rpc.Config;
+using DotBPE.Extra;
+using DotBPE.Gateway;
+using DotBPE.Rpc.Config;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
@@ -19,7 +19,6 @@ namespace MathHttpClient
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.Configure<RouterPointOptions>(router =>
             {
                 router.Categories.Add(new GroupIdentifierOption

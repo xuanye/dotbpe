@@ -1,9 +1,10 @@
 using System;
+using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Threading.Tasks;
-using Tomato.Gateway;
-using Tomato.Rpc;
-using Tomato.Rpc.Server;
+using DotBPE.Gateway;
+using DotBPE.Rpc;
+using DotBPE.Rpc.Server;
 
 namespace GreeterHttpService
 {
@@ -31,7 +32,7 @@ namespace GreeterHttpService
         /// <param name="timeout"></param>
         /// <returns></returns>
         [RpcMethod(2)]
-        [Router("/api/sample/postSample", RestfulVerb.Post)]
+        [Router("/api/sample/postSample", RestfulVerb.Post, "2.0.0")]
         Task<RpcResult<SampleRes>> PostSampleAsync(SampleReq req, int timeout = 3000);
 
     }
@@ -150,6 +151,25 @@ namespace GreeterHttpService
         /// </summary>
         [DataMember(Name = "objectVal",Order = 7)]
         public SampleInnerObject ObjectVal { get; set; }
+
+        /// <summary>
+        /// 列表字符串
+        /// </summary>
+        /// <value></value>
+        [DataMember(Name = "sampleStringList", Order = 8)]
+        public List<string> SampleStringList { get; set; }
+        /// <summary>
+        /// 列表值类型
+        /// </summary>
+        /// <value></value>
+        [DataMember(Name = "sampleIntList", Order = 8)]
+        public List<int> SampleIntList { get; set; }
+        /// <summary>
+        ///  列表对象
+        /// </summary>
+        /// <value></value>
+        [DataMember(Name = "listObjectVals", Order = 8)]
+        public List<SampleInnerObject> ListObjectVals { get; set; }
     }
 
     /// <summary>

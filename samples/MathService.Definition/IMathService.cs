@@ -1,6 +1,6 @@
 using System.Threading.Tasks;
-using Tomato.Gateway;
-using Tomato.Rpc;
+using DotBPE.Gateway;
+using DotBPE.Rpc;
 
 namespace MathService.Definition
 {

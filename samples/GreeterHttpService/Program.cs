@@ -1,12 +1,12 @@
-﻿using System.Threading;
+using System.Threading;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-
+using DotBPE.Gateway;
 
 namespace GreeterHttpService
 {
-    class Program
+    static class Program
     {
         static void Main(string[] args)
         {
@@ -16,7 +16,8 @@ namespace GreeterHttpService
 
         static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:5560") //HTTP绑定在6200端口
+                .UseUrls("http://*:5560") //HTTP绑定在5560端口
+                .UseRpcServer(port:5560)
                 .UseStartup<Startup>()
                 .ConfigureLogging(builder => { builder.SetMinimumLevel(LogLevel.Warning); })
                 .Build();

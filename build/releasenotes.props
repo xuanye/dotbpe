@@ -1,38 +1,45 @@
-<Project>
-	<PropertyGroup>
-		<BaselinePackageNotes>
-        1. 整合常用帮助类，发布到nuget.
-        </BaselinePackageNotes>
-        <RpcPackageNotes>
-        1. 升级Peach到最新版本，调整编解码代码实现
-        2. 调整命名空间，合并到水果系列的代码中
-        </RpcPackageNotes>
-        <ExtraCastlePackageNotes>
-        1. 使用Castle实现客户端代理类
-        2. 实现AOP接口定义
-        </ExtraCastlePackageNotes>
-        <ExtraConsulPackageNotes>
-        1. 实现服务注册功能
-        2. 实现基于DNSClient的服务发现功能
-        </ExtraConsulPackageNotes>
-        <ExtraJsonNetPackageNotes>
-        1. 实现JSON.NET的编解码实现
-        2. 实现将消息体序列化成JSON格式，用于HttpApi
-        </ExtraJsonNetPackageNotes>
-        <ExtraMessagePackPackageNotes>
-        1. 实现MessagePack的协议编码实现
-        </ExtraMessagePackPackageNotes>
-        <ExtraProtobufPackageNotes>
-        1. 实现Google Protobuf的协议编码实现
-        </ExtraProtobufPackageNotes>
-        <GatewayPackageNotes>
-        1. 修复returnMessage中包含特殊符号的问题，但是并不完美
-        </GatewayPackageNotes>
-        <GatewaySwaggerPackageNotes>
-        1. 修复相同path不同method的请求方法不能正确加载的问题
-        </GatewaySwaggerPackageNotes>
-        <GatewaySwaggerUIPackageNotes>
-        1. 为HttpGateway 集成SwaggerUI
-        </GatewaySwaggerUIPackageNotes>
-	</PropertyGroup>
+<?xml version="1.0" encoding="utf-8"?>
+
+<Project> 
+  <PropertyGroup> 
+    <BaselinePackageNotes>
+    1. 添加时间格式化一般字符串表示法的扩展方法
+    </BaselinePackageNotes>  
+    <RpcPackageNotes>
+    1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
+    </RpcPackageNotes>  
+    <ExtraCastlePackageNotes>
+    1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
+    </ExtraCastlePackageNotes>  
+    <ExtraConsulPackageNotes>
+    1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
+    </ExtraConsulPackageNotes>  
+    <ExtraJsonNetPackageNotes>
+    1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
+    </ExtraJsonNetPackageNotes>  
+    <ExtraJsonPackageNotes>
+    1. 实现System.Text.Json的编解码实现
+    </ExtraJsonPackageNotes>  
+    <ExtraMessagePackPackageNotes>
+    1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
+    </ExtraMessagePackPackageNotes>  
+    <ExtraPipelinePackageNotes>
+    1.Foundatio 升级到最新版本
+    </ExtraPipelinePackageNotes>  
+    <ExtraProtobufPackageNotes>
+    1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
+    </ExtraProtobufPackageNotes>  
+    <GatewayPackageNotes>
+    1. 新增绑定到IWebHost的RPC服务,主要用于测试
+    </GatewayPackageNotes>  
+    <GatewaySwaggerPackageNotes>
+    1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
+    </GatewaySwaggerPackageNotes>  
+    <GatewaySwaggerUIPackageNotes>
+    1. 兼容NETApp3.1
+    </GatewaySwaggerUIPackageNotes>  
+    <BestPracticePackageNotes>
+    1.Foundatio 升级到最新版本
+    </BestPracticePackageNotes> 
+  </PropertyGroup> 
 </Project>
