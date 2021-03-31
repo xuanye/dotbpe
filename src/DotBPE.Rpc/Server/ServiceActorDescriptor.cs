@@ -13,10 +13,10 @@ namespace DotBPE.Rpc
     public static class ServiceActorDescriptor
     {
         private static readonly Type serviceType = typeof(IServiceActor<AmpMessage>);
-        public static void ServiceDependencyRegistry(IConfiguration configuration, IServiceCollection services, Type registryType)
+        public static void ServiceDependencyRegistry(IConfiguration configuration, IServiceCollection services, Type registryType,params string[] categories)
         {
             var registry = (IServiceDependencyRegistry)Activator.CreateInstance(registryType);
-            registry.AddServiceDependency(configuration, services);
+            registry.AddServiceDependency(configuration, services,categories);
         }
 
         public static void AddServiceActor(IServiceCollection services, List<Type> actorTypes,params string[] categories )

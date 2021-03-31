@@ -6,7 +6,7 @@ namespace DotBPE.Gateway
 {
 
     /// <summary>
-    ///
+    /// 前置参数处理接口
     /// </summary>
     public interface IHttpParsePlugin: IHttpPlugin
     {

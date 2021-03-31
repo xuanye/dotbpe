@@ -65,8 +65,7 @@ namespace DotBPE.Rpc.Server
 
         private void Initialize(Type serviceType)
         {
-            var allMethods = serviceType.GetMethods();
-            foreach (var method in allMethods)
+            foreach (var method in serviceType.GetMethods())
             {
                 var tt = method.GetCustomAttribute(typeof(RpcMethodAttribute), false);
                 if (tt == null)

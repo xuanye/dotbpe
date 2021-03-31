@@ -115,7 +115,7 @@ namespace DotBPE.Rpc
 
             if (registryTypes.Count > 0) //注册依赖
             {
-                registryTypes.ForEach(r => ServiceActorDescriptor.ServiceDependencyRegistry(configuration, services, r));
+                registryTypes.ForEach(r => ServiceActorDescriptor.ServiceDependencyRegistry(configuration, services, r, categories));
             }
             if (actorTypes.Count > 0) //注册服务
             {

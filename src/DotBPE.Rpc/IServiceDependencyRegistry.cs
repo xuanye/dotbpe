@@ -11,6 +11,6 @@ namespace DotBPE.Rpc
     /// </summary>
     public interface IServiceDependencyRegistry
     {
-        IServiceCollection AddServiceDependency(IConfiguration configuration, IServiceCollection services);
+        IServiceCollection AddServiceDependency(IConfiguration configuration, IServiceCollection services,params string[] categories);
     }
 }
