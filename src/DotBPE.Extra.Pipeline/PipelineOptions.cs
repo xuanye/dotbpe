@@ -35,6 +35,12 @@ namespace DotBPE.Extra
 
 
         /// <summary>
+        /// 消费服务分组
+        /// </summary>
+        public string HostGroup { get; set; }
+
+
+        /// <summary>
         /// 失败重试最大次数 0不重试，默认：5
         /// </summary>
         public int RetryMaxCount { get; set; }

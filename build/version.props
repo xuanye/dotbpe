@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<RpcPackageVersion>2.1.2</RpcPackageVersion>
+		<RpcPackageVersion>2.1.3</RpcPackageVersion>
 		<BaselinePackageVersion>1.0.2</BaselinePackageVersion>
 		<ExtraCastlePackageVersion>1.0.4</ExtraCastlePackageVersion>
 		<ExtraConsulPackageVersion>1.0.1</ExtraConsulPackageVersion>
@@ -8,7 +8,7 @@
 		<ExtraJsonPackageVersion>1.0.0</ExtraJsonPackageVersion>
 		<ExtraMessagePackPackageVersion>1.0.1</ExtraMessagePackPackageVersion>
 		<ExtraProtobufPackageVersion>1.0.2</ExtraProtobufPackageVersion>		
-		<ExtraPipelinePackageVersion>1.2.0</ExtraPipelinePackageVersion>		
+		<ExtraPipelinePackageVersion>1.2.1</ExtraPipelinePackageVersion>		
 		<GatewayPackageVersion>2.0.11</GatewayPackageVersion>
 		<GatewaySwaggerPackageVersion>1.0.12</GatewaySwaggerPackageVersion>
 		<GatewaySwaggerUIPackageVersion>1.0.6</GatewaySwaggerUIPackageVersion>

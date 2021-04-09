@@ -5,7 +5,7 @@ using DotBPE.Baseline.Extensions;
 
 namespace DotBPE.Extra
 {
-    [DisplayAttribute(Name = "relic-queue-task")]
+    [DisplayAttribute(Name = "queue-task")]
     [DataContract]
     public class QueueTaskItem
     {

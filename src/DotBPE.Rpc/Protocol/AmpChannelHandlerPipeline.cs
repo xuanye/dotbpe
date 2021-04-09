@@ -18,11 +18,10 @@ namespace DotBPE.Rpc.Protocol
         }
         public Dictionary<string, IChannelHandler> BuildPipeline(bool isServer)
         {
-
-         
+            int timeOut = isServer ? AmpProtocol.HeartbeatInterval * 2 : AmpProtocol.HeartbeatInterval ;
             return new Dictionary<string, IChannelHandler> {
 
-                { "timeout", new IdleStateHandler(0, 0, AmpProtocol.HeartbeatInterval/1000*2) }, //服务端双倍来处理
+                { "timeout", new IdleStateHandler(0, 0,timeOut) }, //服务端双倍来处理
 
                 { "message-enc", new AmpEncodeHandler(this._serializer) },
                 { "framing-dec", new LengthFieldBasedFrameDecoder(

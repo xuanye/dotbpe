@@ -50,7 +50,7 @@ namespace Math.Client
 
                 Console.WriteLine("============= count:{0}",i);
             }
-
+           
             Console.WriteLine("Press any key to exit !");
             Console.ReadKey();
         }

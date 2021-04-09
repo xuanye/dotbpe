@@ -8,6 +8,7 @@
     <RpcPackageNotes>
     1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
 	2. 扫描注入的接口新增了Host绑定的服务分组参数，用于区分注册服务
+	3. 修复心跳包时长问题导致的长连接一直断开的问题
     </RpcPackageNotes>  
     <ExtraCastlePackageNotes>
     1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
@@ -26,6 +27,7 @@
     </ExtraMessagePackPackageNotes>  
     <ExtraPipelinePackageNotes>
     1.Foundatio 升级到最新版本
+	2.新增消费服务分组
     </ExtraPipelinePackageNotes>  
     <ExtraProtobufPackageNotes>
     1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
