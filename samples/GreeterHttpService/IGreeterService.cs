@@ -32,7 +32,7 @@ namespace GreeterHttpService
             var result = new RpcResult<SayHelloRes>
             {
                 Code = 0,
-                Data = new SayHelloRes {Greeting = $"Hello {req.Name},{req.Id}!" , ReturnMessage = "测试换行符\n"}
+                Data = new SayHelloRes {Greeting = $"Hello {req.Name}" , ReturnMessage = ""}
             };
 
             //throw  new Exception("测试异常");
@@ -52,12 +52,7 @@ namespace GreeterHttpService
         /// </summary>
         [DataMember(Order = 10,Name = "name")]
         public string Name { get; set; }
-
-        /// <summary>
-        /// 标识
-        /// </summary>
-        [DataMember(Order = 11,Name = "id")]
-        public int Id { get; set; }
+       
 
     }
 
@@ -81,7 +76,6 @@ namespace GreeterHttpService
          [DataMember(Order = 10,Name = "greeting")]
          public string Greeting { get; set; }
 
-        public List<SampleData> List { get; } = new List<SampleData>();
     }
 
     [DataContract]

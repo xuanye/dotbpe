@@ -79,8 +79,8 @@ namespace DotBPE.Extra
         /// <summary>
         /// 路由key,null或空时不使用该key
         /// </summary>
-        [DataMember(Name = "routeKey", Order = 8)]
-       [KeyAttribute]
+        [DataMember(Name = "routeKey", Order = 8)]       
+        [KeyAttribute]
         public string RouteKey { get; set; }
 
     }

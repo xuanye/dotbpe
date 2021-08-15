@@ -16,8 +16,7 @@ namespace GreeterHttpService
 
         static IWebHost BuildWebHost(string[] args) =>
             WebHost.CreateDefaultBuilder(args)
-                .UseUrls("http://*:5560") //HTTP绑定在5560端口
-                .UseRpcServer(port:5560)
+                .UseUrls("http://*:5560") //HTTP绑定在5560端口               
                 .UseStartup<Startup>()
                 .ConfigureLogging(builder => { builder.SetMinimumLevel(LogLevel.Warning); })
                 .Build();

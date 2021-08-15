@@ -83,7 +83,7 @@ namespace DotBPE.Extra
                         consulOptionValue.DnsEndpoint = new DnsEndpoint();
                     }
                     return new LookupClient(IPAddress.Parse(consulOptionValue.DnsEndpoint.Address),
-                        consulOptionValue.DnsEndpoint.Port){ UseCache = true};
+                        consulOptionValue.DnsEndpoint.Port);
                 })
                 .AddSingleton<IServiceDiscoveryProvider, ConsulDnsServiceDiscoveryProvider>();
             return services;

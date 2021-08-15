@@ -31,6 +31,7 @@ namespace DotBPE.Gateway
                     o.Port = port;
                     o.BindType = bindType;
                     o.AppName = appName;
+                    o.BindType = bindType;
                     //special address logical
                     if (string.IsNullOrEmpty(specialAddress)) return;
                     o.BindType = AddressBindType.SpecialAddress;
