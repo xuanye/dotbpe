@@ -16,6 +16,7 @@
     </ExtraCastlePackageNotes>  
     <ExtraConsulPackageNotes>
     1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
+    2. 升级Consul相关的依赖
     </ExtraConsulPackageNotes>  
     <ExtraJsonNetPackageNotes>
     1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
