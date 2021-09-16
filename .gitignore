@@ -66,4 +66,5 @@ cache/
 *.lnk
 *.Production.json
 .idea/
+.vscode/
 workspace.xml
