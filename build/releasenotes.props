@@ -36,13 +36,10 @@
     </ExtraProtobufPackageNotes>  
     <GatewayPackageNotes>
     1. 新增绑定到IWebHost的RPC服务,主要用于测试
-    </GatewayPackageNotes>  
-    <GatewaySwaggerPackageNotes>
-    1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
-    </GatewaySwaggerPackageNotes>  
-    <GatewaySwaggerUIPackageNotes>
-    1. 兼容NETApp3.1
-    </GatewaySwaggerUIPackageNotes>  
+    2. 重构Gateway，参考gRPC的绑定方式
+    3. 合并Swagger相关的内容到Gateway项目中
+    4. 更新自定义SwaggerUI
+    </GatewayPackageNotes>   
     <BestPracticePackageNotes>
     1.Foundatio 升级到最新版本
     </BestPracticePackageNotes> 

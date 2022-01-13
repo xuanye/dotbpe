@@ -1,15 +1,10 @@
-
-using System;
-using System.IO;
-using System.Reflection;
 using DotBPE.Extra;
-using DotBPE.Gateway;
-using DotBPE.Gateway.Swagger;
-using DotBPE.Gateway.Swagger.Generator;
-using DotBPE.Gateway.SwaggerUI;
 using DotBPE.Rpc;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using System.IO;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
 namespace GreeterHttpService
@@ -30,42 +25,39 @@ namespace GreeterHttpService
             services.BindService<GreeterService>(); //bindService
             services.BindService<SwaggerSampleService>();
 
-
-            //services.ScanBindServices(Configuration, "GreeterHttpService*", "default");
-
-            services.AddGateway("GreeterHttpService"); //add gateway and auto scan router infos
-
+            
             services.AddMessagePackSerializer(); //message pack serializer
             services.AddTextJsonParser(); // http result json parser
             services.AddDynamicClientProxy(); // aop client
             services.AddDynamicServiceProxy(); // aop service
 
-            services.AddSwagger();
+            services.AddDotBPE();
+
+            services.AddDotBPESwagger(); //DotBPE HTTPAPI && Swagger support
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
+            app.UseStaticFiles();
 
-            app.UseSwagger( config =>
+
+            app.UseRouting();
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
+            app.UseEndpoints(endpoints =>
             {
-                //config.RoutePath = "/v2/swagger.json";
-                config.ApiInfo = new SwaggerApiInfo
-                {
-                    Title = "GreetingService",
-                    Description = "测试Swagger",
-                    Version = "2.0.0"
-                };
+                endpoints.ScanMapServices();
 
-                var xmlFile = $"{Assembly.GetExecutingAssembly().GetName().Name}.xml";
-                var xmlPath = Path.Combine(AppContext.BaseDirectory, xmlFile);
-                config.IncludeXmlComments(xmlPath);
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Welcome to DotBPE RPC Service.");
+                });
             });
 
-            app.UseStaticFiles();
-            app.UseSwaggerUI(config => { config.RoutePrefix = "/swagger"; });
-            //use gateway middleware
-            app.UseGateway();
         }
     }
 }

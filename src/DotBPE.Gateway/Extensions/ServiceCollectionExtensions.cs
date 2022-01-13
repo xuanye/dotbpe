@@ -1,48 +1,75 @@
-using DotBPE.Rpc;
-using Microsoft.Extensions.DependencyInjection;
+using DotBPE.Gateway;
+using DotBPE.Gateway.Internal;
+using DotBPE.Gateway.Swagger;
+using Microsoft.AspNetCore.Mvc.Abstractions;
+using Microsoft.AspNetCore.Mvc.ApiExplorer;
+using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Logging;
-using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
 
-namespace DotBPE.Gateway
+namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
 
         /// <summary>
-        /// add gateway
+        /// Adds RPC HTTP API services to the specified <see cref="IServiceCollection" />.
         /// </summary>
-        /// <param name="services"></param>
-        /// <param name="dllPrefix">service definition dll prefix</param>
-        /// <param name="categories">banding route category，default value is ‘default’ category</param>
-        /// <returns></returns>
-        public static IServiceCollection AddGateway(this IServiceCollection services,string dllPrefix="*"
-            ,params string[] categories)
+        /// <param name="services">The <see cref="IServiceCollection"/> for adding services.</param>
+        /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
+        public static IServiceCollection AddDotBPEHttpApi(this IServiceCollection services)
         {
-            services.AddDotBPE();
-            services.TryAddSingleton<IHttpMetricFactory,DefaultHttpMetricFactory>();
-            services.TryAddSingleton<IHttpServiceScanner,HttpServiceScanner>();
-            services.ScanRouteOptions(dllPrefix, categories);
+
+            if (services == null)
+            {
+                throw new ArgumentNullException(nameof(services));
+            }
+                 
+            services.TryAddSingleton(typeof(ServiceRouteBuilder<>));
+            services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IRpcServiceMethodProvider<>), typeof(HttpApiServiceMethodProvider<>)));
+
             return services;
         }
 
-        private static IServiceCollection ScanRouteOptions(this IServiceCollection services,string dllPrefix="*"
-            ,params string[] categories)
+        /// <summary>
+        /// Adds RPC HTTP API services to the specified <see cref="IServiceCollection" />.
+        /// </summary>   
+        public static IServiceCollection AddDotBPESwagger(this IServiceCollection services, Action<SwaggerOptions> configureOptions = null)
         {
-            services.AddSingleton<IProtocolProcessor>(p =>
+            if (services == null)
             {
-                IJsonParser jsonParser = p.GetRequiredService<IJsonParser>();
-                ILogger logger = p.GetRequiredService<ILoggerFactory>().CreateLogger<IProtocolProcessor>();
-                IHttpMetricFactory metricFactory = p.GetRequiredService<IHttpMetricFactory>();
-                var parsers = p.GetServices<IAdditionalHttpParser>();
-                var scanner = p.GetRequiredService<IHttpServiceScanner>();
-                var options = scanner.Scan(dllPrefix,categories);
+                throw new ArgumentNullException(nameof(services));
+            }
 
-                var gatewayOptions = p.GetService<IOptions<RpcGatewayOptions>>();
-                return new ProtocolProcessor(jsonParser,metricFactory,options, parsers, gatewayOptions.Value??new RpcGatewayOptions(), logger);
+            services.AddDotBPEHttpApi();
+
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IApiDescriptionProvider, RpcHttpApiDescriptionProvider>());
+
+            // Register default description provider in case MVC is not registered
+            services.TryAddSingleton<IApiDescriptionGroupCollectionProvider>(serviceProvider =>
+            {
+                var actionDescriptorCollectionProvider = serviceProvider.GetService<IActionDescriptorCollectionProvider>();
+                var apiDescriptionProvider = serviceProvider.GetServices<IApiDescriptionProvider>();
+
+                return new ApiDescriptionGroupCollectionProvider(
+                    actionDescriptorCollectionProvider ?? new EmptyActionDescriptorCollectionProvider(),
+                    apiDescriptionProvider);
             });
 
+            if (configureOptions != null)
+                services.Configure(configureOptions);
+
+            services.TryAddSingleton<ISwaggerProvider, DefaultSwaggerProvider>();
+
             return services;
         }
+
+        // Dummy type that is only used if MVC is not registered in the app
+        private class EmptyActionDescriptorCollectionProvider : IActionDescriptorCollectionProvider
+        {
+            public ActionDescriptorCollection ActionDescriptors { get; } = new ActionDescriptorCollection(new List<ActionDescriptor>(), 1);
+        }
+
     }
 }

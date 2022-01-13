@@ -1,8 +1,7 @@
-using System.Threading;
 using Microsoft.AspNetCore;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Logging;
-using DotBPE.Gateway;
+using System.Threading;
 
 namespace GreeterHttpService
 {

@@ -1,7 +1,10 @@
 using DotBPE.Extra;
 using DotBPE.Gateway;
 using DotBPE.Rpc.Config;
+using MathService.Definition;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
 using IConfiguration = Microsoft.Extensions.Configuration.IConfiguration;
 
@@ -27,19 +30,30 @@ namespace MathHttpClient
                     RemoteAddress = Peach.Infrastructure.IPUtility.GetLocalIntranetIP()+":5566"
                 });
             });
-            services.AddGateway("MathService.Definition"); //add gateway and auto scan router infos
+          
 
             services.AddMessagePackSerializer(); //message pack serializer
             services.AddJsonNetParser(); // http result json parser
             services.AddDynamicClientProxy(); // aop client
             services.AddDynamicServiceProxy(); // aop service
 
+            services.AddDotBPEHttpApi();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
-            app.UseGateway();
+            app.UseRouting();
+            app.UseEndpoints(endpoints => {
+
+                endpoints.MapService<IMathService>();
+
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Welcome to DotBPE RPC Service.");
+                });
+            });
         }
     }
 }

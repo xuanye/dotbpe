@@ -12,15 +12,15 @@ namespace DotBPE.Gateway
     public static class WebHostBuilderExtensions
     {
 
-       /// <summary>
-       /// 在HTTP服务上 同时挂载Rpc服务，一般用于测试
-       /// </summary>
-       /// <param name="builder"></param>
-       /// <param name="appName"></param>
-       /// <param name="port"></param>
-       /// <param name="bindType"></param>
-       /// <param name="specialAddress"></param>
-       /// <returns></returns>
+        /// <summary>
+        /// 在HTTP服务上 同时挂载Rpc服务，一般用于测试
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <param name="appName"></param>
+        /// <param name="port"></param>
+        /// <param name="bindType"></param>
+        /// <param name="specialAddress"></param>
+        /// <returns></returns>
         public static IWebHostBuilder UseRpcServer(this IWebHostBuilder builder, string appName = "dotbpe", int port = 5566,
           AddressBindType bindType = AddressBindType.InternalAddress, string specialAddress = null)
         {
@@ -43,3 +43,4 @@ namespace DotBPE.Gateway
         }
     }
 }
+

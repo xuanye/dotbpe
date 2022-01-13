@@ -1,10 +1,9 @@
-using System;
-using System.Collections.Generic;
-using System.Runtime.Serialization;
-using System.Threading.Tasks;
 using DotBPE.Gateway;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Server;
+using System.Collections.Generic;
+using System.Runtime.Serialization;
+using System.Threading.Tasks;
 
 namespace GreeterHttpService
 {

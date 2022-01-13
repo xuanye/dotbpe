@@ -2,6 +2,8 @@ using DotBPE.Extra;
 using DotBPE.Gateway;
 using DotBPE.Rpc;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using PipelineSample.Services;
@@ -25,7 +27,8 @@ namespace PipelineSample
             services.BindService<FooService>(); //bindService          
             services.BindService<QueueTaskService>();
 
-            services.AddGateway("PipelineSample"); //add gateway and auto scan router infos
+
+            services.AddDotBPE();
 
             services.AddMessagePackSerializer(); //message pack serializer
             services.AddTextJsonParser(); // http result json parser
@@ -44,12 +47,28 @@ namespace PipelineSample
             var redis = ConnectionMultiplexer.Connect(redisString);
             services.AddSingleton(redis);
 
+            services.AddDotBPESwagger();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app)
         {
-            app.UseGateway();
+
+            app.UseRouting();
+
+            app.UseSwagger();
+            app.UseSwaggerUI();
+
+            app.UseEndpoints(endpoints =>
+            {
+                endpoints.ScanMapServices("PipelineSample");
+
+                endpoints.MapGet("/", async context =>
+                {
+                    await context.Response.WriteAsync("Welcome to DotBPE RPC Service.");
+                });
+            });
         }
     }
 }

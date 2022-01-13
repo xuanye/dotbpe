@@ -1,7 +1,7 @@
 using System.Linq;
-using Microsoft.AspNetCore.Http;
 
-namespace DotBPE.Gateway
+
+namespace Microsoft.AspNetCore.Http
 {
     public static class HttpRequestExtensions
     {
