@@ -9,7 +9,7 @@
 		<ExtraMessagePackPackageVersion>1.0.1</ExtraMessagePackPackageVersion>
 		<ExtraProtobufPackageVersion>1.0.2</ExtraProtobufPackageVersion>		
 		<ExtraPipelinePackageVersion>1.2.1</ExtraPipelinePackageVersion>		
-		<GatewayPackageVersion>2.1.0</GatewayPackageVersion>	
+		<GatewayPackageVersion>2.1.1</GatewayPackageVersion>	
 		<BestPracticePackageVersion>1.1.0</BestPracticePackageVersion>	
 	</PropertyGroup>
 </Project>
