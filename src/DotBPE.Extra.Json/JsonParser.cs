@@ -20,7 +20,7 @@ namespace DotBPE.Extra
 
         public string ToJson<T>(T item) where T : class
         {
-            return JsonSerializer.Serialize<T>(item, serializeOptions);
+            return JsonSerializer.Serialize<object>(item, serializeOptions);
         }
 
         public object FromJson(string json, Type type)
