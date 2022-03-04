@@ -14,6 +14,7 @@ namespace DotBPE.Gateway
 {
     internal class HttpApiProviderServiceBinder<TService> where TService : class
     {
+        private readonly RpcGatewayOption _gatewayOption;
         private readonly RpcServiceMethodProviderContext<TService> _context;
         private readonly IClientProxy _clientProxy;
         private readonly IJsonParser _jsonParser;
@@ -24,14 +25,16 @@ namespace DotBPE.Gateway
 
         private readonly MethodInfo _dynamicCreateGenericMethod;
         private readonly MethodInfo _dynamicAddGenericMethod;
-        public HttpApiProviderServiceBinder(
+        public HttpApiProviderServiceBinder(           
             RpcServiceMethodProviderContext<TService> context,
+            RpcGatewayOption gatewayOption,
             IClientProxy clientProxy,
             IJsonParser jsonParser,
             ILoggerFactory loggerFactory
          )
         {
             _serviceType = typeof(TService);
+            _gatewayOption = gatewayOption;
             _context = context;
             _clientProxy = clientProxy;
             _jsonParser = jsonParser;
@@ -174,7 +177,7 @@ namespace DotBPE.Gateway
 
                     var methodInvoker = new RpcServiceMethodInvoker<TService, TRequest, TResponse>(invoker,null,0, method, methodContext, _clientProxy);
 
-                    var unaryServerCallHandler = new RpcServiceCallHandler<TService, TRequest, TResponse>(methodInvoker, _jsonParser, httpApiOptions, _loggerFactory);
+                    var unaryServerCallHandler = new RpcServiceCallHandler<TService, TRequest, TResponse>(_gatewayOption, methodInvoker, _jsonParser, httpApiOptions, _loggerFactory);
 
                     _context.AddMethod<TRequest, TResponse>(method, routePattern, metadata, unaryServerCallHandler.HandleCallAsync);
                 }
@@ -185,7 +188,7 @@ namespace DotBPE.Gateway
 
                     var methodInvoker = new RpcServiceMethodInvoker<TService, TRequest, TResponse>(null, invokerWithTimeout, (int)parameters[1].DefaultValue, method, methodContext, _clientProxy);
 
-                    var unaryServerCallHandler = new RpcServiceCallHandler<TService, TRequest, TResponse>(methodInvoker, _jsonParser, httpApiOptions, _loggerFactory);
+                    var unaryServerCallHandler = new RpcServiceCallHandler<TService, TRequest, TResponse>(_gatewayOption, methodInvoker, _jsonParser, httpApiOptions, _loggerFactory);
 
                     _context.AddMethod<TRequest, TResponse>(method, routePattern, metadata, unaryServerCallHandler.HandleCallAsync);
                 }

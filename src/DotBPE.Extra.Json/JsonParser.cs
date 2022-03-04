@@ -9,28 +9,33 @@ namespace DotBPE.Extra
 {
     public class TextJsonParser : IJsonParser
     {
-        static readonly JsonSerializerOptions serializeOptions = new JsonSerializerOptions
+        private static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
         {
-           IgnoreNullValues =true            
+            IgnoreNullValues = true,
+            PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
+            WriteIndented = false,
+            IgnoreReadOnlyProperties = false,
+            AllowTrailingCommas = false
         };
+      
         public string ToJson(object item)
         {
-            return JsonSerializer.Serialize(item, serializeOptions);
+            return JsonSerializer.Serialize(item, JsonSerializerOptions);
         }
 
         public string ToJson<T>(T item) where T : class
         {
-            return JsonSerializer.Serialize<object>(item, serializeOptions);
+            return JsonSerializer.Serialize<object>(item, JsonSerializerOptions);
         }
 
         public object FromJson(string json, Type type)
         {
-            return JsonSerializer.Deserialize(json, type, serializeOptions);
+            return JsonSerializer.Deserialize(json, type, JsonSerializerOptions);
         }
 
         public T FromJson<T>(string json) where T : class
         {
-            return JsonSerializer.Deserialize<T>(json, serializeOptions);
+            return JsonSerializer.Deserialize<T>(json, JsonSerializerOptions);
         }
 
     }

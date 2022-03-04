@@ -25,7 +25,8 @@ namespace Microsoft.Extensions.DependencyInjection
             {
                 throw new ArgumentNullException(nameof(services));
             }
-                 
+
+            services.TryAddSingleton(new RpcGatewayOption());
             services.TryAddSingleton(typeof(ServiceRouteBuilder<>));
             services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IRpcServiceMethodProvider<>), typeof(HttpApiServiceMethodProvider<>)));
 

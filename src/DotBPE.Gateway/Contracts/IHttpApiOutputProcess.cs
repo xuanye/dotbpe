@@ -1,3 +1,4 @@
+using DotBPE.Rpc;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,6 @@ namespace DotBPE.Gateway
 {
     public interface IHttpApiOutputProcess
     {
-        Task<(bool processed, object newResponseBody)> ProcessAsync(HttpResponse response, Encoding encoding, object responseBody);
+        Task<bool> ProcessAsync(HttpResponse response, Encoding encoding, RpcResult result);
     }
 }

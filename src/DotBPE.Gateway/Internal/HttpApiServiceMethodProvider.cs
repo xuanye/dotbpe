@@ -10,16 +10,20 @@ namespace DotBPE.Gateway
 {
     internal class HttpApiServiceMethodProvider<TService> : IRpcServiceMethodProvider<TService> where TService : class
     {
+       
+        private readonly RpcGatewayOption _gatewayOption;
         private readonly IClientProxy _clientProxy;
         private readonly IJsonParser _jsonParser;
         private readonly ILoggerFactory _loggerFactory;  
 
         public HttpApiServiceMethodProvider(
+            RpcGatewayOption gatewayOption,
            IClientProxy clientProxy
            ,IJsonParser jsonParser
            , ILoggerFactory loggerFactory        
            )
         {
+            _gatewayOption = gatewayOption;
             _clientProxy = clientProxy;
             _jsonParser = jsonParser;
             _loggerFactory = loggerFactory;          
@@ -30,7 +34,7 @@ namespace DotBPE.Gateway
         {
             try
             {
-                var binder = new HttpApiProviderServiceBinder<TService>(context, _clientProxy, _jsonParser,_loggerFactory);
+                var binder = new HttpApiProviderServiceBinder<TService>(context, _gatewayOption, _clientProxy, _jsonParser,_loggerFactory);
                 binder.BindAll();
             }
             catch (Exception ex)

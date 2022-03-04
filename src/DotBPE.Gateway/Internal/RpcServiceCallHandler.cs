@@ -17,6 +17,7 @@ namespace DotBPE.Gateway.Internal
        where TRequest : class
        where TResponse : class
     {
+        private readonly RpcGatewayOption _gatewayOption;
         private readonly RpcServiceMethodInvoker<TService, TRequest, TResponse> _serviceMethodInvoker;
      
         private readonly IJsonParser _jsonParser;
@@ -29,12 +30,14 @@ namespace DotBPE.Gateway.Internal
         private readonly HttpApiOptions _httpApiOption;
 
         public RpcServiceCallHandler(
-            RpcServiceMethodInvoker<TService, TRequest, TResponse> serviceMethodInvoker
+            RpcGatewayOption gatewayOption
+           ,RpcServiceMethodInvoker<TService, TRequest, TResponse> serviceMethodInvoker
            ,IJsonParser jsonParser
            ,HttpApiOptions httpApiOption
            ,ILoggerFactory loggerFactory
            )
         {
+            _gatewayOption = gatewayOption;
             _serviceMethodInvoker = serviceMethodInvoker;
             _jsonParser = jsonParser;
           
@@ -116,9 +119,9 @@ namespace DotBPE.Gateway.Internal
                 return;
             }
 
-            if (result == null || result.Code != 0)
+            if (result == null)
             {               
-                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, "Unknown Error", StatusCode.Unknown );
+                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, "Unknown Error", StatusCode.Unknown);
                 return;
             }
 
@@ -263,13 +266,14 @@ namespace DotBPE.Gateway.Internal
             }
         }
 
-        private async Task SendResponse(IHttpApiOutputProcess outputProcess, IHttpPlugin plugin, HttpResponse response, Encoding encoding, RpcResult<TResponse> message)
+        private async Task SendResponse(IHttpApiOutputProcess outputProcess, IHttpPlugin plugin, HttpResponse response, Encoding encoding, RpcResult<TResponse> result)
+
         {
-            object responseBody = message;
+            object responseBody = result.Data;
             var processed = false;
             if (plugin != null && plugin is IHttpOutputProcessPlugin outputProcessPlugin)
             {
-                processed = await outputProcessPlugin.ProcessAsync(response, encoding, responseBody);
+                processed = await outputProcessPlugin.ProcessAsync(response, encoding, result);
             }
             if (processed)
             {
@@ -278,7 +282,7 @@ namespace DotBPE.Gateway.Internal
 
             if (outputProcess != null)
             {
-                (processed, responseBody) = await outputProcess.ProcessAsync(response, encoding, responseBody);
+                processed = await outputProcess.ProcessAsync(response, encoding, result);
             }
             if (processed)
             {
@@ -287,7 +291,7 @@ namespace DotBPE.Gateway.Internal
             response.StatusCode = StatusCodes.Status200OK;
             response.ContentType = "application/json";
 
-            await WriteResponseMessage(response, encoding, responseBody);
+            await WriteResponseMessage(response, encoding, result);
         }
 
         private async Task SendErrorResponse(IHttpApiErrorProcess errorProcess, HttpResponse response, Encoding encoding, string errorMessage,StatusCode statusCode)
@@ -306,17 +310,51 @@ namespace DotBPE.Gateway.Internal
                 return;
             }
 
-            response.StatusCode = MapStatusCodeToHttpStatus(e.ErrorCode);
+            response.StatusCode = StatusCodes.Status500InternalServerError;
             response.ContentType = "application/json";
 
-            await WriteResponseMessage(response, encoding, e);
+            await WriteResponseMessage(response, encoding, new RpcResult<Error>() { Code = (int)statusCode, Data = e});
         }
+      
 
-        private async Task WriteResponseMessage(HttpResponse response, Encoding encoding, object responseBody)
+        private async Task WriteResponseMessage<T>(HttpResponse response, Encoding encoding, RpcResult<T> result) where T :class
         {
+           
             using (var writer = new HttpResponseStreamWriter(response.Body, encoding))
             {
-                await writer.WriteAsync(_jsonParser.ToJson(responseBody));              
+                await writer.WriteAsync("{\"");
+                await writer.WriteAsync(_gatewayOption.CodeFieldName);
+                await writer.WriteAsync("\":");
+                await writer.WriteAsync(result.Code.ToString());
+                await writer.WriteAsync(",\"");
+                await writer.WriteAsync(_gatewayOption.MessageFieldName);
+                await writer.WriteAsync("\":\"");
+
+                var message = ExtractMessage(result.Data);
+                if (!string.IsNullOrEmpty(message))
+                {
+                    await writer.WriteAsync(message.Replace("\n", "\\n"));
+                }
+                else
+                {
+                    await writer.WriteAsync("");
+                }
+                await writer.WriteAsync("\"");
+
+                if(result.Data != null)
+                {
+                    await writer.WriteAsync(",\"");
+                    await writer.WriteAsync(_gatewayOption.DataFieldName);
+                    await writer.WriteAsync("\":");                 
+                    await writer.WriteAsync(_jsonParser.ToJson(result.Data));
+                }
+                else
+                {
+                    await writer.WriteAsync(",\"");
+                    await writer.WriteAsync(_gatewayOption.DataFieldName);
+                    await writer.WriteAsync("\":{}");
+                }
+                await writer.WriteAsync("}");
 
                 // Perf: call FlushAsync to call WriteAsync on the stream with any content left in the TextWriter's
                 // buffers. This is better than just letting dispose handle it (which would result in a synchronous
@@ -324,6 +362,25 @@ namespace DotBPE.Gateway.Internal
                 await writer.FlushAsync();
             }
         }
+        private string ExtractMessage(object data)
+        {
+            if (data != null)
+            {
+                var p = data.GetType().GetProperty("ReturnMessage");
+
+                if(p == null)
+                {
+                    p = data.GetType().GetProperty("Message");
+                }
+                if (p != null && p.PropertyType == typeof(string))
+                {
+                    var objValue = p.GetValue(data);
+                    return  objValue != null ? objValue.ToString() : "";
+                }
+            }
+            return null;
+        }
+
 
         private static int MapStatusCodeToHttpStatus(StatusCode statusCode)
         {
