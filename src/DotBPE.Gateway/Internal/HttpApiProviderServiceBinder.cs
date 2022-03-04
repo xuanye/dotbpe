@@ -54,10 +54,10 @@ namespace DotBPE.Gateway
             if (sAttr == null)
                 return;
 
-            AddRpcService( sAttr, new string[] {});
+            AddRpcService( sAttr);
         }
 
-        private void AddRpcService(RpcServiceAttribute sAttr, params string[] categories)
+        private void AddRpcService(RpcServiceAttribute sAttr)
         {
             var methods = _serviceType.GetMethods();
             foreach (var m in methods)
@@ -86,14 +86,9 @@ namespace DotBPE.Gateway
                     continue;
                 }
                 var responseType = returnGenericTypes.GetGenericArguments()[0];
-                
-                if ((categories != null && categories.Any() && categories.Contains(rAttr.Category))
-                    || "default".Equals(rAttr.Category, StringComparison.OrdinalIgnoreCase)
-                    )
-                {
-                    DynamicAddMethod(m, sAttr, mAttr, rAttr, requestType, responseType);
-                }
-              
+
+                DynamicAddMethod(m, sAttr, mAttr, rAttr, requestType, responseType);
+
             }
         }
         private void DynamicAddMethod(MethodInfo m, RpcServiceAttribute sAttr, RpcMethodAttribute mAttr, RouterAttribute rAttr, Type requestType, Type responseType)
