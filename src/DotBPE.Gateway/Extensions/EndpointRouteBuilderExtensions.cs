@@ -1,5 +1,7 @@
 using DotBPE.Gateway.Internal;
 using DotBPE.Rpc;
+using DotBPE.Rpc.Protocol;
+using DotBPE.Rpc.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
@@ -40,8 +42,9 @@ namespace Microsoft.AspNetCore.Routing
             return new RpcServiceEndpointConventionBuilder(endpointConventionBuilders);
         }
 
-        public static void ScanMapServices(this IEndpointRouteBuilder builder, string dllPrefix = "*", params string[] categories)
+        public static void ScanMapServices(this IEndpointRouteBuilder builder, params string[] categories)
         {
+            
             //builder.ServiceProvider 
             var loggerFactory =  builder.ServiceProvider.GetRequiredService<ILoggerFactory>();         
             Environment.SetServiceProvider(builder.ServiceProvider);
@@ -50,26 +53,14 @@ namespace Microsoft.AspNetCore.Routing
 
             var logger=  loggerFactory.CreateLogger("RouteBuilder");
 
-            string basePath = DotBPE.Rpc.Internal.Environment.GetAppBasePath();
 
-            var dllFiles = Directory.GetFiles(string.Concat(basePath, ""), $"{dllPrefix}.dll");
+            var serviceActors = builder.ServiceProvider.GetServices<IServiceActor<AmpMessage>>();
 
-            logger.LogInformation("dll count={0}", dllFiles.Length);
-
-
-            List<Assembly> assemblies = new List<Assembly>();
-            foreach (var file in dllFiles)
+            foreach(var actor in serviceActors)
             {
+                 var interfaces = actor.GetType().GetInterfaces();
 
-                assemblies.Add(Assembly.LoadFrom(file));
-            }
-
-            logger.LogInformation("assembly count={0}", assemblies.Count);
-
-            foreach (var a in assemblies)
-            {
-                //Console.WriteLine(a.FullName);
-                foreach (var type in a.GetTypes())
+                foreach (var type in interfaces)
                 {
 
                     if (!type.IsInterface)
@@ -79,16 +70,15 @@ namespace Microsoft.AspNetCore.Routing
                     var sAttr = type.GetCustomAttribute<RpcServiceAttribute>();
                     if (sAttr == null)
                         continue;
-
-                    if ( categories.Any() && categories.Contains(sAttr.GroupName)
-                        || "default".Equals(sAttr.GroupName, StringComparison.OrdinalIgnoreCase)
-                        )
+                   
+                    if (( categories.Any() && categories.Contains(sAttr.GroupName)) || "default".Equals(sAttr.GroupName,StringComparison.OrdinalIgnoreCase))
                     {
                         builder.MapService(type);
-                    }
-                   
+                    }  
+                  
                 }
             }
+          
         }
 
  
