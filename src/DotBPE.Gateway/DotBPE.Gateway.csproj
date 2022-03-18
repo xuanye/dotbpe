@@ -9,7 +9,7 @@
     <Owners>Xuanye Wong</Owners>
     <Authors>Xuanye Wong</Authors>
     <PackageTags>microservice,dotnet,peach,rpc,dotbpe</PackageTags>
-    <PackageIconUrl>https://raw.githubusercontent.com/dotbpe/dotbpe/master/icon.png</PackageIconUrl>
+    <PackageIcon>icon.png</PackageIcon>
     <Title>dotbpe.rpc is a lightweight and high performance, easy to learn rpc framework</Title>
     <Description>dotbpe.rpc is a lightweight and high performance, easy to learn rpc framework</Description>
     <PackageProjectUrl>https://github.com/dotbpe/dotbpe</PackageProjectUrl>
@@ -28,4 +28,8 @@
     <ItemGroup>
         <EmbeddedResource Include="Swagger/UI/**/*" />
     </ItemGroup>
+    <ItemGroup>      
+        <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
+    </ItemGroup>
+    
 </Project>

@@ -17,6 +17,10 @@ namespace DotBPE.Gateway.Internal
        where TRequest : class
        where TResponse : class
     {
+        private const string ClientIpPropertyName = "ClientIp"; 
+        private const string IdentityPropertyName = "Identity";
+        private const string RequestIdPropertyName = "XRequestId";
+
         private readonly RpcGatewayOption _gatewayOption;
         private readonly RpcServiceMethodInvoker<TService, TRequest, TResponse> _serviceMethodInvoker;
      
@@ -61,61 +65,65 @@ namespace DotBPE.Gateway.Internal
             var selectedEncoding = ResponseEncoding.SelectCharacterEncoding(httpContext.Request);
 
 
-            if (plugin != null && plugin is IHttpProcessPlugin processPlugin)
-            {
-                await processPlugin.ProcessAsync(httpContext.Request, httpContext.Response);
-                return;
-            }
-
-            (object, StatusCode, string) tuple;
-            if (plugin != null && plugin is IHttpRequestParsePlugin parsePlugin)
-            {
-                //replace request message parse
-                tuple = await parsePlugin.ParseAsync(httpContext.Request);
-            }
-            else
-            {
-                try
+            RpcResult<TResponse> result;
+            try
+            { 
+                if (plugin != null && plugin is IHttpProcessPlugin processPlugin)
                 {
-                    tuple = await CreateMessage(httpContext.Request);
+                    var processedResult = await processPlugin.ProcessAsync(httpContext.Request, httpContext.Response);
+                    if( processedResult != null)
+                    {
+                        if (processedResult is TResponse resMsg)
+                        {
+                            result =new RpcResult<TResponse>() {  Data = resMsg };
+                            await SendResponse(outputProcess, plugin, httpContext, selectedEncoding, result);
+                        }
+                    }
+                    return;
                 }
-                catch (Exception ex)
+
+                (object, StatusCode, string) tuple;
+                if (plugin != null && plugin is IHttpRequestParsePlugin parsePlugin)
                 {
-                    tuple = (null, StatusCode.InvalidArgument, ex.Message);
+                    //replace request message parse
+                    tuple = await parsePlugin.ParseAsync(httpContext.Request);
                 }
-               
-            }
+                else
+                {                   
+                    tuple = await CreateMessage(httpContext.Request);                 
+                }
 
 
-            var (requestMessage, requestStatusCode, errorMessage) = tuple;
-
-            if (requestMessage == null || requestStatusCode != StatusCode.OK)
-            {
-                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, errorMessage ?? string.Empty, requestStatusCode);
-                return;
-            }
-
-            //post parse
-            if (plugin != null && plugin is IHttpRequestParsePostPlugin parsePostPlugin)
-            {
-                (requestStatusCode, errorMessage) = await parsePostPlugin.ParseAsync(httpContext.Request, requestMessage);
+                var (requestMessage, requestStatusCode, errorMessage) = tuple;
 
                 if (requestMessage == null || requestStatusCode != StatusCode.OK)
                 {
                     await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, errorMessage ?? string.Empty, requestStatusCode);
                     return;
                 }
-            }
 
-            RpcResult<TResponse> result;
-            try
-            {
+                //post parse
+                if (plugin != null && plugin is IHttpRequestParsePostPlugin parsePostPlugin)
+                {
+                    (requestStatusCode, errorMessage) = await parsePostPlugin.ParseAsync(httpContext.Request, requestMessage);
+
+                    if (requestMessage == null || requestStatusCode != StatusCode.OK)
+                    {
+                        await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, errorMessage ?? string.Empty, requestStatusCode);
+                        return;
+                    }
+                }
+
+                //ParseCommonParams
+                ParseCommonParams(httpContext.Request, requestMessage);
+
+                //invoke method
                 result = await _serviceMethodInvoker.Invoke(httpContext, (TRequest)requestMessage);
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, "Exception was thrown by handler.", StatusCode.Internal);
+                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, ex.Message , StatusCode.Internal);
                 return;
             }
 
@@ -125,10 +133,41 @@ namespace DotBPE.Gateway.Internal
                 return;
             }
 
-            await SendResponse(outputProcess, plugin, httpContext.Response, selectedEncoding, result);
+            await SendResponse(outputProcess, plugin, httpContext, selectedEncoding, result);
         }
 
-     
+
+        private void ParseCommonParams(HttpRequest request,object requestMsg)
+        {          
+
+            var clientIp = request.GetClientIp();
+            var xRequestId = string.Empty;
+            SetValue(requestMsg, ClientIpPropertyName, clientIp);
+            if (request.Headers.TryGetValue("X-Request-Id",out var requestId))
+            {
+                xRequestId = requestId.ToString();
+            }
+            else
+            {
+                xRequestId = Guid.NewGuid().ToString("N");
+            }
+            SetValue(requestMsg, IdentityPropertyName, xRequestId);
+            if (request.HttpContext.User.Identity.IsAuthenticated)
+            {
+                SetValue(requestMsg,IdentityPropertyName,request.HttpContext.User.Identity.Name);
+            }
+            else
+            {
+                SetValue(requestMsg, IdentityPropertyName, "");
+            }
+
+        }
+
+        private void SetValue(object obj,string propertyName, object value)
+        {
+            var property = obj.GetType().GetProperty(propertyName);
+            property?.SetValue(obj, value);
+        }
 
         private async Task<(object requestMessage, StatusCode statusCode, string errorMessage)> CreateMessage(HttpRequest request)
         {
@@ -266,14 +305,13 @@ namespace DotBPE.Gateway.Internal
             }
         }
 
-        private async Task SendResponse(IHttpApiOutputProcess outputProcess, IHttpPlugin plugin, HttpResponse response, Encoding encoding, RpcResult<TResponse> result)
-
+        private async Task SendResponse(IHttpApiOutputProcess outputProcess, IHttpPlugin plugin, HttpContext context, Encoding encoding, RpcResult<TResponse> result)
         {
-            object responseBody = result.Data;
+            
             var processed = false;
             if (plugin != null && plugin is IHttpOutputProcessPlugin outputProcessPlugin)
             {
-                processed = await outputProcessPlugin.ProcessAsync(response, encoding, result);
+                processed = await outputProcessPlugin.ProcessAsync(context.Request, context.Response, encoding, result);
             }
             if (processed)
             {
@@ -282,16 +320,16 @@ namespace DotBPE.Gateway.Internal
 
             if (outputProcess != null)
             {
-                processed = await outputProcess.ProcessAsync(response, encoding, result);
+                processed = await outputProcess.ProcessAsync(context.Request,context.Response, encoding, result);
             }
             if (processed)
             {
                 return;
             }
-            response.StatusCode = StatusCodes.Status200OK;
-            response.ContentType = "application/json";
+            context.Response.StatusCode = StatusCodes.Status200OK;
+            context.Response.ContentType = "application/json";
 
-            await WriteResponseMessage(response, encoding, result);
+            await WriteResponseMessage(context.Response, encoding, result);
         }
 
         private async Task SendErrorResponse(IHttpApiErrorProcess errorProcess, HttpResponse response, Encoding encoding, string errorMessage,StatusCode statusCode)
@@ -333,7 +371,7 @@ namespace DotBPE.Gateway.Internal
                 var message = ExtractMessage(result.Data);
                 if (!string.IsNullOrEmpty(message))
                 {
-                    await writer.WriteAsync(message.Replace("\n", "\\n"));
+                    await writer.WriteAsync(message.Replace("\r", "\\r").Replace("\n","\\n"));
                 }
                 else
                 {
@@ -345,8 +383,17 @@ namespace DotBPE.Gateway.Internal
                 {
                     await writer.WriteAsync(",\"");
                     await writer.WriteAsync(_gatewayOption.DataFieldName);
-                    await writer.WriteAsync("\":");                 
-                    await writer.WriteAsync(_jsonParser.ToJson(result.Data));
+                    await writer.WriteAsync("\":");
+
+                    string jsonData = _jsonParser.ToJson(result.Data);
+                    if (string.IsNullOrEmpty(jsonData))
+                    {
+                        await writer.WriteAsync("{}");
+                    }
+                    else
+                    {
+                        await writer.WriteAsync(jsonData);
+                    }                   
                 }
                 else
                 {

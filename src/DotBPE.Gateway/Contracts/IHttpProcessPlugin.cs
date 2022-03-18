@@ -1,3 +1,4 @@
+using DotBPE.Rpc;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Collections.Generic;
@@ -8,6 +9,6 @@ namespace DotBPE.Gateway
 {
     public interface IHttpProcessPlugin: IHttpPlugin
     {
-        Task ProcessAsync(HttpRequest req, HttpResponse res);
+        Task<object> ProcessAsync(HttpRequest req, HttpResponse res);
     }
 }

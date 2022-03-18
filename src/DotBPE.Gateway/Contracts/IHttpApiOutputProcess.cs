@@ -9,6 +9,6 @@ namespace DotBPE.Gateway
 {
     public interface IHttpApiOutputProcess
     {
-        Task<bool> ProcessAsync(HttpResponse response, Encoding encoding, RpcResult result);
+        Task<bool> ProcessAsync(HttpRequest request,HttpResponse response, Encoding encoding, RpcResult result);
     }
 }

@@ -5,7 +5,7 @@ namespace Microsoft.AspNetCore.Http
 {
     public static class HttpRequestExtensions
     {
-        public static string GetUserIp(this HttpRequest request)
+        public static string GetClientIp(this HttpRequest request)
         {
             var ip = request.Headers["X-Forwarded-For"].FirstOrDefault();
 

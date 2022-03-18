@@ -30,11 +30,9 @@ namespace DotBPE.Extra
             this._generator = serviceProvider.GetRequiredService<IProxyGenerator>();
         }
 
-
-
         private IInterceptor ActorInterceptor =>
-            this._interceptor ??
-            (this._interceptor = this._provider.GetRequiredService<ServiceActorInterceptor>());
+            _interceptor ??
+            (_interceptor = _provider.GetRequiredService<ServiceActorInterceptor>());
 
 
         protected override IServiceActor<AmpMessage> GetFromCache(string cacheKey)
@@ -67,12 +65,12 @@ namespace DotBPE.Extra
         {
             if (_proxy_not_found_actor != null)
             {
-                return this._proxy_not_found_actor;
+                return _proxy_not_found_actor;
             }
 
             var actor = base.GetNotFoundActor();
-            this._proxy_not_found_actor = this._generator.CreateInterfaceProxyWithTarget(actor, ActorInterceptor);
-            return this._proxy_not_found_actor;
+            _proxy_not_found_actor = _generator.CreateInterfaceProxyWithTarget(actor, ActorInterceptor);
+            return _proxy_not_found_actor;
         }
     }
 
