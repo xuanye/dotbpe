@@ -1,3 +1,4 @@
+using System.Diagnostics;
 using Castle.DynamicProxy;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Server;
@@ -17,6 +18,8 @@ namespace DotBPE.Extra
 
         public void Intercept(IInvocation invocation)
         {
+            Debug.Assert(invocation.Method.DeclaringType != null, "invocation.Method.DeclaringType != null");
+
             var serviceNameArr = invocation.Method.DeclaringType.Name.Split('`');
             var methodFullName = $"{serviceNameArr[0]}.{invocation.Method.Name}";
 

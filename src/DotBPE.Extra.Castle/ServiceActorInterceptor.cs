@@ -7,19 +7,19 @@ using Microsoft.Extensions.DependencyInjection;
 namespace DotBPE.Extra
 {
     public class ServiceActorInterceptor:IInterceptor
-    {     
+    {
 
         private readonly IContextAccessor _contextAccessor;
 
         public ServiceActorInterceptor(IServiceProvider provider)
-        { 
-            _contextAccessor = provider.GetService<IContextAccessor>();           
+        {
+            _contextAccessor = provider.GetService<IContextAccessor>();
         }
 
 
         public void Intercept(IInvocation invocation)
         {
-                     
+
             if (_contextAccessor != null)
             {
                 if (_contextAccessor.CallContext == null)
@@ -30,13 +30,13 @@ namespace DotBPE.Extra
             }
 
             try
-            {               
+            {
                 invocation.Proceed();
             }
             finally
             {
                _contextAccessor?.CallContext.CloseDef();
-            }            
-        }      
+            }
+        }
     }
 }

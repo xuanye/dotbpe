@@ -10,23 +10,23 @@ namespace DotBPE.Gateway
 {
     internal class HttpApiServiceMethodProvider<TService> : IRpcServiceMethodProvider<TService> where TService : class
     {
-       
+
         private readonly RpcGatewayOption _gatewayOption;
         private readonly IClientProxy _clientProxy;
         private readonly IJsonParser _jsonParser;
-        private readonly ILoggerFactory _loggerFactory;  
+        private readonly ILoggerFactory _loggerFactory;
 
         public HttpApiServiceMethodProvider(
             RpcGatewayOption gatewayOption,
            IClientProxy clientProxy
            ,IJsonParser jsonParser
-           , ILoggerFactory loggerFactory        
+           , ILoggerFactory loggerFactory
            )
         {
             _gatewayOption = gatewayOption;
             _clientProxy = clientProxy;
             _jsonParser = jsonParser;
-            _loggerFactory = loggerFactory;          
+            _loggerFactory = loggerFactory;
         }
 
 
@@ -41,7 +41,7 @@ namespace DotBPE.Gateway
             {
                 throw new InvalidOperationException($"Error binding RPC service To HttpApi '{typeof(TService).Name}'.", ex);
             }
-              
+
         }
     }
 }

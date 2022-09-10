@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 using DotBPE.Rpc.Codec;
@@ -12,13 +13,11 @@ using Environment = DotBPE.Rpc.Internal.Environment;
 
 namespace DotBPE.Rpc.Server
 {
-    public class BaseService<TInterFace> : AbsServiceActor where TInterFace : class
+    public class BaseService<TService> : AbsServiceActor where TService : class
     {
-        static ConcurrentDictionary<string, MethodInfo> METHOD_CACHE = new ConcurrentDictionary<string, MethodInfo>();
-
         protected BaseService()
         {
-            var serviceType = typeof(TInterFace);
+            var serviceType = typeof(TService);
 
             var serviceAttribute = GetServiceAttribute(serviceType);
 
@@ -67,20 +66,18 @@ namespace DotBPE.Rpc.Server
         {
             foreach (var method in serviceType.GetMethods())
             {
-                var tt = method.GetCustomAttribute(typeof(RpcMethodAttribute), false);
-                if (tt == null)
+                var methodAttr = method.GetCustomAttribute<RpcMethodAttribute>( false);
+                if (methodAttr == null)
                 {
                     continue;
                 }
-                var methodAttr = tt as RpcMethodAttribute;
-                METHOD_CACHE.TryAdd($"{ServiceId}${methodAttr.MessageId}", method);
+                MethodDescriptorHelper.TryAdd($"{ServiceId}${methodAttr.MessageId}", method);
             }
         }
 
-        private RpcServiceAttribute GetServiceAttribute(Type serviceType)
+        private static RpcServiceAttribute GetServiceAttribute(Type serviceType)
         {
-            var serviceAttribute = serviceType.GetCustomAttribute(
-                typeof(RpcServiceAttribute), false) as RpcServiceAttribute;
+            var serviceAttribute = serviceType.GetCustomAttribute<RpcServiceAttribute>(false);
             if (serviceAttribute == null)
             {
                 throw new InvalidOperationException($"Miss RpcServiceAttribute at {serviceType}");
@@ -92,10 +89,11 @@ namespace DotBPE.Rpc.Server
 
         private Task<RpcResult<object>> InvokeInner(MethodInfo method, ISocketContext<AmpMessage> context, params object[] args)
         {
+            Debug.Assert(method.DeclaringType != null, "method.DeclaringType != null");
+
             var serviceNameArr = method.DeclaringType.Name.Split('`');
             var methodFullName = $"{serviceNameArr[0]}.{method.Name}";
 
-            //TODO:这里可以做服务端拦截
             using (var logger = this.AuditLoggerFactory.GetLogger(methodFullName))
             {
                 logger.SetParameter(args[0]);
@@ -110,6 +108,7 @@ namespace DotBPE.Rpc.Server
         /// <summary>
         ///  Remote Call
         /// </summary>
+        /// <param name="context"></param>
         /// <param name="req"></param>
         /// <returns></returns>
         protected override async Task<AmpMessage> ProcessAsync(ISocketContext<AmpMessage> context, AmpMessage req)
@@ -118,17 +117,17 @@ namespace DotBPE.Rpc.Server
             resMsg.Sequence = req.Sequence;
             resMsg.CodecType = (CodecType)Enum.ToObject(typeof(CodecType), Serializer.CodecType);
 
-            string key = $"{req.ServiceId}${req.MessageId}";
-            if (METHOD_CACHE.TryGetValue(key, out var m))
+            var key = $"{req.ServiceId}${req.MessageId}";
+            if (MethodDescriptorHelper.TryGetValue(key, out var m))
             {
                 var parameterInfos = m.GetParameters();
                 if (parameterInfos.Length < 1 || parameterInfos.Length > 2)
                 {
-                    new RpcException("rpc method parameters count error,must be [1,2]");
+                    throw new RpcException("rpc method parameters count error,must be [1,2]");
                 }
 
-                object arg1 = Serializer.Deserialize(req.Data, parameterInfos[0].ParameterType);
-                bool withResponse = req.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse;
+                var arg1 = Serializer.Deserialize(req.Data, parameterInfos[0].ParameterType);
+                var withResponse = req.InvokeMessageType == InvokeMessageType.InvokeWithoutResponse;
 
                 RpcResult<object> retVal;
                 if (parameterInfos.Length == 2)

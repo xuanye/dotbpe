@@ -34,8 +34,8 @@ namespace DotBPE.Rpc.Server
 
             var path = servicePath.Split('.');
 
-            var serviceId = string.Empty;
-            var messageId = string.Empty;
+            string serviceId;
+            string messageId;
 
             if (path.Length == 2)
             {

@@ -1,7 +1,7 @@
 namespace DotBPE.Rpc.Server
 {
-    public class IRpcServiceMethodProvider
+    public interface IRpcServiceMethodProvider<TService> where TService : class
     {
-        
+        void OnServiceMethodDiscovery(RpcServiceMethodProviderContext<TService> context);
     }
 }

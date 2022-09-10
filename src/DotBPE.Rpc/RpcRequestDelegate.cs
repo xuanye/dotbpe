@@ -1,7 +1,7 @@
+using System.Threading.Tasks;
+using DotBPE.Rpc.Server;
+
 namespace DotBPE.Rpc
 {
-    public class RpcRequestDelegate
-    {
-        
-    }
+    public delegate Task RpcRequestDelegate(IRpcContext context);
 }

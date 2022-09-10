@@ -34,19 +34,19 @@ namespace Microsoft.AspNetCore.Routing
         }
         private static IEndpointConventionBuilder MapService(this IEndpointRouteBuilder builder,Type serviceType)
         {
-            var builderType = typeof(ServiceRouteBuilder<>);         
+            var builderType = typeof(ServiceRouteBuilder<>);
             var serviceRouteBuilder = builder.ServiceProvider.GetRequiredService(builderType.MakeGenericType(serviceType)) as IServiceRouteBuilder;
 
-            IEnumerable<IEndpointConventionBuilder> endpointConventionBuilders = serviceRouteBuilder.Build(builder);
+            var endpointConventionBuilders = serviceRouteBuilder!.Build(builder);
 
             return new RpcServiceEndpointConventionBuilder(endpointConventionBuilders);
         }
 
         public static void ScanMapServices(this IEndpointRouteBuilder builder, params string[] categories)
         {
-            
-            //builder.ServiceProvider 
-            var loggerFactory =  builder.ServiceProvider.GetRequiredService<ILoggerFactory>();         
+
+            //builder.ServiceProvider
+            var loggerFactory =  builder.ServiceProvider.GetRequiredService<ILoggerFactory>();
             Environment.SetServiceProvider(builder.ServiceProvider);
             Environment.SetLoggerFactory(loggerFactory);
 
@@ -70,18 +70,18 @@ namespace Microsoft.AspNetCore.Routing
                     var sAttr = type.GetCustomAttribute<RpcServiceAttribute>();
                     if (sAttr == null)
                         continue;
-                   
+
                     if (( categories.Any() && categories.Contains(sAttr.GroupName)) || "default".Equals(sAttr.GroupName,StringComparison.OrdinalIgnoreCase))
                     {
                         builder.MapService(type);
-                    }  
-                  
+                    }
+
                 }
             }
-          
+
         }
 
- 
+
 
     }
 }

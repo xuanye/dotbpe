@@ -16,17 +16,17 @@ namespace PipelineSample.Services
     }
 
     public class QueueTaskService : BaseService<IQueueTaskService>, IQueueTaskService
-    {      
-      
+    {
+
 
         public async Task<RpcResult<VoidRes>> DoWork(QueueTaskReq req)
         {
-            Logger.LogInformation("{0}: do work {1} ,after {2} seconds,data:\r\n-----\r\n{3}\r\n"
+            Logger.LogInformation("{datetime}: do work {requestId} ,after {delay} seconds,data:\r\n-----\r\n{data}\r\n"
                 , DateTime.Now.ToString("yyyyMMdd HH:mm:ss"), req.XRequestId, req.Delay, req.JobData);
 
             //await Task.Delay(1000);
             Console.WriteLine("*******************************************");
-            Console.WriteLine($"**********执行任务:{DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss fff")}");
+            Console.WriteLine($"**********执行任务:{DateTime.Now:yyyy-MM-dd HH:mm:ss fff}");
             // throw new Exception("********任务错了********");
             await Task.CompletedTask;
 

@@ -15,7 +15,7 @@ namespace DotBPE.Gateway
     internal class HttpApiProviderServiceBinder<TService> where TService : class
     {
         private readonly RpcGatewayOption _gatewayOption;
-        private readonly RpcServiceMethodProviderContext<TService> _context;
+        private readonly RpcServiceMethodProviderContext _context;
         private readonly IClientProxy _clientProxy;
         private readonly IJsonParser _jsonParser;
         private readonly ILoggerFactory _loggerFactory;
@@ -25,8 +25,8 @@ namespace DotBPE.Gateway
 
         private readonly MethodInfo _dynamicCreateGenericMethod;
         private readonly MethodInfo _dynamicAddGenericMethod;
-        public HttpApiProviderServiceBinder(           
-            RpcServiceMethodProviderContext<TService> context,
+        public HttpApiProviderServiceBinder(
+            RpcServiceMethodProviderContext context,
             RpcGatewayOption gatewayOption,
             IClientProxy clientProxy,
             IJsonParser jsonParser,
@@ -78,7 +78,7 @@ namespace DotBPE.Gateway
                     //TODO:WARNING~
                     continue;
                 }
-               
+
                 var returnGenericTypes = returnType.GenericTypeArguments[0]; //RpcReslut<>
                 if(!returnGenericTypes.IsGenericType || returnGenericTypes.GetGenericTypeDefinition() != typeof(RpcResult<>))
                 {
@@ -112,7 +112,7 @@ namespace DotBPE.Gateway
              where TRequest : class
            where TResponse : class
         {
-          
+
 
             if(rAttr.AcceptVerb== RestfulVerb.Any)
             {
@@ -130,8 +130,8 @@ namespace DotBPE.Gateway
                     };
                     AddMethodCore(method, httpApiOptions);
                 }
-             
-               
+
+
             }
             else
             {
@@ -144,7 +144,7 @@ namespace DotBPE.Gateway
                     Version = rAttr.Version
                 };
                 AddMethodCore(method, httpApiOptions);
-            }           
+            }
         }
         private void AddMethodCore<TRequest, TResponse>(Method<TRequest, TResponse> method, HttpApiOptions httpApiOptions)
            where TRequest : class
@@ -176,19 +176,19 @@ namespace DotBPE.Gateway
 
                     _context.AddMethod<TRequest, TResponse>(method, routePattern, metadata, unaryServerCallHandler.HandleCallAsync);
                 }
-                else //has timeout 
+                else //has timeout
                 {
-                 
+
                     var (invokerWithTimeout, metadata) = CreateModelCore<RpcServiceMethodWithTimeout<TService, TRequest, TResponse>, TRequest, TResponse>(method, httpApiOptions);
 
-                    var methodInvoker = new RpcServiceMethodInvoker<TService, TRequest, TResponse>(null, invokerWithTimeout, (int)parameters[1].DefaultValue, method, methodContext, _clientProxy);
+                    var methodInvoker = new RpcServiceMethodInvoker<TService, TRequest, TResponse>(null, invokerWithTimeout, (int)parameters[1].DefaultValue!, method, methodContext, _clientProxy);
 
                     var unaryServerCallHandler = new RpcServiceCallHandler<TService, TRequest, TResponse>(_gatewayOption, methodInvoker, _jsonParser, httpApiOptions, _loggerFactory);
 
                     _context.AddMethod<TRequest, TResponse>(method, routePattern, metadata, unaryServerCallHandler.HandleCallAsync);
                 }
 
-            
+
             }
             catch (Exception ex)
             {
@@ -204,7 +204,7 @@ namespace DotBPE.Gateway
            where TRequest : class
            where TResponse : class
         {
-          
+
             var invoker = (TDelegate)Delegate.CreateDelegate(typeof(TDelegate), method.HandlerMethod);
 
             var metadata = new List<object>();
