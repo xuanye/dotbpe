@@ -16,8 +16,7 @@ namespace DotBPE.Rpc.Server
 
         public async Task ReceiveAsync(ISocketContext<AmpMessage> context, AmpMessage message)
         {
-            AmpMessage response = new AmpMessage
-            {
+            AmpMessage response = new AmpMessage {
                 InvokeMessageType = InvokeMessageType.Response,
                 Code = RpcErrorCodes.CODE_SERVICE_NOT_FOUND,
                 ServiceId = message.ServiceId,

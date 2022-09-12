@@ -1,14 +1,17 @@
-using System;
-using System.Collections.Concurrent;
-using System.Diagnostics;
-using System.Reflection;
-using System.Threading.Tasks;
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocol;
 using Microsoft.Extensions.DependencyInjection;
 using Peach;
+using System;
+using System.Collections.Concurrent;
+using System.Diagnostics;
+using System.Reflection;
+using System.Threading.Tasks;
 using Environment = DotBPE.Rpc.Internal.Environment;
 
 namespace DotBPE.Rpc.Server
@@ -34,7 +37,9 @@ namespace DotBPE.Rpc.Server
         /// <summary>
         /// service id
         /// </summary>
-        protected int ServiceId { get; }
+        protected int ServiceId {
+            get;
+        }
 
 
 
@@ -66,7 +71,7 @@ namespace DotBPE.Rpc.Server
         {
             foreach (var method in serviceType.GetMethods())
             {
-                var methodAttr = method.GetCustomAttribute<RpcMethodAttribute>( false);
+                var methodAttr = method.GetCustomAttribute<RpcMethodAttribute>(false);
                 if (methodAttr == null)
                 {
                     continue;
@@ -97,7 +102,7 @@ namespace DotBPE.Rpc.Server
             using (var logger = this.AuditLoggerFactory.GetLogger(methodFullName))
             {
                 logger.SetParameter(args[0]);
-                logger.SetContext(new RpcContext { LocalAddress = context.LocalEndPoint,RemoteAddress = context.RemoteEndPoint });
+                logger.SetContext(new RpcContext { LocalAddress = context.LocalEndPoint, RemoteAddress = context.RemoteEndPoint });
                 object retVal = method.Invoke(this, args);
                 var result = InternalHelper.DrillDownResponseObj(retVal);
                 logger.SetReturnValue(result);
@@ -151,14 +156,14 @@ namespace DotBPE.Rpc.Server
                     retVal = await InvokeInner(m, context, arg1);
                 }
 
-                if(retVal == null)
+                if (retVal == null)
                 {
                     resMsg.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
                     return resMsg;
                 }
 
                 resMsg.Code = retVal.Code;
-                if(retVal.Data != null)
+                if (retVal.Data != null)
                 {
                     resMsg.Data = Serializer.Serialize(retVal.Data);
                 }
