@@ -26,7 +26,7 @@ namespace DotBPE.Rpc.Core
         }
         public Task ReceiveAsync(ISocketContext<AmpMessage> context, AmpMessage message)
         {
-            _logger.LogDebug("Received a message from {remoteAddress},messageId={messageId}", context.RemoteEndPoint, message.Id);
+            _logger.LogDebug("Received a message from {RemoteAddress},messageId={MessageId}", context.RemoteEndPoint, message.Id);
             if (message.MessageType == RpcMessageType.Response)
             {
                 return Task.CompletedTask;

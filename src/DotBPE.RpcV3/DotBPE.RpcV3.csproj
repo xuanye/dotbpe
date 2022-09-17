@@ -29,4 +29,9 @@
         <ProjectReference Include="..\DotBPE.Baseline\DotBPE.Baseline.csproj" />
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Client" />
+      <Folder Include="Server" />
+    </ItemGroup>
+
 </Project>

@@ -9,31 +9,22 @@ namespace DotBPE.Rpc.Protocols
 {
     public interface IRpcMessage
     {
-        RpcMessageType MessageType {
-            get;
-        }
+        RpcMessageType MessageType { get; }
 
-        int Length {
-            get;
-        }
+        int Length { get; }
+
 
         /// <summary>
         /// Service identifier to locate a service
         /// </summary>
-        string ServiceIdentity {
-            get;
-        }
+        string ServiceIdentity { get; }
 
         /// <summary>
         /// Method identifier to locate a method
         /// </summary>
-        string MethodIdentifier {
-            get;
-        }
+        string MethodIdentifier { get; }
 
-        bool IsHeartBeat {
-            get;
-        }
+        bool IsHeartBeat { get; }
     }
 
     public enum RpcMessageType : byte

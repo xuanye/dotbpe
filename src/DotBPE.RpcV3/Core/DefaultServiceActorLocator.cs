@@ -35,8 +35,7 @@ namespace DotBPE.Rpc.Core
 
         private void Initialize(IEnumerable<IServiceActor<AmpMessage>> serviceActors)
         {
-
-            if (serviceActors != null && serviceActors.Any())
+            if (serviceActors.Any())
             {
                 foreach (var actor in serviceActors)
                 {
@@ -61,20 +60,19 @@ namespace DotBPE.Rpc.Core
             string serviceId;
             string methodId;
 
-            if (parts.Length == 2)
+            switch (parts.Length)
             {
-                serviceId = parts[0];
-                methodId = parts[1];
-            }
-            else if (parts.Length == 3)
-            {
-                serviceId = parts[1];
-                methodId = parts[2];
-            }
-            else
-            {
-                _logger.LogError("ServiceActor not found:{actorId}", actorId);
-                throw new RpcException($"ServiceActor not found:{actorId}");
+                case 2:
+                    serviceId = parts[0];
+                    methodId = parts[1];
+                    break;
+                case 3:
+                    serviceId = parts[1];
+                    methodId = parts[2];
+                    break;
+                default:
+                    _logger.LogError("ServiceActor not found:{ActorId}", actorId);
+                    throw new RpcException($"ServiceActor not found:{actorId}");
             }
 
             var serviceKey = $"{serviceId}.0";
@@ -89,11 +87,7 @@ namespace DotBPE.Rpc.Core
 
             actor = GetFromCache(serviceKey);
 
-            if (actor != null)
-            {
-                return actor;
-            }
-            return GetNotFoundActor();
+            return actor ?? GetNotFoundActor();
         }
         protected virtual IServiceActor? GetFromCache(string cacheKey)
         {

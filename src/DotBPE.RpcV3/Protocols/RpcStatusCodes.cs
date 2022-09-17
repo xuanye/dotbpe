@@ -30,9 +30,9 @@ namespace DotBPE.Rpc.Protocols
         public const int CODE_SERVICE_NOT_FOUND = -10242404;
 
         /// <summary>
-        /// ratelimed
+        /// rate limited
         /// </summary>
-        public const int CODE_RATELIMITED = -10242409;
+        public const int CODE_RATE_LIMITED = -10242409;
 
         /// <summary>
         /// timeout

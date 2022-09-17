@@ -19,18 +19,18 @@ namespace DotBPE.Rpc.Protocols
         }
         public Dictionary<string, IChannelHandler> BuildPipeline(bool isServer)
         {
-            var timeOut = isServer ? AmpProtocol.HeartbeatInterval * 2 : AmpProtocol.HeartbeatInterval;
+            var timeOut = isServer ? AmpProtocol.HEARTBEAT_INTERVAL * 2 : AmpProtocol.HEARTBEAT_INTERVAL;
             return new Dictionary<string, IChannelHandler> {
 
                 { "timeout", new IdleStateHandler(0, 0,timeOut) },
 
                 { "message-enc", new AmpEncodeHandler(_serializer) },
                 { "framing-dec", new LengthFieldBasedFrameDecoder(
-                    AmpProtocol.MaxFrameLength,
-                    AmpProtocol.LengthFieldOffset,
-                    AmpProtocol.LengthFieldLength,
-                    AmpProtocol.LengthAdjustment,
-                    AmpProtocol.InitialBytesToStrip
+                    AmpProtocol.MAX_FRAME_LENGTH,
+                    AmpProtocol.LENGTH_FIELD_OFFSET,
+                    AmpProtocol.LENGTH_FIELD_LENGTH,
+                    AmpProtocol.LENGTH_ADJUSTMENT,
+                    AmpProtocol.INITIAL_BYTES_TO_STRIP
                 ) },
                 { "message-dec", new AmpDecodeHandler(_serializer) }
             };

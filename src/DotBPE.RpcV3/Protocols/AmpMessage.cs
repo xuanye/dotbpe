@@ -13,12 +13,11 @@ namespace DotBPE.Rpc.Protocols
     /// </summary>
     public class AmpMessage : Peach.Messaging.IMessage, IRpcMessage
     {
-        public static readonly AmpMessage HEART_BEAT = CreateRequestMessage(0, 0, CodecType.Protobuf, true);
-
         /// <summary>
         /// The first version is 18 bytes header fixed length
         /// </summary>
         public const int VERSION_0_HEAD_LENGTH = 18;
+
         /// <summary>
         /// The enhanced version has a fixed length of 21 byte headers
         /// </summary>
@@ -28,28 +27,24 @@ namespace DotBPE.Rpc.Protocols
         /// <summary>
         /// Status Code
         /// </summary>
-        public int Code {
-            get; set;
-        }
+        public int Code { get; set; }
 
         /// <summary>
         /// 0=Protobuf 1=MessagePack 2 = JSON
         /// </summary>
-        public CodecType CodecType {
-            get; set;
-        }
+        public CodecType CodecType { get; set; }
 
         /// <summary>
         /// message data buffer
         /// </summary>
-        public byte[]? Data {
-            get; set;
-        }
+        public byte[]? Data { get; set; }
 
         public bool IsHeartBeat => ServiceId == 0 && MessageId == 0;
 
-        public int Length {
-            get {
+        public int Length
+        {
+            get
+            {
                 var hl = Version == 0 ? VERSION_0_HEAD_LENGTH : VERSION_1_HEAD_LENGTH;
                 if (Data == null)
                 {
@@ -69,50 +64,43 @@ namespace DotBPE.Rpc.Protocols
         /// <summary>
         ///  Unique message number of the calling service Determines which method
         /// </summary>
-        public ushort MessageId {
-            get; set;
-        }
+        public ushort MessageId { get; set; }
+
 
         public string MethodIdentifier => $"{ServiceId}.{MessageId}";
 
         /// <summary>
         /// serial number
         /// </summary>
-        public int Sequence {
-            get; set;
-        }
+        public int Sequence { get; set; }
 
         /// <summary>
         /// The unique service number of the service, Determine which service
         /// </summary>
-        public int ServiceId {
-            get; set;
-        }
+        public int ServiceId { get; set; }
 
         public string ServiceIdentity => $"{ServiceId}.0";
 
         /// <summary>
         /// Version 0/1
         /// </summary>
-        public byte Version {
-            get; set;
-        }
-
-        public RpcMessageType MessageType {
-            get; set;
-        }
-
-        public string? FriendlyServiceName {
-            get; set;
-        }
-
-        public string ServiceGroupName { get; set; } = "default";
-
-        public string MessageRoutePath => $"{ServiceGroupName}.{MethodIdentifier}";
-
-        public static AmpMessage CreateRequestMessage(int serviceId, ushort messageId, CodecType codecType, bool oneway = false)
+        public byte Version
         {
-            var message = new AmpMessage {
+            get;
+            set;
+        }
+
+        public RpcMessageType MessageType
+        {
+            get;
+            set;
+        }
+
+        public static AmpMessage CreateRequestMessage(int serviceId, ushort messageId, CodecType codecType,
+            bool oneway = false)
+        {
+            var message = new AmpMessage
+            {
                 ServiceId = serviceId,
                 MessageId = messageId,
                 Version = 1,
@@ -124,7 +112,8 @@ namespace DotBPE.Rpc.Protocols
 
         public static AmpMessage CreateResponseMessage(AmpMessage request)
         {
-            var message = new AmpMessage {
+            var message = new AmpMessage
+            {
                 ServiceId = request.ServiceId,
                 MessageId = request.MessageId,
                 Version = 1,

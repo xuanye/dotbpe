@@ -56,11 +56,11 @@ namespace DotBPE.Rpc.Core
         {
             if (!_invokerCache.TryAdd(actorModel.Method.FullName, actorModel))
             {
-                _logger.LogWarning($"{actorModel.Method.FullName} has registration conflicts");
+                _logger.LogWarning("{MethodFullName} has registration conflicts", actorModel.Method.FullName);
             }
             else
             {
-                _logger.LogInformation($"{actorModel.Method.FullName} has been registered");
+                _logger.LogInformation("{MethodFullName} has been registered", actorModel.Method.FullName);
             }
         }
     }

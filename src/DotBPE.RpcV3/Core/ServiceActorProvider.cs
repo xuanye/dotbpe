@@ -9,7 +9,7 @@ using System.Reflection;
 
 namespace DotBPE.Rpc.Core
 {
-    public class ServiceActorProvider<TService> : IServiceActorProvider<TService, AmpMessage>
+    public class ServiceActorProvider<TService> : IServiceActorProvider<TService>
           where TService : class
     {
         private readonly ISerializer _serializer;

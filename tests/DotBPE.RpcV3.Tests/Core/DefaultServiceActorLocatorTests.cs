@@ -18,15 +18,15 @@ namespace DotBPE.Rpc.Tests.Core
         {
             var service = new ServiceCollection();
 
-            service.AddSingleton<IServiceActor<AmpMessage>, FooService>();
+            service.AddSingleton<IServiceActor<IFooService>, FooService>();
 
-            service.AddSingleton<IServiceActorLocator<AmpMessage>, DefaultServiceActorLocator>();
+            service.AddSingleton<IServiceActorLocator, DefaultServiceActorLocator>();
 
             service.AddLogging();
 
             var provider = service.BuildServiceProvider();
 
-            var locator = provider.GetRequiredService<IServiceActorLocator<AmpMessage>>();
+            var locator = provider.GetRequiredService<IServiceActorLocator>();
 
             var actor1 = locator.LocateServiceActor("100.0");
             var actor2 = locator.LocateServiceActor("100.1");

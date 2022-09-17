@@ -8,7 +8,7 @@ using System.Text;
 
 namespace DotBPE.Rpc.Abstractions
 {
-    public interface IServiceActorProvider<TService, AmpMessage>
+    public interface IServiceActorProvider<TService>
         where TService : class
     {
         void OnServiceActorDiscovery(ServiceActorProviderContext<TService> context);

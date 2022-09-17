@@ -19,7 +19,7 @@ namespace DotBPE.Rpc.Protocols
             _serializer = serializer;
         }
 
-        protected override void Encode(IChannelHandlerContext context, AmpMessage message, IByteBuffer output)
+        protected override void Encode(IChannelHandlerContext context, AmpMessage? message, IByteBuffer output)
         {
             if (message == null)
             {
