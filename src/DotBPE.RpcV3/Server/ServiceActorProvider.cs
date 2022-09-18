@@ -1,13 +1,13 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
+using DotBPE.Rpc;
 using DotBPE.Rpc.Attributes;
 using DotBPE.Rpc.Protocols;
 using System;
 using System.Reflection;
 
-namespace DotBPE.Rpc.Core
+namespace DotBPE.Rpc.Server
 {
     public class ServiceActorProvider<TService> : IServiceActorProvider<TService>
           where TService : class

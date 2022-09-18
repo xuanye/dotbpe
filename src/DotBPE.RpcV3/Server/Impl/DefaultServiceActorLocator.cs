@@ -1,21 +1,15 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocols;
-using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
-namespace DotBPE.Rpc.Core
+namespace DotBPE.Rpc.Server
 {
     /// <summary>
     /// 根据配置信息获取本地或者远程的
@@ -51,9 +45,7 @@ namespace DotBPE.Rpc.Core
         public IServiceActor LocateServiceActor(string actorId)
         {
             if (HeartBeatActor.Instance.Id.Equals(actorId))
-            {
                 return HeartBeatActor.Instance;
-            }
 
             var parts = actorId.Split('.');
 
@@ -81,9 +73,7 @@ namespace DotBPE.Rpc.Core
 
             var actor = GetFromCache(messageKey);
             if (actor != null)
-            {
                 return actor;
-            }
 
             actor = GetFromCache(serviceKey);
 

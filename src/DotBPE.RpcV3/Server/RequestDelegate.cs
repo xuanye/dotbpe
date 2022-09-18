@@ -1,16 +1,11 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
 using DotBPE.Rpc.Protocols;
 using Peach;
-using System;
-using System.Collections.Generic;
-using System.Net.Http;
-using System.Text;
 using System.Threading.Tasks;
 
-namespace DotBPE.Rpc.Core
+namespace DotBPE.Rpc.Server
 {
     public delegate Task RequestDelegate(IServiceActor serviceActor, ISocketContext<AmpMessage> context, AmpMessage message)
            ;

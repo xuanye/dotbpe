@@ -1,13 +1,14 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
+using DotBPE.Rpc;
 using DotBPE.Rpc.Attributes;
 using DotBPE.Rpc.Protocols;
+using DotBPE.Rpc.Server;
 using System;
 using System.Reflection;
 
-namespace DotBPE.Rpc.Core
+namespace DotBPE.Rpc.Server
 {
     internal class ServiceActorBinder<TService>
          where TService : class
@@ -28,15 +29,11 @@ namespace DotBPE.Rpc.Core
         public void Bind()
         {
             if (!_serviceType.IsInterface)
-            {
                 return;
-            }
 
             var sAttr = _serviceType.GetCustomAttribute<RpcServiceAttribute>();
             if (sAttr == null)
-            {
                 return;
-            }
 
             AddRpcService(sAttr);
         }
@@ -47,23 +44,17 @@ namespace DotBPE.Rpc.Core
             {
                 var mAttr = m.GetCustomAttribute<RpcMethodAttribute>();
                 if (mAttr == null)
-                {
                     continue;
-                }
 
                 var returnType = m.ReturnType;
                 var requestType = m.GetParameters()[0].ParameterType;
 
                 if (!returnType.IsGenericType && returnType.GenericTypeArguments.Length != 1)
-                {
                     continue;
-                }
 
                 var returnGenericTypes = returnType.GenericTypeArguments[0];
                 if (!returnGenericTypes.IsGenericType || returnGenericTypes.GetGenericTypeDefinition() != typeof(RpcResult<>))
-                {
                     continue;
-                }
                 var responseType = returnGenericTypes.GetGenericArguments()[0];
 
                 DynamicAddMethod(m, sAttr, mAttr, requestType, responseType);

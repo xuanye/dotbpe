@@ -3,7 +3,7 @@
 
 using DotBPE.Rpc.Abstractions;
 using DotBPE.Rpc.Attributes;
-using DotBPE.Rpc.Core;
+using DotBPE.RpcV3;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Tests

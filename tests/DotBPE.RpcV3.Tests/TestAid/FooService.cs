@@ -1,9 +1,8 @@
 // Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
-using DotBPE.Rpc.Core;
 using DotBPE.Rpc.Protocols;
+
 using System.Threading.Tasks;
 
 
@@ -19,13 +18,15 @@ namespace DotBPE.Rpc.Tests
 
     public class FooReq
     {
-        public string FooWord {
+        public string FooWord
+        {
             get; set;
         }
     }
     public class FooRes
     {
-        public string RetFooWord {
+        public string RetFooWord
+        {
             get; set;
         }
     }

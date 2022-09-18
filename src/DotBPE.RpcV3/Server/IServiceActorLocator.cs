@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotBPE.Rpc.Abstractions
+namespace DotBPE.Rpc.Server
 {
 
     /// <summary>

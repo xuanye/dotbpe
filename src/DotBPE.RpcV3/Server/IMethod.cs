@@ -5,27 +5,33 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotBPE.Rpc.Abstractions
+namespace DotBPE.Rpc.Server
 {
     public interface IMethod
     {
-        string GroupName {
+        string GroupName
+        {
             get;
         }
-        string ServiceName {
+        string ServiceName
+        {
             get;
         }
-        string MethodName {
+        string MethodName
+        {
             get;
         }
-        int ServiceId {
+        int ServiceId
+        {
             get;
         }
-        int MethodId {
+        int MethodId
+        {
             get;
         }
 
-        string FullName {
+        string FullName
+        {
             get;
         }
     }

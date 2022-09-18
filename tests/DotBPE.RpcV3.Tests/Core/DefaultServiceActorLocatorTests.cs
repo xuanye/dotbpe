@@ -1,10 +1,9 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
-using DotBPE.Rpc.Core;
 using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocols;
+using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 

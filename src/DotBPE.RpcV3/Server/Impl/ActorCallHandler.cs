@@ -1,14 +1,12 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
-using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Protocols;
 using Peach;
 using System;
 using System.Threading.Tasks;
 
-namespace DotBPE.Rpc.Core
+namespace DotBPE.Rpc.Server
 {
     public class ActorCallHandler<TService, TRequest, TResponse>
         where TService : class
@@ -29,21 +27,19 @@ namespace DotBPE.Rpc.Core
 
         public async Task HandleCallAsync(IServiceActor serviceActor, ISocketContext<AmpMessage> context, AmpMessage reqMsg)
         {
+            //TODO:这里可以添加服务拦截器的实现
+
             var resMsg = AmpMessage.CreateResponseMessage(reqMsg);
 
             TRequest? request = null;
             if (reqMsg.Data != null)
-            {
                 request = (TRequest)_serializer.Deserialize(reqMsg.Data, _requestType);
-            }
 
             var result = await _invoker.InvokeAsync(serviceActor, request);
 
             resMsg.Code = result.Code;
             if (result.Data != null)
-            {
                 resMsg.Data = _serializer.Serialize(result.Data);
-            }
 
             await context.SendAsync(resMsg);
 

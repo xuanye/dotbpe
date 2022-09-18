@@ -1,7 +1,7 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
+using DotBPE.RpcV3.Server;
 using System;
 using System.Threading;
 using System.Threading.Tasks;

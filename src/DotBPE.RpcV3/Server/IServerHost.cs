@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
-namespace DotBPE.Rpc.Abstractions
+namespace DotBPE.Rpc.Server
 {
     public interface IServerHost
     {

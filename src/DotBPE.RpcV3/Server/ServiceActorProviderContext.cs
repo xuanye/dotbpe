@@ -1,14 +1,12 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
-using DotBPE.Rpc.Core;
 using Peach.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotBPE.Rpc.Abstractions
+namespace DotBPE.Rpc.Server
 {
     public class ServiceActorProviderContext<TService>
         where TService : class

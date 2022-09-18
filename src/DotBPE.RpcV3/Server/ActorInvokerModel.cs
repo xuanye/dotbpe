@@ -1,9 +1,9 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
 
-namespace DotBPE.Rpc.Core
+
+namespace DotBPE.Rpc.Server
 {
     public class ActorInvokerModel
     {
@@ -15,14 +15,10 @@ namespace DotBPE.Rpc.Core
             Method = method;
         }
 
-        public IMethod Method {
-            get;
-        }
+        public IMethod Method { get; }
 
 
-        public RequestDelegate RequestDelegate {
-            get;
-        }
+        public RequestDelegate RequestDelegate { get; }
 
 
     }

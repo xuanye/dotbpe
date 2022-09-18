@@ -6,7 +6,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotBPE.Rpc.Abstractions
+namespace DotBPE.Rpc.Server
 {
     public interface IServiceActorProvider<TService>
         where TService : class

@@ -1,12 +1,11 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
 using DotBPE.Rpc.Protocols;
 using System;
 using System.Threading.Tasks;
 
-namespace DotBPE.Rpc.Core
+namespace DotBPE.Rpc.Server
 {
     public class MethodInvoker<TService, TRequest, TResponse>
         where TService : class
@@ -31,13 +30,9 @@ namespace DotBPE.Rpc.Core
         public async Task<RpcResult<TResponse>> InvokeAsync(IServiceActor serviceActor, TRequest? request)
         {
             if (_invoker != null)
-            {
                 return await _invoker.Invoke(serviceActor, request);
-            }
             if (_invokerWithTimeout != null)
-            {
                 return await _invokerWithTimeout.Invoke(serviceActor, request, _timeout);
-            }
 
             throw new InvalidOperationException("There is no method invoker");
         }

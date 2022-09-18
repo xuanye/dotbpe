@@ -1,17 +1,13 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-namespace DotBPE.Rpc.Abstractions
+namespace DotBPE.Rpc.Server
 {
     public interface IServiceActor
     {
-        string Id {
-            get;
-        }
+        string Id { get; }
 
-        string GroupName {
-            get;
-        }
+        string GroupName { get; }
     }
 
     public interface IServiceActor<TService> : IServiceActor where TService : class

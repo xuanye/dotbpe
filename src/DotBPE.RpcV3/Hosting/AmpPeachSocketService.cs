@@ -1,8 +1,8 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Abstractions;
 using DotBPE.Rpc.Protocols;
+using DotBPE.Rpc.Server;
 using Microsoft.Extensions.Logging;
 using Peach;
 using System;

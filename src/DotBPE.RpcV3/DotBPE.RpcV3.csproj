@@ -31,7 +31,7 @@
 
     <ItemGroup>
       <Folder Include="Client" />
-      <Folder Include="Server" />
+      <Folder Include="Core\" />
     </ItemGroup>
 
 </Project>

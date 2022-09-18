@@ -2,16 +2,11 @@
 // Licensed under MIT license
 
 
-using DotBPE.Rpc.Abstractions;
-using DotBPE.Rpc.Attributes;
-using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Protocols;
 using Peach;
-using System;
-using System.Reflection;
 using System.Threading.Tasks;
 
-namespace DotBPE.Rpc.Core
+namespace DotBPE.Rpc.Server
 {
     public class ServiceActorHandler : IServiceActorHandler
     {
@@ -23,8 +18,6 @@ namespace DotBPE.Rpc.Core
             _serviceActor = serviceActor;
             _invoker = invoker;
         }
-
-
 
         public Task HandleAsync(ISocketContext<AmpMessage> context, AmpMessage message)
         {

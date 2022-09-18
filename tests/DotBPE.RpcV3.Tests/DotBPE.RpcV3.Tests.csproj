@@ -15,4 +15,7 @@
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\DotBPE.RpcV3\DotBPE.RpcV3.csproj" />
 	</ItemGroup>
+	<ItemGroup>
+	  <Folder Include="Server\" />
+	</ItemGroup>
 </Project>

@@ -7,19 +7,21 @@ using System.Runtime.Serialization;
 using System.Text;
 using System.Xml.Linq;
 
-namespace DotBPE.Rpc.Core
+namespace DotBPE.Rpc
 {
 
     public class RpcResult
     {
-        public int Code {
+        public int Code
+        {
             get; set;
         }
     }
 
     public class RpcResult<T> : RpcResult where T : class
     {
-        public T? Data {
+        public T? Data
+        {
             get; set;
         }
     }
