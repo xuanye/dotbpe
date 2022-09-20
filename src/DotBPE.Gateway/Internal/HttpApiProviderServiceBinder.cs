@@ -18,7 +18,7 @@ namespace DotBPE.Gateway
     internal class HttpApiProvidererServiceBind<TService> where TService : class
     {
         private readonly RpcGatewayOption _gatewayOption;
-        private readonly RpcServiceMethodProviderContext _context;
+        private readonly RpcServiceMethodProviderContext<TService> _context;
         private readonly IClientProxy _clientProxy;
         private readonly IJsonParser _jsonParser;
         private readonly ILoggerFactory _loggerFactory;
@@ -29,7 +29,7 @@ namespace DotBPE.Gateway
         private readonly MethodInfo _dynamicCreateGenericMethod;
         private readonly MethodInfo _dynamicAddGenericMethod;
         public HttpApiProviderServiceBinder(
-            RpcServiceMethodProviderContext context,
+            RpcServiceMethodProviderContext<TService> context,
             RpcGatewayOption gatewayOption,
             IClientProxy clientProxy,
             IJsonParser jsonParser,

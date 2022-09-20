@@ -8,26 +8,30 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Server
 {
-    public class ActorCallHandler<TService, TRequest, TResponse>
-        where TService : class
+    public class ActorCallHandler<TService,TRequest, TResponse>   
+        where TService:IServiceActor
         where TRequest : class
         where TResponse : class
     {
+        private readonly IServiceActorLocator _serviceActor;
         private readonly MethodInvoker<TService, TRequest, TResponse> _invoker;
         private readonly ISerializer _serializer;
 
         private readonly Type _requestType;
-        public ActorCallHandler(MethodInvoker<TService, TRequest, TResponse> invoker, ISerializer serializer)
+        public ActorCallHandler(IServiceActorLocator serviceActor,MethodInvoker<TService,TRequest, TResponse> invoker, ISerializer serializer)
         {
+            _serviceActor = serviceActor;
             _invoker = invoker;
             _serializer = serializer;
             _requestType = typeof(TRequest);
         }
+                
 
-
-        public async Task HandleCallAsync(IServiceActor serviceActor, ISocketContext<AmpMessage> context, AmpMessage reqMsg)
+        public async Task HandleCallAsync(ISocketContext<AmpMessage> context, AmpMessage reqMsg)
         {
             //TODO:这里可以添加服务拦截器的实现
+
+            var actor =  _serviceActor.LocateServiceActor(reqMsg.MethodIdentifier);
 
             var resMsg = AmpMessage.CreateResponseMessage(reqMsg);
 
@@ -35,7 +39,7 @@ namespace DotBPE.Rpc.Server
             if (reqMsg.Data != null)
                 request = (TRequest)_serializer.Deserialize(reqMsg.Data, _requestType);
 
-            var result = await _invoker.InvokeAsync(serviceActor, request);
+            var result = await _invoker.InvokeAsync((TService)actor, request);
 
             resMsg.Code = result.Code;
             if (result.Data != null)

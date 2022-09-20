@@ -11,17 +11,19 @@ using System.Reflection;
 namespace DotBPE.Rpc.Server
 {
     internal class ServiceActorBinder<TService>
-         where TService : class
+         where TService : IServiceActor
     {
-        private readonly ServiceActorProviderContext<TService> _context;
+        private readonly ServiceActorProviderContext _context;
+        private readonly IServiceActorLocator _actorLocator;
         private readonly ISerializer _serializer;
         private readonly Type _serviceType;
         private readonly MethodInfo _dynamicAddGenericMethod;
 
-        public ServiceActorBinder(ServiceActorProviderContext<TService> context, ISerializer serializer)
+        public ServiceActorBinder(ServiceActorProviderContext context,IServiceActorLocator actorLocator, ISerializer serializer)
         {
             _serviceType = typeof(TService);
             _context = context;
+            _actorLocator = actorLocator;
             _serializer = serializer;
             _dynamicAddGenericMethod = GetType().GetMethod("AddMethod", BindingFlags.NonPublic | BindingFlags.Instance);
         }
@@ -86,18 +88,18 @@ namespace DotBPE.Rpc.Server
             var parameters = method.Handler.GetParameters();
             if (parameters.Length == 1) //without timeout
             {
-                var serviceMethod = CreateServiceMethod<ServiceMethod<TService, TRequest, TResponse>, TRequest, TResponse>(method);
-                var invoker = new MethodInvoker<TService, TRequest, TResponse>(serviceMethod, null, 0);
-                var actorHandler = new ActorCallHandler<TService, TRequest, TResponse>(invoker, _serializer);
+                var serviceMethod = CreateServiceMethod<ServiceMethod<TService,TRequest, TResponse>, TRequest, TResponse>(method);
+                var invoker = new MethodInvoker<TService,TRequest, TResponse>(serviceMethod, null, 0);
+                var actorHandler = new ActorCallHandler<TService,TRequest, TResponse>(_actorLocator, invoker, _serializer);
                 var model = new ActorInvokerModel(method, actorHandler.HandleCallAsync);
 
                 _context.AddActorHandler(model);
             }
             else //with timeout
             {
-                var serviceMethod = CreateServiceMethod<ServiceMethodWithTimeout<TService, TRequest, TResponse>, TRequest, TResponse>(method);
-                var invoker = new MethodInvoker<TService, TRequest, TResponse>(null, serviceMethod, (int)parameters[1].DefaultValue);
-                var actorHandler = new ActorCallHandler<TService, TRequest, TResponse>(invoker, _serializer);
+                var serviceMethod = CreateServiceMethod<ServiceMethodWithTimeout<TService,TRequest, TResponse>, TRequest, TResponse>(method);
+                var invoker = new MethodInvoker<TService,TRequest, TResponse>(null, serviceMethod, (int)parameters[1].DefaultValue);
+                var actorHandler = new ActorCallHandler<TService,TRequest, TResponse>(_actorLocator, invoker, _serializer);
                 var model = new ActorInvokerModel(method, actorHandler.HandleCallAsync);
 
                 _context.AddActorHandler(model);

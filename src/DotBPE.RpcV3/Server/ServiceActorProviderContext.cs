@@ -8,8 +8,7 @@ using System.Text;
 
 namespace DotBPE.Rpc.Server
 {
-    public class ServiceActorProviderContext<TService>
-        where TService : class
+    public class ServiceActorProviderContext 
     {
         private readonly IServiceActorHandlerFactory _handlerFactory;
 

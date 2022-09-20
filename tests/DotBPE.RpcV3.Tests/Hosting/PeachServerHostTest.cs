@@ -3,15 +3,10 @@
 
 using DotBPE.Rpc.Hosting;
 using DotBPE.Rpc.Protocols;
-using DotBPE.RpcV3.Server;
+using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Hosting;
 using Moq;
 using Peach;
-using Peach.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 using Xunit;
@@ -21,7 +16,7 @@ namespace DotBPE.Rpc.Tests.Hosting
     public class PeachServerHostTest
     {
         [Fact]
-        public async Task RunServerHost_ShouldBe_NoError()
+        public async Task RunServerHost_ShouldBe_OK()
         {
             var services = new ServiceCollection();
 
@@ -50,7 +45,7 @@ namespace DotBPE.Rpc.Tests.Hosting
         }
 
         [Fact]
-        public async Task RunPeachServerHost_ShouldBe_NoError()
+        public async Task RunPeachServerHost_ShouldBe_OK()
         {
             var services = new ServiceCollection();
 

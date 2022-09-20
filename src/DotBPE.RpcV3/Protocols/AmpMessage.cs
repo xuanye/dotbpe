@@ -84,17 +84,9 @@ namespace DotBPE.Rpc.Protocols
         /// <summary>
         /// Version 0/1
         /// </summary>
-        public byte Version
-        {
-            get;
-            set;
-        }
+        public byte Version { get; set; }
 
-        public RpcMessageType MessageType
-        {
-            get;
-            set;
-        }
+        public RpcMessageType MessageType { get; set; }
 
         public static AmpMessage CreateRequestMessage(int serviceId, ushort messageId, CodecType codecType,
             bool oneway = false)

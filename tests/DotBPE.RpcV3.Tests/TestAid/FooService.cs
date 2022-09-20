@@ -2,7 +2,7 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc.Protocols;
-
+using DotBPE.Rpc.Server;
 using System.Threading.Tasks;
 
 

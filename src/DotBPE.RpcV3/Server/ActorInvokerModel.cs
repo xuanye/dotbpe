@@ -17,9 +17,7 @@ namespace DotBPE.Rpc.Server
 
         public IMethod Method { get; }
 
-
         public RequestDelegate RequestDelegate { get; }
-
-
     }
+  
 }

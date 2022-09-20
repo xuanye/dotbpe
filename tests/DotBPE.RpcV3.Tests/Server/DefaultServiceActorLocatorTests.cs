@@ -2,12 +2,11 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc.Internal;
-using DotBPE.Rpc.Protocols;
 using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 
-namespace DotBPE.Rpc.Tests.Core
+namespace DotBPE.Rpc.Tests.Server
 {
     public class DefaultServiceActorLocatorTests
     {
@@ -44,19 +43,19 @@ namespace DotBPE.Rpc.Tests.Core
         }
 
         [Fact]
-        public void GetNotRegisteredServiceActor_Should_ReturnNotFoundServiceActor()
+        public void GetUnRegisteredServiceActor_Should_ReturnNotFoundServiceActor()
         {
             var service = new ServiceCollection();
 
-            service.AddSingleton<IServiceActor<AmpMessage>, FooService>();
+            service.AddSingleton<IServiceActor<IFooService>, FooService>();
 
-            service.AddSingleton<IServiceActorLocator<AmpMessage>, DefaultServiceActorLocator>();
+            service.AddSingleton<IServiceActorLocator, DefaultServiceActorLocator>();
 
             service.AddLogging();
 
             var provider = service.BuildServiceProvider();
 
-            var locator = provider.GetRequiredService<IServiceActorLocator<AmpMessage>>();
+            var locator = provider.GetRequiredService<IServiceActorLocator>();
 
             var actor1 = locator.LocateServiceActor("100.0");
 
@@ -73,15 +72,15 @@ namespace DotBPE.Rpc.Tests.Core
         {
             var service = new ServiceCollection();
 
-            service.AddSingleton<IServiceActor<AmpMessage>, FooService>();
+            service.AddSingleton<IServiceActor<IFooService>, FooService>();
 
-            service.AddSingleton<IServiceActorLocator<AmpMessage>, DefaultServiceActorLocator>();
+            service.AddSingleton<IServiceActorLocator, DefaultServiceActorLocator>();
 
             service.AddLogging();
 
             var provider = service.BuildServiceProvider();
 
-            var locator = provider.GetRequiredService<IServiceActorLocator<AmpMessage>>();
+            var locator = provider.GetRequiredService<IServiceActorLocator>();
 
             var actor1 = locator.LocateServiceActor("0.0");
 

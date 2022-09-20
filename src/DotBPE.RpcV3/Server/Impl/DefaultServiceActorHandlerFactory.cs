@@ -12,15 +12,14 @@ namespace DotBPE.Rpc.Server
         private static readonly ConcurrentDictionary<string, ActorInvokerModel> _invokerCache = new ConcurrentDictionary<string, ActorInvokerModel>();
         private static readonly ConcurrentDictionary<string, IServiceActorHandler> _handlerCache = new ConcurrentDictionary<string, IServiceActorHandler>();
         private readonly ILogger<DefaultServiceActorHandlerFactory> _logger;
-        private readonly IServiceActorLocator _actorLocator;
+
 
         public DefaultServiceActorHandlerFactory(
-            ILogger<DefaultServiceActorHandlerFactory> logger,
-            IServiceActorLocator actorLocator
+            ILogger<DefaultServiceActorHandlerFactory> logger
             )
         {
             _logger = logger;
-            _actorLocator = actorLocator;
+
         }
 
 
@@ -32,9 +31,8 @@ namespace DotBPE.Rpc.Server
 
             if (!_invokerCache.TryGetValue(methodIdentifier, out var invoker))
                 return NotFoundServiceActorHandler.Instance;
-            var serviceActor = _actorLocator.LocateServiceActor(methodIdentifier);
 
-            handler = new ServiceActorHandler(serviceActor, invoker);
+            handler = new ServiceActorHandler(invoker);
             _handlerCache.TryAdd(methodIdentifier, handler);
             return handler;
         }
@@ -42,12 +40,15 @@ namespace DotBPE.Rpc.Server
         public void RegisterActorInvokerHandler(ActorInvokerModel actorModel)
         {
             if (!_invokerCache.TryAdd(actorModel.Method.FullName, actorModel))
+            {
                 _logger.LogWarning("{MethodFullName} has registration conflicts", actorModel.Method.FullName);
+            }
             else
             {
                 _logger.LogInformation("{MethodFullName} has been registered", actorModel.Method.FullName);
             }
         }
+
     }
 
 

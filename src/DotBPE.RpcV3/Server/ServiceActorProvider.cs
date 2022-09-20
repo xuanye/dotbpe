@@ -10,22 +10,24 @@ using System.Reflection;
 namespace DotBPE.Rpc.Server
 {
     public class ServiceActorProvider<TService> : IServiceActorProvider<TService>
-          where TService : class
+        where TService : IServiceActor
     {
+        private readonly IServiceActorLocator _actorLocator;
         private readonly ISerializer _serializer;
 
-        public ServiceActorProvider(ISerializer serializer)
+        public ServiceActorProvider(IServiceActorLocator actorLocator,ISerializer serializer)
         {
+            _actorLocator = actorLocator;
             _serializer = serializer;
         }
 
 
-        public void OnServiceActorDiscovery(ServiceActorProviderContext<TService> context)
+        public void OnServiceActorDiscovery(ServiceActorProviderContext context)
         {
             try
             {
 
-                var binder = new ServiceActorBinder<TService>(context, _serializer);
+                var binder = new ServiceActorBinder<TService>(context, _actorLocator, _serializer);
                 binder.Bind();
 
             }
