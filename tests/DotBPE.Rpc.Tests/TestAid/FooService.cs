@@ -1,18 +1,33 @@
-using System.Threading.Tasks;
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Rpc.Protocols;
 using DotBPE.Rpc.Server;
+using System.Threading.Tasks;
+
 
 namespace DotBPE.Rpc.Tests
 {
     public class FooService : BaseService<IFooService>, IFooService
     {
-        public Task<RpcResult> Foo1Async(FooReq req)
+        public Task<RpcResult<FooRes>> FooAsync(FooReq req)
         {
-            return Task.FromResult(new RpcResult());
+            return Task.FromResult(new RpcResult<FooRes> { Data = new FooRes { RetFooWord = req.FooWord } });
         }
+    }
 
-        public Task<RpcResult<FooRes>> Foo2Async(FooReq req)
+    public class FooReq
+    {
+        public string FooWord
         {
-            return Task.FromResult(new RpcResult<FooRes> {Data = new FooRes {RetFooWord = req.FooWord}});
+            get; set;
+        }
+    }
+    public class FooRes
+    {
+        public string RetFooWord
+        {
+            get; set;
         }
     }
 }

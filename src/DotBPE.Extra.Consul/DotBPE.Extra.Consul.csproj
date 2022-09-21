@@ -29,10 +29,6 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-    </ItemGroup>
-
-    <ItemGroup>
       <None Remove="Microsoft.Extensions.Options.ConfigurationExtensions" />
     </ItemGroup>
 </Project>

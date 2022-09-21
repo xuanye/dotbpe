@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotBPE.Rpc
+namespace DotBPE.Rpc.Attributes
 {
     [AttributeUsage(AttributeTargets.Method)]
     public class RpcMethodAttribute : Attribute

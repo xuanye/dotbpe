@@ -2,7 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Text;
 
-namespace DotBPE.Rpc
+namespace DotBPE.Rpc.Attributes
 {
     [AttributeUsage(AttributeTargets.Interface)]
     public class RpcServiceAttribute : Attribute
@@ -11,7 +11,7 @@ namespace DotBPE.Rpc
         {
 
         }
-        public RpcServiceAttribute(int serviceId,string groupName="default")
+        public RpcServiceAttribute(int serviceId, string groupName = "default")
         {
             ServiceId = serviceId;
             GroupName = groupName;

@@ -23,8 +23,4 @@
         <OutputType>Library</OutputType>
     </PropertyGroup>
 
-    <ItemGroup>
-        <ProjectReference Include="..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
-    </ItemGroup>
-
 </Project>

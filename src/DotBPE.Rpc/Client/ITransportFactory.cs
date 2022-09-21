@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using Peach.Messaging;
 using System;
 using System.Collections.Generic;
@@ -8,9 +11,9 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public interface ITransportFactory<TMessage>  where TMessage : IMessage
+    public interface ITransportFactory
     {
-        Task<ITransport<TMessage>> CreateTransport(EndPoint endpoint);
+        Task<ITransport> CreateTransport(EndPoint endpoint);
 
         Task CloseTransportAsync(EndPoint endpoint);
 

@@ -1,16 +1,16 @@
-// Copyright (c) Xuanye Wong. All rights reserved.
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
 using DotBPE.Rpc.Protocols;
-using Peach.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public interface IClientMessageHandler
+    public interface IMessageSubscriber
     {
-        void RaiseReceive(AmpMessage message);
+        void Handle(AmpMessage message);
     }
 }

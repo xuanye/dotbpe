@@ -1,14 +1,16 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Rpc.Attributes;
+using DotBPE.Rpc.Server;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Tests
 {
     [RpcService(100, GroupName = "mock")]
-    public interface IFooService
+    public interface IFooService:IServiceActor
     {
         [RpcMethod(1)]
-        Task<RpcResult> Foo1Async(FooReq req);
-
-        [RpcMethod(2)]
-        Task<RpcResult<FooRes>> Foo2Async(FooReq req);
+        Task<RpcResult<FooRes>> FooAsync(FooReq req);
     }
 }
