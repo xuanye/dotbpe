@@ -16,7 +16,6 @@ namespace DotBPE.Rpc.Client
     public class DefaultCallInvoker : ICallInvoker, IMessageSubscriber
     {
         private readonly IRpcClient _rpcClient;
-
         private readonly ISerializer _serializer;
         private readonly ILogger<DefaultCallInvoker> _logger;
         private readonly ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>> _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
@@ -38,6 +37,7 @@ namespace DotBPE.Rpc.Client
             reqMessage.FriendlyServiceName = method.FullName;
             reqMessage.ServiceGroupName = method.GroupName;
             reqMessage.Data = _serializer.Serialize(request);
+
 
             var rsp = await AsyncCallInner(reqMessage, method.DefaultTimeout > 0 ? method.DefaultTimeout : 3000);
             if (rsp != null)
@@ -97,11 +97,13 @@ namespace DotBPE.Rpc.Client
             AutoSetSequence(request);
             _logger.LogDebug("new request id={0},type={1}", request.Id, request.MessageType);
 
+            /*
             if (request.MessageType == RpcMessageType.OnewayRequest)
             {
                 await SendAsync(request);
                 return AmpMessage.CreateResponseMessage(request);
             }
+            */
 
             var cts = new CancellationTokenSource(timeout);
             //timeout callback

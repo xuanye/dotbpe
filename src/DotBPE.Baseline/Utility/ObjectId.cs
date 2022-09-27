@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Baseline.Extensions;
 using System;
 using System.Diagnostics;

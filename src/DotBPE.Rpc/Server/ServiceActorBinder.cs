@@ -2,7 +2,7 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc.Attributes;
-using DotBPE.Rpc.Protocols;
+using DotBPE.Rpc.Server.Impl;
 using System;
 using System.Reflection;
 
@@ -65,14 +65,14 @@ namespace DotBPE.Rpc.Server
         {
 
             var dynamicAddMethodInvoker = _dynamicAddGenericMethod.MakeGenericMethod(requestType, responseType);
-            var method = new Method()
+            var method = new ServerMethod()
             {
                 GroupName = sAttr.GroupName,
                 ServiceName = _serviceType.Name,
+                ServiceId = sAttr.ServiceId,
+                MethodId = mAttr.MessageId,
                 MethodName = m.Name,
                 Handler = m,
-                ServiceId = sAttr.ServiceId,
-                MethodId = mAttr.MessageId
             };
 
             dynamicAddMethodInvoker.Invoke(this, new object[] { method });
@@ -86,7 +86,7 @@ namespace DotBPE.Rpc.Server
         /// <param name="method"></param>
 
 #pragma warning disable IDE0051 // Remove unused private members
-        private void AddMethod<TRequest, TResponse>(Method method)
+        private void AddMethod<TRequest, TResponse>(ServerMethod method)
 #pragma warning restore IDE0051 // Remove unused private members
            where TRequest : class
            where TResponse : class
@@ -114,7 +114,7 @@ namespace DotBPE.Rpc.Server
 
         }
         private TDelegate CreateServiceMethod<TDelegate, TRequest, TResponse>(
-          Method method
+          ServerMethod method
         )
           where TDelegate : Delegate
           where TRequest : class

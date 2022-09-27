@@ -5,7 +5,7 @@ using System.Text;
 
 namespace DotBPE.Rpc.Client
 {
-    public interface IRouterPolicy
+    public interface IRoutingPolicy
     {
         IRouterPoint Select(string serviceKey, List<IRouterPoint> remoteAddresses);
     }

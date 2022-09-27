@@ -20,11 +20,7 @@
             $(RpcPackageNotes)
         </PackageReleaseNotes>
     </PropertyGroup>
-    <ItemGroup>
-      <Compile Remove="Core\**" />
-      <EmbeddedResource Remove="Core\**" />
-      <None Remove="Core\**" />
-    </ItemGroup>
+
 
     <ItemGroup>
         <PackageReference Include="Peach" Version="0.2.2" />

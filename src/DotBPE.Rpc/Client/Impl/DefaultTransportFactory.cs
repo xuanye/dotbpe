@@ -7,9 +7,7 @@ using Microsoft.Extensions.Logging;
 using Peach;
 using System;
 using System.Collections.Concurrent;
-using System.Collections.Generic;
 using System.Net;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -17,15 +15,13 @@ namespace DotBPE.Rpc.Client
 {
     public class DefaultTransportFactory : ITransportFactory
     {
+        static readonly SemaphoreSlim SemaphoreSlim = new SemaphoreSlim(1, 1);
+
+
         private readonly ConcurrentDictionary<EndPoint, ITransport> _transportCache = new ConcurrentDictionary<EndPoint, ITransport>();
-
         private readonly ISocketClient<AmpMessage> _socket;
-
         private readonly IClientMessageHandler _handler;
         private readonly ILogger<DefaultTransportFactory> _logger;
-
-        static readonly SemaphoreSlim semaphoreSlim = new SemaphoreSlim(1, 1);
-
 
         public DefaultTransportFactory(
             ISocketClient<AmpMessage> socket,
@@ -70,7 +66,7 @@ namespace DotBPE.Rpc.Client
                 return transport;
             }
 
-            await semaphoreSlim.WaitAsync();
+            await SemaphoreSlim.WaitAsync();
             try
             {
                 if (_transportCache.TryGetValue(endpoint, out transport))
@@ -89,11 +85,17 @@ namespace DotBPE.Rpc.Client
 
                 return transport;
             }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "An error occurred during create transport");
+                throw;
+            }
             finally
+
             {
                 //When the task is ready, release the semaphore. It is vital to ALWAYS release the semaphore when we are ready, or else we will end up with a Semaphore that is forever locked.
                 //This is why it is important to do the Release within a try...finally clause; program execution may crash or take a different path, this way you are guaranteed execution
-                semaphoreSlim.Release();
+                SemaphoreSlim.Release();
             }
         }
 
@@ -135,14 +137,13 @@ namespace DotBPE.Rpc.Client
             CloseTransportAsync(ConvertIPV4EndPoint(e.Context.RemoteEndPoint)).AnyContext();
 #pragma warning restore CS4014 // 由于此调用不会等待，因此在调用完成前将继续执行当前方法
 
-            _logger.LogInformation("-------------------client:connection is disconnected---------------------");
-            _logger.LogInformation(e.Context.Id);
+            _logger.LogInformation("Client{Id}:Connection is being disconnected,remote address:{RemoteAddress}", e.Context.Id, e.Context.RemoteEndPoint);
         }
 
         private void Socket_OnConnectedAsync(object sender, Peach.EventArgs.ConnectedEventArgs<AmpMessage> e)
         {
-            _logger.LogInformation("-------------------client:connection is connected---------------------");
-            _logger.LogInformation(e.Context.Id);
+
+            _logger.LogInformation("Client{Id}:Connection established,remote address:{RemoteAddress}", e.Context.Id, e.Context.RemoteEndPoint);
         }
 
         private EndPoint ConvertIPV4EndPoint(IPEndPoint endpoint)

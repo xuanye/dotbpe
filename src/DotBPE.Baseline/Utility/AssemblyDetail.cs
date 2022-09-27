@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Baseline.Extensions;
 using System;
 using System.Collections.Concurrent;
@@ -53,7 +56,7 @@ namespace DotBPE.Baseline.Utility
             });
         }
 
-        public static IEnumerable<AssemblyDetail> ExtractAll(string filter = "Foundatio*")
+        public static IEnumerable<AssemblyDetail> ExtractAll(string filter = "DotBPE*")
         {
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {

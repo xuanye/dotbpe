@@ -1,12 +1,17 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
+using DotBPE.Rpc.Client.RoutingPolicies;
+using DotBPE.Rpc.Protocols;
+using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Peach;
 using System;
 
 namespace DotBPE.Rpc.Client
 {
-    public class ClientProxyFactory: IClientProxyFactory
+    public class ClientProxyFactory : IClientProxyFactory
     {
         private readonly IServiceCollection _container;
         private IServiceProvider? _provider;
@@ -25,21 +30,20 @@ namespace DotBPE.Rpc.Client
         {
             container ??= new ServiceCollection();
 
-         
-            /*
+
+            /* */
             container.AddSingleton<IServiceRouter, DefaultServiceRouter>();
             container.AddSingleton<ISocketClient<AmpMessage>, RpcSocketClient>();
-            container.AddSingleton<IServiceActorLocator<AmpMessage>, DefaultServiceActorLocator>();
-            container.AddSingleton<ICallInvoker, DefaultCallInvoker>();
-            container.AddSingleton<IClientMessageHandler<AmpMessage>, DefaultClientMessageHandler>();
-            container.AddSingleton<IRpcClient<AmpMessage>, DefaultRpcClient>();
-            container.AddSingleton<ITransportFactory<AmpMessage>, DefaultTransportFactory>();
 
-            container.TryAddSingleton<IClientAuditLoggerFactory, DefaultClientAuditLoggerFactory>();
-            container.TryAddSingleton<IRequestAuditLoggerFactory, DefaultRequestAuditLoggerFactory>();
-            container.TryAddSingleton<IRouterPolicy, RoundrobinPolicy>();
+            container.AddSingleton<ICallInvoker, DefaultCallInvoker>();
+            container.AddSingleton<IClientMessageHandler, DefaultClientMessageHandler>();
+            container.AddSingleton<IRpcClient, DefaultRpcClient>();
+            container.AddSingleton<ITransportFactory, DefaultTransportFactory>();
+
+            container.TryAddSingleton<IServiceActorLocator, DefaultServiceActorLocator>();
+            container.TryAddSingleton<IRoutingPolicy, RoundrobinRoutingPolicy>();
             container.Configure<RpcClientOptions>(x => { });
-            */
+
 
             container.AddLogging();
             container.AddOptions();
