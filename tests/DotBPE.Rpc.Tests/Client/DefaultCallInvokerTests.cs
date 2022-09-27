@@ -4,6 +4,9 @@
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Protocols;
 using DotBPE.Rpc.Server;
+using DotBPE.Rpc.Tests.TestAid;
+using Microsoft.Extensions.Logging;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moq.AutoMock;
 using System;
@@ -80,32 +83,20 @@ namespace DotBPE.Rpc.Tests.Client
         }
 
         [Fact]
-        public Task TestCall_NormalProcess_ShouldBe_Ok()
+        public async Task TestCall_NormalProcess_ShouldBe_Ok()
         {
 
-            //arrange
-            var autoMocker = new AutoMocker();
-            var callInvoker = autoMocker.CreateInstance<DefaultCallInvoker>();
-            var rpcClient = autoMocker.GetMock<IRpcClient>();
+            //arrange          
+            var serializer = new DefaultJsonSerializer();
+            var rpcClient = new Mock<IRpcClient>();
+            var logger = NullLoggerFactory.Instance.CreateLogger<DefaultCallInvoker>();
 
             AmpMessage receivedMsg = null;
             rpcClient.Setup(x => x.SendAsync(It.IsAny<AmpMessage>())).Callback((AmpMessage msg) =>
             {
                 receivedMsg = msg;
             });
-
-            var serializer = autoMocker.GetMock<ISerializer>();
-            serializer.Setup(x => x.Serialize<FooReq>(It.IsAny<FooReq>())).Returns((FooReq src) =>
-            {
-                return Encoding.UTF8.GetBytes(src.FooWord);
-            });
-            serializer.Setup(x => x.Deserialize(It.IsAny<byte[]>(), typeof(FooReq))).Returns((byte[] data) =>
-            {
-                return new FooReq()
-                {
-                    FooWord = Encoding.UTF8.GetString(data)
-                };
-            });
+            var callInvoker = new DefaultCallInvoker(rpcClient.Object, serializer, logger);
 
             var method = new Method()
             {
@@ -122,10 +113,43 @@ namespace DotBPE.Rpc.Tests.Client
             //act
             var invokeTask = callInvoker.InvokerAsync<FooReq, FooRes>(method, reqMsg);
 
-            callInvoker.Handle()
-            Assert.NotNull(rspMsg);
-            Assert.Equal(RpcStatusCodes.CODE_TIMEOUT, rspMsg.Code);
+            var rspTask = Task.Run(async () =>
+            {
+                while (true)
+                {
+                    if (receivedMsg == null)
+                    {
+                        await Task.Delay(10);
+                    }
+                    else
+                    {
+                        var rspMsg = AmpMessage.CreateResponseMessage(receivedMsg);
+                        rspMsg.Data = serializer.Serialize(new FooRes() { RetFooWord = "Response DotBPE" });
+                        callInvoker.Handle(rspMsg);
+                        break;
+                    }
+                }
+            });
 
+            await Task.WhenAll(invokeTask, rspTask);
+
+
+            //assert
+            var rspData = invokeTask.Result;
+
+            Assert.NotNull(receivedMsg);
+            Assert.Equal(100, receivedMsg.ServiceId);
+            Assert.Equal(1, receivedMsg.MessageId);
+
+            Assert.NotNull(receivedMsg.Data);
+            var recoverReq = serializer.Deserialize<FooReq>(receivedMsg.Data);
+            Assert.Equal("Hello DotBPE", recoverReq.FooWord);
+
+            Assert.NotNull(rspData);
+            Assert.Equal(RpcStatusCodes.CODE_SUCCESS, rspData.Code);
+
+            Assert.NotNull(rspData.Data);
+            Assert.Equal("Response DotBPE", rspData.Data.RetFooWord);
 
         }
 
