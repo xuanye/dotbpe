@@ -23,7 +23,7 @@ namespace DotBPE.Rpc.Protocols
         public const int HEARTBEAT_INTERVAL = 15; // Send a heartbeat if there is no new message for 15 seconds
 
 
-        public static AmpMessage? Decode(CodecType codecType, IByteBuffer input)
+        public static AmpMessage Decode(CodecType codecType, IByteBuffer input)
         {
 
             if (input.ReadableBytes == 0)
@@ -37,23 +37,23 @@ namespace DotBPE.Rpc.Protocols
             switch (msg.Version)
             {
                 case 0:
-                {
-                    headLength = AmpMessage.VERSION_0_HEAD_LENGTH;
-                    if (input.ReadableBytes < AmpMessage.VERSION_0_HEAD_LENGTH - 1)
                     {
-                        throw new RpcCodecException($"decode error ,ReadableBytes={input.ReadableBytes + 1},HEAD_LENGTH={AmpMessage.VERSION_0_HEAD_LENGTH}");
+                        headLength = AmpMessage.VERSION_0_HEAD_LENGTH;
+                        if (input.ReadableBytes < AmpMessage.VERSION_0_HEAD_LENGTH - 1)
+                        {
+                            throw new RpcCodecException($"decode error ,ReadableBytes={input.ReadableBytes + 1},HEAD_LENGTH={AmpMessage.VERSION_0_HEAD_LENGTH}");
+                        }
+                        break;
                     }
-                    break;
-                }
                 case 1:
-                {
-                    headLength = AmpMessage.VERSION_1_HEAD_LENGTH;
-                    if (input.ReadableBytes < AmpMessage.VERSION_1_HEAD_LENGTH - 1)
                     {
-                        throw new RpcCodecException($"decode error ,ReadableBytes={input.ReadableBytes + 1},HEAD_LENGTH={AmpMessage.VERSION_1_HEAD_LENGTH}");
+                        headLength = AmpMessage.VERSION_1_HEAD_LENGTH;
+                        if (input.ReadableBytes < AmpMessage.VERSION_1_HEAD_LENGTH - 1)
+                        {
+                            throw new RpcCodecException($"decode error ,ReadableBytes={input.ReadableBytes + 1},HEAD_LENGTH={AmpMessage.VERSION_1_HEAD_LENGTH}");
+                        }
+                        break;
                     }
-                    break;
-                }
                 default:
                     throw new RpcCodecException($"decode error ,{msg.Version} is not support");
             }

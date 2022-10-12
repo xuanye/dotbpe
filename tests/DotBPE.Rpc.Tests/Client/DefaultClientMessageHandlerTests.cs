@@ -5,9 +5,6 @@ using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Protocols;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace DotBPE.Rpc.Tests.Client
@@ -39,8 +36,8 @@ namespace DotBPE.Rpc.Tests.Client
                 recievedMsg2 = m2;
             });
 
-            services.AddSingleton<IMessageSubscriber>(subscriber1.Object);
-            services.AddSingleton<IMessageSubscriber>(subscriber2.Object);
+            services.AddSingleton(subscriber1.Object);
+            services.AddSingleton(subscriber2.Object);
 
             //act
             var provider = services.BuildServiceProvider();

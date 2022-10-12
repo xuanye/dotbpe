@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using Microsoft.Extensions.Hosting;
 
 namespace DotBPE.Extra
@@ -8,18 +11,8 @@ namespace DotBPE.Extra
         {
             return @this.ConfigureServices(services =>
             {
-                services.AddDynamicClientProxy().AddDynamicServiceProxy();
+                services.AddDynamicProxy();
             });
         }
-
-        public static IHostBuilder UseCastleDynamicClientProxy(this IHostBuilder @this)
-        {
-            return @this.ConfigureServices(services => { services.AddDynamicClientProxy(); });
-        }
-        public static IHostBuilder UseCastleDynamicServiceProxy(this IHostBuilder @this)
-        {
-            return @this.ConfigureServices(services => { services.AddDynamicServiceProxy(); });
-        }
-
     }
 }

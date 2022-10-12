@@ -18,16 +18,16 @@ namespace DotBPE.Rpc.Server
     {
         private readonly ILogger<DefaultServiceActorLocator> _logger;
 
-        private readonly ConcurrentDictionary<string, IServiceActor<AmpMessage>> _actorCaches =
-          new ConcurrentDictionary<string, IServiceActor<AmpMessage>>();
+        private readonly ConcurrentDictionary<string, IServiceActor> _actorCaches =
+          new ConcurrentDictionary<string, IServiceActor>();
 
-        public DefaultServiceActorLocator(IEnumerable<IServiceActor<AmpMessage>> serviceActors, ILogger<DefaultServiceActorLocator> logger)
+        public DefaultServiceActorLocator(IEnumerable<IServiceActor> serviceActors, ILoggerFactory loggerFactory)
         {
-            _logger = logger;
+            _logger = loggerFactory.CreateLogger<DefaultServiceActorLocator>();
             Initialize(serviceActors);
         }
 
-        private void Initialize(IEnumerable<IServiceActor<AmpMessage>> serviceActors)
+        private void Initialize(IEnumerable<IServiceActor> serviceActors)
         {
             if (serviceActors.Any())
             {
@@ -79,7 +79,7 @@ namespace DotBPE.Rpc.Server
 
             return actor ?? GetNotFoundActor();
         }
-        protected virtual IServiceActor? GetFromCache(string cacheKey)
+        protected virtual IServiceActor GetFromCache(string cacheKey)
         {
             return _actorCaches.TryGetValue(cacheKey, out var serviceActor)
                     ? serviceActor

@@ -3,4 +3,4 @@
 
 using System.Runtime.CompilerServices;
 
-[assembly: InternalsVisibleTo("DotBPE.Rpc.Tests")]
+[assembly: InternalsVisibleTo("DotBPE.Extra.Castle.Tests")]

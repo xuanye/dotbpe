@@ -6,18 +6,18 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Server
 {
-    public class MethodInvoker<TService,TRequest, TResponse>    
-        where TService :IServiceActor
+    public class MethodInvoker<TService, TRequest, TResponse>
+        where TService : IServiceActor
         where TRequest : class
         where TResponse : class
     {
-        private readonly ServiceMethod<TService, TRequest, TResponse>? _invoker;
-        private readonly ServiceMethodWithTimeout<TService, TRequest, TResponse>? _invokerWithTimeout;
+        private readonly ServiceMethod<TService, TRequest, TResponse> _invoker;
+        private readonly ServiceMethodWithTimeout<TService, TRequest, TResponse> _invokerWithTimeout;
         private readonly int _timeout;
 
         public MethodInvoker(
-            ServiceMethod<TService,TRequest, TResponse>? invoker,
-            ServiceMethodWithTimeout<TService,TRequest, TResponse>? invokerWithTimeout,
+            ServiceMethod<TService, TRequest, TResponse> invoker,
+            ServiceMethodWithTimeout<TService, TRequest, TResponse> invokerWithTimeout,
             int timeout
             )
         {
@@ -26,7 +26,7 @@ namespace DotBPE.Rpc.Server
             _timeout = timeout;
         }
 
-        public async Task<RpcResult<TResponse>> InvokeAsync(TService service, TRequest? request)
+        public async Task<RpcResult<TResponse>> InvokeAsync(TService service, TRequest request)
         {
             if (_invoker != null)
                 return await _invoker.Invoke(service, request);

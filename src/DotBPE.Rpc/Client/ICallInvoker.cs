@@ -1,8 +1,6 @@
 // Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Protocols;
-using Peach.Messaging;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
@@ -13,6 +11,5 @@ namespace DotBPE.Rpc.Client
         Task<RpcResult<TResponse>> InvokerAsync<TRequest, TResponse>(IMethod method, TRequest request)
             where TRequest : class
             where TResponse : class;
-
     }
 }

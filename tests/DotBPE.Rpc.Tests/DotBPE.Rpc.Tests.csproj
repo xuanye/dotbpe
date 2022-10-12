@@ -15,5 +15,6 @@
 	</ItemGroup>
 	<ItemGroup>
 	  <ProjectReference Include="..\..\src\DotBPE.Rpc\DotBPE.Rpc.csproj" />
+	  <ProjectReference Include="..\DotBPE.TestBase\DotBPE.TestBase.csproj" />
 	</ItemGroup>
 </Project>

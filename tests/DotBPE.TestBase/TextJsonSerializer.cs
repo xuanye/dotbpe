@@ -1,12 +1,12 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
+using DotBPE.Rpc;
 using System;
-using System.Collections.Generic;
 using System.Text;
 using System.Text.Json;
 
-namespace DotBPE.Rpc.Tests.TestAid
+namespace DotBPE.TestBase
 {
     public class DefaultJsonSerializer : ISerializer
     {

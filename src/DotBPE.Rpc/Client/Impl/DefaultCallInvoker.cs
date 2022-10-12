@@ -43,7 +43,7 @@ namespace DotBPE.Rpc.Client
             if (rsp != null)
             {
                 result.Code = rsp.Code;
-                if (rsp.Data != null)
+                if (rsp.Data != null && rsp.Data.Length > 0)
                 {
                     result.Data = _serializer.Deserialize<TResponse>(rsp.Data);
                 }
@@ -55,6 +55,8 @@ namespace DotBPE.Rpc.Client
             }
             return result;
         }
+
+
 
 
         public void Handle(AmpMessage message)
@@ -189,5 +191,7 @@ namespace DotBPE.Rpc.Client
             int id = Interlocked.Increment(ref _invokerSeq);
             request.Sequence = id;
         }
+
+
     }
 }

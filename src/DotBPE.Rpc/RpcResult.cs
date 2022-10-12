@@ -20,7 +20,7 @@ namespace DotBPE.Rpc
 
     public class RpcResult<T> : RpcResult where T : class
     {
-        public T? Data
+        public T Data
         {
             get; set;
         }

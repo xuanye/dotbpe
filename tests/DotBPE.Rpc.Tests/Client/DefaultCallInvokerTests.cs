@@ -3,16 +3,12 @@
 
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Protocols;
-using DotBPE.Rpc.Server;
-using DotBPE.Rpc.Tests.TestAid;
+using DotBPE.TestBase;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moq.AutoMock;
-using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Text;
 using System.Threading.Tasks;
 using Xunit;
 

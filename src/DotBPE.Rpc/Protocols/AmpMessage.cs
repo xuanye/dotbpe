@@ -37,7 +37,7 @@ namespace DotBPE.Rpc.Protocols
         /// <summary>
         /// message data buffer
         /// </summary>
-        public byte[]? Data { get; set; }
+        public byte[] Data { get; set; }
 
         public bool IsHeartBeat => ServiceId == 0 && MessageId == 0;
 
@@ -81,7 +81,7 @@ namespace DotBPE.Rpc.Protocols
 
         public string ServiceIdentity => $"{ServiceId}.0";
 
-        public string? FriendlyServiceName { get; set; }
+        public string FriendlyServiceName { get; set; }
         public string ServiceGroupName { get; set; } = "default";
 
         public string RoutePath => $"{ServiceGroupName}.{MethodIdentifier}";
@@ -139,7 +139,7 @@ namespace DotBPE.Rpc.Protocols
             {
                 ServiceId = 0,
                 MessageId = 0,
-                Version =  1,
+                Version = 1,
                 Sequence = 0,
                 CodecType = codecType,
                 MessageType = RpcMessageType.Request

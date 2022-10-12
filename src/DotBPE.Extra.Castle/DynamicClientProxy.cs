@@ -1,65 +1,56 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using Castle.DynamicProxy;
-using DotBPE.Rpc;
+using DotBPE.Rpc.Attributes;
 using DotBPE.Rpc.Client;
-using DotBPE.Rpc.Exceptions;
-using DotBPE.Rpc.Internal;
-using DotBPE.Rpc.Protocol;
 using DotBPE.Rpc.Server;
-using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Threading.Tasks;
 
 namespace DotBPE.Extra
 {
     public class DynamicClientProxy : IClientProxy
     {
         private readonly IProxyGenerator _generator;
-        private IInterceptor _remoteInvoker;
-        private IInterceptor _localInvoker;
-        private readonly IServiceProvider _provider;
-
-        private IServiceRouter _serviceRouter;
-        private IServiceActorLocator<AmpMessage> _actorLocator;
+        private readonly IInterceptor _remoteInvoker;
+        private readonly ClientInterceptor[] _clientInterceptors;
+        private readonly IServiceRouter _serviceRouter;
+        private readonly IServiceActorLocator _actorLocator;
 
 
-        private static readonly ConcurrentDictionary<string, object> TYPE_CACHE
-            = new ConcurrentDictionary<string, object>();
+        private readonly ConcurrentDictionary<string, object> _typeCache = new ConcurrentDictionary<string, object>();
 
-        public DynamicClientProxy(IServiceProvider provider)
+
+        public DynamicClientProxy(IProxyGenerator generator
+            , IServiceActorLocator actorLocator
+            , IServiceRouter serviceRouter
+            , RemoteInvokeInterceptor remoteInvoker
+            , IEnumerable<ClientInterceptor> clientInterceptors
+            )
         {
-            this._generator = provider.GetRequiredService<IProxyGenerator>();
-
-            this._provider = provider;
+            _generator = generator;
+            _actorLocator = actorLocator;
+            _serviceRouter = serviceRouter;
+            _remoteInvoker = remoteInvoker;
+            _clientInterceptors = clientInterceptors.ToArray();
         }
 
+        public TService Create<TService>(ushort specialMessageId = 0) where TService : class
+        {
+            return CreateAsync<TService>(specialMessageId).GetAwaiter().GetResult();
+        }
 
-        private IInterceptor RemoteCallInterceptor =>
-            this._remoteInvoker ??
-            (this._remoteInvoker = this._provider.GetRequiredService<RemoteInvokeInterceptor>());
-
-        private IInterceptor LocalInvokeInterceptor =>
-            this._localInvoker ??
-            (this._localInvoker = this._provider.GetRequiredService<LocalInvokeInterceptor>());
-
-
-
-
-        private IServiceRouter ServiceRouter =>
-            this._serviceRouter ??
-            (this._serviceRouter = this._provider.GetRequiredService<IServiceRouter>());
-
-
-        private IServiceActorLocator<AmpMessage> ActorLocator =>
-            this._actorLocator ??
-            (this._actorLocator = this._provider.GetRequiredService<IServiceActorLocator<AmpMessage>>());
-
-        public TService Create<TService>(ushort spacialMessageId = 0) where TService : class
+        public async Task<TService> CreateAsync<TService>(ushort spacialMessageId = 0) where TService : class
         {
             var serviceType = typeof(TService);
             var cacheKey = $"{serviceType.FullName}${spacialMessageId}";
 
-            if (TYPE_CACHE.TryGetValue(cacheKey, out var cacheService))
+            if (_typeCache.TryGetValue(cacheKey, out var cacheService))
             {
                 return (TService)cacheService;
             }
@@ -71,44 +62,56 @@ namespace DotBPE.Extra
             }
             var sAttr = service as RpcServiceAttribute;
 
-            var serviceIdentity = InternalHelper.FormatServiceIdentity(sAttr.GroupName, sAttr.ServiceId, spacialMessageId);
+            var serviceIdentity = FormatServiceIdentity(sAttr.GroupName, sAttr.ServiceId, spacialMessageId);
             // $"{sAttr.ServiceId}${spacialMessageId};{sAttr.GroupName}";
-            var servicePath = InternalHelper.FormatServicePath(sAttr.ServiceId, spacialMessageId);
+            var servicePath = FormatServicePath(sAttr.ServiceId, spacialMessageId);
 
-            var isLocal = IsLocalCall(serviceIdentity);
+            var isLocal = await IsLocalCall(serviceIdentity);
 
             TService proxy;
             if (isLocal)
             {
-                var actor = ActorLocator.LocateServiceActor(servicePath);
+                var actor = _actorLocator.LocateServiceActor(servicePath);
 
                 if (!(actor is TService realService))
                 {
                     throw new InvalidOperationException($"{serviceType.FullName} has no implementation class,should it be configured at remote server");
                 }
-                proxy = _generator.CreateInterfaceProxyWithTarget(realService, LocalInvokeInterceptor);
-                TYPE_CACHE.TryAdd(cacheKey, proxy);
-
+                proxy = realService;
             }
             else
             {
-                proxy = _generator.CreateInterfaceProxyWithoutTarget<TService>(RemoteCallInterceptor);
-                TYPE_CACHE.TryAdd(cacheKey, proxy);
+                var interceptors = new List<IInterceptor>();
+                interceptors.AddRange(_clientInterceptors);
+                interceptors.Add(_remoteInvoker);
+                proxy = _generator.CreateInterfaceProxyWithoutTarget<TService>(interceptors.ToArray());
             }
-
+            _typeCache.TryAdd(cacheKey, proxy);
             return proxy;
 
         }
 
-        private bool IsLocalCall(string serviceIdentity)
+        private async Task<bool> IsLocalCall(string serviceIdentity)
         {
-            var point = ServiceRouter.FindRouterPoint(serviceIdentity).GetAwaiter().GetResult();
+            var point = await _serviceRouter.FindRouterPoint(serviceIdentity);
             if (point == null)
             {
                 return true;
             }
             return point.RoutePointType == RoutePointType.Local;
         }
+
+
+        public static string FormatServiceIdentity(string serviceGroupName, int serviceId, ushort messageId)
+        {
+            return $"{serviceGroupName}.{serviceId}.{messageId}";
+        }
+
+        public static string FormatServicePath(int serviceId, ushort messageId)
+        {
+            return $"{serviceId}.{messageId}";
+        }
+
 
     }
 }

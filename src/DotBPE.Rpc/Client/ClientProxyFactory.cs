@@ -14,7 +14,7 @@ namespace DotBPE.Rpc.Client
     public class ClientProxyFactory : IClientProxyFactory
     {
         private readonly IServiceCollection _container;
-        private IServiceProvider? _provider;
+        private IServiceProvider _provider;
         private ClientProxyFactory(IServiceCollection container)
         {
             _container = container;
@@ -26,10 +26,12 @@ namespace DotBPE.Rpc.Client
         /// </summary>
         /// <param name="container">if container is null container will be create new instance inside</param>
         /// <returns></returns>
-        public static IClientProxyFactory Create(IServiceCollection? container = null)
+        public static IClientProxyFactory Create(IServiceCollection container = null)
         {
-            container ??= new ServiceCollection();
-
+            if (container == null)
+            {
+                container = new ServiceCollection();
+            }
 
             /* */
             container.AddSingleton<IServiceRouter, DefaultServiceRouter>();
@@ -65,8 +67,10 @@ namespace DotBPE.Rpc.Client
 
         public TService GetService<TService>() where TService : class
         {
-            _provider ??= _container.BuildServiceProvider();
-
+            if (_provider == null)
+            {
+                _provider = _container.BuildServiceProvider();
+            }
             return _provider.GetService<TService>();
         }
 

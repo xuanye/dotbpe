@@ -3,6 +3,7 @@
 
 using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Server;
+using DotBPE.TestBase;
 using Microsoft.Extensions.DependencyInjection;
 using Xunit;
 

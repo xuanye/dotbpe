@@ -72,7 +72,7 @@ namespace DotBPE.Rpc.Client
             {
                 foreach (var cfg in _routeOptions.Messages)
                 {
-                    var remoteLst = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress!);
+                    var remoteLst = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress);
                     if (remoteLst.Count > 0)
                     {
                         AddRouter($"{cfg.ServiceId}.{cfg.MessageId}", cfg.Weight, remoteLst);
@@ -87,7 +87,7 @@ namespace DotBPE.Rpc.Client
             {
                 foreach (var cfg in _routeOptions.Services)
                 {
-                    var remoteLst = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress!);
+                    var remoteLst = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress);
                     if (remoteLst.Count > 0)
                     {
                         AddRouter($"{cfg.ServiceId}.0", cfg.Weight, remoteLst);
@@ -101,7 +101,7 @@ namespace DotBPE.Rpc.Client
             {
                 foreach (var cfg in _routeOptions.Categories)
                 {
-                    var remoteLst = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress!);
+                    var remoteLst = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress);
                     if (remoteLst.Count > 0)
                     {
                         AddRouter($"{cfg.GroupName}", cfg.Weight, remoteLst);

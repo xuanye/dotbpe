@@ -8,8 +8,8 @@ using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Server
 {
-    public class ActorCallHandler<TService,TRequest, TResponse>   
-        where TService:IServiceActor
+    public class ActorCallHandler<TService, TRequest, TResponse>
+        where TService : IServiceActor
         where TRequest : class
         where TResponse : class
     {
@@ -18,24 +18,24 @@ namespace DotBPE.Rpc.Server
         private readonly ISerializer _serializer;
 
         private readonly Type _requestType;
-        public ActorCallHandler(IServiceActorLocator serviceActor,MethodInvoker<TService,TRequest, TResponse> invoker, ISerializer serializer)
+        public ActorCallHandler(IServiceActorLocator serviceActor, MethodInvoker<TService, TRequest, TResponse> invoker, ISerializer serializer)
         {
             _serviceActor = serviceActor;
             _invoker = invoker;
             _serializer = serializer;
             _requestType = typeof(TRequest);
         }
-                
+
 
         public async Task HandleCallAsync(ISocketContext<AmpMessage> context, AmpMessage reqMsg)
         {
             //TODO:这里可以添加服务拦截器的实现
 
-            var actor =  _serviceActor.LocateServiceActor(reqMsg.MethodIdentifier);
+            var actor = _serviceActor.LocateServiceActor(reqMsg.MethodIdentifier);
 
             var resMsg = AmpMessage.CreateResponseMessage(reqMsg);
 
-            TRequest? request = null;
+            TRequest request = null;
             if (reqMsg.Data != null)
                 request = (TRequest)_serializer.Deserialize(reqMsg.Data, _requestType);
 

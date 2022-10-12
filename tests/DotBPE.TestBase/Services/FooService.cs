@@ -1,12 +1,12 @@
 // Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Protocols;
+using DotBPE.Rpc;
 using DotBPE.Rpc.Server;
 using System.Threading.Tasks;
 
 
-namespace DotBPE.Rpc.Tests
+namespace DotBPE.TestBase
 {
     public class FooService : BaseService<IFooService>, IFooService
     {
