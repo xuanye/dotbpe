@@ -19,29 +19,23 @@ namespace DotBPE.Extra
             if (typeof(Task).IsAssignableFrom(returnType) && returnType.IsGenericType) //Task<RpcResult>
             {
                 var innerType = returnType.GetGenericArguments()[0];
-                if (innerType == typeof(RpcResult))
-                {
-                    responseType = typeof(EmptyResponse); ;
-                }
-                else if (typeof(RpcResult).IsAssignableFrom(innerType) && innerType.IsGenericType)
+                if (typeof(RpcResult).IsAssignableFrom(innerType) && innerType.IsGenericType)
                 {
                     responseType = innerType.GetGenericArguments()[0];
                 }
                 else
                 {
-                    throw new RpcException("Return type must be Task or Task<RpcResult<T>>");
+                    throw new RpcException("Return type must be Task<RpcResult<T>>");
                 }
             }
             else
             {
-                throw new RpcException("Return type must be Task or Task<RpcResult<T>>");
+                throw new RpcException("Return type must be Task<RpcResult<T>>");
             }
 
 
             return (invocation.Arguments[0].GetType(), responseType);
         }
-
-
 
     }
 }

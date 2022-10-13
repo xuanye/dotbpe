@@ -5,7 +5,6 @@ using Castle.DynamicProxy;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Exceptions;
 using System;
-using System.Diagnostics;
 using System.Reflection;
 using System.Threading.Tasks;
 
@@ -26,6 +25,7 @@ namespace DotBPE.Extra
         public void Intercept(IInvocation invocation)
         {
             var (requestType, responseType) = ReflectionHelper.GetInvocationCallTypes(invocation);
+
             var invoker = _methodCache.MakeGenericMethod(requestType, responseType);
 
             invoker.Invoke(this, new[] { invocation.Arguments[0], invocation });
@@ -97,6 +97,7 @@ namespace DotBPE.Extra
             }
 
         }
+
 
         protected virtual Task<RpcResult<TResponse>> ServiceHandle<TRequest, TResponse>(TRequest req, ServiceMethod<TRequest, TResponse> continuation)
             where TRequest : class
