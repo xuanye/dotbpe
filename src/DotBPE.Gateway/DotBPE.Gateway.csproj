@@ -30,5 +30,8 @@
     <ItemGroup>      
         <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
     </ItemGroup>
+    <ItemGroup>
+      <ProjectReference Include="..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
+    </ItemGroup>
     
 </Project>

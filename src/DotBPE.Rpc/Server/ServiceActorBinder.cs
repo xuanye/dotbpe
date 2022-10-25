@@ -2,7 +2,9 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc.Attributes;
+using DotBPE.Rpc.AuditLog;
 using DotBPE.Rpc.Server.Impl;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Reflection;
 
@@ -14,15 +16,24 @@ namespace DotBPE.Rpc.Server
         private readonly ServiceActorProviderContext _context;
         private readonly IServiceActorLocator _actorLocator;
         private readonly ISerializer _serializer;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly IAuditLoggerFactory _auditLoggerFactory;
         private readonly Type _serviceType;
         private readonly MethodInfo _dynamicAddGenericMethod;
 
-        public ServiceActorBinder(ServiceActorProviderContext context, IServiceActorLocator actorLocator, ISerializer serializer)
+        public ServiceActorBinder(ServiceActorProviderContext context
+            , IServiceActorLocator actorLocator
+            , ISerializer serializer
+            , ILoggerFactory loggerFactory
+            , IAuditLoggerFactory auditLoggerFactory = null
+            )
         {
             _serviceType = typeof(TService);
             _context = context;
             _actorLocator = actorLocator;
             _serializer = serializer;
+            _loggerFactory = loggerFactory;
+            _auditLoggerFactory = auditLoggerFactory;
             _dynamicAddGenericMethod = GetType().GetMethod("AddMethod", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
@@ -97,7 +108,7 @@ namespace DotBPE.Rpc.Server
             {
                 var serviceMethod = CreateServiceMethod<ServiceMethod<TService, TRequest, TResponse>, TRequest, TResponse>(method);
                 var invoker = new MethodInvoker<TService, TRequest, TResponse>(serviceMethod, null, 0);
-                var actorHandler = new ActorCallHandler<TService, TRequest, TResponse>(_actorLocator, invoker, _serializer);
+                var actorHandler = new ActorCallHandler<TService, TRequest, TResponse>(_actorLocator, invoker, _serializer, _loggerFactory, _auditLoggerFactory);
                 var model = new ActorInvokerModel(method, actorHandler.HandleCallAsync);
 
                 _context.AddActorHandler(model);
@@ -106,7 +117,7 @@ namespace DotBPE.Rpc.Server
             {
                 var serviceMethod = CreateServiceMethod<ServiceMethodWithTimeout<TService, TRequest, TResponse>, TRequest, TResponse>(method);
                 var invoker = new MethodInvoker<TService, TRequest, TResponse>(null, serviceMethod, (int)parameters[1].DefaultValue);
-                var actorHandler = new ActorCallHandler<TService, TRequest, TResponse>(_actorLocator, invoker, _serializer);
+                var actorHandler = new ActorCallHandler<TService, TRequest, TResponse>(_actorLocator, invoker, _serializer, _loggerFactory, _auditLoggerFactory);
                 var model = new ActorInvokerModel(method, actorHandler.HandleCallAsync);
 
                 _context.AddActorHandler(model);

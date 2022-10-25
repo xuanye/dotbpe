@@ -3,14 +3,12 @@
 
 using System;
 using System.Collections.Generic;
-using System.Net;
 using System.Text;
 
-namespace DotBPE.Rpc.Server
+namespace DotBPE.Rpc.AuditLog
 {
-    public interface IRpcContext
+    public interface IAuditLogFormatter
     {
-        IPEndPoint RemoteAddress { get; }
-        IPEndPoint LocalAddress { get; }
+        string Format(IAuditLogInfo auditLog);
     }
 }

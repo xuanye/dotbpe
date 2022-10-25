@@ -1,16 +1,9 @@
-using DotBPE.BestPractice.AuditLog;
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Extra;
-using DotBPE.Rpc;
-using DotBPE.Rpc.Client;
-using DotBPE.Rpc.Server;
 using Microsoft.Extensions.Configuration;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.DependencyInjection.Extensions;
 using Microsoft.Extensions.Hosting;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DotBPE.BestPractice
 {
@@ -24,8 +17,9 @@ namespace DotBPE.BestPractice
         /// <param name="port">服务绑定的端口</param>
         /// <param name="auditLog">是否启用审计日志</param>
         /// <returns></returns>
-        public static IHostBuilder UseDefaultRpc(this IHostBuilder @this,int port=5566,bool auditLog=true)
+        public static IHostBuilder UseDefaultRpc(this IHostBuilder @this, int port = 5566, bool auditLog = true)
         {
+            /*
             @this.UseRpcServer(port: port)
                 .UseCastleDynamicProxy() //使用Castle动态代理
                 .UseProtobufSerializer(true); //消息使用Protobuf序列化RPC通讯，并序列化JSON
@@ -47,6 +41,7 @@ namespace DotBPE.BestPractice
                   config.AddJsonFile("serilog.json", optional: true);
                   config.AddJsonFile($"serilog.{hostContext.HostingEnvironment.EnvironmentName}.json", optional: true);
             });
+            */
 
             return @this;
         }

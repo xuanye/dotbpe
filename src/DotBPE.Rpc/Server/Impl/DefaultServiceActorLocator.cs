@@ -64,7 +64,7 @@ namespace DotBPE.Rpc.Server
                     break;
                 default:
                     _logger.LogError("ServiceActor not found:{ActorId}", actorId);
-                    throw new RpcException($"ServiceActor not found:{actorId}");
+                    throw new RpcException(RpcStatusCodes.CODE_SERVICE_NOT_FOUND, $"ServiceActor not found:{actorId}");
             }
 
             var serviceKey = $"{serviceId}.0";

@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
+using DotBPE.Rpc.AuditLog;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Protocols;
 using DotBPE.TestBase;
@@ -9,6 +10,7 @@ using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moq.AutoMock;
 using System.Diagnostics;
+using System.Net.Sockets;
 using System.Threading.Tasks;
 using Xunit;
 
@@ -53,7 +55,9 @@ namespace DotBPE.Rpc.Tests.Client
 
             //arrange
             var autoMocker = new AutoMocker();
+
             var callInvoker = autoMocker.CreateInstance<DefaultCallInvoker>();
+
             var method = new Method()
             {
                 GroupName = "default",

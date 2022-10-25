@@ -72,7 +72,6 @@ namespace DotBPE.Extra
             if (isLocal)
             {
                 var actor = _actorLocator.LocateServiceActor(servicePath);
-
                 if (!(actor is TService realService))
                 {
                     throw new InvalidOperationException($"{serviceType.FullName} has no implementation class,should it be configured at remote server");

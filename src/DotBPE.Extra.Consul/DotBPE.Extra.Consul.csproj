@@ -31,4 +31,8 @@
     <ItemGroup>
       <None Remove="Microsoft.Extensions.Options.ConfigurationExtensions" />
     </ItemGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
+    </ItemGroup>
 </Project>

@@ -4,6 +4,7 @@
 using DotBPE.Rpc.Internal;
 using DotBPE.Rpc.Server;
 using DotBPE.TestBase;
+using Microsoft.Extensions.Logging.Abstractions;
 using Moq;
 using Moq.AutoMock;
 using System;
@@ -54,7 +55,7 @@ namespace DotBPE.Rpc.Tests.Server
 
             var fooService = new FooService();
             var invoker = new MethodInvoker<IFooService, FooReq, FooRes>(serviceMethod, null, 0);
-            var callHandler = new ActorCallHandler<IFooService, FooReq, FooRes>(locator.Object, invoker, serializer.Object);
+            var callHandler = new ActorCallHandler<IFooService, FooReq, FooRes>(locator.Object, invoker, serializer.Object, NullLoggerFactory.Instance);
             var method = new Method()
             {
                 GroupName = "default",

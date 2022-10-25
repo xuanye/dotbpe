@@ -1,20 +1,22 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Rpc;
+using Google.Protobuf;
 using System;
 using System.Collections.Concurrent;
-using DotBPE.Rpc;
-using DotBPE.Rpc.BestPractice;
-using Google.Protobuf;
 
 namespace DotBPE.Extra
 {
-    public class JsonParser:IJsonParser
+    public class JsonParser : IJsonParser
     {
-        private static readonly JsonFormatter AmpJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(false).WithFormatEnumsAsIntegers(true));
-        static readonly ConcurrentDictionary<Type, MessageParser> PARSER_CACHE = new ConcurrentDictionary<Type, MessageParser>();
-        private static readonly Type BaseType = typeof(IMessage);
+        private static readonly JsonFormatter _ampJsonFormatter = new JsonFormatter(new JsonFormatter.Settings(false).WithFormatEnumsAsIntegers(true));
+        private static readonly ConcurrentDictionary<Type, MessageParser> _parseCache = new ConcurrentDictionary<Type, MessageParser>();
+        private static readonly Type _baseType = typeof(IMessage);
 
         private static MessageParser FindMessageParser(Type messageType)
         {
-            if (BaseType.IsAssignableFrom(messageType) && messageType.IsClass)
+            if (_baseType.IsAssignableFrom(messageType) && messageType.IsClass)
             {
                 var property = messageType.GetProperty("Parser");
                 if (property != null)
@@ -27,31 +29,31 @@ namespace DotBPE.Extra
 
         public string ToJson(object item)
         {
-            
-            if(item is IMessage message)
+
+            if (item is IMessage message)
             {
-                return AmpJsonFormatter.Format(message);
+                return _ampJsonFormatter.Format(message);
             }
             return null;
         }
 
         public string ToJson<T>(T item) where T : class
         {
-          
+
 
             if (item is IMessage message)
             {
-                return AmpJsonFormatter.Format(message);
+                return _ampJsonFormatter.Format(message);
             }
             return null;
         }
 
         public object FromJson(string json, Type type)
         {
-            if (!PARSER_CACHE.TryGetValue(type, out var parser))
+            if (!_parseCache.TryGetValue(type, out var parser))
             {
                 parser = FindMessageParser(type);
-                PARSER_CACHE.TryAdd(type, parser);
+                _parseCache.TryAdd(type, parser);
             }
             return parser.ParseJson(json);
         }
@@ -61,6 +63,6 @@ namespace DotBPE.Extra
             var type = typeof(T);
             return (T)FromJson(json, type);
         }
-       
+
     }
 }

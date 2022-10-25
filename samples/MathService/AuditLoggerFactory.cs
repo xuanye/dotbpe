@@ -1,6 +1,8 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
-using DotBPE.Rpc.Server;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
@@ -9,7 +11,7 @@ using System.Text;
 namespace MathService
 {
     public class RequestAuditLoggerFactory : IRequestAuditLoggerFactory
-    {       
+    {
         private readonly ILogger<RequestAuditLogger> serviceLogger;
 
         public RequestAuditLoggerFactory(ILoggerFactory factory)
@@ -20,10 +22,10 @@ namespace MathService
         public IRequestAuditLogger GetLogger(string methodFullName)
         {
             return new RequestAuditLogger(methodFullName, this.serviceLogger);
-        }      
+        }
     }
 
-    public class ClientAuditLoggerFactory :  IClientAuditLoggerFactory
+    public class ClientAuditLoggerFactory : IClientAuditLoggerFactory
     {
 
         private readonly ILogger<ClientAuditLogger> clientLogger;
@@ -43,7 +45,7 @@ namespace MathService
     {
         private readonly ILogger _logger;
 
-        public RequestAuditLogger(string methodName,ILogger logger)
+        public RequestAuditLogger(string methodName, ILogger logger)
         {
             this.MethodFullName = methodName;
             this._logger = logger;

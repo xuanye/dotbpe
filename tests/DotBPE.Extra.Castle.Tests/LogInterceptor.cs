@@ -18,9 +18,9 @@ namespace DotBPE.Extra.Castle.Tests
             _logAction = logAction;
         }
 
-        protected override async Task<RpcResult<TResponse>> ServiceHandle<TRequest, TResponse>(TRequest req, ServiceMethod<TRequest, TResponse> continuation)
+        protected override async Task<RpcResult<TResponse>> ServiceHandle<TRequest, TResponse>(TRequest req, InvocationContext context, ServiceMethod<TRequest, TResponse> continuation)
         {
-            var res = await continuation(req);
+            var res = await continuation(req, context);
 
             _logAction(req, res);
             return res;

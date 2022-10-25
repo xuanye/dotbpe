@@ -3,15 +3,14 @@
 
 using DotBPE.Gateway.Internal;
 using DotBPE.Rpc;
+using DotBPE.Rpc.Attributes;
 using DotBPE.Rpc.Client;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
 using System.Reflection;
-using System.Text;
 
 namespace DotBPE.Gateway
 {
@@ -73,8 +72,8 @@ namespace DotBPE.Gateway
                 if (rAttr == null)
                     continue;
 
-                Type returnType = m.ReturnType;
-                Type requestType = m.GetParameters()[0].ParameterType;
+                var returnType = m.ReturnType;
+                var requestType = m.GetParameters()[0].ParameterType;
 
                 if (!returnType.IsGenericType && returnType.GenericTypeArguments.Length != 1)
                 {
@@ -123,7 +122,8 @@ namespace DotBPE.Gateway
 
                 foreach (var verb in anyVerbs)
                 {
-                    var httpApiOptions = new HttpApiOptions() {
+                    var httpApiOptions = new HttpApiOptions()
+                    {
                         AcceptVerb = verb,
                         Category = rAttr.Category,
                         Pattern = rAttr.Path,
@@ -137,7 +137,8 @@ namespace DotBPE.Gateway
             }
             else
             {
-                var httpApiOptions = new HttpApiOptions() {
+                var httpApiOptions = new HttpApiOptions()
+                {
                     AcceptVerb = rAttr.AcceptVerb,
                     Category = rAttr.Category,
                     Pattern = rAttr.Path,

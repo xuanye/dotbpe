@@ -36,82 +36,49 @@ namespace DotBPE.Extra
             where TRequest : class
             where TResponse : class
         {
+            var methodName = $"{invocation.Method.DeclaringType.Name}.{invocation.Method.Name}";
             var returnType = invocation.Method.ReturnType;
 
-            if (invocation.Arguments.Length == 1)
+            var callContext = new InvocationContext() { Method = invocation.Method };
+
+            if (invocation.Arguments.Length > 1 && invocation.Arguments[1].GetType() == typeof(int))
             {
-                var serviceMethod = new ServiceMethod<TRequest, TResponse>(async req =>
-                {
-                    invocation.Proceed();
-                    var result = invocation.ReturnValue;
-                    if (typeof(Task).IsAssignableFrom(returnType) && returnType.IsGenericType) //Task<RpcResult>
-                    {
-
-                        var resultTask = result as Task;
-
-                        await resultTask;
-
-                        var property = result.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance);
-                        if (property == null)
-                            throw new InvalidOperationException("Task does not have a return value (" + result.GetType().ToString() + ")");
-                        var response = property.GetValue(result);
-
-                        return (RpcResult<TResponse>)response;
-                    }
-                    else
-                    {
-                        throw new RpcException("Return type must be Task or Task<RpcResult<T>>");
-                    }
-
-                });
-
-                return ServiceHandle(request, serviceMethod);
+                callContext.Timeout = (int)invocation.Arguments[1];
             }
-            else
+
+            var serviceMethod = new ServiceMethod<TRequest, TResponse>(async (req, context) =>
             {
-                var serviceMethod = new ServiceMethodWithTimeout<TRequest, TResponse>(async (_1, _2) =>
+                invocation.Proceed();
+                var result = invocation.ReturnValue;
+                if (typeof(Task).IsAssignableFrom(returnType) && returnType.IsGenericType) //Task<RpcResult>
                 {
-                    invocation.Proceed();
-                    var result = invocation.ReturnValue;
-                    if (typeof(Task).IsAssignableFrom(returnType) && returnType.IsGenericType) //Task<RpcResult>
-                    {
-                        var resultTask = result as Task;
+                    var resultTask = result as Task;
+                    await resultTask;
+                    var property = result.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance);
+                    if (property == null)
+                        throw new InvalidOperationException("Task does not have a return value (" + result.GetType().ToString() + ")");
+                    var response = property.GetValue(result);
+                    return (RpcResult<TResponse>)response;
+                }
+                else
+                {
+                    throw new RpcException("Return type must be Task or Task<RpcResult<T>>");
+                }
 
-                        await resultTask;
+            });
 
-                        var property = result.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance);
-                        if (property == null)
-                            throw new InvalidOperationException("Task does not have a return value (" + result.GetType().ToString() + ")");
-                        var response = property.GetValue(result);
-
-                        return (RpcResult<TResponse>)response;
-                    }
-                    else
-                    {
-                        throw new RpcException("Return type must be Task or Task<RpcResult<T>>");
-                    }
-
-                });
-                int timeout = (int)invocation.Arguments[1];
-                return ServiceHandleWithTimeout(request, timeout, serviceMethod);
-            }
+            return ServiceHandle(request, callContext, serviceMethod);
 
         }
 
 
-        protected virtual Task<RpcResult<TResponse>> ServiceHandle<TRequest, TResponse>(TRequest req, ServiceMethod<TRequest, TResponse> continuation)
+        protected virtual Task<RpcResult<TResponse>> ServiceHandle<TRequest, TResponse>(TRequest req, InvocationContext callContext, ServiceMethod<TRequest, TResponse> continuation)
             where TRequest : class
             where TResponse : class
         {
-            return continuation(req);
+            return continuation(req, callContext);
         }
 
-        protected virtual Task<RpcResult<TResponse>> ServiceHandleWithTimeout<TRequest, TResponse>(TRequest req, int timeout, ServiceMethodWithTimeout<TRequest, TResponse> continuation)
-          where TRequest : class
-          where TResponse : class
-        {
-            return continuation(req, timeout);
-        }
 
     }
 }

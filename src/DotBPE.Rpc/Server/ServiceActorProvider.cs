@@ -1,11 +1,9 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc;
-using DotBPE.Rpc.Attributes;
-using DotBPE.Rpc.Protocols;
+using DotBPE.Rpc.AuditLog;
+using Microsoft.Extensions.Logging;
 using System;
-using System.Reflection;
 
 namespace DotBPE.Rpc.Server
 {
@@ -14,11 +12,18 @@ namespace DotBPE.Rpc.Server
     {
         private readonly IServiceActorLocator _actorLocator;
         private readonly ISerializer _serializer;
+        private readonly ILoggerFactory _loggerFactory;
+        private readonly IAuditLoggerFactory _auditLoggerFactory;
 
-        public ServiceActorProvider(IServiceActorLocator actorLocator,ISerializer serializer)
+        public ServiceActorProvider(IServiceActorLocator actorLocator
+            , ISerializer serializer
+            , ILoggerFactory loggerFactory
+            , IAuditLoggerFactory auditLoggerFactory = null)
         {
             _actorLocator = actorLocator;
             _serializer = serializer;
+            _loggerFactory = loggerFactory;
+            _auditLoggerFactory = auditLoggerFactory;
         }
 
 
@@ -27,7 +32,7 @@ namespace DotBPE.Rpc.Server
             try
             {
 
-                var binder = new ServiceActorBinder<TService>(context, _actorLocator, _serializer);
+                var binder = new ServiceActorBinder<TService>(context, _actorLocator, _serializer, _loggerFactory, _auditLoggerFactory);
                 binder.Bind();
 
             }

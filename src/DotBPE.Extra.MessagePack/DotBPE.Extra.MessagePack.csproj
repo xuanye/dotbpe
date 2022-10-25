@@ -26,4 +26,8 @@
     <PackageReference Include="MessagePack" Version="2.2.85" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
+  </ItemGroup>
+
 </Project>

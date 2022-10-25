@@ -86,7 +86,7 @@ namespace DotBPE.Rpc.Client
         }
 
         /// <summary>
-        /// get client proxy  instance
+        /// get client proxy instance
         /// </summary>
         /// <returns></returns>
         public IClientProxy GetClientProxy()

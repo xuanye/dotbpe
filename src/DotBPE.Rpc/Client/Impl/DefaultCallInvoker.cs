@@ -1,13 +1,16 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
+using DotBPE.Rpc.AuditLog;
 using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Protocols;
+using DotBPE.Rpc.Server;
 using DotNetty.Transport.Channels;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -18,14 +21,20 @@ namespace DotBPE.Rpc.Client
         private readonly IRpcClient _rpcClient;
         private readonly ISerializer _serializer;
         private readonly ILogger<DefaultCallInvoker> _logger;
+        private readonly IAuditLoggerFactory _auditLoggerFactory;
         private readonly ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>> _resultDictionary = new ConcurrentDictionary<string, TaskCompletionSource<AmpMessage>>();
 
         private static int _invokerSeq;
-        public DefaultCallInvoker(IRpcClient rpcClient, ISerializer serializer, ILogger<DefaultCallInvoker> logger)
+        public DefaultCallInvoker(IRpcClient rpcClient
+            , ISerializer serializer
+            , ILogger<DefaultCallInvoker> logger
+            , IAuditLoggerFactory auditLoggerFactory = null
+            )
         {
             _rpcClient = rpcClient;
             _serializer = serializer;
             _logger = logger;
+            _auditLoggerFactory = auditLoggerFactory;
         }
 
         public async Task<RpcResult<TResponse>> InvokerAsync<TRequest, TResponse>(IMethod method, TRequest request)
@@ -38,7 +47,8 @@ namespace DotBPE.Rpc.Client
             reqMessage.ServiceGroupName = method.GroupName;
             reqMessage.Data = _serializer.Serialize(request);
 
-
+            var sw = new Stopwatch();
+            sw.Start();
             var rsp = await AsyncCallInner(reqMessage, method.DefaultTimeout > 0 ? method.DefaultTimeout : 3000);
             if (rsp != null)
             {
@@ -52,6 +62,14 @@ namespace DotBPE.Rpc.Client
             {
                 _logger.LogError("Call {0} , return null", method.FullName);
                 result.Code = RpcStatusCodes.CODE_INTERNAL_ERROR;
+            }
+            sw.Stop();
+            //audit logger
+            if (_auditLoggerFactory != null)
+            {
+                var logger = _auditLoggerFactory.GetLogger(AuditLogType.Client);
+                if (logger != null)
+                    await logger.Log(method.FullName, request, result.Data, result.Code, sw.ElapsedMilliseconds, LocalRpcContext.Instance);
             }
             return result;
         }
@@ -98,14 +116,6 @@ namespace DotBPE.Rpc.Client
 
             AutoSetSequence(request);
             _logger.LogDebug("new request id={0},type={1}", request.Id, request.MessageType);
-
-            /*
-            if (request.MessageType == RpcMessageType.OnewayRequest)
-            {
-                await SendAsync(request);
-                return AmpMessage.CreateResponseMessage(request);
-            }
-            */
 
             var cts = new CancellationTokenSource(timeout);
             //timeout callback
