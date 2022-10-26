@@ -13,7 +13,7 @@ namespace DotBPE.Rpc.Tests.Protocol
     public class AmpProtocolTests
     {
         [Fact]
-        public void CreateRequestMessageWithRespsone_ShouldBe_DecodeIncorrect()
+        public void EncodeAndDecode_ShouldBeOk()
         {
             var codecType = CodecType.MessagePack;
             /**/

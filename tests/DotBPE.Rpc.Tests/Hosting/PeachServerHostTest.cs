@@ -16,7 +16,7 @@ namespace DotBPE.Rpc.Tests.Hosting
     public class PeachServerHostTest
     {
         [Fact]
-        public async Task RunServerHost_ShouldBe_OK()
+        public async Task RunServerHost_ShouldBeOK()
         {
             var services = new ServiceCollection();
 
@@ -45,7 +45,7 @@ namespace DotBPE.Rpc.Tests.Hosting
         }
 
         [Fact]
-        public async Task RunPeachServerHost_ShouldBe_OK()
+        public async Task RunPeachServerHost_ShouldBeOK()
         {
             var services = new ServiceCollection();
 

@@ -25,6 +25,7 @@
     <PackageReference Include="StackExchange.Redis" Version="2.2.4" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\DotBPE.BestPractice\DotBPE.BestPractice.csproj" />
     <ProjectReference Include="..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
   </ItemGroup>
 </Project>

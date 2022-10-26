@@ -23,7 +23,9 @@ namespace DotBPE.Extra
         {
             services.TryAddSingleton<IContextAccessor, DefaultContextAccessor>();
             return services.AddSingleton<IServiceActorLocator, DynamicServiceActorLocator>()
-                .AddServiceInterceptor<CallContextServiceActorInterceptor>();
+                .AddServiceInterceptor<CallContextServiceActorInterceptor>()
+                .AddServiceInterceptor<ServiceAuditLogInterceptor>();
+
         }
 
         public static IServiceCollection AddDynamicProxy(this IServiceCollection services)

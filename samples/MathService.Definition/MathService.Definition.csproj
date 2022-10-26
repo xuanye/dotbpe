@@ -8,7 +8,6 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DotBPE.Extra.MessagePack\DotBPE.Extra.MessagePack.csproj" />
-    <ProjectReference Include="..\..\src\DotBPE.Gateway\DotBPE.Gateway.csproj" />
   </ItemGroup>
 
 </Project>

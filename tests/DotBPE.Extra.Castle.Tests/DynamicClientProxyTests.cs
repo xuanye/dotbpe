@@ -17,9 +17,9 @@ namespace DotBPE.Extra.Castle.Tests
     public class DynamicClientProxyTests
     {
         [Fact]
-        public async Task LocalProxy_Create_ShouldBe_Ok()
+        public async Task Create_ReturnLocalProxy_LocalPoint()
         {
-
+            //arrange
             var routerMock = new Mock<IServiceRouter>();
 
             IRouterPoint localPoint = new RouterPoint { RoutePointType = RoutePointType.Local };
@@ -40,13 +40,12 @@ namespace DotBPE.Extra.Castle.Tests
 
             var proxy = provider.GetService<IClientProxy>();
 
+            //act
             var client = proxy.Create<IFooService>();
-
-            Assert.NotNull(client);
-
             var message = "Hello DotBPE!";
             var res = await client.FooAsync(new FooReq() { FooWord = message });
 
+            //assert
             Assert.NotNull(res);
             Assert.Equal(0, res.Code);
             Assert.NotNull(res.Data);
@@ -54,9 +53,9 @@ namespace DotBPE.Extra.Castle.Tests
         }
 
         [Fact]
-        public async Task LocalProxy_CreateAsync_ShouldBe_Ok()
+        public async Task CreateAsync_ReturnLocalProxy_LocalPoint()
         {
-
+            //arrange
             var routerMock = new Mock<IServiceRouter>();
 
             IRouterPoint localPoint = new RouterPoint { RoutePointType = RoutePointType.Local };
@@ -75,13 +74,12 @@ namespace DotBPE.Extra.Castle.Tests
 
             var proxy = provider.GetService<IClientProxy>();
 
+            //act
             var client = await proxy.CreateAsync<IFooService>();
-
-            Assert.NotNull(client);
-
             var message = "Hello DotBPE!";
             var res = await client.FooAsync(new FooReq() { FooWord = message });
 
+            //assert
             Assert.NotNull(res);
             Assert.Equal(0, res.Code);
             Assert.NotNull(res.Data);
@@ -89,8 +87,9 @@ namespace DotBPE.Extra.Castle.Tests
         }
 
         [Fact]
-        public async Task RemoteProxy_Create_ShouldBeOk()
+        public async Task CreateAsync_ReturnRemoteProxy_RemotePoint()
         {
+            //arrange
             var routerMock = new Mock<IServiceRouter>();
 
             var remoteIP = "192.168.1.1";
@@ -135,18 +134,17 @@ namespace DotBPE.Extra.Castle.Tests
 
             var proxy = provider.GetService<IClientProxy>();
 
+
+            //act
             var client = await proxy.CreateAsync<IFooService>();
-
-            Assert.NotNull(client);
-
             var message = "Hello DotBPE!";
             var res = await client.FooAsync(new FooReq() { FooWord = message });
 
 
+            //assert
             var serviceType = typeof(IFooService);
             var serviceAttr = serviceType.GetCustomAttribute<RpcServiceAttribute>();
             Assert.NotNull(serviceAttr);
-
             var methodInfo = serviceType.GetMethod("FooAsync");
             Assert.NotNull(methodInfo);
 

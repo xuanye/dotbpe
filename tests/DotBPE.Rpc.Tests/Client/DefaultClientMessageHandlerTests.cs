@@ -12,7 +12,7 @@ namespace DotBPE.Rpc.Tests.Client
     public class DefaultClientMessageHandlerTests
     {
         [Fact]
-        public void TestSubscriber_Should_RecieveMessage()
+        public void RaiseReceive_SubscribersRecieveSameMessage()
         {
             //arrange
             var services = new ServiceCollection();

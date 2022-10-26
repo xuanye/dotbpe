@@ -11,26 +11,26 @@ namespace DotBPE.Rpc.Tests.Client
 {
     public class DefaultTransportFactoryTests
     {
-        [Fact]
-        public async Task CreateTransport_ShouldBe_Ok()
+        [Theory]
+        [InlineData("192.168.1.2", 4000)]
+        [InlineData("127.0.0.1", 4001)]
+        public async Task CreateTransport_ShouldBe_Ok(string address, int port)
         {
             //arrange
             var autoMocker = new AutoMocker();
 
             var factory = autoMocker.CreateInstance<DefaultTransportFactory>();
 
-            var address = "192.168.1.2";
-            var port1 = 4000;
-            var port2 = 4001;
-            var endpoint1 = new IPEndPoint(IPAddress.Parse(address), port1);
-            var endpoint2 = new IPEndPoint(IPAddress.Parse(address), port1);
+            var endpoint1 = new IPEndPoint(IPAddress.Parse(address), port);
+            var endpoint2 = new IPEndPoint(IPAddress.Parse(address), port);
+            var endpoint3 = new IPEndPoint(IPAddress.Parse(address), port + 1);
 
-            var endpoint3 = new IPEndPoint(IPAddress.Parse(address), port2);
             //act
 
             var transport1 = await factory.CreateTransport(endpoint1);
             var transport2 = await factory.CreateTransport(endpoint2);
             var transport3 = await factory.CreateTransport(endpoint3);
+
 
             //assert
             Assert.NotNull(transport1);
@@ -42,21 +42,19 @@ namespace DotBPE.Rpc.Tests.Client
 
         }
 
-        [Fact]
-        public async Task CreateTransport_Concurrently_ShouldBe_Ok()
+        [Theory]
+        [InlineData("192.168.1.2", 4000)]
+        [InlineData("127.0.0.1", 4001)]
+        public async Task CreateTransport_Concurrently_ShouldBe_Ok(string address, int port)
         {
             //arrange
             var autoMocker = new AutoMocker();
 
             var factory = autoMocker.CreateInstance<DefaultTransportFactory>();
 
-            var address = "192.168.1.2";
-            var port1 = 4000;
-            var port2 = 4001;
-            var endpoint1 = new IPEndPoint(IPAddress.Parse(address), port1);
-            var endpoint2 = new IPEndPoint(IPAddress.Parse(address), port1);
-
-            var endpoint3 = new IPEndPoint(IPAddress.Parse(address), port2);
+            var endpoint1 = new IPEndPoint(IPAddress.Parse(address), port);
+            var endpoint2 = new IPEndPoint(IPAddress.Parse(address), port);
+            var endpoint3 = new IPEndPoint(IPAddress.Parse(address), port + 1);
             //act
 
             var task1 = factory.CreateTransport(endpoint1);

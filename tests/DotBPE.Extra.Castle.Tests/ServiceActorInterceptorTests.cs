@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
+using DotBPE.Extra.Castle.Tests.TestObjects;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.TestBase;
@@ -15,8 +16,9 @@ namespace DotBPE.Extra.Castle.Tests
     public class ServiceActorInterceptorTests
     {
         [Fact]
-        public async Task ServiceInterceptor_Should_RecieveMessage()
+        public async Task ServiceInterceptor_RecieveMessage_AfterRegistered()
         {
+            //arrange
             var routerMock = new Mock<IServiceRouter>();
 
             IRouterPoint local = new RouterPoint
@@ -46,13 +48,14 @@ namespace DotBPE.Extra.Castle.Tests
 
             var proxy = provider.GetService<IClientProxy>();
 
+
             var client = await proxy.CreateAsync<IFooService>();
-
-            Assert.NotNull(client);
-
             var message = "Hello DotBPE!";
+
+            //act
             var res = await client.FooAsync(new FooReq() { FooWord = message });
 
+            //assert
             Assert.NotNull(res);
             Assert.Equal(0, res.Code);
             Assert.NotNull(res.Data);
@@ -68,8 +71,9 @@ namespace DotBPE.Extra.Castle.Tests
 
 
         [Fact]
-        public async Task ServiceInterceptor_ShouldNot_RecieveMessage_WhenCallRemote()
+        public async Task ServiceInterceptor_DoesNotRecieveMessage_CallRemote()
         {
+            //arrange
             var routerMock = new Mock<IServiceRouter>();
 
             var remoteIP = "192.168.1.1";
@@ -112,21 +116,19 @@ namespace DotBPE.Extra.Castle.Tests
             }));
 
             var provider = services.BuildServiceProvider();
-
             var proxy = provider.GetService<IClientProxy>();
-
             var client = await proxy.CreateAsync<IFooService>();
 
-            Assert.NotNull(client);
 
             var message = "Hello DotBPE!";
+            //act
             var res = await client.FooAsync(new FooReq() { FooWord = message });
 
+            //assert
             Assert.NotNull(res);
             Assert.Equal(0, res.Code);
             Assert.NotNull(res.Data);
             Assert.Equal(responseMsg, res.Data.RetFooWord);
-
             Assert.False(executed);
 
 

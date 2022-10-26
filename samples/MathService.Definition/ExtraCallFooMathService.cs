@@ -1,37 +1,30 @@
-using System.Threading.Tasks;
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Server;
 using Microsoft.Extensions.Logging;
+using System.Threading.Tasks;
 
 namespace MathService.Definition
 {
-    public class ExtraCallFooMathService: BaseService<IMathService>,IMathService
+    public class ExtraCallFooMathService : BaseService<IMathService>, IMathService
     {
         private readonly ILogger<MathService> _logger;
-        private readonly IClientProxy _clientProxy;
-        public ExtraCallFooMathService(IClientProxy clientProxy,ILogger<MathService> logger)
+
+        public ExtraCallFooMathService(ILogger<MathService> logger)
         {
-            this._logger = logger;
-            this._clientProxy = clientProxy;
+            _logger = logger;
+
         }
-        public async Task<RpcResult<SumRes>> SumAsync(SumReq req)
+        public Task<RpcResult<SumRes>> SumAsync(SumReq req)
         {
-            RpcResult<SumRes> result = new RpcResult<SumRes> { Data = new SumRes() };
+            var result = new RpcResult<SumRes> { Data = new SumRes() };
             result.Data.Total = req.A + req.B;
 
-            var fooService = this._clientProxy.Create<IFooService>();
-            var fooResult = await fooService.FooAsync(new FooReq { FooWord="Foo" });
-
-            if(fooResult.Code != 0)
-            {
-                result.Code = fooResult.Code;
-                return result;
-            }
-            result.Data.FooWord = fooResult.Data?.RetWord;
-
-            this._logger.LogInformation("A+B=C {A}+{B}={C}",req.A,req.B,result.Data.Total);
-            return result;
+            _logger.LogInformation("A+B=C {A}+{B}={C}", req.A, req.B, result.Data.Total);
+            return Task.FromResult(result);
         }
     }
 

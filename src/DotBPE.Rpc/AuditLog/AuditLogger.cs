@@ -35,7 +35,7 @@ namespace DotBPE.Rpc.AuditLog
                 };
                 var logText = _formatter.Format(logInfo);
 
-                return _writer.WriteAsync(logText);
+                return _writer.WriteAsync(logText, AuditLogType);
             }
             catch
             {

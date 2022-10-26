@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using System.Runtime.Serialization;
 
 namespace MathService.Definition
@@ -11,14 +14,9 @@ namespace MathService.Definition
         /// <summary>
         /// 总记录
         /// </summary>
-        [DataMember(Order =1,Name ="total")]
+        [DataMember(Order = 1, Name = "total")]
         public int Total { get; set; }
 
-        /// <summary>
-        /// FooWord字段
-        /// </summary>
-        [DataMember(Order = 2, Name = "foo_word")]
-        public string FooWord { get; set; }
     }
 
     /// <summary>
@@ -40,29 +38,5 @@ namespace MathService.Definition
         public int B { get; set; }
     }
 
-    /// <summary>
-    /// Foo请求
-    /// </summary>
-    [DataContract]
-    public class FooReq
-    {
-        /// <summary>
-        /// FooWord字段
-        /// </summary>
-        [DataMember(Order = 1, Name = "foo_word")]
-        public string FooWord{ get; set; }
-    }
 
-    /// <summary>
-    /// Foo返回值
-    /// </summary>
-    [DataContract]
-    public class FooRes
-    {
-        /// <summary>
-        /// 返回值字段
-        /// </summary>
-        [DataMember(Order = 1, Name = "ret_word")]
-        public string RetWord { get; set; }
-    }
 }

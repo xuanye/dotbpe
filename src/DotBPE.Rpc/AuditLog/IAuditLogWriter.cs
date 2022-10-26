@@ -10,6 +10,6 @@ namespace DotBPE.Rpc.AuditLog
 {
     public interface IAuditLogWriter
     {
-        Task WriteAsync(string log);
+        Task WriteAsync(string log, AuditLogType auditLogType);
     }
 }

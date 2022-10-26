@@ -15,7 +15,7 @@ namespace DotBPE.Rpc.Tests.Server
     public class DefaultServiceActorHandlerFactoryTests
     {
         [Fact]
-        public void RegisterActorInvoker_ShouldBe_Ok()
+        public void RegisterActorInvoker_NoError()
         {
             //arrange
             var autoMocker = new AutoMocker();
@@ -40,7 +40,7 @@ namespace DotBPE.Rpc.Tests.Server
         }
 
         [Fact]
-        public void GetRegistedActorInvoker_ShouldBe_Ok()
+        public void GetInstance_ReturnCorrectHandler_CorrectMethodId()
         {
             //arrange
             var autoMocker = new AutoMocker();
@@ -76,6 +76,43 @@ namespace DotBPE.Rpc.Tests.Server
 
             Assert.NotNull(actorHandler);
 
+
+
+
+
+        }
+        [Fact]
+        public void GetInstance_ReturnNotFoundHandler_IncorrectMethodId()
+        {
+            //arrange
+            var autoMocker = new AutoMocker();
+            var factory = autoMocker.CreateInstance<DefaultServiceActorHandlerFactory>();
+            var locator = autoMocker.GetMock<IServiceActorLocator>();
+
+            var serializer = new Mock<ISerializer>();
+
+
+            var methodInfo = typeof(IFooService).GetMethod("FooAsync");
+            var serviceMethod = (ServiceMethod<IFooService, FooReq, FooRes>)Delegate.CreateDelegate(typeof(ServiceMethod<IFooService, FooReq, FooRes>), methodInfo);
+
+            var fooService = new FooService();
+            var invoker = new MethodInvoker<IFooService, FooReq, FooRes>(serviceMethod, null, 0);
+            var callHandler = new ActorCallHandler<IFooService, FooReq, FooRes>(locator.Object, invoker, serializer.Object, NullLoggerFactory.Instance);
+            var method = new Method()
+            {
+                GroupName = "default",
+                ServiceName = "FooService",
+                ServiceId = 100,
+                MethodId = 1,
+                MethodName = "FooAsync"
+            };
+            var actorModel = new ActorInvokerModel(method, callHandler.HandleCallAsync);
+
+            var methodIdentity = $"{method.ServiceId}.{method.MethodId}";
+            locator.Setup(x => x.LocateServiceActor(methodIdentity)).Returns(fooService);
+
+            //act
+            factory.RegisterActorInvokerHandler(actorModel);
 
 
             var actorNotFoundHandler = factory.GetInstance($"101.1");

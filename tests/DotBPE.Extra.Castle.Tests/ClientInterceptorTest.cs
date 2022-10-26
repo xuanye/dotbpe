@@ -1,6 +1,7 @@
 // Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
+using DotBPE.Extra.Castle.Tests.TestObjects;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.TestBase;
@@ -16,14 +17,12 @@ namespace DotBPE.Extra.Castle.Tests
     public class ClientInterceptorTest
     {
         [Fact]
-        public async Task ClientInterceptor_Should_RecieveMessage()
+        public async Task ClientInterceptor_RecieveMessage_AfterRegistered()
         {
+            //arrange
             var routerMock = new Mock<IServiceRouter>();
-
-
             var remoteIP = "192.168.1.1";
             var remotePort = 4001;
-
             IRouterPoint remotePoint = new RouterPoint
             {
                 RoutePointType = RoutePointType.Remote,
@@ -67,12 +66,12 @@ namespace DotBPE.Extra.Castle.Tests
             var proxy = provider.GetService<IClientProxy>();
 
             var client = await proxy.CreateAsync<IFooService>();
-
-            Assert.NotNull(client);
-
             var message = "Hello DotBPE!";
+
+            //act
             var res = await client.FooAsync(new FooReq() { FooWord = message });
 
+            //assert
             Assert.NotNull(res);
             Assert.Equal(0, res.Code);
             Assert.NotNull(res.Data);
@@ -87,12 +86,10 @@ namespace DotBPE.Extra.Castle.Tests
         }
 
         [Fact]
-        public async Task ClientInterceptor_ShouldNot_RecieveMessage_WhenCallLocal()
+        public async Task ClientInterceptor_DoesNotRecieveMessage_CallLocal()
         {
+            //arrange
             var routerMock = new Mock<IServiceRouter>();
-
-
-
             IRouterPoint localPoint = new RouterPoint
             {
                 RoutePointType = RoutePointType.Local,
@@ -100,7 +97,6 @@ namespace DotBPE.Extra.Castle.Tests
             routerMock.Setup(x => x.FindRouterPoint(It.IsAny<string>())).Returns(Task.FromResult(localPoint));
 
             var invokerMock = new Mock<ICallInvoker>();
-
 
             var services = new ServiceCollection();
             services.AddLogging();
@@ -122,11 +118,11 @@ namespace DotBPE.Extra.Castle.Tests
 
             var client = await proxy.CreateAsync<IFooService>();
 
-            Assert.NotNull(client);
-
             var message = "Hello DotBPE!";
+            //act
             var res = await client.FooAsync(new FooReq() { FooWord = message });
 
+            //assert
             Assert.NotNull(res);
             Assert.Equal(0, res.Code);
             Assert.NotNull(res.Data);

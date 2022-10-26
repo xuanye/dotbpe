@@ -7,7 +7,7 @@ using System.Collections.Generic;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace DotBPE.Extra.Castle.Tests
+namespace DotBPE.Extra.Castle.Tests.TestObjects
 {
     public class LogInterceptor : ClientInterceptor
     {

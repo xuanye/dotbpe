@@ -1,16 +1,20 @@
-using System;
-using System.Collections.Generic;
-using System.Threading;
-using System.Threading.Tasks;
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Baseline.Extensions;
 using DotBPE.Rpc;
 using DotBPE.Rpc.BestPractice;
 using DotBPE.Rpc.Client;
+using DotBPE.Rpc.Protocols;
 using Foundatio.Messaging;
 using Microsoft.Extensions.Hosting;
 using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
+using System;
+using System.Collections.Generic;
 using System.Linq;
+using System.Threading;
+using System.Threading.Tasks;
 
 namespace DotBPE.Extra
 {
@@ -35,33 +39,33 @@ namespace DotBPE.Extra
         {
             _pipelineOptions = optionsAccessor.Value;
             _pipelineTaskService = pipelineTaskService;
-            this._messageBus = messageBus;
-            this._jsonParser = jsonParser;
-            this._dbStorage = dbStorage;
+            _messageBus = messageBus;
+            _jsonParser = jsonParser;
+            _dbStorage = dbStorage;
 
-            this._rpcServiceScanner = rpcServiceScanner;
-            this._logger = logger;
+            _rpcServiceScanner = rpcServiceScanner;
+            _logger = logger;
         }
 
         public Task StartAsync(CancellationToken cancellationToken)
         {
 
-            this._messageBus.SubscribeAsync<QueueTaskItem>(Consume, cancellationToken);
+            _messageBus.SubscribeAsync<QueueTaskItem>(Consume, cancellationToken);
 
-            this._logger.LogInformation("MessageBusConsumeService is Started!");
+            _logger.LogInformation("MessageBusConsumeService is Started!");
             return Task.CompletedTask;
         }
 
         public Task StopAsync(CancellationToken cancellationToken)
         {
-            this._messageBus.Dispose();
-            this._logger.LogInformation("MessageBusConsumeService is Stop!");
+            _messageBus.Dispose();
+            _logger.LogInformation("MessageBusConsumeService is Stop!");
             return Task.CompletedTask;
         }
 
         private async Task Consume(QueueTaskItem item)
         {
-            this._logger.LogDebug("serviceId={serviceId},messageId={messageId},data = {data}", item.ServiceId, item.MessageId, item.ExecuteJson);
+            _logger.LogDebug("serviceId={serviceId},messageId={messageId},data = {data}", item.ServiceId, item.MessageId, item.ExecuteJson);
             var res = await InvokeCall(item);
             if (res.Code == 0) return;
             //this._logger.LogWarning("执行失败{code},returnMessage={returnMessage}:serviceId={serviceId},messageId={messageId},data = {data}", res.Code, returnMessage, item.ServiceId, item.MessageId, item.ExecuteJson);
@@ -69,7 +73,7 @@ namespace DotBPE.Extra
             if (IsRetryException(res) == false)
             {
                 if (item.TaskId > 0) //延时任务
-                    await this._dbStorage.Failed(item.TaskId, 10000, GetMaxTimeSpan());//业务异常不需要重试，所以把失败次数改大一点
+                    await _dbStorage.Failed(item.TaskId, 10000, GetMaxTimeSpan());//业务异常不需要重试，所以把失败次数改大一点
                 return;
             }
 
@@ -84,10 +88,10 @@ namespace DotBPE.Extra
             var json = item.ExecuteJson;
             try
             {
-                var rpcMethod = this._rpcServiceScanner.GetRpcInvoker(serviceId, messageId);
+                var rpcMethod = _rpcServiceScanner.GetRpcInvoker(serviceId, messageId);
                 var parameters = rpcMethod.InvokeMethod.GetParameters();
 
-                var param0 = this._jsonParser.FromJson(json, parameters[0].ParameterType);
+                var param0 = _jsonParser.FromJson(json, parameters[0].ParameterType);
                 var callParams = parameters.Length == 1 ?
                     new[] { param0 }
                     : new[] { param0, parameters[1].HasDefaultValue ? parameters[1].DefaultValue : DefaultRpcTimeout };
@@ -115,7 +119,7 @@ namespace DotBPE.Extra
                     var resultProp = retValType.GetProperty("Result");
                     if (resultProp == null)
                     {
-                        res.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
+                        res.Code = RpcStatusCodes.CODE_INTERNAL_ERROR;
                         return res;
                     }
 
@@ -129,14 +133,14 @@ namespace DotBPE.Extra
                     if (res.Code != 0)
                     {
                         var returnMessage = GetReturnMessage(result) ?? string.Empty;
-                        this._logger.LogWarning("执行失败{code},returnMessage={returnMessage}:serviceId={serviceId},messageId={messageId},data = {data}", res.Code, returnMessage, item.ServiceId, item.MessageId, item.ExecuteJson);
+                        _logger.LogWarning("执行失败{code},returnMessage={returnMessage}:serviceId={serviceId},messageId={messageId},data = {data}", res.Code, returnMessage, item.ServiceId, item.MessageId, item.ExecuteJson);
                     }
                 }
             }
             catch (Exception ex)
             {
-                res.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
-                this._logger.LogError(ex, "invoke queue task fail:" + ex.Message);
+                res.Code = RpcStatusCodes.CODE_INTERNAL_ERROR;
+                _logger.LogError(ex, "invoke queue task fail:" + ex.Message);
             }
 
             return res;
@@ -161,8 +165,8 @@ namespace DotBPE.Extra
             if (item.TaskId > 0) //延时任务
             {
                 var nextExecuteTime = GetNextRetryTimeSpan(item.FailCount + 1);
-                if (item.FailCount >= this._pipelineOptions.RetryMaxCount) nextExecuteTime = GetMaxTimeSpan();
-                await this._dbStorage.Failed(item.TaskId, 1, nextExecuteTime); //要更新下次执行延时时间，不然就立即执行了
+                if (item.FailCount >= _pipelineOptions.RetryMaxCount) nextExecuteTime = GetMaxTimeSpan();
+                await _dbStorage.Failed(item.TaskId, 1, nextExecuteTime); //要更新下次执行延时时间，不然就立即执行了
                 return;
             }
             else
@@ -183,7 +187,7 @@ namespace DotBPE.Extra
                     UpdateTime = DateTime.Now,
                     RouteKey = item.RouteKey
                 };
-                await this._pipelineTaskService.EnqueueDelay(delayTask);
+                await _pipelineTaskService.EnqueueDelay(delayTask);
                 return;
             }
         }
@@ -196,7 +200,7 @@ namespace DotBPE.Extra
         private bool IsRetryException(RpcResult res)
         {
             //return res != null && res.Code == RpcErrorCodes.CODE_INTERNAL_ERROR;
-            return res != null && this._pipelineOptions.RetryExceptionCode.ToList().Contains(res.Code) && this._pipelineOptions.RetryMaxCount > 0;
+            return res != null && _pipelineOptions.RetryExceptionCode.ToList().Contains(res.Code) && this._pipelineOptions.RetryMaxCount > 0;
         }
 
         /// <summary>
@@ -206,7 +210,7 @@ namespace DotBPE.Extra
         /// <returns></returns>
         private TimeSpan GetNextRetryTimeSpan(int failCount)
         {
-            var retryStrategy = this._pipelineOptions.RetryStrategy;
+            var retryStrategy = _pipelineOptions.RetryStrategy;
             if (failCount <= 0) failCount = 1;
             if (failCount > retryStrategy.Length)
             {

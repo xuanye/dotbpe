@@ -15,7 +15,7 @@ namespace DotBPE.Rpc.Tests.Server
     {
 
         [Fact]
-        public async Task ReceiveResponseMessage_ShouldBe_DoNothing()
+        public async Task ReceiveAsync_ShouldDoNothing_GetAResponseMessage()
         {
 
             //arrange
@@ -23,13 +23,13 @@ namespace DotBPE.Rpc.Tests.Server
             var messageHandler = autoMocker.CreateInstance<DefaultMessageHandler>();
             var mockContext = new Mock<ISocketContext<AmpMessage>>();
             var message = new AmpMessage() { MessageType = RpcMessageType.Response };
-            
+
             //act
             await messageHandler.ReceiveAsync(mockContext.Object, message);
         }
 
         [Fact]
-        public async Task Receive_A_ValidMessage_HandlerFactory_Should_Find_Matched_Handler()
+        public async Task ReceiveAsync_ActorHandlerShouldReveiveMsg_RequestMesage()
         {
 
             //arrange
@@ -38,7 +38,7 @@ namespace DotBPE.Rpc.Tests.Server
             var factoryMock = autoMocker.GetMock<IServiceActorHandlerFactory>();
 
             var mockContext = new Mock<ISocketContext<AmpMessage>>();
-       
+
 
             var actorHandler = new Mock<IServiceActorHandler>();
 
@@ -48,21 +48,22 @@ namespace DotBPE.Rpc.Tests.Server
                 {
                     recievedMsg = msg;
                 });
-               
+
 
             factoryMock.Setup(x => x.GetInstance(It.IsAny<string>())).Returns(actorHandler.Object);
-        
-            var sendMsg = new AmpMessage() { MessageType = RpcMessageType.Request, ServiceId=100, MessageId=1};
+
+            var sendMsg = new AmpMessage() { MessageType = RpcMessageType.Request, ServiceId = 100, MessageId = 1 };
 
             //act
             await messageHandler.ReceiveAsync(mockContext.Object, sendMsg);
 
+            //assert
             Assert.NotNull(recievedMsg);
             Assert.Equal(recievedMsg, sendMsg);
         }
 
         [Fact]
-        public async Task Receive_A_Not_ValidMessage_HandlerFactory_Should_Find_Match_NotFoundHandler()
+        public async Task ReceiveAsync_ShouldMatchNotFoundHandler_ValidRequestMessage()
         {
 
             //arrange
@@ -72,7 +73,7 @@ namespace DotBPE.Rpc.Tests.Server
 
             var mockContext = new Mock<ISocketContext<AmpMessage>>();
 
-            AmpMessage recievedMsg =null;
+            AmpMessage recievedMsg = null;
             mockContext.Setup(x => x.SendAsync(It.IsAny<AmpMessage>())).Callback((AmpMessage msg) =>
             {
                 recievedMsg = msg;

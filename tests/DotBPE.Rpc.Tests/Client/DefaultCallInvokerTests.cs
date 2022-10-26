@@ -19,7 +19,7 @@ namespace DotBPE.Rpc.Tests.Client
     public class DefaultCallInvokerTests
     {
         [Fact]
-        public async Task TestCall_WillBeTimeout_AfterDefaultSetting3s()
+        public async Task InvokerAsync_Timeout_AfterDefaultSetting3s()
         {
 
             //arrange
@@ -49,8 +49,11 @@ namespace DotBPE.Rpc.Tests.Client
             Assert.InRange(stopwatch.ElapsedMilliseconds, 3000, 3100);
         }
 
-        [Fact]
-        public async Task TestCall_WillBeTimeout_After5S()
+        [Theory]
+        [InlineData(3000)]
+        [InlineData(5000)]
+        [InlineData(10000)]
+        public async Task InvokerAsync_Timeout_AfterInputMS(int timeout)
         {
 
             //arrange
@@ -65,7 +68,7 @@ namespace DotBPE.Rpc.Tests.Client
                 ServiceId = 100,
                 MethodId = 1,
                 MethodName = "FooAsync",
-                DefaultTimeout = 5000
+                DefaultTimeout = timeout
             };
 
             var reqMsg = new FooReq() { FooWord = "Hello DotBPE" };
@@ -79,11 +82,11 @@ namespace DotBPE.Rpc.Tests.Client
             //assert
             Assert.NotNull(rspMsg);
             Assert.Equal(RpcStatusCodes.CODE_TIMEOUT, rspMsg.Code);
-            Assert.InRange(stopwatch.ElapsedMilliseconds, 5000, 5100);
+            Assert.InRange(stopwatch.ElapsedMilliseconds, timeout, timeout + 100);
         }
 
         [Fact]
-        public async Task TestCall_NormalProcess_ShouldBe_Ok()
+        public async Task InvokerAsync_ShouldBeOk_CorrectParameters()
         {
 
             //arrange          

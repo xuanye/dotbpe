@@ -16,7 +16,7 @@ namespace DotBPE.Rpc.Tests.Client
     {
 
         [Fact]
-        public async Task MessageHandler_WillRecieveErrorRespons_WhenRouterPointNotFound()
+        public async Task SendAsync_MessageHandlerRecieveErrorRespons_RouterPointNotFound()
         {
             //arrange
             var autoMocker = new AutoMocker();
@@ -56,7 +56,7 @@ namespace DotBPE.Rpc.Tests.Client
 
 
         [Fact]
-        public async Task MessageHandler_WillRecieveErrorRespons_WhenRouterPointIsLocal()
+        public async Task SendAsync_MessageHandlerRecieveErrorRespons_RouterPointIsLocal()
         {
             //arrange
             var autoMocker = new AutoMocker();
@@ -97,7 +97,7 @@ namespace DotBPE.Rpc.Tests.Client
 
 
         [Fact]
-        public async Task Transport_WillRecieveMessage_WhenRouterPointIsRemote()
+        public async Task SendAsync_TransportRecieveMessage_RouterPointIsRemote()
         {
             //arrange
             var autoMocker = new AutoMocker();
