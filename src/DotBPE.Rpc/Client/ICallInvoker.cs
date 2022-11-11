@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 namespace DotBPE.Rpc.Client
 {
 
-    public interface ICallInvoker
+    public interface ICallInvoker : IMessageSubscriber
     {
         Task<RpcResult<TResponse>> InvokerAsync<TRequest, TResponse>(IMethod method, TRequest request)
             where TRequest : class

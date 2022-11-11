@@ -11,6 +11,7 @@ namespace DotBPE.Rpc.Client
 {
     public interface IClientMessageHandler
     {
+
         void RaiseReceive(AmpMessage message);
     }
 }

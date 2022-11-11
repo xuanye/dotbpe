@@ -9,18 +9,20 @@ namespace DotBPE.Rpc.Client
 {
     public class DefaultClientMessageHandler : IClientMessageHandler
     {
-        private readonly List<IMessageSubscriber> _subscribers;
 
-        public DefaultClientMessageHandler(IEnumerable<IMessageSubscriber> subscribers)
+        private readonly IMessageSubscriberContainer _subscriberContainer;
+
+        public DefaultClientMessageHandler(IMessageSubscriberContainer subscriberContainer)
         {
-            _subscribers = subscribers.ToList();
+            _subscriberContainer = subscriberContainer;
         }
 
         public void RaiseReceive(AmpMessage message)
         {
-            if (_subscribers?.Count > 0)
+            var subscribers = _subscriberContainer.GetMessageSubscribers();
+            if (subscribers?.Count > 0)
             {
-                foreach (var subscriber in _subscribers)
+                foreach (var subscriber in subscribers)
                 {
                     subscriber.Handle(message);
                 }

@@ -11,7 +11,7 @@ using System.Reflection;
 namespace DotBPE.Rpc.Server
 {
     internal class ServiceActorBinder<TService>
-         where TService : IServiceActor
+         where TService : class
     {
         private readonly ServiceActorProviderContext _context;
         private readonly IServiceActorLocator _actorLocator;

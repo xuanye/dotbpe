@@ -26,7 +26,6 @@ namespace DotBPE.Rpc.Tests.Client
             var endpoint3 = new IPEndPoint(IPAddress.Parse(address), port + 1);
 
             //act
-
             var transport1 = await factory.CreateTransport(endpoint1);
             var transport2 = await factory.CreateTransport(endpoint2);
             var transport3 = await factory.CreateTransport(endpoint3);
@@ -55,8 +54,8 @@ namespace DotBPE.Rpc.Tests.Client
             var endpoint1 = new IPEndPoint(IPAddress.Parse(address), port);
             var endpoint2 = new IPEndPoint(IPAddress.Parse(address), port);
             var endpoint3 = new IPEndPoint(IPAddress.Parse(address), port + 1);
-            //act
 
+            //act
             var task1 = factory.CreateTransport(endpoint1);
             var task2 = factory.CreateTransport(endpoint2);
             var task3 = factory.CreateTransport(endpoint3);

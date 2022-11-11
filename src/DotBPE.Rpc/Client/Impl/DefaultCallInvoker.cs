@@ -2,6 +2,7 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc.AuditLog;
+using DotBPE.Rpc.Client.Impl;
 using DotBPE.Rpc.Codec;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Protocols;
@@ -27,6 +28,7 @@ namespace DotBPE.Rpc.Client
         private static int _invokerSeq;
         public DefaultCallInvoker(IRpcClient rpcClient
             , ISerializer serializer
+            , IMessageSubscriberContainer subscriberContainer
             , ILogger<DefaultCallInvoker> logger
             , IAuditLoggerFactory auditLoggerFactory = null
             )
@@ -35,6 +37,10 @@ namespace DotBPE.Rpc.Client
             _serializer = serializer;
             _logger = logger;
             _auditLoggerFactory = auditLoggerFactory;
+            if (subscriberContainer is DefaultMessageSubscriberContainer container)
+            {
+                container.Subscribe(this);
+            }
         }
 
         public async Task<RpcResult<TResponse>> InvokerAsync<TRequest, TResponse>(IMethod method, TRequest request)

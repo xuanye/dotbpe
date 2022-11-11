@@ -4,9 +4,6 @@
 
 using DotBPE.Rpc.Server;
 using Peach;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -19,6 +16,7 @@ namespace DotBPE.Rpc.Hosting
         public PeachServerHost(IServerBootstrap server)
         {
             _server = server;
+
         }
 
         public Task StartAsync(CancellationToken cancellationToken)

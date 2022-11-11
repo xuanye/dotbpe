@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace DotBPE.Rpc.Server
 {
     public class MethodInvoker<TService, TRequest, TResponse>
-        where TService : IServiceActor
+        where TService : class
         where TRequest : class
         where TResponse : class
     {

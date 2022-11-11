@@ -25,6 +25,11 @@ namespace DotBPE.Rpc.Server
             if (message.MessageType == RpcMessageType.Response)
                 return Task.CompletedTask;
 
+            if (message.IsHeartBeat)
+            {
+                return HeartBeatServiceActorHandler.Instance.HandleAsync(context, message);
+            }
+
             var handler = _actorHandlerFactory.GetInstance(message.MethodIdentifier);
             if (handler != null)
                 return handler.HandleAsync(context, message);

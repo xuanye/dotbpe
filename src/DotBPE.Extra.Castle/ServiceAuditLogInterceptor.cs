@@ -36,7 +36,7 @@ namespace DotBPE.Extra
                 }
             }
             sw.Stop();
-            if (_auditLoggerFactory == null)
+            if (_auditLoggerFactory != null)
             {
                 var methodName = $"{context.Method.DeclaringType.Name}.{context.Method.Name}";
                 var logger = _auditLoggerFactory.GetLogger(AuditLogType.InProc);

@@ -3,19 +3,51 @@
 
 using DotBPE.Rpc;
 using DotBPE.Rpc.Attributes;
+using DotBPE.Rpc.Client;
+using DotBPE.Rpc.Client.Impl;
+using DotBPE.Rpc.Client.RoutingPolicies;
+using DotBPE.Rpc.Hosting;
+using DotBPE.Rpc.Protocols;
 using DotBPE.Rpc.Server;
+using Microsoft.Extensions.DependencyInjection.Extensions;
+using Peach;
 using System;
+using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
+using System.Xml.Linq;
 
 namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
+
+        public static IServiceCollection AddDotBPE(this IServiceCollection @this)
+        {
+            @this.AddLogging();
+            @this.AddOptions();
+            @this.AddAmpProtocol();
+            @this.AddDefaultImpl();
+
+            return @this;
+        }
+
+        public static IServiceCollection AddPeachServer(this IServiceCollection @this)
+        {
+            //add host service
+            @this.AddSingleton<ISocketService<AmpMessage>, AmpPeachSocketService>()
+                .AddSingleton<IServerBootstrap, PeachServerBootstrap>()
+                .AddSingleton<IServerHost, PeachServerHost>();
+
+            @this.AddHostedService<RpcServiceHostedService>();
+
+            return @this;
+        }
+
+
         public static IServiceCollection BindService<TService>(this IServiceCollection @this)
             where TService : IServiceActor
         {
-
             return @this.BindService(typeof(TService));
         }
 
@@ -79,5 +111,42 @@ namespace Microsoft.Extensions.DependencyInjection
             }
             return @this;
         }
+
+
+        #region  Private Method
+        private static IServiceCollection AddAmpProtocol(this IServiceCollection services)
+        {
+            services.AddSingleton<IChannelHandlerPipeline, AmpChannelHandlerPipeline>();
+            services.AddSingleton<ISocketClient<AmpMessage>, RpcSocketClient>();
+
+            return services;
+        }
+
+        private static IServiceCollection AddDefaultImpl(this IServiceCollection services)
+        {
+            //sever
+            services.AddSingleton<IServiceActorBuilder, ServiceActorBuilder>();
+            services.AddSingleton<IServiceActorHandlerFactory, DefaultServiceActorHandlerFactory>();
+            services.AddSingleton(typeof(ServiceActorProvider<>));
+            services.AddSingleton<IMessageHandler<AmpMessage>, DefaultMessageHandler>();
+            services.TryAddSingleton<IServiceActorLocator, DefaultServiceActorLocator>();
+
+            //client
+            services.AddSingleton<IRpcClient, DefaultRpcClient>();
+            services.AddSingleton<IMessageSubscriberContainer, DefaultMessageSubscriberContainer>();
+
+            services.AddSingleton<ICallInvoker, DefaultCallInvoker>();
+            services.AddSingleton<IClientMessageHandler, DefaultClientMessageHandler>();
+            services.AddSingleton<ITransportFactory, DefaultTransportFactory>();
+
+
+            services.TryAddSingleton<IRoutingPolicy, RoundrobinRoutingPolicy>();
+            services.TryAddSingleton<IServiceRouter, DefaultServiceRouter>();
+
+
+            return services;
+        }
+
+        #endregion
     }
 }

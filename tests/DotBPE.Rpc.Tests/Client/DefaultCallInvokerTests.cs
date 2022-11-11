@@ -92,6 +92,8 @@ namespace DotBPE.Rpc.Tests.Client
             //arrange          
             var serializer = new DefaultJsonSerializer();
             var rpcClient = new Mock<IRpcClient>();
+            
+            var container = new Mock<IMessageSubscriberContainer>();
             var logger = NullLoggerFactory.Instance.CreateLogger<DefaultCallInvoker>();
 
             AmpMessage receivedMsg = null;
@@ -99,7 +101,7 @@ namespace DotBPE.Rpc.Tests.Client
             {
                 receivedMsg = msg;
             });
-            var callInvoker = new DefaultCallInvoker(rpcClient.Object, serializer, logger);
+            var callInvoker = new DefaultCallInvoker(rpcClient.Object, serializer,container.Object, logger);
 
             var method = new Method()
             {

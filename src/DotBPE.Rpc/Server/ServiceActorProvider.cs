@@ -7,8 +7,8 @@ using System;
 
 namespace DotBPE.Rpc.Server
 {
-    public class ServiceActorProvider<TService> : IServiceActorProvider<TService>
-        where TService : IServiceActor
+    public class ServiceActorProvider<TService> : IServiceActorProvider
+        where TService : class
     {
         private readonly IServiceActorLocator _actorLocator;
         private readonly ISerializer _serializer;

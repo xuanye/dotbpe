@@ -44,8 +44,6 @@ namespace DotBPE.Rpc.Server
 
         public IServiceActor LocateServiceActor(string actorId)
         {
-            if (HeartBeatActor.Instance.Id.Equals(actorId))
-                return HeartBeatActor.Instance;
 
             var parts = actorId.Split('.');
 

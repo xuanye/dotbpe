@@ -49,6 +49,7 @@ namespace DotBPE.Rpc.Tests.Hosting
         {
             var services = new ServiceCollection();
 
+          
             //协议
             services.AddSingleton<IChannelHandlerPipeline, AmpChannelHandlerPipeline>();
 
@@ -58,7 +59,6 @@ namespace DotBPE.Rpc.Tests.Hosting
 
             //添加挂载的宿主服务
             services.AddSingleton<IServerBootstrap, PeachServerBootstrap>();
-
 
             //挂载服务逻辑
             services.AddSingleton(new Mock<IMessageHandler<AmpMessage>>().Object);

@@ -8,8 +8,7 @@ using System.Text;
 
 namespace DotBPE.Rpc.Server
 {
-    public interface IServiceActorProvider<TService>
-        where TService : IServiceActor
+    public interface IServiceActorProvider
     {
         void OnServiceActorDiscovery(ServiceActorProviderContext context);
     }

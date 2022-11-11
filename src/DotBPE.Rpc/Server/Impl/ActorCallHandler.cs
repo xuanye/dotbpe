@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 namespace DotBPE.Rpc.Server
 {
     public class ActorCallHandler<TService, TRequest, TResponse>
-        where TService : IServiceActor
+        where TService : class
         where TRequest : class
         where TResponse : class
     {
@@ -66,6 +66,7 @@ namespace DotBPE.Rpc.Server
             catch (Exception ex)
             {
                 _logger.LogError(ex, $"call service method error:{ex.Message}");
+
                 resMsg.Code = RpcStatusCodes.CODE_INTERNAL_ERROR;
             }
 

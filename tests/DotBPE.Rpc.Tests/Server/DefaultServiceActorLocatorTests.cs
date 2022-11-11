@@ -65,27 +65,5 @@ namespace DotBPE.Rpc.Tests.Server
             Assert.Same(NotFoundServiceActor.Instance, actor2);
         }
 
-
-        [Fact]
-        public void LocateServiceActor_ReturnHeartBeatActor_HeartBeatId()
-        {
-            var service = new ServiceCollection();
-
-            service.AddSingleton<IServiceActor<IFooService>, FooService>();
-
-            service.AddSingleton<IServiceActorLocator, DefaultServiceActorLocator>();
-
-            service.AddLogging();
-
-            var provider = service.BuildServiceProvider();
-
-            var locator = provider.GetRequiredService<IServiceActorLocator>();
-
-            var actor1 = locator.LocateServiceActor("0.0");
-
-            Assert.NotNull(actor1);
-
-            Assert.Same(HeartBeatActor.Instance, actor1);
-        }
     }
 }

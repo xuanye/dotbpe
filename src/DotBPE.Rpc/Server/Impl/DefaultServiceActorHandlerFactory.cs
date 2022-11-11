@@ -14,15 +14,10 @@ namespace DotBPE.Rpc.Server
         private readonly ILogger<DefaultServiceActorHandlerFactory> _logger;
 
 
-        public DefaultServiceActorHandlerFactory(
-            ILogger<DefaultServiceActorHandlerFactory> logger
-            )
+        public DefaultServiceActorHandlerFactory(ILogger<DefaultServiceActorHandlerFactory> logger)
         {
             _logger = logger;
-
         }
-
-
 
         public IServiceActorHandler GetInstance(string methodIdentifier)
         {
@@ -39,7 +34,7 @@ namespace DotBPE.Rpc.Server
 
         public void RegisterActorInvokerHandler(ActorInvokerModel actorModel)
         {
-            if (!_invokerCache.TryAdd(actorModel.Method.FullName, actorModel))
+            if (!_invokerCache.TryAdd(actorModel.MethodIdentifier, actorModel))
             {
                 _logger.LogWarning("{MethodFullName} has registration conflicts", actorModel.Method.FullName);
             }

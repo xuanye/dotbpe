@@ -13,9 +13,10 @@ namespace DotBPE.Rpc.Server
             Method = method;
         }
 
+        public string MethodIdentifier => $"{Method.ServiceId}.{Method.MethodId}";
         public IMethod Method { get; }
 
         public RequestDelegate RequestDelegate { get; }
     }
-  
+
 }

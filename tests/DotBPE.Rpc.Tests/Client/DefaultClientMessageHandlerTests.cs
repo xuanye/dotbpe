@@ -2,6 +2,7 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc.Client;
+using DotBPE.Rpc.Client.Impl;
 using DotBPE.Rpc.Protocols;
 using Microsoft.Extensions.DependencyInjection;
 using Moq;
@@ -12,12 +13,12 @@ namespace DotBPE.Rpc.Tests.Client
     public class DefaultClientMessageHandlerTests
     {
         [Fact]
-        public void RaiseReceive_SubscribersRecieveSameMessage()
+        public void RaiseReceive_SubscribersReceiveSameMessage()
         {
             //arrange
             var services = new ServiceCollection();
             services.AddSingleton<IClientMessageHandler, DefaultClientMessageHandler>();
-
+            services.AddSingleton<IMessageSubscriberContainer, DefaultMessageSubscriberContainer>();
 
             var msg = AmpMessage.CreateResponseMessage("100|1");
 
@@ -25,15 +26,15 @@ namespace DotBPE.Rpc.Tests.Client
             var subscriber1 = new Mock<IMessageSubscriber>();
             var subscriber2 = new Mock<IMessageSubscriber>();
 
-            AmpMessage recievedMsg1 = null;
-            AmpMessage recievedMsg2 = null;
+            AmpMessage receivedMessage1 = null;
+            AmpMessage receivedMessage2 = null;
             subscriber1.Setup(x => x.Handle(It.IsAny<AmpMessage>())).Callback((AmpMessage m1) =>
             {
-                recievedMsg1 = m1;
+                receivedMessage1 = m1;
             });
             subscriber2.Setup(x => x.Handle(It.IsAny<AmpMessage>())).Callback((AmpMessage m2) =>
             {
-                recievedMsg2 = m2;
+                receivedMessage2 = m2;
             });
 
             services.AddSingleton(subscriber1.Object);
@@ -45,10 +46,10 @@ namespace DotBPE.Rpc.Tests.Client
             messageHandler.RaiseReceive(msg);
 
             //assert
-            Assert.NotNull(recievedMsg1);
-            Assert.NotNull(recievedMsg2);
-            Assert.Equal(msg, recievedMsg1);
-            Assert.Equal(msg, recievedMsg2);
+            Assert.NotNull(receivedMessage1);
+            Assert.NotNull(receivedMessage2);
+            Assert.Equal(msg, receivedMessage1);
+            Assert.Equal(msg, receivedMessage2);
         }
     }
 }

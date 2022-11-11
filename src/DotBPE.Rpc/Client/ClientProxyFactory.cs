@@ -1,6 +1,7 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
+using DotBPE.Rpc.Client.Impl;
 using DotBPE.Rpc.Client.RoutingPolicies;
 using DotBPE.Rpc.Protocols;
 using DotBPE.Rpc.Server;
@@ -34,10 +35,14 @@ namespace DotBPE.Rpc.Client
             }
 
             /* */
+            container.AddSingleton<IChannelHandlerPipeline, AmpChannelHandlerPipeline>();
             container.AddSingleton<IServiceRouter, DefaultServiceRouter>();
             container.AddSingleton<ISocketClient<AmpMessage>, RpcSocketClient>();
 
+            container.AddSingleton<IMessageSubscriberContainer, DefaultMessageSubscriberContainer>();
+
             container.AddSingleton<ICallInvoker, DefaultCallInvoker>();
+
             container.AddSingleton<IClientMessageHandler, DefaultClientMessageHandler>();
             container.AddSingleton<IRpcClient, DefaultRpcClient>();
             container.AddSingleton<ITransportFactory, DefaultTransportFactory>();

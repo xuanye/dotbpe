@@ -1,11 +1,12 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Extra;
-using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
-using DotBPE.Rpc.Config;
 using MathService.Definition;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
-using Peach.Infrastructure;
 
 namespace Math.Client
 {
@@ -17,9 +18,13 @@ namespace Math.Client
             /* default route  */
             var factory = ClientProxyFactory.Create()
                 .UseCastleDynamicClientProxy()
-                .ConfigureLogging(logger =>logger.AddConsole())
+                .ConfigureLogging(logger =>
+                {
+                    logger.SetMinimumLevel(LogLevel.Debug);
+                    logger.AddConsole();
+                })
                 .UseMessagePackSerializer()
-                .UseDefaultChannel($"{IPUtility.GetLocalIntranetIP().MapToIPv4()}:5566");
+                .UseDefaultChannel($"127.0.0.1:5566");
 
 
 
@@ -39,8 +44,8 @@ namespace Math.Client
             var random = new Random();
             while (i++ < 100)
             {
-                var req = new SumReq {A = random.Next(100000), B = random.Next(100000)};
-                var result = mathService.SumAsync(req).Result;
+                var req = new SumReq { A = random.Next(100000), B = random.Next(100000) };
+                var result = mathService.SumAsync(req).GetAwaiter().GetResult();
 
                 Console.WriteLine("Call Math Service ,return_code={0}", result.Code);
                 if (result.Code == 0)
@@ -48,11 +53,28 @@ namespace Math.Client
                     Console.WriteLine("Call Math Service Add {0}+{1}={2}", req.A, req.B, result.Data?.Total);
                 }
 
-                Console.WriteLine("============= count:{0}",i);
+                Console.WriteLine("============= count:{0}", i);           
+              
             }
-           
+
             Console.WriteLine("Press any key to exit !");
-            Console.ReadKey();
+            var key =  Console.ReadKey();
+            if (key.Key == ConsoleKey.C)
+            { 
+                Console.WriteLine("=====recall======== ");   
+                var req = new SumReq { A = random.Next(100000), B = random.Next(100000) };
+                var result = mathService.SumAsync(req).GetAwaiter().GetResult();
+
+                Console.WriteLine("Call Math Service ,return_code={0}", result.Code);
+                if (result.Code == 0)
+                {
+                    Console.WriteLine("Call Math Service Add {0}+{1}={2}", req.A, req.B, result.Data?.Total);
+                }
+
+                Console.WriteLine("============= count:{0}", i);           
+            }
+            
+            
         }
     }
 }
