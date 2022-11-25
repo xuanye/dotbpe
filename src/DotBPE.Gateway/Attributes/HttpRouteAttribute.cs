@@ -1,13 +1,17 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using System;
 
 namespace DotBPE.Gateway
 {
     [AttributeUsage(AttributeTargets.Method)]
-    public class RouterAttribute:Attribute
+    public class HttpRouteAttribute : Attribute
     {
 
-        public RouterAttribute(string path,RestfulVerb acceptVerb= RestfulVerb.Any,string version ="1.0.0")
+        public HttpRouteAttribute(string path, HttpVerb acceptVerb = HttpVerb.Any, string version = "1.0.0")
         {
+
             Path = path;
             AcceptVerb = acceptVerb;
             Version = version;
@@ -19,24 +23,24 @@ namespace DotBPE.Gateway
 
         public string Version { get; } = "1.0.0";
 
-        public RestfulVerb AcceptVerb { get;  }
+        public HttpVerb AcceptVerb { get; }
 
         public string PluginName { get; set; }
 
 
-        private Type _PluginType;
+        private Type _pluginType;
         public Type PluginType
         {
             get
             {
                 if (!string.IsNullOrEmpty(PluginName))
                 {
-                    if (_PluginType != null)
+                    if (_pluginType != null)
                     {
-                        return _PluginType;
+                        return _pluginType;
                     }
-                    _PluginType =Type.GetType(PluginName);
-                    return _PluginType;
+                    _pluginType = Type.GetType(PluginName);
+                    return _pluginType;
                 }
 
                 return null;

@@ -1,7 +1,9 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 using System;
-using System.Globalization;
 using System.IO;
 using System.Text;
 using System.Text.Json;
@@ -18,7 +20,7 @@ namespace DotBPE.Gateway.Swagger
 
         public SwaggerMiddleware(
             SwaggerOptions options,
-            RequestDelegate next,            
+            RequestDelegate next,
             ILogger<SwaggerMiddleware> logger
             )
         {
@@ -40,7 +42,7 @@ namespace DotBPE.Gateway.Swagger
                 var swagger = swaggerProvider.GetSwaggerInfo();
                 await RespondWithSwaggerJson(httpContext.Response, swagger);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
                 RespondWithNotFound(httpContext.Response);
@@ -50,7 +52,7 @@ namespace DotBPE.Gateway.Swagger
 
         private bool RequestingSwaggerDocument(HttpRequest request)
         {
-            if(!string.Equals(request.Method, "get", StringComparison.OrdinalIgnoreCase))
+            if (!string.Equals(request.Method, "get", StringComparison.OrdinalIgnoreCase))
             {
                 return false;
             }
@@ -78,7 +80,7 @@ namespace DotBPE.Gateway.Swagger
             };
 
             var swaggerJson = JsonSerializer.Serialize<object>(swagger, jsonSerializerOptions);
-        
+
             await response.WriteAsync(swaggerJson, new UTF8Encoding(false));
 #else
             var jsonSerializerOptions = new JsonSerializerOptions
@@ -96,5 +98,5 @@ namespace DotBPE.Gateway.Swagger
 #endif
         }
     }
-       
+
 }

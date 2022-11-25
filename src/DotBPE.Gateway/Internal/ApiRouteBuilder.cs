@@ -1,42 +1,43 @@
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Rpc.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
-using System.Linq;
-using Log = DotBPE.Gateway.Internal.ServiceRouteBuilderLog;
+using System.Text;
+using Logger = DotBPE.Gateway.Internal.ApiRouteBuilderLogger;
+
 
 namespace DotBPE.Gateway.Internal
 {
 
-    public interface IServiceRouteBuilder
+    public interface IApiRouteBuilder
     {
         IEnumerable<IEndpointConventionBuilder> Build(IEndpointRouteBuilder endpointRouteBuilder);
     }
 
-    internal class ServiceRouteBuilder<TService>:IServiceRouteBuilder where TService : class
+    internal class ApiRouteBuilder<TService> : IApiRouteBuilder
+        where TService : class
     {
-        private readonly IEnumerable<IRpcServiceMethodProvider<TService>> _serviceMethodProviders;
-       
         private readonly ILogger _logger;
+        private readonly IEnumerable<IApiMethodProvider<TService>> _apiMethodProviders;
 
-
-        public ServiceRouteBuilder(
-           IEnumerable<IRpcServiceMethodProvider<TService>> serviceMethodProviders,           
-           ILoggerFactory loggerFactory)
+        public ApiRouteBuilder(IEnumerable<IApiMethodProvider<TService>> apiMethodProviders, ILoggerFactory loggerFactory)
         {
-            _serviceMethodProviders = serviceMethodProviders.ToList();        
-            _logger = loggerFactory.CreateLogger<ServiceRouteBuilder<TService>>();
+            _logger = loggerFactory.CreateLogger<ApiRouteBuilder<TService>>();
+            _apiMethodProviders = apiMethodProviders;
         }
-
         public IEnumerable<IEndpointConventionBuilder> Build(IEndpointRouteBuilder endpointRouteBuilder)
         {
-            Log.DiscoveringServiceMethods(_logger, typeof(TService));
+            Logger.DiscoveringServiceMethods(_logger, typeof(TService));
 
-            var serviceMethodProviderContext = new RpcServiceMethodProviderContext<TService>();
-            foreach (var serviceMethodProvider in _serviceMethodProviders)
+            var serviceMethodProviderContext = new ApiMethodProviderContext<TService>();
+            foreach (var provider in _apiMethodProviders)
             {
-                serviceMethodProvider.OnServiceMethodDiscovery(serviceMethodProviderContext);
+                provider.OnMethodDiscovery(serviceMethodProviderContext);
             }
 
             var endpointConventionBuilders = new List<IEndpointConventionBuilder>();
@@ -50,7 +51,7 @@ namespace DotBPE.Gateway.Internal
                     {
                         ep.DisplayName = $"RPC - {method.Pattern.RawText}";
 
-                        ep.Metadata.Add(new RpcMethodMetadata(typeof(TService), method.Method));
+                        //ep.Metadata.Add(new ApiMethodMetadata(typeof(TService), method.Method));
                         foreach (var item in method.Metadata)
                         {
                             ep.Metadata.Add(item);
@@ -59,25 +60,22 @@ namespace DotBPE.Gateway.Internal
 
                     endpointConventionBuilders.Add(endpointBuilder);
 
-                    Log.AddedServiceMethod(_logger, method.Method.Name, method.Method.ServiceName,method.Pattern.RawText ?? string.Empty);
+                    Logger.AddedServiceMethod(_logger, method.Method.Name, method.Method.ServiceName, method.Pattern.RawText ?? string.Empty);
                 }
             }
             else
             {
-                Log.NoServiceMethodsDiscovered(_logger, typeof(TService));
+                Logger.NoServiceMethodsDiscovered(_logger, typeof(TService));
             }
-
-            //NOTE:CreateUnimplementedEndpoints ??
 
             return endpointConventionBuilders;
         }
-
-       
     }
-    internal static class ServiceRouteBuilderLog
+
+    internal static class ApiRouteBuilderLogger
     {
-        private static readonly Action<ILogger, string, string,  string, Exception> _addedServiceMethod =
-            LoggerMessage.Define<string, string,  string>(LogLevel.Trace, new EventId(1, "AddedServiceMethod"), "Added RPC method '{MethodName}' to service '{ServiceName}'. route pattern: '{RoutePattern}'.");
+        private static readonly Action<ILogger, string, string, string, Exception> _addedServiceMethod =
+            LoggerMessage.Define<string, string, string>(LogLevel.Trace, new EventId(1, "AddedServiceMethod"), "Added RPC method '{MethodName}' to service '{ServiceName}'. route pattern: '{RoutePattern}'.");
 
         private static readonly Action<ILogger, Type, Exception> _discoveringServiceMethods =
             LoggerMessage.Define<Type>(LogLevel.Trace, new EventId(2, "DiscoveringServiceMethods"), "Discovering RPC methods for {ServiceType}.");

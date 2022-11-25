@@ -7,8 +7,8 @@
         <Copyright>Xuanye @ 2017-2022</Copyright>
         <Owners>Xuanye Wong</Owners>
         <Authors>Xuanye Wong</Authors>
-        <PackageTags>microservice,dotnet,peach,rpc,dotbpe</PackageTags>
-        <PackageIconUrl>https://raw.githubusercontent.com/dotbpe/dotbpe/master/icon.png</PackageIconUrl>
+        <PackageIcon>icon.png</PackageIcon>
+        <PackageTags>microservice,dotnet,peach,rpc,dotbpe</PackageTags>       
         <Title>dotbpe.rpc is a lightweight and high performance, easy to learn rpc framework</Title>
         <Description>dotbpe.rpc is a lightweight and high performance, easy to learn rpc framework</Description>
         <PackageProjectUrl>https://github.com/dotbpe/dotbpe</PackageProjectUrl>
@@ -24,7 +24,9 @@
     <ItemGroup>
         <PackageReference Include="Peach" Version="0.2.2" />
     </ItemGroup>
-
+    <ItemGroup>
+        <None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
+    </ItemGroup>
     <ItemGroup>
         <ProjectReference Include="..\DotBPE.Baseline\DotBPE.Baseline.csproj" />
     </ItemGroup>

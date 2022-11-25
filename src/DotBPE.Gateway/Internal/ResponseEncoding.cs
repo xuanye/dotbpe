@@ -1,12 +1,13 @@
-using System;
-using System.Collections.Generic;
-using System.Net.Http.Headers;
-using System.Text;
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.Primitives;
 using Microsoft.Net.Http.Headers;
-using StringWithQualityHeaderValue = Microsoft.Net.Http.Headers.StringWithQualityHeaderValue;
+using System;
+using System.Collections.Generic;
+using System.Text;
 
 namespace DotBPE.Gateway.Internal
 {
@@ -142,4 +143,3 @@ namespace DotBPE.Gateway.Internal
         }
     }
 }
-

@@ -1,3 +1,6 @@
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Rpc;
 using DotBPE.Rpc.Exceptions;
 using Microsoft.AspNetCore.Http;
@@ -7,54 +10,57 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
+using System.Net;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web;
 
 namespace DotBPE.Gateway.Internal
 {
-    internal class RpcServiceCallHandler<TService, TRequest, TResponse>
-       where TService : class
-       where TRequest : class
-       where TResponse : class
+
+    internal class HttpApiCallHandler<TService, TRequest, TResponse>
+      where TService : class
+      where TRequest : class
+      where TResponse : class
     {
-        private const string ClientIpPropertyName = "ClientIp"; 
-        private const string IdentityPropertyName = "Identity";
-        private const string RequestIdPropertyName = "XRequestId";
+        private const string _clientIpPropertyName = "ClientIp";
+        private const string _identityPropertyName = "Identity";
+        private const string _requestIdPropertyName = "XRequestId";
 
         private readonly RpcGatewayOption _gatewayOption;
-        private readonly RpcServiceMethodInvoker<TService, TRequest, TResponse> _serviceMethodInvoker;
-     
+        private readonly ApiMethodInvoker<TService, TRequest, TResponse> _methodInvoker;
+
         private readonly IJsonParser _jsonParser;
 
         private readonly ILogger _logger;
 
-        private static readonly List<string> AllowContentTypes = new List<string>() {
+        private static readonly List<string> _allowContentTypes = new List<string>() {
             "application/x-www-form-urlencoded", "multipart/form-data","application/json" };
 
         private readonly HttpApiOptions _httpApiOption;
 
-        public RpcServiceCallHandler(
+        public HttpApiCallHandler(
             RpcGatewayOption gatewayOption
-           ,RpcServiceMethodInvoker<TService, TRequest, TResponse> serviceMethodInvoker
-           ,IJsonParser jsonParser
-           ,HttpApiOptions httpApiOption
-           ,ILoggerFactory loggerFactory
+           , ApiMethodInvoker<TService, TRequest, TResponse> methodInvoker
+           , IJsonParser jsonParser
+           , HttpApiOptions httpApiOption
+           , ILoggerFactory loggerFactory
            )
         {
             _gatewayOption = gatewayOption;
-            _serviceMethodInvoker = serviceMethodInvoker;
+            _methodInvoker = methodInvoker;
             _jsonParser = jsonParser;
-          
+
             _httpApiOption = httpApiOption;
-            _logger = loggerFactory.CreateLogger<RpcServiceCallHandler<TService, TRequest, TResponse>>();
+            _logger = loggerFactory.CreateLogger<HttpApiCallHandler<TService, TRequest, TResponse>>();
         }
 
         public async Task HandleCallAsync(HttpContext httpContext)
         {
             var serviceProvider = httpContext.RequestServices;
 
-            IHttpApiOutputProcess outputProcess = serviceProvider.GetService<IHttpApiOutputProcess>();
-            IHttpApiErrorProcess errorProcess = serviceProvider.GetService<IHttpApiErrorProcess>();
+            var outputProcess = serviceProvider.GetService<IHttpApiOutputProcess>();
+            var errorProcess = serviceProvider.GetService<IHttpApiErrorProcess>();
 
             IHttpPlugin plugin = null;
 
@@ -67,36 +73,36 @@ namespace DotBPE.Gateway.Internal
 
             RpcResult<TResponse> result;
             try
-            { 
+            {
                 if (plugin != null && plugin is IHttpProcessPlugin processPlugin)
                 {
                     var processedResult = await processPlugin.ProcessAsync(httpContext.Request, httpContext.Response);
-                    if( processedResult != null)
+                    if (processedResult != null)
                     {
                         if (processedResult is TResponse resMsg)
                         {
-                            result =new RpcResult<TResponse>() {  Data = resMsg };
+                            result = new RpcResult<TResponse>() { Data = resMsg };
                             await SendResponse(outputProcess, plugin, httpContext, selectedEncoding, result);
                         }
                     }
                     return;
                 }
 
-                (object, StatusCode, string) tuple;
+                (object, int, string) tuple;
                 if (plugin != null && plugin is IHttpRequestParsePlugin parsePlugin)
                 {
                     //replace request message parse
                     tuple = await parsePlugin.ParseAsync(httpContext.Request);
                 }
                 else
-                {                   
-                    tuple = await CreateMessage(httpContext.Request);                 
+                {
+                    tuple = await CreateMessage(httpContext.Request);
                 }
 
 
                 var (requestMessage, requestStatusCode, errorMessage) = tuple;
 
-                if (requestMessage == null || requestStatusCode != StatusCode.OK)
+                if (requestMessage == null || requestStatusCode != StatusCodes.Status200OK || requestStatusCode == 0)
                 {
                     await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, errorMessage ?? string.Empty, requestStatusCode);
                     return;
@@ -107,7 +113,7 @@ namespace DotBPE.Gateway.Internal
                 {
                     (requestStatusCode, errorMessage) = await parsePostPlugin.ParseAsync(httpContext.Request, requestMessage);
 
-                    if (requestMessage == null || requestStatusCode != StatusCode.OK)
+                    if (requestMessage == null || requestStatusCode != StatusCodes.Status200OK || requestStatusCode == 0)
                     {
                         await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, errorMessage ?? string.Empty, requestStatusCode);
                         return;
@@ -118,18 +124,24 @@ namespace DotBPE.Gateway.Internal
                 ParseCommonParams(httpContext.Request, requestMessage);
 
                 //invoke method
-                result = await _serviceMethodInvoker.Invoke(httpContext, (TRequest)requestMessage);
+                result = await _methodInvoker.Invoke((TRequest)requestMessage);
+            }
+            catch (RpcException rpcEx)
+            {
+                _logger.LogError(rpcEx, rpcEx.Message);
+                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, rpcEx.Message, rpcEx.StatusCode);
+                return;
             }
             catch (Exception ex)
             {
                 _logger.LogError(ex, ex.Message);
-                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, ex.Message , StatusCode.Internal);
+                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, ex.Message, StatusCodes.Status500InternalServerError);
                 return;
             }
 
             if (result == null)
-            {               
-                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, "Unknown Error", StatusCode.Unknown);
+            {
+                await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, "Unknown Error", StatusCodes.Status500InternalServerError);
                 return;
             }
 
@@ -137,13 +149,13 @@ namespace DotBPE.Gateway.Internal
         }
 
 
-        private void ParseCommonParams(HttpRequest request,object requestMsg)
-        {          
+        private void ParseCommonParams(HttpRequest request, object requestMsg)
+        {
 
             var clientIp = request.GetClientIp();
-            var xRequestId = string.Empty;
-            SetValue(requestMsg, ClientIpPropertyName, clientIp);
-            if (request.Headers.TryGetValue("X-Request-Id",out var requestId))
+            SetValue(requestMsg, _clientIpPropertyName, clientIp);
+            string xRequestId;
+            if (request.Headers.TryGetValue("X-Request-Id", out var requestId))
             {
                 xRequestId = requestId.ToString();
             }
@@ -151,27 +163,27 @@ namespace DotBPE.Gateway.Internal
             {
                 xRequestId = Guid.NewGuid().ToString("N");
             }
-            SetValue(requestMsg, IdentityPropertyName, xRequestId);
+            SetValue(requestMsg, _identityPropertyName, xRequestId);
             if (request.HttpContext.User.Identity.IsAuthenticated)
             {
-                SetValue(requestMsg,IdentityPropertyName,request.HttpContext.User.Identity.Name);
+                SetValue(requestMsg, _identityPropertyName, request.HttpContext.User.Identity.Name);
             }
             else
             {
-                SetValue(requestMsg, IdentityPropertyName, "");
+                SetValue(requestMsg, _identityPropertyName, "");
             }
 
         }
 
-        private void SetValue(object obj,string propertyName, object value)
+        private static void SetValue(object obj, string propertyName, object value)
         {
             var property = obj.GetType().GetProperty(propertyName);
             property?.SetValue(obj, value);
         }
 
-        private async Task<(object requestMessage, StatusCode statusCode, string errorMessage)> CreateMessage(HttpRequest request)
+        private async Task<(object requestMessage, int statusCode, string errorMessage)> CreateMessage(HttpRequest request)
         {
-          
+
             var method = request.Method.ToLower();
             var contentType = "";
 
@@ -182,13 +194,13 @@ namespace DotBPE.Gateway.Internal
                     contentType = request.ContentType.ToLower().Split(';')[0];
                 }
 
-                if (!AllowContentTypes.Contains(contentType))
+                if (!_allowContentTypes.Contains(contentType))
                 {
-                    return (null, StatusCode.InvalidArgument, "Request content-type is invalid.");
+                    return (null, StatusCodes.Status400BadRequest, "Request content-type is invalid.");
                 }
             }
 
-            Dictionary<string,string> requestValues = new Dictionary<string, string>();
+            var requestValues = new Dictionary<string, string>();
             TRequest requestMessage;
 
             if (contentType == "application/x-www-form-urlencoded" || contentType == "multipart/form-data")
@@ -196,7 +208,7 @@ namespace DotBPE.Gateway.Internal
                 requestMessage = Activator.CreateInstance<TRequest>();
 
                 var form = await request.ReadFormAsync();
-                ParseFormValues(form, requestValues);             
+                ParseFormValues(form, requestValues);
             }
             else if (contentType.StartsWith("application/json"))
             {
@@ -210,10 +222,11 @@ namespace DotBPE.Gateway.Internal
                     {
                         var body = await requestReader.ReadToEndAsync();
                         requestMessage = _jsonParser.FromJson<TRequest>(body);
-                    }                  
+                    }
                     catch (Exception exception)
                     {
-                        return (null, StatusCode.InvalidArgument, exception.Message);
+                        _logger.LogError(exception, exception.Message);
+                        return (null, StatusCodes.Status400BadRequest, "Request JSON payload is not correctly formatted.");
                     }
                 }
             }
@@ -224,16 +237,15 @@ namespace DotBPE.Gateway.Internal
 
             ParseRouteValues(request.RouteValues, requestValues);
             ParseQueryStringValues(request.Query, requestValues);
-
             ParseFromDictionary(requestMessage, requestValues);
 
-            return (requestMessage, StatusCode.OK, null);
+            return (requestMessage, StatusCodes.Status200OK, null);
         }
 
-        private void ParseFromDictionary(TRequest instance, IDictionary<string, string> requestValues)
-        {          
+        private static void ParseFromDictionary(TRequest instance, IDictionary<string, string> requestValues)
+        {
 
-            var properties =  typeof(TRequest).GetProperties();
+            var properties = typeof(TRequest).GetProperties();
 
             foreach (var property in properties)
             {
@@ -266,9 +278,9 @@ namespace DotBPE.Gateway.Internal
                     }
 
                 }
-            }          
+            }
         }
-        private void ParseQueryStringValues(IQueryCollection query, Dictionary<string, string> requestValues)
+        private static void ParseQueryStringValues(IQueryCollection query, Dictionary<string, string> requestValues)
         {
             foreach (var key in query.Keys)
             {
@@ -278,7 +290,7 @@ namespace DotBPE.Gateway.Internal
             }
         }
 
-        private void ParseRouteValues(RouteValueDictionary routeValues, Dictionary<string, string> requestValues)
+        private static void ParseRouteValues(RouteValueDictionary routeValues, Dictionary<string, string> requestValues)
         {
             foreach (var key in routeValues.Keys)
             {
@@ -286,7 +298,7 @@ namespace DotBPE.Gateway.Internal
                 if (!requestValues.ContainsKey(lowKey))
                 {
                     requestValues.Add(lowKey, routeValues[key].ToString());
-                }                    
+                }
                 else
                 {
                     requestValues[lowKey] = routeValues[key].ToString();
@@ -294,20 +306,20 @@ namespace DotBPE.Gateway.Internal
             }
         }
 
-        private void ParseFormValues(IFormCollection form, Dictionary<string, string> requestValues)
+        private static void ParseFormValues(IFormCollection form, Dictionary<string, string> requestValues)
         {
 
             foreach (var key in form.Keys)
             {
                 var lowKey = ToFriendlyKey(key);
-                if (!requestValues.ContainsKey(lowKey))                  
+                if (!requestValues.ContainsKey(lowKey))
                     requestValues.Add(lowKey, form[key]);
             }
         }
 
         private async Task SendResponse(IHttpApiOutputProcess outputProcess, IHttpPlugin plugin, HttpContext context, Encoding encoding, RpcResult<TResponse> result)
         {
-            
+
             var processed = false;
             if (plugin != null && plugin is IHttpOutputProcessPlugin outputProcessPlugin)
             {
@@ -320,7 +332,7 @@ namespace DotBPE.Gateway.Internal
 
             if (outputProcess != null)
             {
-                processed = await outputProcess.ProcessAsync(context.Request,context.Response, encoding, result);
+                processed = await outputProcess.ProcessAsync(context.Request, context.Response, encoding, result);
             }
             if (processed)
             {
@@ -332,10 +344,10 @@ namespace DotBPE.Gateway.Internal
             await WriteResponseMessage(context.Response, encoding, result);
         }
 
-        private async Task SendErrorResponse(IHttpApiErrorProcess errorProcess, HttpResponse response, Encoding encoding, string errorMessage,StatusCode statusCode)
+        private async Task SendErrorResponse(IHttpApiErrorProcess errorProcess, HttpResponse response, Encoding encoding, string errorMessage, int statusCode)
         {
-          
-            var e = new Error() { ErrorCode = statusCode ,Message = errorMessage};
+
+            var e = new Error() { Code = statusCode, Message = errorMessage };
 
             var processed = false;
 
@@ -348,146 +360,86 @@ namespace DotBPE.Gateway.Internal
                 return;
             }
 
-            response.StatusCode = StatusCodes.Status500InternalServerError;
+            response.StatusCode = statusCode;
             response.ContentType = "application/json";
 
-            await WriteResponseMessage(response, encoding, new RpcResult<Error>() { Code = (int)statusCode, Data = e});
+            await WriteResponseMessage(response, encoding, new RpcResult<Error>() { Code = statusCode, Data = e });
         }
-      
 
-        private async Task WriteResponseMessage<T>(HttpResponse response, Encoding encoding, RpcResult<T> result) where T :class
+
+        private async Task WriteResponseMessage<T>(HttpResponse response, Encoding encoding, RpcResult<T> result) where T : class
         {
-           
-            using (var writer = new HttpResponseStreamWriter(response.Body, encoding))
+
+            using var writer = new HttpResponseStreamWriter(response.Body, encoding);
+
+            await writer.WriteAsync("{\"");
+            await writer.WriteAsync(_gatewayOption.CodeFieldName);
+            await writer.WriteAsync("\":");
+            await writer.WriteAsync(result.Code.ToString());
+            await writer.WriteAsync(",\"");
+            await writer.WriteAsync(_gatewayOption.MessageFieldName);
+            await writer.WriteAsync("\":\"");
+
+            var message = ExtractMessage(result.Data);
+            if (!string.IsNullOrEmpty(message))
             {
-                await writer.WriteAsync("{\"");
-                await writer.WriteAsync(_gatewayOption.CodeFieldName);
-                await writer.WriteAsync("\":");
-                await writer.WriteAsync(result.Code.ToString());
-                await writer.WriteAsync(",\"");
-                await writer.WriteAsync(_gatewayOption.MessageFieldName);
-                await writer.WriteAsync("\":\"");
-
-                var message = ExtractMessage(result.Data);
-                if (!string.IsNullOrEmpty(message))
-                {
-                    await writer.WriteAsync(message.Replace("\r", "\\r").Replace("\n","\\n"));
-                }
-                else
-                {
-                    await writer.WriteAsync("");
-                }
-                await writer.WriteAsync("\"");
-
-                if(result.Data != null)
-                {
-                    await writer.WriteAsync(",\"");
-                    await writer.WriteAsync(_gatewayOption.DataFieldName);
-                    await writer.WriteAsync("\":");
-
-                    string jsonData = _jsonParser.ToJson(result.Data);
-                    if (string.IsNullOrEmpty(jsonData))
-                    {
-                        await writer.WriteAsync("{}");
-                    }
-                    else
-                    {
-                        await writer.WriteAsync(jsonData);
-                    }                   
-                }
-                else
-                {
-                    await writer.WriteAsync(",\"");
-                    await writer.WriteAsync(_gatewayOption.DataFieldName);
-                    await writer.WriteAsync("\":{}");
-                }
-                await writer.WriteAsync("}");
-
-                // Perf: call FlushAsync to call WriteAsync on the stream with any content left in the TextWriter's
-                // buffers. This is better than just letting dispose handle it (which would result in a synchronous
-                // write).
-                await writer.FlushAsync();
+                await writer.WriteAsync(HttpUtility.JavaScriptStringEncode(message));
             }
+            else
+            {
+                await writer.WriteAsync("");
+            }
+            await writer.WriteAsync("\"");
+
+            if (result.Data != null)
+            {
+                await writer.WriteAsync(",\"");
+                await writer.WriteAsync(_gatewayOption.DataFieldName);
+                await writer.WriteAsync("\":");
+
+                string jsonData = _jsonParser.ToJson(result.Data);
+                if (string.IsNullOrEmpty(jsonData))
+                {
+                    await writer.WriteAsync("{}");
+                }
+                else
+                {
+                    await writer.WriteAsync(jsonData);
+                }
+            }
+            else
+            {
+                await writer.WriteAsync(",\"");
+                await writer.WriteAsync(_gatewayOption.DataFieldName);
+                await writer.WriteAsync("\":{}");
+            }
+            await writer.WriteAsync("}");
+
+            // Perf: call FlushAsync to call WriteAsync on the stream with any content left in the TextWriter's
+            // buffers. This is better than just letting dispose handle it (which would result in a synchronous
+            // write).
+            await writer.FlushAsync();
         }
-        private string ExtractMessage(object data)
+        private static string ExtractMessage(object data)
         {
             if (data != null)
             {
                 var p = data.GetType().GetProperty("ReturnMessage");
 
-                if(p == null)
+                if (p == null)
                 {
                     p = data.GetType().GetProperty("Message");
                 }
                 if (p != null && p.PropertyType == typeof(string))
                 {
                     var objValue = p.GetValue(data);
-                    return  objValue != null ? objValue.ToString() : "";
+                    return objValue != null ? objValue.ToString() : "";
                 }
             }
             return null;
         }
 
 
-        private static int MapStatusCodeToHttpStatus(StatusCode statusCode)
-        {
-            switch (statusCode)
-            {
-                case StatusCode.OK:
-                    return StatusCodes.Status200OK;
-
-                case StatusCode.Cancelled:
-                    return StatusCodes.Status408RequestTimeout;
-
-                case StatusCode.Unknown:
-                    return StatusCodes.Status500InternalServerError;
-
-                case StatusCode.InvalidArgument:
-                    return StatusCodes.Status400BadRequest;
-
-                case StatusCode.DeadlineExceeded:
-                    return StatusCodes.Status504GatewayTimeout;
-
-                case StatusCode.NotFound:
-                    return StatusCodes.Status404NotFound;
-
-                case StatusCode.AlreadyExists:
-                    return StatusCodes.Status409Conflict;
-
-                case StatusCode.PermissionDenied:
-                    return StatusCodes.Status403Forbidden;
-
-                case StatusCode.Unauthenticated:
-                    return StatusCodes.Status401Unauthorized;
-
-                case StatusCode.ResourceExhausted:
-                    return StatusCodes.Status429TooManyRequests;
-
-                case StatusCode.FailedPrecondition:
-                    // Note, this deliberately doesn't translate to the similarly named '412 Precondition Failed' HTTP response status.
-                    return StatusCodes.Status400BadRequest;
-
-                case StatusCode.Aborted:
-                    return StatusCodes.Status409Conflict;
-
-                case StatusCode.OutOfRange:
-                    return StatusCodes.Status400BadRequest;
-
-                case StatusCode.Unimplemented:
-                    return StatusCodes.Status501NotImplemented;
-
-                case StatusCode.Internal:
-                    return StatusCodes.Status500InternalServerError;
-
-                case StatusCode.Unavailable:
-                    return StatusCodes.Status503ServiceUnavailable;
-
-                case StatusCode.DataLoss:
-                    return StatusCodes.Status500InternalServerError;
-            }
-
-            return StatusCodes.Status500InternalServerError;
-        }
         private static string ToFriendlyKey(string key)
         {
             var parts = key.ToLower().Split('_');

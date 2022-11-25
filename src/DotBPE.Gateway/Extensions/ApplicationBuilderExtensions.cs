@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Gateway.Swagger;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
@@ -7,15 +10,11 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ApplicationBuilderExtensions
     {
+
         public static IApplicationBuilder UseSwagger(this IApplicationBuilder builder)
         {
-
             var optionsAccessor = builder.ApplicationServices.GetRequiredService<IOptions<SwaggerOptions>>();
-
-
             var options = optionsAccessor.Value ?? new SwaggerOptions();
-
-
             //var swaggerProvider = builder.ApplicationServices.GetRequiredService<ISwaggerApiInfoProvider>();
             //swaggerProvider.ExtractApiInfo();
 

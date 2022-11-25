@@ -5,6 +5,7 @@ using DotBPE.Baseline.Extensions;
 using DotBPE.Rpc.Attributes;
 using Microsoft.Extensions.DependencyInjection;
 using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 
@@ -44,6 +45,9 @@ namespace DotBPE.Rpc.Server
             if (serviceType != null)
             {
                 var serviceActorProvider = _provider.GetRequiredService(serviceActorProviderType.MakeGenericType(serviceType)) as IServiceActorProvider;
+
+                Debug.Assert(serviceActorProvider != null, nameof(serviceActorProvider) + " != null");
+
                 serviceActorProvider.OnServiceActorDiscovery(new ServiceActorProviderContext(_actorHandlerFactory));
             }
 

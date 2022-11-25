@@ -1,18 +1,15 @@
-// Copyright (c) Xuanye Wong. All rights reserved.
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
 using DotBPE.Rpc;
 using System;
-using System.Text;
 using System.Text.Json;
-using System.Text.Json.Serialization;
 
-
-namespace DotBPE.Extra
+namespace DotBPE.Gateway.Tests
 {
-    public class TextJsonParser : IJsonParser
+    public class DefaultJsonParser : IJsonParser
     {
-        private static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
+        private static readonly JsonSerializerOptions _jsonSerializerOptions = new JsonSerializerOptions
         {
 #if NET5_0_OR_GREATER
             DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
@@ -27,22 +24,22 @@ namespace DotBPE.Extra
 
         public string ToJson(object item)
         {
-            return JsonSerializer.Serialize(item, JsonSerializerOptions);
+            return JsonSerializer.Serialize(item, _jsonSerializerOptions);
         }
 
         public string ToJson<T>(T item) where T : class
         {
-            return JsonSerializer.Serialize<object>(item, JsonSerializerOptions);
+            return JsonSerializer.Serialize<object>(item, _jsonSerializerOptions);
         }
 
         public object FromJson(string json, Type type)
         {
-            return JsonSerializer.Deserialize(json, type, JsonSerializerOptions);
+            return JsonSerializer.Deserialize(json, type, _jsonSerializerOptions);
         }
 
         public T FromJson<T>(string json) where T : class
         {
-            return JsonSerializer.Deserialize<T>(json, JsonSerializerOptions);
+            return JsonSerializer.Deserialize<T>(json, _jsonSerializerOptions);
         }
 
     }

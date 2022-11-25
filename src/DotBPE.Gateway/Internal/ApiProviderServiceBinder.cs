@@ -1,52 +1,55 @@
-// Copyright (c) Xuanye Wong. All rights reserved.
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Gateway.Internal;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Attributes;
 using DotBPE.Rpc.Client;
+using DotBPE.Rpc.Server;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.AspNetCore.Routing.Patterns;
 using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
+using System.Text;
 
-namespace DotBPE.Gateway
+namespace DotBPE.Gateway.Internal
 {
-    internal class HttpApiProvidererServiceBind<TService> where TService : class
+    internal class ApiProviderServiceBinder<TService>
+        where TService : class
     {
+        private readonly ApiMethodProviderContext<TService> _context;
         private readonly RpcGatewayOption _gatewayOption;
-        private readonly RpcServiceMethodProviderContext<TService> _context;
         private readonly IClientProxy _clientProxy;
         private readonly IJsonParser _jsonParser;
         private readonly ILoggerFactory _loggerFactory;
-        private readonly ILogger _logger;
 
         private readonly Type _serviceType;
+        private readonly ILogger _logger;
 
         private readonly MethodInfo _dynamicCreateGenericMethod;
         private readonly MethodInfo _dynamicAddGenericMethod;
-        public HttpApiProviderServiceBinder(
-            RpcServiceMethodProviderContext<TService> context,
-            RpcGatewayOption gatewayOption,
-            IClientProxy clientProxy,
-            IJsonParser jsonParser,
-            ILoggerFactory loggerFactory
-         )
+
+        public ApiProviderServiceBinder(ApiMethodProviderContext<TService> context
+            , RpcGatewayOption gatewayOption
+            , IClientProxy clientProxy
+            , IJsonParser jsonParser
+            , ILoggerFactory loggerFactory)
         {
-            _serviceType = typeof(TService);
-            _gatewayOption = gatewayOption;
             _context = context;
+            _gatewayOption = gatewayOption;
             _clientProxy = clientProxy;
             _jsonParser = jsonParser;
             _loggerFactory = loggerFactory;
-            _logger = loggerFactory.CreateLogger<HttpApiProviderServiceBinder<TService>>();
-            _dynamicCreateGenericMethod = this.GetType().GetMethod("CreateMethod", BindingFlags.NonPublic | BindingFlags.Instance);
-            _dynamicAddGenericMethod = this.GetType().GetMethod("AddMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            _serviceType = typeof(TService);
+            _logger = loggerFactory.CreateLogger<ApiProviderServiceBinder<TService>>();
+
+            _dynamicCreateGenericMethod = GetType().GetMethod("CreateMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+            _dynamicAddGenericMethod = GetType().GetMethod("AddMethod", BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
-        public void BindAll()
+        internal void Bind()
         {
             if (!_serviceType.IsInterface)
                 return;
@@ -56,19 +59,20 @@ namespace DotBPE.Gateway
             if (sAttr == null)
                 return;
 
-            AddRpcService(sAttr);
+            AddApiService(sAttr);
         }
 
-        private void AddRpcService(RpcServiceAttribute sAttr)
+        private void AddApiService(RpcServiceAttribute sAttr)
         {
             var methods = _serviceType.GetMethods();
+            var serviceName = _serviceType.Name;
             foreach (var m in methods)
             {
                 var mAttr = m.GetCustomAttribute<RpcMethodAttribute>();
                 if (mAttr == null)
                     continue;
 
-                var rAttr = m.GetCustomAttribute<RouterAttribute>();
+                var rAttr = m.GetCustomAttribute<HttpRouteAttribute>();
                 if (rAttr == null)
                     continue;
 
@@ -77,14 +81,15 @@ namespace DotBPE.Gateway
 
                 if (!returnType.IsGenericType && returnType.GenericTypeArguments.Length != 1)
                 {
-                    //TODO:WARNING~
+                    _logger.LogWarning("{serviceName}.{methodName} return type is not 'RpcResult<T>'", serviceName, m.Name);
+
                     continue;
                 }
 
                 var returnGenericTypes = returnType.GenericTypeArguments[0]; //RpcReslut<>
                 if (!returnGenericTypes.IsGenericType || returnGenericTypes.GetGenericTypeDefinition() != typeof(RpcResult<>))
                 {
-                    //TODO:WARNING~
+                    _logger.LogWarning("{serviceName}.{methodName} return type is not 'RpcResult<T>'", serviceName, m.Name);
                     continue;
                 }
                 var responseType = returnGenericTypes.GetGenericArguments()[0];
@@ -92,8 +97,10 @@ namespace DotBPE.Gateway
                 DynamicAddMethod(m, sAttr, mAttr, rAttr, requestType, responseType);
 
             }
+
         }
-        private void DynamicAddMethod(MethodInfo m, RpcServiceAttribute sAttr, RpcMethodAttribute mAttr, RouterAttribute rAttr, Type requestType, Type responseType)
+
+        private void DynamicAddMethod(MethodInfo m, RpcServiceAttribute sAttr, RpcMethodAttribute mAttr, HttpRouteAttribute rAttr, Type requestType, Type responseType)
         {
             var dynamicCreateMethodInvoker = _dynamicCreateGenericMethod.MakeGenericMethod(requestType, responseType);
             var dynamicAddMethodInvoker = _dynamicAddGenericMethod.MakeGenericMethod(requestType, responseType);
@@ -102,23 +109,30 @@ namespace DotBPE.Gateway
         }
 
 
-        private Method<TRequest, TResponse> CreateMethod<TRequest, TResponse>(string serviceName, MethodInfo hanlder)
+#pragma warning disable IDE0051 // Remove unused private members
+        private ApiMethod<TRequest, TResponse> CreateMethod<TRequest, TResponse>(string serviceName, MethodInfo hanlder)
+#pragma warning restore IDE0051 // Remove unused private members
             where TRequest : class
             where TResponse : class
 
         {
-            return new Method<TRequest, TResponse>(serviceName, hanlder);
+            return new ApiMethod<TRequest, TResponse>(serviceName, hanlder);
         }
 
-        private void AddMethod<TRequest, TResponse>(Method<TRequest, TResponse> method, RpcServiceAttribute sAttr, RpcMethodAttribute mAttr, RouterAttribute rAttr)
-             where TRequest : class
+#pragma warning disable IDE0051 // Remove unused private members
+        private void AddMethod<TRequest, TResponse>(ApiMethod<TRequest, TResponse> method
+#pragma warning restore IDE0051 // Remove unused private members
+            , RpcServiceAttribute sAttr
+            , RpcMethodAttribute mAttr
+            , HttpRouteAttribute rAttr)
+           where TRequest : class
            where TResponse : class
         {
 
 
-            if (rAttr.AcceptVerb == RestfulVerb.Any)
+            if (rAttr.AcceptVerb == HttpVerb.Any)
             {
-                var anyVerbs = new RestfulVerb[] { RestfulVerb.Get, RestfulVerb.Post };
+                var anyVerbs = new HttpVerb[] { HttpVerb.Get, HttpVerb.Post };
 
                 foreach (var verb in anyVerbs)
                 {
@@ -132,8 +146,6 @@ namespace DotBPE.Gateway
                     };
                     AddMethodCore(method, httpApiOptions);
                 }
-
-
             }
             else
             {
@@ -148,7 +160,8 @@ namespace DotBPE.Gateway
                 AddMethodCore(method, httpApiOptions);
             }
         }
-        private void AddMethodCore<TRequest, TResponse>(Method<TRequest, TResponse> method, HttpApiOptions httpApiOptions)
+
+        private void AddMethodCore<TRequest, TResponse>(ApiMethod<TRequest, TResponse> method, HttpApiOptions httpApiOptions)
            where TRequest : class
            where TResponse : class
         {
@@ -163,31 +176,29 @@ namespace DotBPE.Gateway
                     throw new InvalidOperationException($"Path template must start with /: {pattern}");
                 }
 
-
-                var methodContext = MethodOptions.Create();
                 var routePattern = RoutePatternFactory.Parse(pattern);
-
                 var parameters = method.HandlerMethod.GetParameters();
+
                 if (parameters.Length == 1)
                 {
-                    var (invoker, metadata) = CreateModelCore<RpcServiceMethod<TService, TRequest, TResponse>, TRequest, TResponse>(method, httpApiOptions);
+                    var (invoker, metadata) = CreateModelCore<ServiceMethod<TService, TRequest, TResponse>, TRequest, TResponse>(method, httpApiOptions);
 
-                    var methodInvoker = new RpcServiceMethodInvoker<TService, TRequest, TResponse>(invoker, null, 0, method, methodContext, _clientProxy);
+                    var methodInvoker = new ApiMethodInvoker<TService, TRequest, TResponse>(invoker, null, 0, _clientProxy);
 
-                    var unaryServerCallHandler = new RpcServiceCallHandler<TService, TRequest, TResponse>(_gatewayOption, methodInvoker, _jsonParser, httpApiOptions, _loggerFactory);
+                    var callHandler = new HttpApiCallHandler<TService, TRequest, TResponse>(_gatewayOption, methodInvoker, _jsonParser, httpApiOptions, _loggerFactory);
 
-                    _context.AddMethod<TRequest, TResponse>(method, routePattern, metadata, unaryServerCallHandler.HandleCallAsync);
+                    _context.AddMethod<TRequest, TResponse>(method, routePattern, metadata, callHandler.HandleCallAsync);
                 }
                 else //has timeout
                 {
 
-                    var (invokerWithTimeout, metadata) = CreateModelCore<RpcServiceMethodWithTimeout<TService, TRequest, TResponse>, TRequest, TResponse>(method, httpApiOptions);
+                    var (invokerWithTimeout, metadata) = CreateModelCore<ServiceMethodWithTimeout<TService, TRequest, TResponse>, TRequest, TResponse>(method, httpApiOptions);
 
-                    var methodInvoker = new RpcServiceMethodInvoker<TService, TRequest, TResponse>(null, invokerWithTimeout, (int)parameters[1].DefaultValue!, method, methodContext, _clientProxy);
+                    var methodInvoker = new ApiMethodInvoker<TService, TRequest, TResponse>(null, invokerWithTimeout, (int)parameters[1].DefaultValue, _clientProxy);
 
-                    var unaryServerCallHandler = new RpcServiceCallHandler<TService, TRequest, TResponse>(_gatewayOption, methodInvoker, _jsonParser, httpApiOptions, _loggerFactory);
+                    var callHandler = new HttpApiCallHandler<TService, TRequest, TResponse>(_gatewayOption, methodInvoker, _jsonParser, httpApiOptions, _loggerFactory);
 
-                    _context.AddMethod<TRequest, TResponse>(method, routePattern, metadata, unaryServerCallHandler.HandleCallAsync);
+                    _context.AddMethod<TRequest, TResponse>(method, routePattern, metadata, callHandler.HandleCallAsync);
                 }
 
 
@@ -199,7 +210,7 @@ namespace DotBPE.Gateway
         }
 
         private (TDelegate invoker, List<object> metadata) CreateModelCore<TDelegate, TRequest, TResponse>(
-           Method<TRequest, TResponse> method,
+           ApiMethod<TRequest, TResponse> method,
            HttpApiOptions httpApiOptions
          )
            where TDelegate : Delegate
@@ -209,16 +220,15 @@ namespace DotBPE.Gateway
 
             var invoker = (TDelegate)Delegate.CreateDelegate(typeof(TDelegate), method.HandlerMethod);
 
-            var metadata = new List<object>();
-            // Add type metadata first so it has a lower priority
-            //metadata.AddRange(typeof(TService).GetCustomAttributes(inherit: true));
-            // Add method metadata last so it has a higher priority
-            //metadata.AddRange(handlerMethod.GetCustomAttributes(inherit: true));
-            metadata.Add(new HttpMethodMetadata(new[] { httpApiOptions.AcceptVerb.ToString().ToUpper() }));
+            var metadata = new List<object>
+            {
 
-            // Add service method descriptor.
-            // Is used by swagger generation to identify HTTP APIs.
-            metadata.Add(new RpcHttpMetadata(method.HandlerMethod, httpApiOptions, typeof(TRequest), typeof(TResponse)));
+                new HttpMethodMetadata(new[] { httpApiOptions.AcceptVerb.ToString().ToUpper() }),
+
+                // Add service method descriptor.
+                // Is used by swagger generation to identify HTTP APIs.
+                new HttpApiMetadata(method.HandlerMethod, httpApiOptions, typeof(TRequest), typeof(TResponse))
+            };
 
             return (invoker, metadata);
         }

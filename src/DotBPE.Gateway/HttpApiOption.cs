@@ -1,41 +1,41 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using System;
-using System.Collections.Generic;
-using System.Reflection;
-using System.Text;
 
 namespace DotBPE.Gateway
 {
     public class HttpApiOptions
-    {    
+    {
 
         public string Category { get; set; } = "default";
         public string Pattern { get; set; }
 
         public string Version { get; set; } = "1.0.0";
 
-        public RestfulVerb AcceptVerb { get; set; }
+        public HttpVerb AcceptVerb { get; set; }
 
         public string PluginName { get; set; }
 
 
-        private Type _PluginType;
+        private Type _pluginType;
         public Type PluginType
         {
             get
             {
                 if (!string.IsNullOrEmpty(PluginName))
                 {
-                    if (_PluginType != null)
+                    if (_pluginType != null)
                     {
-                        return _PluginType;
+                        return _pluginType;
                     }
-                    _PluginType = Type.GetType(PluginName);
-                    return _PluginType;
+                    _pluginType = Type.GetType(PluginName);
+                    return _pluginType;
                 }
 
                 return null;
             }
-        }     
-       
+        }
+
     }
 }

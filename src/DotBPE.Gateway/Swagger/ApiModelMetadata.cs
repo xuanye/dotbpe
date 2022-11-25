@@ -1,16 +1,16 @@
-// Copyright (c) .NET Foundation. All rights reserved.
-// Licensed under the Apache License, Version 2.0. See License.txt in the project root for license information.
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
 
-using System;
-using System.Collections.Generic;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.AspNetCore.Mvc.ModelBinding.Metadata;
+using System;
+using System.Collections.Generic;
 
 namespace DotBPE.Gateway.Swagger
 {
-    internal class RpcModelMetadata : ModelMetadata
+    internal class ApiModelMetadata : ModelMetadata
     {
-        public RpcModelMetadata(ModelMetadataIdentity identity) : base(identity)
+        public ApiModelMetadata(ModelMetadataIdentity identity) : base(identity)
         {
             IsBindingAllowed = true;
         }

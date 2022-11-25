@@ -1,3 +1,8 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Baseline.Extensions;
+using DotBPE.Gateway.Internal;
 using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
@@ -6,16 +11,14 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using DotBPE.Baseline.Extensions;
-
 
 namespace DotBPE.Gateway.Swagger
 {
-    internal class RpcHttpApiDescriptionProvider : IApiDescriptionProvider
+    internal class HttpApiDescriptionProvider : IApiDescriptionProvider
     {
         private readonly EndpointDataSource _endpointDataSource;
 
-        public RpcHttpApiDescriptionProvider(EndpointDataSource endpointDataSource)
+        public HttpApiDescriptionProvider(EndpointDataSource endpointDataSource)
         {
             _endpointDataSource = endpointDataSource;
         }
@@ -31,10 +34,10 @@ namespace DotBPE.Gateway.Swagger
             {
                 if (endpoint is RouteEndpoint routeEndpoint)
                 {
-                    var rpcMetadata = endpoint.Metadata.GetMetadata<RpcHttpMetadata>();
-                 
+                    var rpcMetadata = endpoint.Metadata.GetMetadata<HttpApiMetadata>();
+
                     if (rpcMetadata != null)
-                    {                       
+                    {
                         var apiDescription = CreateApiDescription(routeEndpoint, rpcMetadata);
                         context.Results.Add(apiDescription);
                     }
@@ -42,18 +45,20 @@ namespace DotBPE.Gateway.Swagger
             }
         }
 
-        private static ApiDescription CreateApiDescription(RouteEndpoint routeEndpoint, RpcHttpMetadata rpcMetadata)
+        private static ApiDescription CreateApiDescription(RouteEndpoint routeEndpoint, HttpApiMetadata rpcMetadata)
         {
-           
+
             var handlerMethod = rpcMetadata.HanderMethod;
             var pattern = rpcMetadata.HttpApiOptions.Pattern;
             var verb = rpcMetadata.HttpApiOptions.AcceptVerb.ToString().ToUpper();
 
-            var apiDescription = new ApiDescription();
-            apiDescription.HttpMethod = verb;
+            var apiDescription = new ApiDescription
+            {
+                HttpMethod = verb
+            };
             apiDescription.SetProperty(rpcMetadata);
             apiDescription.ActionDescriptor = new ActionDescriptor
-            {                   
+            {
                 DisplayName = handlerMethod.Name,
                 RouteValues = new Dictionary<string, string>
                 {
@@ -61,7 +66,7 @@ namespace DotBPE.Gateway.Swagger
                     // Group methods together using the service name.
                     ["controller"] = rpcMetadata.HanderServiceType.FullName
                 }
-                
+
             };
             apiDescription.RelativePath = pattern;
 
@@ -71,12 +76,12 @@ namespace DotBPE.Gateway.Swagger
                 apiDescription.SupportedRequestFormats.Add(new ApiRequestFormat { MediaType = "application/json" });
             }
 
-        
+
             apiDescription.SupportedResponseTypes.Add(new ApiResponseType
             {
                 ApiResponseFormats = { new ApiResponseFormat { MediaType = "application/json" } },
                 Type = rpcMetadata.OutputType,
-                ModelMetadata = new RpcModelMetadata(ModelMetadataIdentity.ForType(rpcMetadata.OutputType)),
+                ModelMetadata = new ApiModelMetadata(ModelMetadataIdentity.ForType(rpcMetadata.OutputType)),
                 StatusCode = 200
             });
 
@@ -102,7 +107,7 @@ namespace DotBPE.Gateway.Swagger
                 apiDescription.ParameterDescriptions.Add(new ApiParameterDescription
                 {
                     Name = routeParameter.Name,
-                    ModelMetadata = new RpcModelMetadata(modelMetadataIdentity),
+                    ModelMetadata = new ApiModelMetadata(modelMetadataIdentity),
                     Source = BindingSource.Path,
                     IsRequired = !routeParameter.IsOptional,
                     DefaultValue = routeParameter.Default
@@ -113,8 +118,8 @@ namespace DotBPE.Gateway.Swagger
             var properties = rpcMetadata.InputType.GetProperties(System.Reflection.BindingFlags.Public | System.Reflection.BindingFlags.Instance);
 
             if (verb.Equals("get", StringComparison.OrdinalIgnoreCase))
-            {               
-                foreach(var field in properties)
+            {
+                foreach (var field in properties)
                 {
                     if (cache.Contains(field.Name))
                     {
@@ -124,15 +129,15 @@ namespace DotBPE.Gateway.Swagger
                           field
                         , field.PropertyType
                         , rpcMetadata.InputType
-                        );                 
+                        );
                     apiDescription.ParameterDescriptions.Add(new ApiParameterDescription
                     {
-                        Name = field.Name.ToCamelCase(),                    
-                        ModelMetadata = new RpcModelMetadata(modelMetadataIdentity),
+                        Name = field.Name.ToCamelCase(),
+                        ModelMetadata = new ApiModelMetadata(modelMetadataIdentity),
                         Source = BindingSource.Query,
-                        IsRequired = false                    
+                        IsRequired = false
                     });
-                }                
+                }
             }
             else
             {
@@ -151,12 +156,12 @@ namespace DotBPE.Gateway.Swagger
                     apiDescription.ParameterDescriptions.Add(new ApiParameterDescription
                     {
                         Name = field.Name.ToCamelCase(),
-                        ModelMetadata = new RpcModelMetadata(modelMetadataIdentity),
+                        ModelMetadata = new ApiModelMetadata(modelMetadataIdentity),
                         Source = BindingSource.Form,
                         IsRequired = false
                     });
                 }
-            }          
+            }
 
             return apiDescription;
         }
@@ -165,6 +170,6 @@ namespace DotBPE.Gateway.Swagger
         {
             // no-op
         }
-       
+
     }
 }

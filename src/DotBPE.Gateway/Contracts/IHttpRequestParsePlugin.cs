@@ -1,13 +1,14 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using Microsoft.AspNetCore.Http;
-using System;
-using System.Collections.Generic;
-using System.Text;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace DotBPE.Gateway
 {
     public interface IHttpRequestParsePlugin : IHttpPlugin
     {
-        Task<(object, StatusCode, string)> ParseAsync(HttpRequest request);
+        Task<(object, int, string)> ParseAsync(HttpRequest request);
     }
 }

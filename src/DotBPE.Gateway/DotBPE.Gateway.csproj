@@ -1,9 +1,9 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
 
   <Import Project="../../build/version.props" />
   <Import Project="../../build/releasenotes.props" />
   <PropertyGroup>
-    <TargetFrameworks>netcoreapp3.1;net5.0;net6.0</TargetFrameworks>    
+	 <TargetFrameworks>netcoreapp3.1;net6.0;net7.0</TargetFrameworks> 
     <Version>$(GatewayPackageVersion)</Version>
     <Copyright>Xuanye @ 2017-2019</Copyright>
     <Owners>Xuanye Wong</Owners>
@@ -20,10 +20,10 @@
       $(GatewayPackageNotes)
     </PackageReleaseNotes>
   </PropertyGroup>
-
-    <ItemGroup>
-        <FrameworkReference Include="Microsoft.AspNetCore.App" />
+	<ItemGroup>
+		<FrameworkReference Include="Microsoft.AspNetCore.App" />
     </ItemGroup>
+	   
     <ItemGroup>
         <EmbeddedResource Include="Swagger/UI/**/*" />
     </ItemGroup>

@@ -12,7 +12,6 @@ namespace MathService
     {
         static void Main(string[] args)
         {
-
             var builder = new HostBuilder()
              .UseRpcServer()
              .UseCastleDynamicProxy()
