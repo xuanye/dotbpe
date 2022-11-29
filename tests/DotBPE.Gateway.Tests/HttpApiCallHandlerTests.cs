@@ -7,19 +7,16 @@ using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Exceptions;
 using DotBPE.Rpc.Server;
-using DotBPE.TestBase;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging.Abstractions;
 using Microsoft.Extensions.Primitives;
-using Microsoft.VisualStudio.TestPlatform.ObjectModel.Client;
 using Moq;
 using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Net;
-using System.Net.Mime;
 using System.Text;
 using System.Text.Json;
 using System.Threading;
@@ -491,6 +488,479 @@ namespace DotBPE.Gateway.Tests
             Assert.Equal(EmumMessage.FOO, request.EmumMessage);
         }
 
+
+        [Fact]
+        public async Task HandleCallAsync_ParseRequest_UseHttpRequestParsePlugin()
+        {
+            // arrange
+            Test1Req request = null;
+            Task<RpcResult<Test1Rsp>> invoker(ITestService s, Test1Req req)
+            {
+                request = req;
+
+                var result = new RpcResult<Test1Rsp>()
+                {
+                    Data = new Test1Rsp()
+                };
+                return Task.FromResult(result);
+            }
+
+            var parsePlugin = new Mock<IHttpRequestParsePlugin>();
+            parsePlugin.Setup(x => x.ParseAsync(It.IsAny<HttpRequest>())).Returns(
+                () =>
+                Task.FromResult(
+                    (
+                        (object)new Test1Req()
+                        {
+                            Name = "TestName2!",
+                            SubMessage = new SubMessage()
+                            {
+                                SubField1 = "TestSubfield2!"
+                            }
+                        }
+                        , StatusCodes.Status200OK,
+                        "")
+                    )
+            );
+
+            var httpApiOptions = new HttpApiOptions()
+            {
+                PluginName = typeof(IHttpRequestParsePlugin).AssemblyQualifiedName
+            };
+
+            var httpApiCallHandler = CreateCallHandler<ITestService, Test1Req, Test1Rsp>(invoker, httpApiOptions);
+
+            var httpContext = CreateHttpContext((services) => services.AddScoped((_) => parsePlugin.Object));
+            httpContext.Request.Query = new QueryCollection(new Dictionary<string, StringValues>
+            {
+                ["name"] = "TestName!"
+            });
+
+            // act      
+            await httpApiCallHandler.HandleCallAsync(httpContext);
+
+
+            // assert
+            Assert.NotNull(request);
+            Assert.Equal("TestName2!", request.Name);
+            Assert.NotNull(request.SubMessage);
+            Assert.Equal("TestSubfield2!", request.SubMessage.SubField1);
+
+        }
+
+
+        [Fact]
+        public async Task HandleCallAsync_ReturnUnsuccessfulStatus_UseHttpRequestParsePlugin()
+        {
+            // arrange
+            Test1Req request = null;
+            Task<RpcResult<Test1Rsp>> invoker(ITestService s, Test1Req req)
+            {
+                request = req;
+
+                var result = new RpcResult<Test1Rsp>()
+                {
+                    Data = new Test1Rsp()
+                };
+                return Task.FromResult(result);
+            }
+            var parsePlugin = new Mock<IHttpRequestParsePlugin>();
+            parsePlugin.Setup(x => x.ParseAsync(It.IsAny<HttpRequest>())).Returns(
+                () =>
+                Task.FromResult(
+                    (
+                        (object)null
+                        , StatusCodes.Status500InternalServerError,
+                        "Internal Error.")
+                    )
+            );
+            var httpApiOptions = new HttpApiOptions()
+            {
+                PluginName = typeof(IHttpRequestParsePlugin).AssemblyQualifiedName
+            };
+
+            var httpApiCallHandler = CreateCallHandler<ITestService, Test1Req, Test1Rsp>(invoker, httpApiOptions);
+
+            var httpContext = CreateHttpContext((services) => services.AddScoped<IHttpRequestParsePlugin>((_) => parsePlugin.Object));
+            httpContext.Request.Query = new QueryCollection(new Dictionary<string, StringValues>
+            {
+                ["name"] = "TestName!"
+            });
+
+            // act
+            await httpApiCallHandler.HandleCallAsync(httpContext);
+
+            // assert
+            Assert.Equal(500, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+            using var responseJson = JsonDocument.Parse(httpContext.Response.Body);
+            var message = responseJson.RootElement.GetProperty("message").GetString();
+            var code = responseJson.RootElement.GetProperty("code").GetInt32();
+
+            Assert.Equal("Internal Error.", message);
+            Assert.Equal(StatusCodes.Status500InternalServerError, code);
+        }
+
+        [Fact]
+        public async Task HandleCallAsync_ParseRequest_UseHttpRequestParsePostPlugin()
+        {
+            // arrange
+            Test1Req request = null;
+            Task<RpcResult<Test1Rsp>> invoker(ITestService s, Test1Req req)
+            {
+                request = req;
+
+                var result = new RpcResult<Test1Rsp>()
+                {
+                    Data = new Test1Rsp()
+                };
+                return Task.FromResult(result);
+            }
+
+            var parsePlugin = new Mock<IHttpRequestParsePostPlugin>();
+            parsePlugin.Setup(x => x.ParseAsync(It.IsAny<HttpRequest>(), It.IsAny<object>())).Returns(
+                (HttpRequest _, object message) =>
+                {
+                    if (message is Test1Req reqMessage)
+                    {
+                        reqMessage.Name += " With UseHttpRequestParsePostPlugin";
+                        reqMessage.SubMessage = new SubMessage()
+                        {
+                            SubField1 = "TestSubfield! With UseHttpRequestParsePostPlugin"
+                        };
+
+                    }
+
+                    return Task.FromResult((StatusCodes.Status200OK, ""));
+                }
+             );
+
+            var httpApiOptions = new HttpApiOptions()
+            {
+                PluginName = typeof(IHttpRequestParsePostPlugin).AssemblyQualifiedName
+            };
+
+            var httpApiCallHandler = CreateCallHandler<ITestService, Test1Req, Test1Rsp>(invoker, httpApiOptions);
+
+            var httpContext = CreateHttpContext((services) => services.AddScoped((_) => parsePlugin.Object));
+            httpContext.Request.Query = new QueryCollection(new Dictionary<string, StringValues>
+            {
+                ["name"] = "TestName!"
+            });
+
+            // act
+            await httpApiCallHandler.HandleCallAsync(httpContext);
+
+            // assert
+            Assert.NotNull(request);
+            Assert.Equal("TestName! With UseHttpRequestParsePostPlugin", request.Name);
+
+            Assert.NotNull(request.SubMessage);
+
+            Assert.Equal("TestSubfield! With UseHttpRequestParsePostPlugin", request.SubMessage.SubField1);
+
+        }
+
+
+        [Fact]
+        public async Task HandleCallAsync_ReturnUnsuccessfulStatus_UseHttpRequestParsePostPlugin()
+        {
+            // arrange
+            Test1Req request = null;
+            Task<RpcResult<Test1Rsp>> invoker(ITestService s, Test1Req req)
+            {
+                request = req;
+
+                var result = new RpcResult<Test1Rsp>()
+                {
+                    Data = new Test1Rsp()
+                };
+                return Task.FromResult(result);
+            }
+
+            var parsePlugin = new Mock<IHttpRequestParsePostPlugin>();
+            parsePlugin.Setup(x => x.ParseAsync(It.IsAny<HttpRequest>(), It.IsAny<object>())).Returns(
+                () =>
+                Task.FromResult(
+                        (
+                            StatusCodes.Status500InternalServerError,
+                            "Internal Error."
+                        )
+                    )
+            );
+            var httpApiOptions = new HttpApiOptions()
+            {
+                PluginName = typeof(IHttpRequestParsePostPlugin).AssemblyQualifiedName
+            };
+
+
+            var httpApiCallHandler = CreateCallHandler<ITestService, Test1Req, Test1Rsp>(invoker, httpApiOptions);
+
+            var httpContext = CreateHttpContext((services) => services.AddScoped((_) => parsePlugin.Object));
+            httpContext.Request.Query = new QueryCollection(new Dictionary<string, StringValues>
+            {
+                ["name"] = "TestName!",
+                ["subMessage.subField"] = "TestSubfield!"
+            });
+
+            // act
+            await httpApiCallHandler.HandleCallAsync(httpContext);
+
+            // assert
+            Assert.Equal(500, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+            using var responseJson = JsonDocument.Parse(httpContext.Response.Body);
+            var message = responseJson.RootElement.GetProperty("message").GetString();
+            var code = responseJson.RootElement.GetProperty("code").GetInt32();
+
+
+            Assert.Equal("Internal Error.", message);
+            Assert.Equal(StatusCodes.Status500InternalServerError, code);
+        }
+
+
+        [Fact]
+        public async Task HandleCallAsync_RedactResponseMessage_UseHttpOutputProcessPlugin()
+        {
+            // arrange          
+            static Task<RpcResult<Test1Rsp>> invoker(ITestService s, Test1Req req)
+            {
+                var result = new RpcResult<Test1Rsp>()
+                {
+                    Data = new Test1Rsp() { Message = "Test Message!" }
+                };
+                return Task.FromResult(result);
+            }
+
+            var parsePlugin = new Mock<IHttpOutputProcessPlugin>();
+            parsePlugin.Setup(x => x.ProcessAsync(It.IsAny<HttpRequest>(), It.IsAny<HttpResponse>(), It.IsAny<Encoding>(), It.IsAny<RpcResult>())).Returns(
+                (HttpRequest _, HttpResponse __, Encoding ___, RpcResult result) =>
+                {
+                    if (result is RpcResult<Test1Rsp> replyMessage && replyMessage.Data != null)
+                    {
+                        replyMessage.Data.Message += " Use HttpOutputProcessPlugin";
+                    }
+
+                    return Task.FromResult(false);
+                }
+             );
+
+            var httpApiOptions = new HttpApiOptions()
+            {
+                PluginName = typeof(IHttpOutputProcessPlugin).AssemblyQualifiedName
+            };
+
+
+            var httpApiCallHandler = CreateCallHandler<ITestService, Test1Req, Test1Rsp>(invoker, httpApiOptions);
+            var httpContext = CreateHttpContext((services) => services.AddScoped<IHttpOutputProcessPlugin>((_) => parsePlugin.Object));
+
+
+            // act
+            await httpApiCallHandler.HandleCallAsync(httpContext);
+
+            // assert
+            Assert.Equal(200, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+            using var responseJson = JsonDocument.Parse(httpContext.Response.Body);
+            var message = responseJson.RootElement.GetProperty("message").GetString();
+
+            Assert.Equal("Test Message! Use HttpOutputProcessPlugin", message);
+        }
+
+
+        [Fact]
+        public async Task HandleCallAsync_ReplaceDefaultResponse_UseHttpOutputProcessPlugin()
+        {
+            // arrange          
+            static Task<RpcResult<Test1Rsp>> invoker(ITestService s, Test1Req req)
+            {
+                var result = new RpcResult<Test1Rsp>()
+                {
+                    Data = new Test1Rsp() { Message = "Test Message!" }
+                };
+                return Task.FromResult(result);
+            }
+
+            var parsePlugin = new Mock<IHttpOutputProcessPlugin>();
+            parsePlugin.Setup(x => x.ProcessAsync(It.IsAny<HttpRequest>(), It.IsAny<HttpResponse>(), It.IsAny<Encoding>(), It.IsAny<RpcResult>())).Returns(
+                async (HttpRequest _, HttpResponse res, Encoding ___, RpcResult result) =>
+                {
+                    if (result is RpcResult<Test1Rsp> replyMessage && replyMessage.Data != null)
+                    {
+                        replyMessage.Data.Message += " Use HttpOutputProcessPlugin";
+                        res.StatusCode = StatusCodes.Status200OK;
+                        res.ContentType = "text/plain";
+                        await res.WriteAsync(replyMessage.Data.Message);
+                        return true;
+                    }
+
+                    return false;
+                }
+             );
+
+            var httpApiOptions = new HttpApiOptions()
+            {
+                PluginName = typeof(IHttpOutputProcessPlugin).AssemblyQualifiedName
+            };
+
+
+            var httpApiCallHandler = CreateCallHandler<ITestService, Test1Req, Test1Rsp>(invoker, httpApiOptions);
+            var httpContext = CreateHttpContext((services) => services.AddScoped<IHttpOutputProcessPlugin>((_) => parsePlugin.Object));
+
+
+            // act
+            await httpApiCallHandler.HandleCallAsync(httpContext);
+
+            // assert
+            Assert.Equal(200, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+
+            using var reader = new StreamReader(httpContext.Response.Body);
+            var responseBody = reader.ReadToEnd();
+
+            Assert.Equal("Test Message! Use HttpOutputProcessPlugin", responseBody);
+        }
+
+
+        [Fact]
+        public async Task HandleCallAsync_PostProcessErrorResponse_UseHttpApiErrorProcess()
+        {
+            // arrange          
+            static Task<RpcResult<Test1Rsp>> invoker(ITestService s, Test1Req req)
+            {
+                throw new InvalidOperationException("Exception!");
+            }
+
+            var process = new Mock<IHttpApiErrorProcess>();
+
+            process.Setup(x => x.ProcessAsync(It.IsAny<HttpResponse>(), It.IsAny<Encoding>(), It.IsAny<Error>())).Returns(
+                (HttpResponse _, Encoding __, Error error) =>
+                {
+                    error.Message = "Internal Error.";
+                    return Task.FromResult(false);
+                }
+                );
+
+
+            var httpApiCallHandler = CreateCallHandler<ITestService, Test1Req, Test1Rsp>(invoker);
+            var httpContext = CreateHttpContext((services) => services.AddScoped((_) => process.Object));
+
+
+            // act
+            await httpApiCallHandler.HandleCallAsync(httpContext);
+
+            // assert
+            Assert.Equal(500, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+            using var responseJson = JsonDocument.Parse(httpContext.Response.Body);
+
+            var message = responseJson.RootElement.GetProperty("message").GetString();
+            var code = responseJson.RootElement.GetProperty("code").GetInt32();
+
+
+
+
+            Assert.Equal("Internal Error.", message);
+            Assert.Equal(StatusCodes.Status500InternalServerError, code);//Internal Error default code
+        }
+
+        [Fact]
+        public async Task HandleCallAsync_HandlerErrorResponse_UseHttpApiErrorProcess()
+        {
+            // arrange          
+            static Task<RpcResult<Test1Rsp>> invoker(ITestService s, Test1Req req)
+            {
+                throw new InvalidOperationException("Exception!");
+            }
+
+            var process = new Mock<IHttpApiErrorProcess>();
+
+            process.Setup(x => x.ProcessAsync(It.IsAny<HttpResponse>(), It.IsAny<Encoding>(), It.IsAny<Error>())).Returns(
+                async (HttpResponse res, Encoding __, Error error) =>
+                {
+                    error.Message = "Exception was thrown by handler.";
+                    res.StatusCode = StatusCodes.Status500InternalServerError;
+                    res.ContentType = "text/plain";
+                    await res.WriteAsync(error.Message);
+                    return true;
+                }
+                );
+
+            var httpApiCallHandler = CreateCallHandler<ITestService, Test1Req, Test1Rsp>(invoker);
+            var httpContext = CreateHttpContext((services) => services.AddScoped((_) => process.Object));
+
+
+            // act
+            await httpApiCallHandler.HandleCallAsync(httpContext);
+
+            // assert
+            Assert.Equal(500, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+            using var reader = new StreamReader(httpContext.Response.Body);
+            var responseBody = reader.ReadToEnd();
+
+            Assert.Equal("Exception was thrown by handler.", responseBody);
+        }
+
+
+
+        [Fact]
+        public async Task HandleCallAsync_ReplaceDefaultResponse_UseHttpApiOutputProcess()
+        {
+            // arrange
+            static Task<RpcResult<Test1Rsp>> invoker(ITestService s, Test1Req req)
+            {
+                var result = new RpcResult<Test1Rsp>()
+                {
+                    Data = new Test1Rsp() { Message = "Test Message!" }
+                };
+                return Task.FromResult(result);
+            }
+
+
+            var process = new Mock<IHttpApiOutputProcess>();
+            process.Setup(x => x.ProcessAsync(It.IsAny<HttpRequest>(), It.IsAny<HttpResponse>(), It.IsAny<Encoding>(), It.IsAny<RpcResult>())).Returns(
+                async (HttpRequest _, HttpResponse res, Encoding ___, RpcResult result) =>
+                {
+                    if (result is RpcResult<Test1Rsp> replyMessage && replyMessage.Data != null)
+                    {
+
+                        replyMessage.Data.Message += " Use UseHttpApiOutputProcess";
+                        res.StatusCode = StatusCodes.Status200OK;
+                        res.ContentType = "text/plain";
+                        await res.WriteAsync(replyMessage.Data.Message);
+                        return true;
+                    }
+
+                    return false;
+
+                }
+             );
+
+            var httpApiCallHandler = CreateCallHandler<ITestService, Test1Req, Test1Rsp>(invoker);
+            var httpContext = CreateHttpContext((services) => services.AddScoped((_) => process.Object));
+
+
+            // act
+            await httpApiCallHandler.HandleCallAsync(httpContext);
+
+            // assert
+            Assert.Equal(200, httpContext.Response.StatusCode);
+
+            httpContext.Response.Body.Seek(0, SeekOrigin.Begin);
+
+            using var reader = new StreamReader(httpContext.Response.Body);
+            var responseBody = reader.ReadToEnd();
+
+            Assert.Equal("Test Message! Use UseHttpApiOutputProcess", responseBody);
+
+        }
 
         private static HttpApiCallHandler<TService, TRequest, TResponse> CreateCallHandler<TService, TRequest, TResponse>(ServiceMethod<TService, TRequest, TResponse> invoker
             , HttpApiOptions httpApiOptions = null)

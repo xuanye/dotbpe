@@ -2,16 +2,11 @@
 // Licensed under MIT license
 
 using DotBPE.Gateway.Internal;
-using DotBPE.Gateway.Swagger;
 using DotBPE.Gateway.Tests.TestObjects;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.DependencyInjection.Extensions;
-using Microsoft.Extensions.Options;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using Xunit;
 
 namespace DotBPE.Gateway.Tests
@@ -19,7 +14,7 @@ namespace DotBPE.Gateway.Tests
     public class ServiceExtensionsTests
     {
         [Fact]
-        public void AddHttpApi_DefaultOption_PopulatedProperties_ShouldBeOk()
+        public void AddHttpApi_DefaultOption_PopulatedProperties()
         {
             // arrange
             var services = new ServiceCollection();
@@ -42,7 +37,7 @@ namespace DotBPE.Gateway.Tests
 
 
         [Fact]
-        public void AddHttpApi_OverrideOption_PopulatedProperties_ShouldBeOk()
+        public void AddHttpApi_OverrideOption_PopulatedProperties()
         {
             // arrange
             var services = new ServiceCollection();
@@ -77,7 +72,7 @@ namespace DotBPE.Gateway.Tests
 
 
         [Fact]
-        public void AddHttpApi_CheckRequiredService_ShouldBeOk()
+        public void AddHttpApi_CheckRequiredService()
         {
             // arrange
             var services = new ServiceCollection();

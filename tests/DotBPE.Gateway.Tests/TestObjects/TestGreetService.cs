@@ -69,7 +69,7 @@ namespace DotBPE.Gateway.Tests.TestObjects
     {
         public string Message { get; set; }
 
-        public List<string> Errors { get; set; }
+        public List<string> ListMessages { get; set; }
 
     }
     public enum EmumMessage

@@ -102,7 +102,7 @@ namespace DotBPE.Gateway.Internal
 
                 var (requestMessage, requestStatusCode, errorMessage) = tuple;
 
-                if (requestMessage == null || requestStatusCode != StatusCodes.Status200OK || requestStatusCode == 0)
+                if (requestMessage == null || (requestStatusCode != StatusCodes.Status200OK && requestStatusCode != 0))
                 {
                     await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, errorMessage ?? string.Empty, requestStatusCode);
                     return;
@@ -113,7 +113,7 @@ namespace DotBPE.Gateway.Internal
                 {
                     (requestStatusCode, errorMessage) = await parsePostPlugin.ParseAsync(httpContext.Request, requestMessage);
 
-                    if (requestMessage == null || requestStatusCode != StatusCodes.Status200OK || requestStatusCode == 0)
+                    if (requestMessage == null || (requestStatusCode != StatusCodes.Status200OK && requestStatusCode != 0))
                     {
                         await SendErrorResponse(errorProcess, httpContext.Response, selectedEncoding, errorMessage ?? string.Empty, requestStatusCode);
                         return;

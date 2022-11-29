@@ -5,7 +5,7 @@ using DotBPE.Rpc;
 using System;
 using System.Text.Json;
 
-namespace DotBPE.Gateway.Tests
+namespace DotBPE.Gateway.Tests.TestObjects
 {
     public class DefaultJsonParser : IJsonParser
     {
