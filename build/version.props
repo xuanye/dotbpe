@@ -4,9 +4,9 @@
 		<BaselinePackageVersion>1.0.2</BaselinePackageVersion>
 		<ExtraCastlePackageVersion>3.0.0</ExtraCastlePackageVersion>
 		<ExtraJsonNetPackageVersion>1.0.1</ExtraJsonNetPackageVersion>
-		<ExtraJsonPackageVersion>1.0.0</ExtraJsonPackageVersion>
-		<ExtraMessagePackPackageVersion>1.0.1</ExtraMessagePackPackageVersion>
-		<ExtraProtobufPackageVersion>1.0.2</ExtraProtobufPackageVersion>			
+		<ExtraJsonPackageVersion>3.0.0</ExtraJsonPackageVersion>
+		<ExtraMessagePackPackageVersion>3.0.0</ExtraMessagePackPackageVersion>
+		<ExtraProtobufPackageVersion>3.0.0</ExtraProtobufPackageVersion>			
 		<GatewayPackageVersion>3.0.0</GatewayPackageVersion>	
 		<BestPracticePackageVersion>3.0.0</BestPracticePackageVersion>	
 	</PropertyGroup>
