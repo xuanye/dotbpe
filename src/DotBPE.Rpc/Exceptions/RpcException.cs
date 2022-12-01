@@ -1,30 +1,26 @@
-#region copyright
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
 
-//-----------------------------------------------------------------------
-// <copyright file="RpcException.cs” project="DotBPE.Rpc">
-//    文件说明:
-//    copyright@2017 xuanye
-// </copyright>
-//-----------------------------------------------------------------------
-
-#endregion copyright
-
+using DotBPE.Rpc.Protocols;
 using System;
 
 namespace DotBPE.Rpc.Exceptions
 {
     public class RpcException : Exception
     {
-        public RpcException()
+        public RpcException(string message) : this(RpcStatusCodes.CODE_INTERNAL_ERROR, message)
         {
+
+        }
+        public RpcException(int statusCode, string message) : base(message)
+        {
+            StatusCode = statusCode;
         }
 
-        public RpcException(string message) : base(message)
+        public RpcException(int statusCode, string message, Exception inner) : base(message, inner)
         {
+            StatusCode = statusCode;
         }
-
-        public RpcException(string message, Exception inner) : base(message, inner)
-        {
-        }
+        public int StatusCode { get; set; }
     }
 }

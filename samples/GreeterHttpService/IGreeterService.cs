@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Gateway;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Server;
@@ -11,14 +14,14 @@ namespace GreeterHttpService
     /// IGreeterService Greet服务
     /// </summary>
     [RpcService(101)]
-    public interface IGreeterService:IRpcService
+    public interface IGreeterService
     {
         /// <summary>
         ///  Say Hello 方法
         /// </summary>
         /// <param name="req"></param>
         /// <returns></returns>
-        [RpcMethod(1),Router("/api/greeter/hello")]
+        [RpcMethod(1), HttpRoute("/api/greeter/hello")]
         Task<RpcResult<SayHelloRes>> SayHelloAsync(SayHelloReq req);
     }
 
@@ -31,7 +34,7 @@ namespace GreeterHttpService
             var result = new RpcResult<SayHelloRes>
             {
                 Code = 0,
-                Data = new SayHelloRes {Greeting = $"Hello {req.Name}" , ReturnMessage = ""}
+                Data = new SayHelloRes { Greeting = $"Hello {req.Name}", ReturnMessage = "" }
             };
 
             //throw  new Exception("测试异常");
@@ -49,9 +52,9 @@ namespace GreeterHttpService
         /// <summary>
         /// 名称
         /// </summary>
-        [DataMember(Order = 10,Name = "name")]
+        [DataMember(Order = 10, Name = "name")]
         public string Name { get; set; }
-       
+
 
     }
 
@@ -65,22 +68,22 @@ namespace GreeterHttpService
         /// <summary>
         /// 返回的消息
         /// </summary>
-         [DataMember(Order = 1,Name = "returnMessage")]
-         public string ReturnMessage { get; set; }
+        [DataMember(Order = 1, Name = "returnMessage")]
+        public string ReturnMessage { get; set; }
 
 
         /// <summary>
         /// Greeting words
         /// </summary>
-         [DataMember(Order = 10,Name = "greeting")]
-         public string Greeting { get; set; }
+        [DataMember(Order = 10, Name = "greeting")]
+        public string Greeting { get; set; }
 
     }
 
     [DataContract]
     public class SampleData
     {
-        [DataMember(Order = 1,Name = "list")]
+        [DataMember(Order = 1, Name = "list")]
         public List<SampleData> Children { get; } = new List<SampleData>();
     }
 }

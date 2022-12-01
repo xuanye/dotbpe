@@ -8,13 +8,8 @@ namespace DotBPE.Rpc
     {
         T Deserialize<T>(byte[] data);
         byte[] Serialize<T>(T item);
-
-
         object Deserialize(byte[] data,Type type);
-
-
         byte[] Serialize(object item);
-
         byte CodecType { get; }
 
     }

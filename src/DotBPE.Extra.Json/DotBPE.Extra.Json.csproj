@@ -22,9 +22,8 @@
         </PackageReleaseNotes>
         <OutputType>Library</OutputType>
     </PropertyGroup>
-
     <ItemGroup>
-        <ProjectReference Include="..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
+      <ProjectReference Include="..\DotBPE.Rpc\DotBPE.Rpc.csproj" />
     </ItemGroup>
 
 </Project>

@@ -1,16 +1,15 @@
-using Peach.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Rpc.Protocols;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public interface ITransport<TMessage> where TMessage : IMessage
+    public interface ITransport
     {
-        Task SendAsync(TMessage request);
-
+        Task SendAsync(AmpMessage request);
 
         Task CloseAsync(CancellationToken cancellationToken);
 

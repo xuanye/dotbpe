@@ -1,3 +1,8 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Baseline.Extensions;
+using DotBPE.Gateway.Internal;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.ModelBinding;
 using Microsoft.Extensions.Options;
@@ -7,8 +12,6 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 using System.Reflection;
-using DotBPE.Baseline.Extensions;
-
 
 namespace DotBPE.Gateway.Swagger
 {
@@ -20,15 +23,15 @@ namespace DotBPE.Gateway.Swagger
         private readonly SwaggerOptions _config;
         private XmlCommentResolver _resolver;
 
-        public DefaultSwaggerProvider(IApiDescriptionGroupCollectionProvider  apiDescriptionGroup, IOptions<SwaggerOptions> optionsAccessor)
+        public DefaultSwaggerProvider(IApiDescriptionGroupCollectionProvider apiDescriptionGroup, IOptions<SwaggerOptions> optionsAccessor)
         {
             _apiDescriptionGroup = apiDescriptionGroup;
             _config = optionsAccessor?.Value ?? new SwaggerOptions();
         }
-     
+
         public SwaggerInfo GetSwaggerInfo()
         {
-            if(_swaggerInfoInstance != null)
+            if (_swaggerInfoInstance != null)
             {
                 return _swaggerInfoInstance;
             }
@@ -54,10 +57,10 @@ namespace DotBPE.Gateway.Swagger
             var firstApi = applicableApiDescriptions.FirstOrDefault();
             if (firstApi == null)
             {
-                return ;
+                return;
             }
-            var rpcHttpMetadata = firstApi.GetProperty<RpcHttpMetadata>();
-            if(rpcHttpMetadata == null)
+            var rpcHttpMetadata = firstApi.GetProperty<HttpApiMetadata>();
+            if (rpcHttpMetadata == null)
             {
                 return;
             }
@@ -74,7 +77,7 @@ namespace DotBPE.Gateway.Swagger
 
         private void GenerateApiPaths(IEnumerable<ApiDescription> applicableApiDescriptions)
         {
-            foreach(var apiDescription in applicableApiDescriptions)
+            foreach (var apiDescription in applicableApiDescriptions)
             {
                 GenerateApiPath(apiDescription);
             }
@@ -84,7 +87,7 @@ namespace DotBPE.Gateway.Swagger
         {
             var swagger = _swaggerInfoInstance;
 
-            var rpcHttpMetadata = apiDescription.GetProperty<RpcHttpMetadata>();
+            var rpcHttpMetadata = apiDescription.GetProperty<HttpApiMetadata>();
 
             var tagName = rpcHttpMetadata.HanderServiceType.Name;
 
@@ -94,41 +97,42 @@ namespace DotBPE.Gateway.Swagger
                 {
                     Name = tagName,
                     Description = _resolver.GetTypeComment(rpcHttpMetadata.HanderServiceType)
-                }); 
+                });
             }
 
             var acceptVerb = apiDescription.HttpMethod.ToLower();
-            var pathMethod = CreateSwaggerMethod(acceptVerb);
+            var pathMethod = DefaultSwaggerProvider.CreateSwaggerMethod(acceptVerb);
 
-            pathMethod.Tags = new List<string> {tagName};
+            pathMethod.Tags = new List<string> { tagName };
 
-            pathMethod.Version = !string.IsNullOrEmpty(rpcHttpMetadata.HttpApiOptions.Version)? rpcHttpMetadata.HttpApiOptions.Version : "1.0";
+            pathMethod.Version = !string.IsNullOrEmpty(rpcHttpMetadata.HttpApiOptions.Version) ? rpcHttpMetadata.HttpApiOptions.Version : "1.0";
             pathMethod.Summary = $"{tagName}.{rpcHttpMetadata.HanderMethod.Name}";
 
 
             apiDescription.SupportedRequestFormats.ForEach(requestFormat => pathMethod.Consumes.Add(requestFormat.MediaType));
-           
+
 
             pathMethod.OperationId = rpcHttpMetadata.HanderMethod.Name;
 
             pathMethod.Description = _resolver.GetMethodComment(rpcHttpMetadata.HanderMethod);
 
             //parameters
-            apiDescription.ParameterDescriptions.ForEach(paramter => {
-                                
+            apiDescription.ParameterDescriptions.ForEach(paramter =>
+            {
+
                 var name = paramter.ModelMetadata.Name;
                 if (_config.IngoreFields.Contains(name))
                 {
-                     return;
+                    return;
                 }
                 var p = paramter.ModelMetadata.ContainerType.GetProperty(name, BindingFlags.Public | BindingFlags.Instance);
-                
+
                 if (p == null)
                 {
                     return;
                 }
                 var apiParameter = new SwaggerApiParameters
-                {                   
+                {
                     Name = paramter.Name,
                     Required = paramter.IsRequired,
                     DefaultValue = paramter.DefaultValue?.ToString(),
@@ -137,10 +141,10 @@ namespace DotBPE.Gateway.Swagger
 
                 if (p.PropertyType == typeof(string) || p.PropertyType.IsValueType)
                 {
-                    var (typeName,format) = GetSwaggerType(p.PropertyType);
+                    var (typeName, format) = GetSwaggerType(p.PropertyType);
                     apiParameter.Type = typeName;
                     apiParameter.Format = format;
-                    apiParameter.In = ConvertBindSource(paramter.Source);
+                    apiParameter.In = DefaultSwaggerProvider.ConvertBindSource(paramter.Source);
                 }
                 else
                 {
@@ -154,11 +158,11 @@ namespace DotBPE.Gateway.Swagger
             apiDescription.SupportedResponseTypes.ForEach(apiResponse =>
             {
                 apiResponse.ApiResponseFormats.ForEach(fomart =>
-                {                  
+                {
                     pathMethod.Produces.Add(fomart.MediaType);
 
                 });
-              
+
                 var responseType = apiResponse.Type;
                 var swaggerApiResponse = new SwaggerApiResponse
                 {
@@ -187,7 +191,7 @@ namespace DotBPE.Gateway.Swagger
 
             if (type.IsArray && type.HasElementType)
             {
-                SwaggerArrayItemSchema arrayItem = new SwaggerArrayItemSchema();
+                var arrayItem = new SwaggerArrayItemSchema();
                 arrayItem.Items.Add(new SwaggerSingleItemSchema
                 {
                     Ref = "#/definitions/" + type.GetElementType().Name
@@ -199,9 +203,9 @@ namespace DotBPE.Gateway.Swagger
             if (type == typeof(string) || type.IsValueType) //string or valueType
             {
                 var (typeName, _) = GetSwaggerType(type);
-              
 
-                SwaggerSingleItemSchema valueItem = new SwaggerSingleItemSchema { Ref = typeName };
+
+                var valueItem = new SwaggerSingleItemSchema { Ref = typeName };
 
                 CreateSwaggerDefinition(type.Name, type);
 
@@ -212,7 +216,7 @@ namespace DotBPE.Gateway.Swagger
                IsCollectionType(type)
             )
             {
-                SwaggerArrayItemSchema arrayItem = new SwaggerArrayItemSchema();
+                var arrayItem = new SwaggerArrayItemSchema();
 
                 if (type.IsGenericType)
                 {
@@ -233,7 +237,7 @@ namespace DotBPE.Gateway.Swagger
                 return arrayItem;
             }
 
-            SwaggerSingleItemSchema singleItem = new SwaggerSingleItemSchema { Ref = "#/definitions/" + type.Name };
+            var singleItem = new SwaggerSingleItemSchema { Ref = "#/definitions/" + type.Name };
 
             CreateSwaggerDefinition(type.Name, type);
 
@@ -245,7 +249,7 @@ namespace DotBPE.Gateway.Swagger
             return type.GetInterface(nameof(ICollection)) != null;
         }
 
-         private void CreateSwaggerDefinition(string name, Type definitionType)
+        private void CreateSwaggerDefinition(string name, Type definitionType)
         {
             if (_swaggerInfoInstance.Definitions.ContainsKey(name))
             {
@@ -281,7 +285,7 @@ namespace DotBPE.Gateway.Swagger
 
                 if (p.PropertyType == typeof(string) || p.PropertyType.IsValueType)
                 {
-                    var (type,format) =GetSwaggerType(p.PropertyType);
+                    var (type, format) = GetSwaggerType(p.PropertyType);
                     pd.Type = type;
                     pd.Format = format;
                 }
@@ -318,18 +322,18 @@ namespace DotBPE.Gateway.Swagger
 
         }
 
-      
+
         private (string, string) GetSwaggerType(Type type)
-        {         
+        {
 
             if (type == typeof(string))
-            {              
+            {
                 return ("string", null);
             }
 
             if (type == typeof(int) || type == typeof(uint) || type.IsEnum)
             {
-                return ("integer","int32");
+                return ("integer", "int32");
             }
             if (type == typeof(long) || type == typeof(ulong))
             {
@@ -339,33 +343,33 @@ namespace DotBPE.Gateway.Swagger
             {
                 return ("integer", "int16");
             }
-           
+
             if (type == typeof(bool))
             {
-                return ("boolean",null);
+                return ("boolean", null);
             }
 
-            if (type == typeof(float) || type == typeof(decimal) || type == typeof(double) )
+            if (type == typeof(float) || type == typeof(decimal) || type == typeof(double))
             {
-                return ("number",null);
+                return ("number", null);
             }
 
-            if(type.IsGenericType) //NullAble valueType
+            if (type.IsGenericType) //NullAble valueType
             {
                 return GetSwaggerType(type.GetGenericArguments()[0]);
             }
 
-            return  ("string", null);
+            return ("string", null);
 
         }
 
-        private string ConvertBindSource(BindingSource source)
+        private static string ConvertBindSource(BindingSource source)
         {
-            if(source == BindingSource.Path)
+            if (source == BindingSource.Path)
             {
                 return "path";
             }
-            else if( source == BindingSource.Form)
+            else if (source == BindingSource.Form)
             {
                 return "formData";
             }
@@ -373,17 +377,24 @@ namespace DotBPE.Gateway.Swagger
             return "query";
         }
 
-        private SwaggerMethod CreateSwaggerMethod(string verb)
+        private static SwaggerMethod CreateSwaggerMethod(string verb)
         {
-            return verb switch
+            switch (verb)
             {
-                "get" => new SwaggerGetMethod(),
-                "post" => new SwaggerPostMethod(),
-                "put" => new SwaggerPutMethod(),
-                "delete" => new SwaggerDeleteMethod(),
-                "patch" => new SwaggerPatchMethod(),
-                _ => new SwaggerGetMethod(),
-            };
+                case "get":
+                    return new SwaggerGetMethod();
+                case "post":
+                    return new SwaggerPostMethod();
+                case "delete":
+                    return new SwaggerDeleteMethod();
+                case "put":
+                    return new SwaggerPutMethod();
+                case "patch":
+                    return new SwaggerPatchMethod();
+                default:
+                    return new SwaggerGetMethod();
+
+            }
         }
 
     }

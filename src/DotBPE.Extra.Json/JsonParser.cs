@@ -1,6 +1,9 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Rpc;
 using System;
 using System.Text;
-using DotBPE.Rpc;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 
@@ -11,13 +14,17 @@ namespace DotBPE.Extra
     {
         private static readonly JsonSerializerOptions JsonSerializerOptions = new JsonSerializerOptions
         {
+#if NET5_0_OR_GREATER
+            DefaultIgnoreCondition = System.Text.Json.Serialization.JsonIgnoreCondition.WhenWritingNull,
+#else
             IgnoreNullValues = true,
+#endif
             PropertyNamingPolicy = JsonNamingPolicy.CamelCase,
             WriteIndented = false,
             IgnoreReadOnlyProperties = false,
             AllowTrailingCommas = false
         };
-      
+
         public string ToJson(object item)
         {
             return JsonSerializer.Serialize(item, JsonSerializerOptions);

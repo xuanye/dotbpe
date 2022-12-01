@@ -1,3 +1,7 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Rpc.Protocols;
 using Peach.Messaging;
 using System;
 using System.Collections.Generic;
@@ -5,10 +9,9 @@ using System.Text;
 
 namespace DotBPE.Rpc.Client
 {
-    public interface IClientMessageHandler<TMessage> where TMessage : IMessage
+    public interface IClientMessageHandler
     {
-        event EventHandler<TMessage> OnReceived;
 
-        void RaiseReceive(TMessage message);
+        void RaiseReceive(AmpMessage message);
     }
 }

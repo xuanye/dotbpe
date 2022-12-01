@@ -1,43 +1,40 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using Castle.DynamicProxy;
+using DotBPE.Rpc.Server;
+using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Concurrent;
-using System.ComponentModel.Design;
+using System.Collections.Generic;
 using System.Linq;
-using System.Reflection;
-using Castle.Core.Internal;
-using Castle.DynamicProxy;
-using DotBPE.Rpc.Protocol;
-using DotBPE.Rpc.Server;
-using Microsoft.Extensions.DependencyInjection;
+
 
 namespace DotBPE.Extra
 {
-    public class DynamicServiceActorLocator:DefaultServiceActorLocator
+    public class DynamicServiceActorLocator : DefaultServiceActorLocator
     {
-        private readonly ConcurrentDictionary<string, IServiceActor<AmpMessage>> DY_ACTOR_CACHE =
-            new ConcurrentDictionary<string, IServiceActor<AmpMessage>>();
-
+        private readonly ConcurrentDictionary<string, IServiceActor> _actorCache =
+            new ConcurrentDictionary<string, IServiceActor>();
 
         private readonly IProxyGenerator _generator;
-        private readonly IServiceProvider _provider;
+        private readonly Interceptor[] _actorInterceptors;
 
-        private IInterceptor _interceptor;
+        private IServiceActor _proxyNotFoundActor;
 
-        private IServiceActor<AmpMessage> _proxy_not_found_actor;
-
-        public DynamicServiceActorLocator(IServiceProvider serviceProvider):base(serviceProvider)
+        public DynamicServiceActorLocator(IProxyGenerator generator
+            , IEnumerable<Interceptor> actorInterceptors
+            , IEnumerable<IServiceActor> serviceActors
+            , ILoggerFactory loggerFactory)
+            : base(serviceActors, loggerFactory)
         {
-            this._provider = serviceProvider;
-            this._generator = serviceProvider.GetRequiredService<IProxyGenerator>();
+            _generator = generator;
+            _actorInterceptors = actorInterceptors.ToArray();
         }
 
-        private IInterceptor ActorInterceptor =>
-            _interceptor ??
-            (_interceptor = _provider.GetRequiredService<ServiceActorInterceptor>());
-
-
-        protected override IServiceActor<AmpMessage> GetFromCache(string cacheKey)
+        protected override IServiceActor GetFromCache(string cacheKey)
         {
-            if (DY_ACTOR_CACHE.TryGetValue(cacheKey,out var serviceActor))
+            if (_actorCache.TryGetValue(cacheKey, out var serviceActor))
             {
                 return serviceActor;
             }
@@ -48,30 +45,29 @@ namespace DotBPE.Extra
                 return null;
             }
 
-            var interfaces = actor.GetType().GetInterfaces().FindAll(x=> x !=typeof(IServiceActor<AmpMessage>));
-            //actor 真实的实现实现类 ，actor:IAService,IServiceActor<AmpMessage>
-            var proxy = (IServiceActor<AmpMessage>)this._generator.CreateInterfaceProxyWithTarget(
-                typeof(IServiceActor<AmpMessage>)
-                ,interfaces.ToArray()
-                ,actor
-                , ActorInterceptor);
+            var interfaces = Array.FindAll(actor.GetType().GetInterfaces(), x => x != typeof(IServiceActor));
+
+            var proxy = (IServiceActor)_generator.CreateInterfaceProxyWithTarget(
+                typeof(IServiceActor)
+                , interfaces.ToArray()
+                , actor
+                , _actorInterceptors);
 
             //var proxy = this._generator.CreateInterfaceProxyWithTarget(actor, ActorInterceptor);
-            DY_ACTOR_CACHE.TryAdd(cacheKey, proxy);
+            _actorCache.TryAdd(cacheKey, proxy);
             return proxy;
         }
 
-        protected override IServiceActor<AmpMessage> GetNotFoundActor()
+        protected override IServiceActor GetNotFoundActor()
         {
-            if (_proxy_not_found_actor != null)
+            if (_proxyNotFoundActor != null)
             {
-                return _proxy_not_found_actor;
+                return _proxyNotFoundActor;
             }
 
             var actor = base.GetNotFoundActor();
-            _proxy_not_found_actor = _generator.CreateInterfaceProxyWithTarget(actor, ActorInterceptor);
-            return _proxy_not_found_actor;
+            _proxyNotFoundActor = _generator.CreateInterfaceProxyWithTarget(actor, _actorInterceptors);
+            return _proxyNotFoundActor;
         }
     }
-
 }

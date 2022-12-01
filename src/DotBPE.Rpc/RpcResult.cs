@@ -1,24 +1,28 @@
-using DotBPE.Rpc.Codec;
-using DotBPE.Rpc.Protocol;
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using System;
 using System.Collections.Generic;
 using System.Runtime.Serialization;
 using System.Text;
+using System.Xml.Linq;
 
 namespace DotBPE.Rpc
 {
 
-    [DataContract]
     public class RpcResult
     {
-        [DataMember(Order =1,Name ="return_code")]
-        public int Code { get; set; }
-    }
-    [DataContract]
-    public class RpcResult<T> : RpcResult //where T:ITransportMessage<AmpMessage>
-    {
-        [DataMember(Order = 3, Name = "data")]
-        public T Data { get; set; }
+        public int Code
+        {
+            get; set;
+        }
     }
 
+    public class RpcResult<T> : RpcResult where T : class
+    {
+        public T Data
+        {
+            get; set;
+        }
+    }
 }

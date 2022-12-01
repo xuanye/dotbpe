@@ -1,24 +1,20 @@
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Baseline.Utility;
-using DotBPE.Rpc.Protocol;
-using Microsoft.Extensions.Options;
+using DotBPE.Rpc.Protocols;
 using Peach;
-using Peach.Config;
-using Peach.Protocol;
-using Peach.Tcp;
-using System;
-using System.Collections.Generic;
-using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    public class DefaultTransport : ITransport<AmpMessage>
+    internal class DefaultTransport : ITransport
     {
         private readonly ISocketContext<AmpMessage> _context;
         public DefaultTransport(ISocketContext<AmpMessage> context)
         {
-            this._context = context;
+            _context = context;
             Id = ObjectId.GenerateNewId().ToString();
         }
 
@@ -26,12 +22,12 @@ namespace DotBPE.Rpc.Client
 
         public Task CloseAsync(CancellationToken cancellationToken)
         {
-            return this._context.Channel.CloseAsync();
+            return _context.Channel.CloseAsync();
         }
 
         public Task SendAsync(AmpMessage request)
         {
-            return this._context.SendAsync(request);
+            return _context.SendAsync(request);
         }
     }
 }

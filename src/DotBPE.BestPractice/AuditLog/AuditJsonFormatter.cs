@@ -30,7 +30,6 @@ namespace DotBPE.BestPractice.AuditLog
         public const string AnyTypeUrlField = "@type";
         public const string AnyDiagnosticValueField = "@value";
         public const string AnyWellKnownTypeValueField = "value";
-        private const string TypeUrlPrefix = "type.googleapis.com";
         private const string NameValueSeparator = ": ";
         private const string PropertySeparator = ", ";
 

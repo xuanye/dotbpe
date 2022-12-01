@@ -1,36 +1,63 @@
-using DotBPE.Rpc.Config;
-using DotBPE.Rpc.Internal;
-using DotBPE.Rpc.Protocol;
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Rpc.Utils;
 using Microsoft.Extensions.Options;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Client
 {
-    /// <summary>
-    /// local config base router
-    /// </summary>
     public class DefaultServiceRouter : IServiceRouter
     {
+
+        private static readonly IRouterPoint LocalRoutePoint = new RouterPoint { RoutePointType = RoutePointType.Local };
+
+
         private readonly RouterPointOptions _routeOptions;
-        private readonly IRouterPolicy _policy;
-        private readonly Dictionary<string, List<IRouterPoint>> SERVICE_CACHE = new Dictionary<string, List<IRouterPoint>>();
-
-
+        private readonly IRoutingPolicy _policy;
+        private readonly Dictionary<string, List<IRouterPoint>> _routeCache = new Dictionary<string, List<IRouterPoint>>();
 
         public DefaultServiceRouter(
             IOptions<RouterPointOptions> routeOptions,
-            IRouterPolicy policy
-            )
+            IRoutingPolicy policy)
         {
-            _routeOptions = routeOptions?.Value?? new RouterPointOptions();
+            _routeOptions = routeOptions.Value ?? new RouterPointOptions();
             _policy = policy;
             Initialize();
         }
+
+        public Task<IRouterPoint> FindRouterPoint(string servicePath)
+        {
+            var parts = servicePath.Split('.');
+            var keyService = $"{parts[1]}.0";
+            var keyMessage = $"{parts[1]}.{parts[2]}";
+
+            if (_routeCache.TryGetValue(keyMessage, out var routerPoints))
+            {
+                return Task.FromResult(SelectEndPoint(keyMessage, routerPoints));
+            }
+            else if (_routeCache.TryGetValue(keyService, out routerPoints))
+            {
+                Task.FromResult(SelectEndPoint(keyService, routerPoints));
+            }
+
+            var keyCategory = parts[0];
+            if (string.IsNullOrEmpty(keyCategory))
+            {
+                keyCategory = "default";
+            }
+
+            if (_routeCache.TryGetValue(keyCategory, out routerPoints))
+            {
+                return Task.FromResult(SelectEndPoint(keyCategory, routerPoints));
+            }
+
+            return Task.FromResult(LocalRoutePoint);
+        }
+
 
         private void Initialize()
         {
@@ -41,11 +68,11 @@ namespace DotBPE.Rpc.Client
 
         private void InitializeMessages()
         {
-            if(_routeOptions.Messages !=null && _routeOptions.Messages.Any())
+            if (_routeOptions.Messages != null && _routeOptions.Messages.Any())
             {
-                foreach(var cfg in this._routeOptions.Messages)
+                foreach (var cfg in _routeOptions.Messages)
                 {
-                    var remoteLst  = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress);
+                    var remoteLst = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress);
                     if (remoteLst.Count > 0)
                     {
                         AddRouter($"{cfg.ServiceId}.{cfg.MessageId}", cfg.Weight, remoteLst);
@@ -58,12 +85,12 @@ namespace DotBPE.Rpc.Client
         {
             if (_routeOptions.Services != null && _routeOptions.Services.Any())
             {
-                foreach (var cfg in this._routeOptions.Services)
+                foreach (var cfg in _routeOptions.Services)
                 {
                     var remoteLst = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress);
                     if (remoteLst.Count > 0)
                     {
-                        AddRouter($"{cfg.ServiceId}.0",cfg.Weight, remoteLst);
+                        AddRouter($"{cfg.ServiceId}.0", cfg.Weight, remoteLst);
                     }
                 }
             }
@@ -72,12 +99,12 @@ namespace DotBPE.Rpc.Client
         {
             if (_routeOptions.Categories != null && _routeOptions.Categories.Count > 0)
             {
-                foreach (var cfg in this._routeOptions.Categories)
+                foreach (var cfg in _routeOptions.Categories)
                 {
                     var remoteLst = EndPointParser.ParseEndPointListFromString(cfg.RemoteAddress);
                     if (remoteLst.Count > 0)
                     {
-                        AddRouter($"{cfg.GroupName}",cfg.Weight, remoteLst);
+                        AddRouter($"{cfg.GroupName}", cfg.Weight, remoteLst);
                     }
                 }
             }
@@ -87,7 +114,7 @@ namespace DotBPE.Rpc.Client
 
 
 
-        private void AddRouter(string key,int weight, List<IPEndPoint> remoteAddress)
+        private void AddRouter(string key, int weight, List<IPEndPoint> remoteAddress)
         {
             var ls = remoteAddress.ConvertAll<IRouterPoint>(
                                 x => new RouterPoint
@@ -97,65 +124,21 @@ namespace DotBPE.Rpc.Client
                                     Weight = weight
                                 });
 
-            if (SERVICE_CACHE.ContainsKey(key))
+            if (_routeCache.ContainsKey(key))
             {
-                SERVICE_CACHE[key].AddRange(ls);
+                _routeCache[key].AddRange(ls);
             }
             else
             {
-                SERVICE_CACHE.Add(key, ls);
+                _routeCache.Add(key, ls);
             }
             //order by weight
-            this.SERVICE_CACHE[key].Sort((x, y) => x.Weight > y.Weight ? 1 : 0);
+            _routeCache[key].Sort((x, y) => x.Weight > y.Weight ? 1 : 0);
         }
-
-
-        public Task<IRouterPoint> FindRouterPoint(string servicePath)
-        {
-            IRouterPoint point = new RouterPoint {  RoutePointType = RoutePointType.Local };
-
-
-            var parts = servicePath.Split('.');
-
-
-            var keyService = $"{parts[1]}.0";
-            var keyMessage = $"{parts[1]}.{parts[2]}";
-
-
-            if (SERVICE_CACHE.ContainsKey(keyMessage))
-            {
-                point = SelectEndPoint(keyMessage, SERVICE_CACHE[keyMessage]);
-                return Task.FromResult(point);
-            }
-
-            if (SERVICE_CACHE.ContainsKey(keyService))
-            {
-                point = SelectEndPoint(keyService, SERVICE_CACHE[keyService]);
-                return Task.FromResult(point);
-            }
-
-
-            var keyCategory = parts[0];
-            if (string.IsNullOrEmpty(keyCategory))
-            {
-                keyCategory = "default";
-            }
-
-            //默认配置
-            if (SERVICE_CACHE.ContainsKey(keyCategory))
-            {
-                point = SelectEndPoint(keyCategory, SERVICE_CACHE[keyCategory]);
-                return Task.FromResult(point);
-            }
-
-            return Task.FromResult(point);
-        }
-
-        private IRouterPoint SelectEndPoint(string serviceKey,List<IRouterPoint> remoteAddresses)
+        private IRouterPoint SelectEndPoint(string serviceKey, List<IRouterPoint> remoteAddresses)
         {
             return _policy.Select(serviceKey, remoteAddresses);
         }
-
 
     }
 }

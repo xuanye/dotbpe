@@ -1,94 +1,91 @@
-using System;
-using System.Collections.Concurrent;
-using System.Linq;
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Rpc.Exceptions;
-using DotBPE.Rpc.Protocol;
-using Microsoft.Extensions.DependencyInjection;
+using DotBPE.Rpc.Internal;
+using DotBPE.Rpc.Protocols;
 using Microsoft.Extensions.Logging;
+using System.Collections.Concurrent;
+using System.Collections.Generic;
+using System.Linq;
 
 namespace DotBPE.Rpc.Server
 {
-    public class DefaultServiceActorLocator : IServiceActorLocator<AmpMessage>
+    /// <summary>
+    /// 根据配置信息获取本地或者远程的
+    /// </summary>
+    public class DefaultServiceActorLocator : IServiceActorLocator
     {
-        private static readonly HeartbeatActor HeartbeatActor = new HeartbeatActor();
         private readonly ILogger<DefaultServiceActorLocator> _logger;
 
-        private readonly ConcurrentDictionary<string, IServiceActor<AmpMessage>> ACTOR_CACHE =
-            new ConcurrentDictionary<string, IServiceActor<AmpMessage>>();
+        private readonly ConcurrentDictionary<string, IServiceActor> _actorCaches =
+          new ConcurrentDictionary<string, IServiceActor>();
 
-        public DefaultServiceActorLocator(IServiceProvider serviceProvider)
+        public DefaultServiceActorLocator(IEnumerable<IServiceActor> serviceActors, ILoggerFactory loggerFactory)
         {
-            var logFactory = serviceProvider.GetService<ILoggerFactory>();
-            this._logger = logFactory.CreateLogger<DefaultServiceActorLocator>();
-            Initialize(serviceProvider);
+            _logger = loggerFactory.CreateLogger<DefaultServiceActorLocator>();
+            Initialize(serviceActors);
         }
 
-        /// <summary>
-        ///     Service Actor Locate
-        /// </summary>
-        /// <param name="message"></param>
-        /// <returns></returns>
-        public IServiceActor<AmpMessage> LocateServiceActor(string servicePath)
+        private void Initialize(IEnumerable<IServiceActor> serviceActors)
         {
-            if (HeartbeatActor.Id.Equals(servicePath)) return HeartbeatActor;
-
-            var path = servicePath.Split('.');
-
-            var serviceId = string.Empty;
-            var messageId = string.Empty;
-
-            if (path.Length == 2)
+            if (serviceActors.Any())
             {
-                serviceId = path[0];
-                messageId = path[1];
-            }
-            else if (path.Length == 3)
-            {
-                serviceId = path[1];
-                messageId = path[2];
+                foreach (var actor in serviceActors)
+                {
+                    _actorCaches.AddOrUpdate(actor.Id, actor, (k, v) => actor);
+                }
             }
             else
             {
-                this._logger.LogError("service path error:{servicePath}", servicePath);
-                throw new RpcException($"service path error:{servicePath}");
+                _logger.LogWarning("no service actor was registered");
+            }
+        }
+
+        public IServiceActor LocateServiceActor(string actorId)
+        {
+
+            var parts = actorId.Split('.');
+
+            string serviceId;
+            string methodId;
+
+            switch (parts.Length)
+            {
+                case 2:
+                    serviceId = parts[0];
+                    methodId = parts[1];
+                    break;
+                case 3:
+                    serviceId = parts[1];
+                    methodId = parts[2];
+                    break;
+                default:
+                    _logger.LogError("ServiceActor not found:{ActorId}", actorId);
+                    throw new RpcException(RpcStatusCodes.CODE_SERVICE_NOT_FOUND, $"ServiceActor not found:{actorId}");
             }
 
-
             var serviceKey = $"{serviceId}.0";
-            var messageKey = $"{serviceId}.{messageId}";
+            var messageKey = $"{serviceId}.{methodId}";
+
 
             var actor = GetFromCache(messageKey);
-            if (actor != null) return actor;
-
+            if (actor != null)
+                return actor;
 
             actor = GetFromCache(serviceKey);
 
-            if (actor != null) return actor;
-
-            return GetNotFoundActor();
+            return actor ?? GetNotFoundActor();
         }
-
-        private void Initialize(IServiceProvider serviceProvider)
+        protected virtual IServiceActor GetFromCache(string cacheKey)
         {
-            var actorList = serviceProvider.GetServices<IServiceActor<AmpMessage>>();
-            if (actorList != null && actorList.Any())
-                foreach (var actor in actorList)
-                    this.ACTOR_CACHE.AddOrUpdate(actor.Id, actor, (k, v) => actor);
-            else
-                this._logger.LogWarning("no service actor was registered");
-        }
-
-        protected virtual IServiceActor<AmpMessage> GetFromCache(string cacheKey)
-        {
-            return
-                this.ACTOR_CACHE.TryGetValue(cacheKey, out var serviceActor)
+            return _actorCaches.TryGetValue(cacheKey, out var serviceActor)
                     ? serviceActor
                     : null;
         }
-
-        protected virtual IServiceActor<AmpMessage> GetNotFoundActor()
+        protected virtual IServiceActor GetNotFoundActor()
         {
-            return NotFoundServiceActor.Default;
+            return NotFoundServiceActor.Instance;
         }
     }
 }

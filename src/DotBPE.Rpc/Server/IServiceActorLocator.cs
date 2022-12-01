@@ -1,16 +1,26 @@
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using Peach.Messaging;
 using System;
 using System.Collections.Generic;
 using System.Text;
+using System.Threading.Tasks;
 
 namespace DotBPE.Rpc.Server
 {
+
     /// <summary>
     /// 服务定位器，实现者需要根据message中的内容，准确的找到具体的IServiceActor
-    /// </summary>
-    /// <typeparam name="TMessage"></typeparam>
-    public interface IServiceActorLocator<TMessage> where TMessage : IMessage
+    /// </summary>  
+    public interface IServiceActorLocator
     {
-        IServiceActor<TMessage> LocateServiceActor(string serviceIdentity);
+        /// <summary>
+        /// Locating a ServiceActor by Id
+        /// </summary>
+        /// <param name="actorId">service actor id</param>
+        /// <returns>IServiceActor</returns>
+        IServiceActor LocateServiceActor(string actorId);
+
     }
 }

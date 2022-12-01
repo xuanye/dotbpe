@@ -1,13 +1,6 @@
-#region copyright
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
 
-// -----------------------------------------------------------------------
-//  <copyright file="RpcException.cs” project="DotBPE.Rpc">
-//    文件说明:
-//     copyright@2017 xuanye 2017-04-08 8:46
-//  </copyright>
-// -----------------------------------------------------------------------
-
-#endregion copyright
 
 using System;
 

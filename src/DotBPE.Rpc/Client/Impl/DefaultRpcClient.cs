@@ -1,7 +1,8 @@
-//using DotBPE.Rpc.Config;
-using DotBPE.Rpc.Protocol;
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+using DotBPE.Rpc.Protocols;
 using Microsoft.Extensions.Logging;
-//using Microsoft.Extensions.Options;
 using System.Threading;
 using System.Threading.Tasks;
 
@@ -10,27 +11,24 @@ namespace DotBPE.Rpc.Client
     /// <summary>
     /// default implement for IRpcClient
     /// </summary>
-    public class DefaultRpcClient : IRpcClient<AmpMessage>
+    public class DefaultRpcClient : IRpcClient
     {
-        //private readonly RpcClientOptions _clientOptions;
         private readonly IServiceRouter _serviceRouter;
-        private readonly ITransportFactory<AmpMessage> _transportFactory;
+        private readonly ITransportFactory _transportFactory;
         private readonly ILogger<DefaultRpcClient> _logger;
-        private readonly IClientMessageHandler<AmpMessage> _handler;
+        private readonly IClientMessageHandler _handler;
 
         public DefaultRpcClient(
-            //IOptions<RpcClientOptions> clientOptions,
             IServiceRouter serviceRouter,
-            ITransportFactory<AmpMessage> transportFactory,
-            IClientMessageHandler<AmpMessage> handler,
+            ITransportFactory transportFactory,
+            IClientMessageHandler handler,
             ILogger<DefaultRpcClient> logger
             )
         {
-            //_clientOptions = clientOptions.Value ?? new RpcClientOptions();
-            this._serviceRouter = serviceRouter;
-            this._transportFactory = transportFactory;
-            this._handler = handler;
-            this._logger = logger;
+            _serviceRouter = serviceRouter;
+            _transportFactory = transportFactory;
+            _handler = handler;
+            _logger = logger;
         }
 
 
@@ -38,37 +36,37 @@ namespace DotBPE.Rpc.Client
 
         public Task CloseAsync(CancellationToken cancellationToken)
         {
-            return this._transportFactory.CloseAllTransports(cancellationToken);
+            return _transportFactory.CloseAllTransports(cancellationToken);
         }
 
         public async Task SendAsync(AmpMessage message)
         {
-            var point = await this._serviceRouter.FindRouterPoint(message.MessageRoutePath);
+            var point = await _serviceRouter.FindRouterPoint(message.RoutePath);
 
             if (point == null)
             {
-                this._logger.LogError("route point not found !");
-                ErrorResponse(message);
+                _logger.LogError("route point is not found !");
+                RaiseErrorResponse(message);
                 return;
             }
-            if(point.RoutePointType != RoutePointType.Remote){
-                this._logger.LogError("route error");
-                ErrorResponse(message);
+            if (point.RoutePointType != RoutePointType.Remote)
+            {
+                _logger.LogError("route error");
+                RaiseErrorResponse(message);
                 return;
             }
-            var transport = await this._transportFactory.CreateTransport(point.RemoteAddress);
+            var transport = await _transportFactory.CreateTransport(point.RemoteAddress);
             await transport.SendAsync(message);
         }
 
         #endregion IRpcClient
 
 
-
-        private void ErrorResponse(AmpMessage message)
+        private void RaiseErrorResponse(AmpMessage message)
         {
-            var rsp = AmpMessage.CreateResponseMessage(message.ServiceId, message.MessageId);
-            rsp.Code = RpcErrorCodes.CODE_INTERNAL_ERROR;
-            this._handler.RaiseReceive(rsp);
+            var rsp = AmpMessage.CreateResponseMessage(message);
+            rsp.Code = RpcStatusCodes.CODE_INTERNAL_ERROR;
+            _handler.RaiseReceive(rsp);
         }
     }
 }

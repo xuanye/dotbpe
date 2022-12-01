@@ -1,17 +1,17 @@
-using Peach;
-using Peach.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Text;
-using System.Threading.Tasks;
+﻿// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
 
 namespace DotBPE.Rpc.Server
 {
-    public interface IServiceActor<TMessage> :IRpcService where TMessage : IMessage
+    public interface IServiceActor
     {
         string Id { get; }
-        string GroupName { get; }
 
-        Task ReceiveAsync(ISocketContext<TMessage> context, TMessage message);
+        string GroupName { get; }
+    }
+
+    public interface IServiceActor<TService> : IServiceActor where TService : class
+    {
+
     }
 }

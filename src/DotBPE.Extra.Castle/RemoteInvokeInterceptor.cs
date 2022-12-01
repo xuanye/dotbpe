@@ -1,10 +1,12 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using Castle.DynamicProxy;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Exceptions;
 using System.Collections.Concurrent;
 using System.Reflection;
-using System.Threading.Tasks;
 
 namespace DotBPE.Extra
 {
@@ -12,126 +14,77 @@ namespace DotBPE.Extra
     {
         private readonly ICallInvoker _callInvoker;
 
-        private static readonly ConcurrentDictionary<string, InvokeMeta> META_CACHE =
+        private static readonly ConcurrentDictionary<string, InvokeMeta> _metaCache =
             new ConcurrentDictionary<string, InvokeMeta>();
 
-        private readonly MethodInfo _AsyncCaller1;
-        private readonly MethodInfo _AsyncCaller2;
-        private readonly IClientAuditLoggerFactory _auditLoggerFactory;
+        private readonly MethodInfo _asyncCaller;
 
 
         public RemoteInvokeInterceptor(
-            ICallInvoker callInvoker,
-            IClientAuditLoggerFactory auditLogFactory
+            ICallInvoker callInvoker
         )
         {
-            this._callInvoker = callInvoker;
-            this._AsyncCaller1 = callInvoker.GetType().GetMethod("AsyncNotify");
-            this._AsyncCaller2 = callInvoker.GetType().GetMethod("AsyncRequest");
-            this._auditLoggerFactory = auditLogFactory;
+            _callInvoker = callInvoker;
+            _asyncCaller = callInvoker.GetType().GetMethod("InvokerAsync");
         }
 
 
         public void Intercept(IInvocation invocation)
         {
-           
-
             var serviceNameArr = invocation.Method.DeclaringType.Name.Split('`');
             var methodFullName = $"{serviceNameArr[0]}.{invocation.Method.Name}";
 
-
             var req = invocation.Arguments[0];
 
+            var meta = GetInvokeMeta(methodFullName, invocation);
 
-            using (var logger = this._auditLoggerFactory.GetLogger(methodFullName))
+
+            var arguments = meta.InvokeMethod.GetParameters();
+
+            int timeout = invocation.Arguments.Length > 1 ?
+                (int)invocation.Arguments[1] :
+                arguments[1].HasDefaultValue ? (int)arguments[1].DefaultValue : 3000;
+
+            var methodInfo = new Method()
             {
-                logger.SetParameter(invocation.Arguments[0]);
-
-                var meta = GetInvokeMeta(methodFullName, invocation);
-
-                object ret;
-
-                if (meta.WithNoResponse)
-                {
-                    // AsyncCallWithOutResponse<T>(string callName,ushort serviceId,ushort messageId,T req);
-                    ret = meta.InvokeMethod.Invoke(this._callInvoker, 
-                        new [] { methodFullName, meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req });
-                }
-                else
-                {
-                    //AsyncCall<T,TResult>(string callName, ushort serviceId, ushort messageId,T req, int timeOut = 3000)
-                    var arguments = meta.InvokeMethod.GetParameters();
-                   
-                    object timeout = invocation.Arguments.Length > 1 ?
-                        invocation.Arguments[1] :
-                        arguments[1].HasDefaultValue ? arguments[1].DefaultValue : 3000;
-                   
-                    ret = meta.InvokeMethod.Invoke(this._callInvoker,
-                        new [] { methodFullName, meta.ServiceGroupName, meta.ServiceId, meta.MessageId, req, timeout });
-                }
-
-                invocation.ReturnValue = ret;
-
-                logger.SetReturnValue(invocation.ReturnValue);
-            }
-
+                GroupName = meta.ServiceGroupName,
+                ServiceName = serviceNameArr[0],
+                MethodName = invocation.Method.Name,
+                ServiceId = meta.ServiceId,
+                MethodId = meta.MessageId,
+                DefaultTimeout = timeout
+            };
+            invocation.ReturnValue = meta.InvokeMethod.Invoke(_callInvoker, new[] { methodInfo, req });
 
         }
 
         private InvokeMeta GetInvokeMeta(string cacheKey, IInvocation invocation)
         {
-            var req = invocation.Arguments[0];
-            if (!META_CACHE.TryGetValue(cacheKey, out var meta))
+            if (!_metaCache.TryGetValue(cacheKey, out var meta))
             {
                 var service = invocation.Method.DeclaringType.GetCustomAttribute(typeof(RpcServiceAttribute), false);
                 if (service == null)
                 {
-                    throw new RpcException("RpcServiceAttribute Not Found");
+                    throw new RpcException("RpcServiceAttribute required");
                 }
                 var method = invocation.Method.GetCustomAttribute(typeof(RpcMethodAttribute), false);
                 if (method == null)
                 {
-                    throw new RpcException("RpcMethodAttribute Not Found");
+                    throw new RpcException("RpcMethodAttribute required");
                 }
                 var sAttr = service as RpcServiceAttribute;
                 var mAttr = method as RpcMethodAttribute;
                 meta = new InvokeMeta
                 {
-                    ServiceId = sAttr.ServiceId, MessageId = mAttr.MessageId,ServiceGroupName = sAttr.GroupName
+                    ServiceId = sAttr.ServiceId,
+                    MessageId = mAttr.MessageId,
+                    ServiceGroupName = sAttr.GroupName
                 };
 
-                var returnType = invocation.Method.ReturnType;
-                if (returnType == typeof(Task))
-                {
-                    meta.WithNoResponse = true;
-                }
-                else if (returnType.BaseType == typeof(Task)) //Task<RpcResult>
-                {
-                    var innerType = returnType.GetProperty("Result").PropertyType;
-                    if (innerType == typeof(RpcResult))
-                    {
-                        meta.ResultType = null;
-                    }
-                    else if (innerType.BaseType == typeof(RpcResult))
-                    {
-                        meta.ResultType = innerType.GetProperty("Data").PropertyType;
-                    }
-                }
-                else
-                {
-                    throw new RpcException("ReturnType must be Task or Task<RpcResult<T>>");
-                }
+                var (requestType, responseType) = ReflectionHelper.GetInvocationCallTypes(invocation);
 
-                if (meta.WithNoResponse || meta.ResultType == null)
-                {
-                    meta.InvokeMethod = this._AsyncCaller1.MakeGenericMethod(req.GetType());
-                }
-                else
-                {
-                    meta.InvokeMethod = this._AsyncCaller2.MakeGenericMethod(req.GetType(), meta.ResultType);
-                }
-
-                META_CACHE.TryAdd(cacheKey, meta);
+                meta.InvokeMethod = _asyncCaller.MakeGenericMethod(requestType, responseType);
+                _metaCache.TryAdd(cacheKey, meta);
             }
 
             return meta;

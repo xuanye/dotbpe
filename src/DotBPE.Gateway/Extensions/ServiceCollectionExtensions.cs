@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Gateway;
 using DotBPE.Gateway.Internal;
 using DotBPE.Gateway.Swagger;
@@ -5,6 +8,7 @@ using Microsoft.AspNetCore.Mvc.Abstractions;
 using Microsoft.AspNetCore.Mvc.ApiExplorer;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.Extensions.DependencyInjection.Extensions;
+using Microsoft.Extensions.Options;
 using System;
 using System.Collections.Generic;
 
@@ -13,12 +17,8 @@ namespace Microsoft.Extensions.DependencyInjection
     public static class ServiceCollectionExtensions
     {
 
-        /// <summary>
-        /// Adds RPC HTTP API services to the specified <see cref="IServiceCollection" />.
-        /// </summary>
-        /// <param name="services">The <see cref="IServiceCollection"/> for adding services.</param>
-        /// <returns>The <see cref="IServiceCollection"/> so that additional calls can be chained.</returns>
-        public static IServiceCollection AddDotBPEHttpApi(this IServiceCollection services)
+
+        public static IServiceCollection AddHttpApi(this IServiceCollection services, Action<RpcGatewayOption> configureOptions = null, Action<SwaggerOptions> configureSwaggerOptions = null)
         {
 
             if (services == null)
@@ -26,26 +26,26 @@ namespace Microsoft.Extensions.DependencyInjection
                 throw new ArgumentNullException(nameof(services));
             }
 
-            services.TryAddSingleton(new RpcGatewayOption());
-            services.TryAddSingleton(typeof(ServiceRouteBuilder<>));
-            services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IRpcServiceMethodProvider<>), typeof(HttpApiServiceMethodProvider<>)));
 
-            return services;
-        }
-
-        /// <summary>
-        /// Adds RPC HTTP API services to the specified <see cref="IServiceCollection" />.
-        /// </summary>   
-        public static IServiceCollection AddDotBPESwagger(this IServiceCollection services, Action<SwaggerOptions> configureOptions = null)
-        {
-            if (services == null)
+            if (configureOptions != null)
             {
-                throw new ArgumentNullException(nameof(services));
+                services.Configure(configureOptions);
+                services.AddSingleton(p =>
+                {
+                    return p.GetRequiredService<IOptions<RpcGatewayOption>>().Value;
+                });
+            }
+            else
+            {
+                services.TryAddSingleton(new RpcGatewayOption());
             }
 
-            services.AddDotBPEHttpApi();
 
-            services.TryAddEnumerable(ServiceDescriptor.Transient<IApiDescriptionProvider, RpcHttpApiDescriptionProvider>());
+            services.TryAddSingleton(typeof(ApiRouteBuilder<>));
+            services.TryAddEnumerable(ServiceDescriptor.Singleton(typeof(IApiMethodProvider<>), typeof(DefaultApiMethodProvider<>)));
+
+
+            services.TryAddEnumerable(ServiceDescriptor.Transient<IApiDescriptionProvider, HttpApiDescriptionProvider>());
 
             // Register default description provider in case MVC is not registered
             services.TryAddSingleton<IApiDescriptionGroupCollectionProvider>(serviceProvider =>
@@ -58,13 +58,16 @@ namespace Microsoft.Extensions.DependencyInjection
                     apiDescriptionProvider);
             });
 
-            if (configureOptions != null)
-                services.Configure(configureOptions);
+            if (configureSwaggerOptions != null)
+                services.Configure(configureSwaggerOptions);
 
             services.TryAddSingleton<ISwaggerProvider, DefaultSwaggerProvider>();
 
             return services;
+
         }
+
+
 
         // Dummy type that is only used if MVC is not registered in the app
         private class EmptyActionDescriptorCollectionProvider : IActionDescriptorCollectionProvider
