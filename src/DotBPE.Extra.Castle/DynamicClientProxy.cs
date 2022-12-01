@@ -2,7 +2,7 @@
 // Licensed under MIT license
 
 using Castle.DynamicProxy;
-using DotBPE.Rpc.Attributes;
+using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Server;
 using System;

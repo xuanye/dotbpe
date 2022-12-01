@@ -2,7 +2,6 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc;
-using DotBPE.Rpc.Attributes;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Client.Impl;
 using DotBPE.Rpc.Client.RoutingPolicies;
@@ -12,10 +11,8 @@ using DotBPE.Rpc.Server;
 using Microsoft.Extensions.DependencyInjection.Extensions;
 using Peach;
 using System;
-using System.ComponentModel;
 using System.Linq;
 using System.Reflection;
-using System.Xml.Linq;
 
 namespace Microsoft.Extensions.DependencyInjection
 {

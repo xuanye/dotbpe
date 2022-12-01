@@ -2,7 +2,6 @@
 // Licensed under MIT license
 
 using DotBPE.Baseline.Extensions;
-using DotBPE.Rpc.Attributes;
 using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Diagnostics;

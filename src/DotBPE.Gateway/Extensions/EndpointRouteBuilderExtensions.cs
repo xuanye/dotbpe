@@ -3,7 +3,7 @@
 
 
 using DotBPE.Gateway.Internal;
-using DotBPE.Rpc.Attributes;
+using DotBPE.Rpc;
 using DotBPE.Rpc.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.DependencyInjection;

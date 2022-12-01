@@ -2,7 +2,6 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc;
-using DotBPE.Rpc.Attributes;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Server;
 using Microsoft.AspNetCore.Routing;
@@ -11,7 +10,6 @@ using Microsoft.Extensions.Logging;
 using System;
 using System.Collections.Generic;
 using System.Reflection;
-using System.Text;
 
 namespace DotBPE.Gateway.Internal
 {

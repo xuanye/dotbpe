@@ -14,10 +14,7 @@
     <ExtraCastlePackageNotes>
     1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
     </ExtraCastlePackageNotes>  
-    <ExtraConsulPackageNotes>
-    1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
-    2. 升级Consul相关的依赖
-    </ExtraConsulPackageNotes>  
+
     <ExtraJsonNetPackageNotes>
     1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
     </ExtraJsonNetPackageNotes>  
@@ -26,11 +23,7 @@
     </ExtraJsonPackageNotes>  
     <ExtraMessagePackPackageNotes>
     1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
-    </ExtraMessagePackPackageNotes>  
-    <ExtraPipelinePackageNotes>
-    1.Foundatio 升级到最新版本
-	2.新增消费服务分组
-    </ExtraPipelinePackageNotes>  
+    </ExtraMessagePackPackageNotes>     
     <ExtraProtobufPackageNotes>
     1. 调整TargetFramework 为 netstandard2.0，去除不必要的升级
     </ExtraProtobufPackageNotes>  

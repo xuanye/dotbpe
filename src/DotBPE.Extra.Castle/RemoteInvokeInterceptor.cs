@@ -3,7 +3,6 @@
 
 using Castle.DynamicProxy;
 using DotBPE.Rpc;
-using DotBPE.Rpc.Attributes;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Exceptions;
 using System.Collections.Concurrent;

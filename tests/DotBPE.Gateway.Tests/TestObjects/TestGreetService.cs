@@ -2,7 +2,6 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc;
-using DotBPE.Rpc.Attributes;
 using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;

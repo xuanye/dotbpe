@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Extra;
 using DotBPE.Rpc;
 using Microsoft.AspNetCore.Builder;
@@ -13,7 +16,7 @@ namespace GreeterHttpService
     {
         public Startup(IConfiguration config)
         {
-            this.Configuration = config;
+            Configuration = config;
         }
 
         IConfiguration Configuration { get; }
@@ -25,15 +28,14 @@ namespace GreeterHttpService
             services.BindService<GreeterService>(); //bindService
             services.BindService<SwaggerSampleService>();
 
-            
+
             services.AddMessagePackSerializer(); //message pack serializer
             services.AddTextJsonParser(); // http result json parser
-            services.AddDynamicClientProxy(); // aop client
-            services.AddDynamicServiceProxy(); // aop service
+            services.AddDynamicProxy(); // aop dynamic proxy      
 
             services.AddDotBPE();
 
-            services.AddDotBPESwagger(); //DotBPE HTTPAPI && Swagger support
+            services.AddHttpApi(); //DotBPE HTTPAPI && Swagger support
 
         }
 

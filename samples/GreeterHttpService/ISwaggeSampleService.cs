@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using DotBPE.Gateway;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Server;
@@ -22,7 +25,7 @@ namespace GreeterHttpService
         /// <param name="timeout"></param>
         /// <returns></returns>
         [RpcMethod(1)]
-        [Router("/api/sample/getSample", RestfulVerb.Get)]
+        [HttpRoute("/api/sample/getSample", HttpVerb.Get)]
         Task<RpcResult<SampleRes>> GetSampleAsync(SampleReq req, int timeout = 3000);
 
         /// <summary>
@@ -32,7 +35,7 @@ namespace GreeterHttpService
         /// <param name="timeout"></param>
         /// <returns></returns>
         [RpcMethod(2)]
-        [Router("/api/sample/postSample", RestfulVerb.Post, "2.0.0")]
+        [HttpRoute("/api/sample/postSample", HttpVerb.Post, "2.0.0")]
         Task<RpcResult<SampleRes>> PostSampleAsync(SampleReq req, int timeout = 3000);
 
         /// <summary>
@@ -42,7 +45,7 @@ namespace GreeterHttpService
         /// <param name="timeout"></param>
         /// <returns></returns>
         [RpcMethod(2)]
-        [Router("/api/sample/putSample", RestfulVerb.Put, "2.0.0")]
+        [HttpRoute("/api/sample/putSample", HttpVerb.Put, "2.0.0")]
         Task<RpcResult<SampleRes>> PutSampleAsync(SampleReq req, int timeout = 3000);
 
         /// <summary>
@@ -52,7 +55,7 @@ namespace GreeterHttpService
         /// <param name="timeout"></param>
         /// <returns></returns>
         [RpcMethod(2)]
-        [Router("/api/sample/patchSample", RestfulVerb.Patch, "2.0.0")]
+        [HttpRoute("/api/sample/patchSample", HttpVerb.Patch, "2.0.0")]
         Task<RpcResult<SampleRes>> PatchSampleAsync(SampleReq req, int timeout = 3000);
 
         /// <summary>
@@ -62,7 +65,7 @@ namespace GreeterHttpService
         /// <param name="timeout"></param>
         /// <returns></returns>
         [RpcMethod(2)]
-        [Router("/api/sample/deleteSample", RestfulVerb.Delete, "2.0.0")]
+        [HttpRoute("/api/sample/deleteSample", HttpVerb.Delete, "2.0.0")]
         Task<RpcResult<SampleRes>> DeleteSampleAsync(SampleReq req, int timeout = 3000);
 
     }

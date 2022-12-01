@@ -2,7 +2,6 @@
 // Licensed under MIT license
 
 
-using DotBPE.Rpc.Attributes;
 using System;
 using System.Reflection;
 

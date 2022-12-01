@@ -1,7 +1,6 @@
 ﻿// Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Rpc.Attributes;
 using DotBPE.Rpc.AuditLog;
 using DotBPE.Rpc.Server.Impl;
 using Microsoft.Extensions.Logging;
