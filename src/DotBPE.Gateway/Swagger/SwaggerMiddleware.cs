@@ -60,12 +60,12 @@ namespace DotBPE.Gateway.Swagger
             return _options.RoutePath.Equals(request.Path, StringComparison.CurrentCultureIgnoreCase);
         }
 
-        private void RespondWithNotFound(HttpResponse response)
+        private static void RespondWithNotFound(HttpResponse response)
         {
             response.StatusCode = 404;
         }
 
-        private async Task RespondWithSwaggerJson(HttpResponse response, SwaggerInfo swagger)
+        private static async Task RespondWithSwaggerJson(HttpResponse response, SwaggerInfo swagger)
         {
             response.StatusCode = 200;
             response.ContentType = "application/json;charset=utf-8";
