@@ -78,6 +78,8 @@ namespace GreeterHttpService
         [DataMember(Order = 10, Name = "greeting")]
         public string Greeting { get; set; }
 
+        [DataMember(Order = 11, Name = "sampleData")]
+        public SampleData Data { get; set; }
     }
 
     [DataContract]

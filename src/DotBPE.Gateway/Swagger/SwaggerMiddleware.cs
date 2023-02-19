@@ -69,7 +69,17 @@ namespace DotBPE.Gateway.Swagger
         {
             response.StatusCode = 200;
             response.ContentType = "application/json;charset=utf-8";
+
+            var settings = new Newtonsoft.Json.JsonSerializerSettings
+            {
+                DefaultValueHandling = Newtonsoft.Json.DefaultValueHandling.Ignore
+            };
+
+            var swaggerJson = Newtonsoft.Json.JsonConvert.SerializeObject(swagger, Newtonsoft.Json.Formatting.None, settings);
+            await response.WriteAsync(swaggerJson, new UTF8Encoding(false));
+
 #if NET5_0_OR_GREATER
+            /* 
             var jsonSerializerOptions = new JsonSerializerOptions
             {
                 DefaultIgnoreCondition = JsonIgnoreCondition.WhenWritingNull,
@@ -82,7 +92,10 @@ namespace DotBPE.Gateway.Swagger
             var swaggerJson = JsonSerializer.Serialize<object>(swagger, jsonSerializerOptions);
 
             await response.WriteAsync(swaggerJson, new UTF8Encoding(false));
+        */
+                       
 #else
+            /*
             var jsonSerializerOptions = new JsonSerializerOptions
             {
                 IgnoreNullValues = true,
@@ -92,9 +105,12 @@ namespace DotBPE.Gateway.Swagger
                 AllowTrailingCommas = false
             };
 
+
+            
             var swaggerJson = JsonSerializer.Serialize<object>(swagger, jsonSerializerOptions);
 
             await response.WriteAsync(swaggerJson, new UTF8Encoding(false));
+            */
 #endif
         }
     }
