@@ -11,6 +11,7 @@ using Microsoft.AspNetCore.Routing;
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Xml.Linq;
 
 namespace DotBPE.Gateway.Swagger
 {
@@ -89,10 +90,11 @@ namespace DotBPE.Gateway.Swagger
             foreach (var routeParameter in routeEndpoint.RoutePattern.Parameters)
             {
                 var name = routeParameter.Name.ToPascalCase();
-                if (cache.Contains(routeParameter.Name))
+                if (cache.Contains(name))
                 {
                     continue;
                 }
+              
                 var property = rpcMetadata.InputType.GetProperty(name);
                 if (property == null)
                 {
@@ -106,12 +108,13 @@ namespace DotBPE.Gateway.Swagger
 
                 apiDescription.ParameterDescriptions.Add(new ApiParameterDescription
                 {
-                    Name = routeParameter.Name,
+                    Name = name.ToCamelCase(),
                     ModelMetadata = new ApiModelMetadata(modelMetadataIdentity),
                     Source = BindingSource.Path,
                     IsRequired = !routeParameter.IsOptional,
                     DefaultValue = routeParameter.Default
                 });
+                cache.Add(name);
             }
 
 
@@ -136,7 +139,7 @@ namespace DotBPE.Gateway.Swagger
                         ModelMetadata = new ApiModelMetadata(modelMetadataIdentity),
                         Source = BindingSource.Query,
                         IsRequired = false
-                    });
+                    });                   
                 }
             }
             else
@@ -159,7 +162,7 @@ namespace DotBPE.Gateway.Swagger
                         ModelMetadata = new ApiModelMetadata(modelMetadataIdentity),
                         Source = BindingSource.Form,
                         IsRequired = false
-                    });
+                    });                    
                 }
             }
 

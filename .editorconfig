@@ -132,6 +132,7 @@ csharp_style_prefer_extended_property_pattern = true:suggestion
 csharp_style_prefer_not_pattern = true:suggestion
 csharp_style_var_for_built_in_types = false:silent
 csharp_space_around_binary_operators = before_and_after
+csharp_style_prefer_readonly_struct = true:suggestion
 
 [*.{cs,vb}]
 #### Naming styles ####

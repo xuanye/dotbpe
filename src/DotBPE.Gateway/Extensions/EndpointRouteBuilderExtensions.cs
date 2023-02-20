@@ -20,11 +20,30 @@ namespace Microsoft.AspNetCore.Routing
 
         public static IEndpointConventionBuilder MapService<TService>(this IEndpointRouteBuilder builder) where TService : class
         {
-            var routeBuilder = builder.ServiceProvider.GetRequiredService<ApiRouteBuilder<TService>>();
+            var serviceType = typeof(TService);
+            if (!serviceType.IsInterface)
+            {
+                var formTypes =  serviceType.GetInterfaces();
+                foreach(var interfaceType in formTypes)
+                {
+                    var serviceAttr = interfaceType.GetCustomAttribute<RpcServiceAttribute>();
+                    if(serviceAttr != null)
+                    {
+                       return builder.MapService(interfaceType);                       
+                    }
+                }
+                throw new InvalidOperationException($"{serviceType.FullName} does not contain a service definition");
+            }
+            else{
+                var routeBuilder = builder.ServiceProvider.GetRequiredService<ApiRouteBuilder<TService>>();
 
-            var endpointConventionBuilders = routeBuilder.Build(builder);
+                var endpointConventionBuilders = routeBuilder.Build(builder);
 
-            return new ApiEndpointConventionBuilder(endpointConventionBuilders);
+                return new ApiEndpointConventionBuilder(endpointConventionBuilders);
+            }
+
+
+          
         }
 
         private static IEndpointConventionBuilder MapService(this IEndpointRouteBuilder builder, Type serviceType)

@@ -13,7 +13,19 @@ namespace DotBPE.Gateway.Swagger
         public string BasePath { get; set; } = "/";
 
 
-        public List<string> IngoreFields { get; } = new List<string> { "Identity", "ClientIp", "XRequestId", "Header" };
+        public List<string> IngoreFields { get; } = new List<string> { 
+            "Identity", 
+            "ClientIp", 
+            "XRequestId", 
+            "Header", 
+            "AcceptLanguage",
+            "XClientVersion",
+            "XDeviceId",
+            "XDeviceName",
+            "XDeviceOs",
+            "XSourceType",
+            "XClientVersion"
+        };
 
         public string RoutePath { get; set; } = "/v2/swagger.json";
 
