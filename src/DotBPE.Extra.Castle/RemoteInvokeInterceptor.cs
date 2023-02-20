@@ -1,6 +1,5 @@
 // Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
-
 using Castle.DynamicProxy;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
