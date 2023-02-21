@@ -39,7 +39,9 @@ namespace DotBPE.Extra
             var methodName = $"{invocation.Method.DeclaringType.Name}.{invocation.Method.Name}";
             var returnType = invocation.Method.ReturnType;
 
-            var callContext = new InvocationContext() { Method = invocation.Method };
+
+
+            var callContext = new InvocationContext() { Method = invocation.Method, ServiceType = invocation.TargetType };
 
             if (invocation.Arguments.Length > 1 && invocation.Arguments[1].GetType() == typeof(int))
             {
