@@ -1,6 +1,6 @@
 <Project>
 	<PropertyGroup>
-		<RpcPackageVersion>3.0.0</RpcPackageVersion>
+		<RpcPackageVersion>3.0.1</RpcPackageVersion>
 		<BaselinePackageVersion>1.0.2</BaselinePackageVersion>
 		<ExtraCastlePackageVersion>3.0.1</ExtraCastlePackageVersion>
 		<ExtraJsonNetPackageVersion>1.0.1</ExtraJsonNetPackageVersion>

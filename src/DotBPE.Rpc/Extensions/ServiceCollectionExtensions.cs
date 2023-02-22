@@ -59,14 +59,14 @@ namespace Microsoft.Extensions.DependencyInjection
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
-                if (type.IsAssignableFrom(actorType) && type.IsClass)
+                if (actorType.IsAssignableFrom(type) && type.IsClass)
                 {
-                    var serviceAttr = type.GetCustomAttribute<RpcServiceAttribute>(true);
+                    var serviceAttr = GetServiceAttribute(type);
                     if (serviceAttr == null)
                     {
                         continue;
                     }
-                    if (groups.Contains(serviceAttr.GroupName))
+                    if (!groups.Any() || groups.Contains(serviceAttr.GroupName))
                     {
                         @this.BindService(type);
                     }
@@ -81,10 +81,9 @@ namespace Microsoft.Extensions.DependencyInjection
             var types = assembly.GetTypes();
             foreach (var type in types)
             {
-                if (type.IsAssignableFrom(actorType) && type.IsClass)
+                if (actorType.IsAssignableFrom(type) && type.IsClass)
                 {
-
-                    var serviceAttr = type.GetCustomAttribute<RpcServiceAttribute>(true);
+                    var serviceAttr = GetServiceAttribute(type);
                     if (serviceAttr == null)
                     {
                         continue;
@@ -142,6 +141,20 @@ namespace Microsoft.Extensions.DependencyInjection
 
 
             return services;
+        }
+
+        private static RpcServiceAttribute GetServiceAttribute(Type serviceType)
+        {
+            var formTypes = serviceType.GetInterfaces();
+            foreach (var interfaceType in formTypes)
+            {
+                var serviceAttr = interfaceType.GetCustomAttribute<RpcServiceAttribute>();
+                if (serviceAttr != null)
+                {
+                    return serviceAttr;
+                }
+            }
+            return null;
         }
 
         #endregion

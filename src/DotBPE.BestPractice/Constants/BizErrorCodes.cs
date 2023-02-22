@@ -1,3 +1,6 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
 using System;
 using System.Collections.Generic;
 using System.Text;
@@ -34,8 +37,6 @@ namespace DotBPE.BestPractice
         /// </summary>
         public const int REQUIRED_AUTH_CODE = -10250003;
 
-
-
         /// <summary>
         /// 业务校验失败
         /// </summary>
@@ -56,18 +57,15 @@ namespace DotBPE.BestPractice
         /// </summary>
         public const int INTERNAL_ERROR_CODE = -10250500;
 
-
-
         /// <summary>
         /// 操作成功 但是被限制  比如包含敏感词
         /// </summary>
-        public const int SUCESS_BUT = -10250600;
+        public const int SUCCESS_BUT = -10250600;
 
         /// <summary>
         /// 操作次数太多或者太频繁
         /// </summary>
         public const int TOO_MANY_ACTION = -10250601;
-
 
         /// <summary>
         /// 远程调用业务业务结果失败
