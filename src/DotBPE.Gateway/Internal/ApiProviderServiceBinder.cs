@@ -43,8 +43,9 @@ namespace DotBPE.Gateway.Internal
             _serviceType = typeof(TService);
             _logger = loggerFactory.CreateLogger<ApiProviderServiceBinder<TService>>();
 
-            _dynamicCreateGenericMethod = GetType().GetMethod("CreateMethod", BindingFlags.NonPublic | BindingFlags.Instance);
-            _dynamicAddGenericMethod = GetType().GetMethod("AddMethod", BindingFlags.NonPublic | BindingFlags.Instance);
+
+            _dynamicCreateGenericMethod = GetType().GetMethod(nameof(ApiProviderServiceBinder<TService>.CreateMethod), BindingFlags.NonPublic | BindingFlags.Instance);
+            _dynamicAddGenericMethod = GetType().GetMethod(nameof(ApiProviderServiceBinder<TService>.AddMethod), BindingFlags.NonPublic | BindingFlags.Instance);
         }
 
         internal void Bind()
@@ -107,19 +108,16 @@ namespace DotBPE.Gateway.Internal
         }
 
 
-#pragma warning disable IDE0051 // Remove unused private members
+
         private ApiMethod<TRequest, TResponse> CreateMethod<TRequest, TResponse>(string serviceName, MethodInfo hanlder)
-#pragma warning restore IDE0051 // Remove unused private members
             where TRequest : class
             where TResponse : class
-
         {
             return new ApiMethod<TRequest, TResponse>(serviceName, hanlder);
         }
 
-#pragma warning disable IDE0051 // Remove unused private members
+
         private void AddMethod<TRequest, TResponse>(ApiMethod<TRequest, TResponse> method
-#pragma warning restore IDE0051 // Remove unused private members
             , RpcServiceAttribute sAttr
             , RpcMethodAttribute mAttr
             , HttpRouteAttribute rAttr)

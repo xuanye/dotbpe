@@ -13,7 +13,7 @@ namespace DotBPE.Extra
     public abstract class Interceptor : IInterceptor
     {
 
-        private const string _handleMethodName = "HandleIt";
+        private const string _handleMethodName = nameof(Interceptor.HandleIt);//"HandleIt";
 
         private readonly MethodInfo _methodCache;
 
@@ -29,22 +29,24 @@ namespace DotBPE.Extra
             var invoker = _methodCache.MakeGenericMethod(requestType, responseType);
 
             invoker.Invoke(this, new[] { invocation.Arguments[0], invocation });
+
         }
 
 
-        private Task<RpcResult<TResponse>> HandleIt<TRequest, TResponse>(TRequest request, IInvocation invocation)
+        private void HandleIt<TRequest, TResponse>(TRequest request, IInvocation invocation)
             where TRequest : class
             where TResponse : class
         {
             var methodName = $"{invocation.Method.DeclaringType.Name}.{invocation.Method.Name}";
             var returnType = invocation.Method.ReturnType;
 
-            var callContext = new InvocationContext() { Method = invocation.Method };
+            var callContext = new InvocationContext() { Method = invocation.Method, ServiceType = invocation.TargetType };
 
             if (invocation.Arguments.Length > 1 && invocation.Arguments[1].GetType() == typeof(int))
             {
                 callContext.Timeout = (int)invocation.Arguments[1];
             }
+
 
             var serviceMethod = new ServiceMethod<TRequest, TResponse>(async (req, context) =>
             {
@@ -67,8 +69,13 @@ namespace DotBPE.Extra
 
             });
 
-            return ServiceHandle(request, callContext, serviceMethod);
+            //it's a recursive loop;
+            var rpcResult = ServiceHandle(request, callContext, serviceMethod);
 
+            if (invocation.ReturnValue == null) //loop be broken
+            {
+                invocation.ReturnValue = rpcResult;
+            }
         }
 
 

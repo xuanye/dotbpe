@@ -9,7 +9,6 @@ using System.Xml.Linq;
 
 namespace DotBPE.Rpc
 {
-
     public class RpcResult
     {
         public int Code

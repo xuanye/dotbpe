@@ -10,6 +10,7 @@ namespace DotBPE.Extra
 {
     public class InvocationContext
     {
+        public Type ServiceType { get; set; }
         public MethodInfo Method { get; set; }
 
         public int Timeout { get; set; }

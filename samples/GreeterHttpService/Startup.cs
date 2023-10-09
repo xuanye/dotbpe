@@ -25,9 +25,10 @@ namespace GreeterHttpService
         public void ConfigureServices(IServiceCollection services)
         {
             //添加路由信息
-            services.BindService<GreeterService>(); //bindService
-            services.BindService<SwaggerSampleService>();
+            //services.BindService<GreeterService>(); //bindService
+            //services.BindService<SwaggerSampleService>();
 
+            services.BindServices(this.GetType().Assembly, "default");
 
             services.AddMessagePackSerializer(); //message pack serializer
             services.AddTextJsonParser(); // http result json parser
