@@ -5,6 +5,7 @@ using Castle.DynamicProxy;
 using DotBPE.Rpc;
 using DotBPE.Rpc.Client;
 using DotBPE.Rpc.Server;
+using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Concurrent;
 using System.Collections.Generic;
@@ -18,27 +19,28 @@ namespace DotBPE.Extra
     {
         private readonly IProxyGenerator _generator;
         private readonly IInterceptor _remoteInvoker;
-        private readonly ClientInterceptor[] _clientInterceptors;
+        private readonly IServiceProvider _provider;
         private readonly IServiceRouter _serviceRouter;
-        private readonly IServiceActorLocator _actorLocator;
 
+        private IServiceActorLocator _actorLocator;
+        private ClientInterceptor[] _clientInterceptors;
 
         private readonly ConcurrentDictionary<string, object> _typeCache = new ConcurrentDictionary<string, object>();
 
-
         public DynamicClientProxy(IProxyGenerator generator
-            , IServiceActorLocator actorLocator
             , IServiceRouter serviceRouter
             , RemoteInvokeInterceptor remoteInvoker
-            , IEnumerable<ClientInterceptor> clientInterceptors
+            , IServiceProvider provider
             )
         {
             _generator = generator;
-            _actorLocator = actorLocator;
             _serviceRouter = serviceRouter;
             _remoteInvoker = remoteInvoker;
-            _clientInterceptors = clientInterceptors.ToArray();
+            _provider = provider;
         }
+
+        protected IServiceActorLocator ActorLocator => _actorLocator ?? (_actorLocator = _provider.GetService<IServiceActorLocator>());
+        protected IEnumerable<ClientInterceptor> ClientInterceptors => _clientInterceptors ?? (_clientInterceptors = _provider.GetServices<ClientInterceptor>().ToArray());
 
         public TService Create<TService>(ushort specialMessageId = 0) where TService : class
         {
@@ -71,7 +73,7 @@ namespace DotBPE.Extra
             TService proxy;
             if (isLocal)
             {
-                var actor = _actorLocator.LocateServiceActor(servicePath);
+                var actor = ActorLocator.LocateServiceActor(servicePath);
                 if (!(actor is TService realService))
                 {
                     throw new InvalidOperationException($"{serviceType.FullName} has no implementation class,should it be configured at remote server");
@@ -81,13 +83,12 @@ namespace DotBPE.Extra
             else
             {
                 var interceptors = new List<IInterceptor>();
-                interceptors.AddRange(_clientInterceptors);
+                interceptors.AddRange(ClientInterceptors);
                 interceptors.Add(_remoteInvoker);
                 proxy = _generator.CreateInterfaceProxyWithoutTarget<TService>(interceptors.ToArray());
             }
             _typeCache.TryAdd(cacheKey, proxy);
             return proxy;
-
         }
 
         private async Task<bool> IsLocalCall(string serviceIdentity)
@@ -100,7 +101,6 @@ namespace DotBPE.Extra
             return point.RoutePointType == RoutePointType.Local;
         }
 
-
         public static string FormatServiceIdentity(string serviceGroupName, int serviceId, ushort messageId)
         {
             return $"{serviceGroupName}.{serviceId}.{messageId}";
@@ -110,7 +110,5 @@ namespace DotBPE.Extra
         {
             return $"{serviceId}.{messageId}";
         }
-
-
     }
 }

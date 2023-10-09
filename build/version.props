@@ -2,12 +2,12 @@
 	<PropertyGroup>
 		<RpcPackageVersion>3.0.1</RpcPackageVersion>
 		<BaselinePackageVersion>1.0.2</BaselinePackageVersion>
-		<ExtraCastlePackageVersion>3.0.1</ExtraCastlePackageVersion>
+		<ExtraCastlePackageVersion>3.0.2</ExtraCastlePackageVersion>
 		<ExtraJsonNetPackageVersion>1.0.1</ExtraJsonNetPackageVersion>
 		<ExtraJsonPackageVersion>3.0.0</ExtraJsonPackageVersion>
 		<ExtraMessagePackPackageVersion>3.0.0</ExtraMessagePackPackageVersion>
 		<ExtraProtobufPackageVersion>3.0.0</ExtraProtobufPackageVersion>			
 		<GatewayPackageVersion>3.0.0</GatewayPackageVersion>	
-		<BestPracticePackageVersion>3.0.1</BestPracticePackageVersion>	
+		<BestPracticePackageVersion>3.0.2</BestPracticePackageVersion>	
 	</PropertyGroup>
 </Project>
