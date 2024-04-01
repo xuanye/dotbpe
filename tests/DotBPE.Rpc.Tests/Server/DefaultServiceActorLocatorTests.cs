@@ -11,8 +11,6 @@ namespace DotBPE.Rpc.Tests.Server
 {
     public class DefaultServiceActorLocatorTests
     {
-
-
         [Theory]
         [InlineData("100.0", "100.1")]
         [InlineData("100.0", "100.2")]
@@ -26,19 +24,14 @@ namespace DotBPE.Rpc.Tests.Server
             var provider = service.BuildServiceProvider();
             var locator = provider.GetRequiredService<IServiceActorLocator>();
 
-
             //act
             var serviceActor = locator.LocateServiceActor(serviceId);
             var methodActor = locator.LocateServiceActor(methodId);
-
 
             //assert
             Assert.NotNull(serviceActor);
             Assert.NotNull(methodActor);
             Assert.Same(serviceActor, methodActor);
-
-
-
         }
 
         [Fact]
@@ -64,6 +57,5 @@ namespace DotBPE.Rpc.Tests.Server
             Assert.NotNull(actor2);
             Assert.Same(NotFoundServiceActor.Instance, actor2);
         }
-
     }
 }
