@@ -21,7 +21,6 @@ namespace DotBPE.Rpc.Tests.Client
         [Fact]
         public async Task InvokerAsync_Timeout_AfterDefaultSetting3s()
         {
-
             //arrange
             var autoMocker = new AutoMocker();
             var callInvoker = autoMocker.CreateInstance<DefaultCallInvoker>();
@@ -55,7 +54,6 @@ namespace DotBPE.Rpc.Tests.Client
         [InlineData(10000)]
         public async Task InvokerAsync_Timeout_AfterInputMS(int timeout)
         {
-
             //arrange
             var autoMocker = new AutoMocker();
 
@@ -82,17 +80,16 @@ namespace DotBPE.Rpc.Tests.Client
             //assert
             Assert.NotNull(rspMsg);
             Assert.Equal(RpcStatusCodes.CODE_TIMEOUT, rspMsg.Code);
-            Assert.InRange(stopwatch.ElapsedMilliseconds, timeout, timeout + 100);
+            Assert.InRange(stopwatch.ElapsedMilliseconds, timeout - 50, timeout + 50);
         }
 
         [Fact]
         public async Task InvokerAsync_ShouldBeOk_CorrectParameters()
         {
-
-            //arrange          
+            //arrange
             var serializer = new DefaultJsonSerializer();
             var rpcClient = new Mock<IRpcClient>();
-            
+
             var container = new Mock<IMessageSubscriberContainer>();
             var logger = NullLoggerFactory.Instance.CreateLogger<DefaultCallInvoker>();
 
@@ -101,7 +98,7 @@ namespace DotBPE.Rpc.Tests.Client
             {
                 receivedMsg = msg;
             });
-            var callInvoker = new DefaultCallInvoker(rpcClient.Object, serializer,container.Object, logger);
+            var callInvoker = new DefaultCallInvoker(rpcClient.Object, serializer, container.Object, logger);
 
             var method = new Method()
             {
@@ -138,7 +135,6 @@ namespace DotBPE.Rpc.Tests.Client
 
             await Task.WhenAll(invokeTask, rspTask);
 
-
             //assert
             var rspData = invokeTask.Result;
 
@@ -155,11 +151,6 @@ namespace DotBPE.Rpc.Tests.Client
 
             Assert.NotNull(rspData.Data);
             Assert.Equal("Response DotBPE", rspData.Data.RetFooWord);
-
         }
-
-
-
-
     }
 }
