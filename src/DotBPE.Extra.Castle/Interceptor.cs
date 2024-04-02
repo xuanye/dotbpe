@@ -12,7 +12,6 @@ namespace DotBPE.Extra
 {
     public abstract class Interceptor : IInterceptor
     {
-
         private const string _handleMethodName = nameof(Interceptor.HandleIt);//"HandleIt";
 
         private readonly MethodInfo _methodCache;
@@ -29,9 +28,7 @@ namespace DotBPE.Extra
             var invoker = _methodCache.MakeGenericMethod(requestType, responseType);
 
             invoker.Invoke(this, new[] { invocation.Arguments[0], invocation });
-
         }
-
 
         private void HandleIt<TRequest, TResponse>(TRequest request, IInvocation invocation)
             where TRequest : class
@@ -40,13 +37,17 @@ namespace DotBPE.Extra
             var methodName = $"{invocation.Method.DeclaringType.Name}.{invocation.Method.Name}";
             var returnType = invocation.Method.ReturnType;
 
-            var callContext = new InvocationContext() { Method = invocation.Method, ServiceType = invocation.TargetType };
+            var callContext = new InvocationContext()
+            {
+                Method = invocation.Method,
+                MethodInvocationTarget = invocation.MethodInvocationTarget,
+                ServiceType = invocation.TargetType,
+            };
 
             if (invocation.Arguments.Length > 1 && invocation.Arguments[1].GetType() == typeof(int))
             {
                 callContext.Timeout = (int)invocation.Arguments[1];
             }
-
 
             var serviceMethod = new ServiceMethod<TRequest, TResponse>(async (req, context) =>
             {
@@ -57,8 +58,12 @@ namespace DotBPE.Extra
                     var resultTask = result as Task;
                     await resultTask;
                     var property = result.GetType().GetProperty("Result", BindingFlags.Public | BindingFlags.Instance);
+
                     if (property == null)
+                    {
                         throw new InvalidOperationException("Task does not have a return value (" + result.GetType().ToString() + ")");
+                    }
+
                     var response = property.GetValue(result);
                     return (RpcResult<TResponse>)response;
                 }
@@ -66,7 +71,6 @@ namespace DotBPE.Extra
                 {
                     throw new RpcException("Return type must be Task or Task<RpcResult<T>>");
                 }
-
             });
 
             //it's a recursive loop;
@@ -78,14 +82,11 @@ namespace DotBPE.Extra
             }
         }
 
-
         protected virtual Task<RpcResult<TResponse>> ServiceHandle<TRequest, TResponse>(TRequest req, InvocationContext callContext, ServiceMethod<TRequest, TResponse> continuation)
             where TRequest : class
             where TResponse : class
         {
             return continuation(req, callContext);
         }
-
-
     }
 }

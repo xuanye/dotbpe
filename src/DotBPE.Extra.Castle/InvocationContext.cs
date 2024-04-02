@@ -12,6 +12,7 @@ namespace DotBPE.Extra
     {
         public Type ServiceType { get; set; }
         public MethodInfo Method { get; set; }
+        public MethodInfo MethodInvocationTarget { get; set; }
 
         public int Timeout { get; set; }
     }
