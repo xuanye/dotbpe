@@ -13,7 +13,6 @@ namespace DotBPE.Rpc.Server
         private static readonly ConcurrentDictionary<string, IServiceActorHandler> _handlerCache = new ConcurrentDictionary<string, IServiceActorHandler>();
         private readonly ILogger<DefaultServiceActorHandlerFactory> _logger;
 
-
         public DefaultServiceActorHandlerFactory(ILogger<DefaultServiceActorHandlerFactory> logger)
         {
             _logger = logger;
@@ -40,11 +39,8 @@ namespace DotBPE.Rpc.Server
             }
             else
             {
-                _logger.LogInformation("{MethodFullName} has been registered", actorModel.Method.FullName);
+                _logger.LogDebug("{MethodFullName} has been registered", actorModel.Method.FullName);
             }
         }
-
     }
-
-
 }
