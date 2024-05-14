@@ -2,6 +2,7 @@
 // Licensed under MIT license
 
 using DotBPE.Gateway.Swagger;
+using DotBPE.Rpc.Server;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Options;
 using System;
@@ -10,7 +11,6 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ApplicationBuilderExtensions
     {
-
         public static IApplicationBuilder UseSwagger(this IApplicationBuilder builder)
         {
             var optionsAccessor = builder.ApplicationServices.GetRequiredService<IOptions<SwaggerOptions>>();
@@ -42,5 +42,18 @@ namespace Microsoft.Extensions.DependencyInjection
             return app;
         }
 
+        /// <summary>
+        /// When the Http service is started at the same time as the Rpc service,
+        /// We need to register all the actor methods with the Rpc service.
+        /// </summary>
+        /// <param name="builder"></param>
+        /// <returns></returns>
+        public static IApplicationBuilder RunRpcServer(this IApplicationBuilder builder)
+        {
+            var actorBuilder = builder.ApplicationServices.GetRequiredService<IServiceActorBuilder>();
+            actorBuilder.Build();
+
+            return builder;
+        }
     }
 }

@@ -18,6 +18,29 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class ServiceCollectionExtensions
     {
+        /// <summary>
+        /// Add the DotBPE service along with the other dependencies needed to enable the RPC service
+        /// </summary>
+        /// <param name="services"></param>
+        /// <param name="configServer"></param>
+        /// <returns></returns>
+        public static IServiceCollection AddDotBPEServer(this IServiceCollection @this, Action<RpcServerOptions> configServer = null)
+        {
+            if (configServer != null)
+            {
+                @this.Configure(configServer);
+            }
+            else
+            {
+                @this.Configure<RpcServerOptions>(o =>
+                {
+                    o.Port = RpcServerOptions.Default.Port;
+                    o.BindType = RpcServerOptions.Default.BindType;
+                });
+            }
+            return @this.AddDotBPE()
+                    .AddPeachServer();
+        }
 
         public static IServiceCollection AddDotBPE(this IServiceCollection @this)
         {
@@ -40,7 +63,6 @@ namespace Microsoft.Extensions.DependencyInjection
 
             return @this;
         }
-
 
         public static IServiceCollection BindService<TService>(this IServiceCollection @this)
             where TService : IServiceActor
@@ -108,8 +130,8 @@ namespace Microsoft.Extensions.DependencyInjection
             return @this;
         }
 
+        #region Private Method
 
-        #region  Private Method
         private static IServiceCollection AddAmpProtocol(this IServiceCollection services)
         {
             services.AddSingleton<IChannelHandlerPipeline, AmpChannelHandlerPipeline>();
@@ -135,10 +157,8 @@ namespace Microsoft.Extensions.DependencyInjection
             services.AddSingleton<IClientMessageHandler, DefaultClientMessageHandler>();
             services.AddSingleton<ITransportFactory, DefaultTransportFactory>();
 
-
             services.TryAddSingleton<IRoutingPolicy, RoundrobinRoutingPolicy>();
             services.TryAddSingleton<IServiceRouter, DefaultServiceRouter>();
-
 
             return services;
         }
@@ -157,6 +177,6 @@ namespace Microsoft.Extensions.DependencyInjection
             return null;
         }
 
-        #endregion
+        #endregion Private Method
     }
 }

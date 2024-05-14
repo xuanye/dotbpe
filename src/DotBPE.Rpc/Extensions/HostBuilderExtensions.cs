@@ -15,28 +15,14 @@ namespace Microsoft.Extensions.DependencyInjection
 {
     public static class HostBuilderExtensions
     {
-
         public static IHostBuilder UseRpcServer(this IHostBuilder builder, Action<RpcServerOptions> configServer = null)
         {
-
             return builder.ConfigureServices(services =>
             {
-                if (configServer != null)
-                {
-                    services.Configure(configServer);
-                }
-                else
-                {
-                    services.Configure<RpcServerOptions>(o =>
-                    {
-                        o.Port = RpcServerOptions.Default.Port;
-                        o.BindType = RpcServerOptions.Default.BindType;
-                    });
-                }
-                services.AddDotBPE();
-                services.AddPeachServer();
+                services.AddDotBPEServer(configServer);
             });
         }
+
         public static IHostBuilder BindService<TService>(this IHostBuilder builder) where TService : class, IServiceActor
         {
             return builder.ConfigureServices(services => services.BindService<TService>());
@@ -46,7 +32,6 @@ namespace Microsoft.Extensions.DependencyInjection
         {
             return builder.ConfigureServices(services => services.BindServices(typeof(Assembly).Assembly, filterFunc));
         }
-
 
         public static async Task<IHost> RunServerAsync(this IHostBuilder builder, CancellationToken cancellationToken = default(CancellationToken))
         {
