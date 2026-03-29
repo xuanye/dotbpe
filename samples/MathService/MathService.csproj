@@ -14,7 +14,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\src\DotBPE.BestPractice\DotBPE.BestPractice.csproj" />
-    <ProjectReference Include="..\..\src\DotBPE.Extra.Castle\DotBPE.Extra.Castle.csproj" />
+    <ProjectReference Include="..\..\src\DotBPE.Extensions.Castle\DotBPE.Extensions.Castle.csproj" />
     <ProjectReference Include="..\MathService.Definition\MathService.Definition.csproj" />
   </ItemGroup>
 

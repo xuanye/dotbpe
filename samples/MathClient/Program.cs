@@ -1,7 +1,7 @@
 // Copyright (c) Xuanye Wong. All rights reserved.
 // Licensed under MIT license
 
-using DotBPE.Extra;
+using DotBPE.Extensions;
 using DotBPE.Rpc.Client;
 using MathService.Definition;
 using Microsoft.Extensions.DependencyInjection;

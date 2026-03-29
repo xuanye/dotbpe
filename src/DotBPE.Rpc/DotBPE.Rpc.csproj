@@ -30,5 +30,11 @@
     <ItemGroup>
         <ProjectReference Include="..\DotBPE.Baseline\DotBPE.Baseline.csproj" />
     </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DotBPE.Abstractions\DotBPE.Abstractions.csproj" />
+    </ItemGroup>
+    <ItemGroup>
+        <ProjectReference Include="..\DotBPE.Protocol\DotBPE.Protocol.csproj" />
+    </ItemGroup>
 
 </Project>

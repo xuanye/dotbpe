@@ -1,0 +1,50 @@
+{
+  "active_plan": "D:\\workspace\\opensource\\dotbpe\\.sisyphus\\plans\\dotbpe-restructure.md",
+  "started_at": "2026-03-29T02:53:04.796Z",
+  "session_ids": [
+    "ses_2c8cc68bbffeUnZ5QMlDHT4wjR",
+    "ses_2c87b9176ffegTRrmQEbQp36ab",
+    "ses_2c87ace91ffecPsXqbAgw9GpS5",
+    "ses_2c87b6597ffecBJi6xB2ylbc6D",
+    "ses_2c87ace22ffeQN5de5Dm61uOnk",
+    "ses_2c87b5277ffeffT2zxnTa2y2h4",
+    "ses_2c87b7ab7ffe53VJTl7wdsIrqK",
+    "ses_2c8619c37ffexBTZPDKSQ2pYck",
+    "ses_2c8617c5dffetbclDpCaAKwUWI",
+    "ses_2c85270a3ffez5OWItdc2Zy4Vp",
+    "ses_2c852cc29ffejIoB3tF8hHhInK",
+    "ses_2c84ec027ffeFY5vg9GrmE6vmJ",
+    "ses_2c84ee9a3ffeHqBPashEyTc8Mx",
+    "ses_2c84eb417ffeMV6ArCNm2g539v",
+    "ses_2c84ede3bffenYycPDUoIoewPW",
+    "ses_2c84ea660ffennIOYzUkrmyP2f",
+    "ses_2c8452a0bffe7SNKmPRrc5AxLo",
+    "ses_2c8452a7fffepdpUNHHUg4q19X",
+    "ses_2c840aa0dffegzhAfMcLxfMt7K",
+    "ses_2c840ab1effeSdY8nePc7aitea",
+    "ses_2c83c49b2ffeA3aK1NNx2HgZ7U",
+    "ses_2c83c64b7ffezXzmUk4qfStyul",
+    "ses_2c8391c0effep5fvm3gX5Wj3Yn",
+    "ses_2c83910e8ffeto3IdrvdAreeVH",
+    "ses_2c822754cffevI8B8HaQZgbSLF",
+    "ses_2c8227625ffe6hjeVwsTxW2vq8",
+    "ses_2c82276b8ffeeLkwD6Q7YiCVg7",
+    "ses_2c81ffe9dffe66ZA1UgLXkuP1j",
+    "ses_2c820070affeOyAzkXl5JbhN90",
+    "ses_2c8200969ffew4ecpZ5PVdsE7J",
+    "ses_2c82007c3ffetOj3M2ws52IFyo"
+  ],
+  "plan_name": "dotbpe-restructure",
+  "agent": "atlas",
+  "task_sessions": {
+    "todo:1": {
+      "task_key": "todo:1",
+      "task_label": "1",
+      "task_title": "Create docs/index.md with full navigation",
+      "session_id": "ses_2c8278a0cffeIi60aJG27lIxIZ",
+      "agent": "Sisyphus-Junior",
+      "category": "unspecified-high",
+      "updated_at": "2026-03-29T04:29:56.571Z"
+    }
+  }
+}

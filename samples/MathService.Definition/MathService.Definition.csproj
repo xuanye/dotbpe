@@ -7,7 +7,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DotBPE.Extra.MessagePack\DotBPE.Extra.MessagePack.csproj" />
+    <ProjectReference Include="..\..\src\DotBPE.Extensions.MessagePack\DotBPE.Extensions.MessagePack.csproj" />
   </ItemGroup>
 
 </Project>

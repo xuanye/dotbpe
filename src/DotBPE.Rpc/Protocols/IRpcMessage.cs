@@ -2,36 +2,44 @@
 // Licensed under MIT license
 
 using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotBPE.Rpc.Protocols
 {
-    public interface IRpcMessage
+    /// <summary>
+    /// RPC message interface
+    /// </summary>
+    /// <remarks>
+    /// This type is obsolete. Use <see cref="DotBPE.Abstractions.Protocols.IRpcMessage"/> instead.
+    /// </remarks>
+    [Obsolete("Use DotBPE.Abstractions.Protocols.IRpcMessage instead")]
+    public interface IRpcMessage : DotBPE.Abstractions.Protocols.IRpcMessage
     {
-        RpcMessageType MessageType { get; }
-
-        int Length { get; }
-
-
-        /// <summary>
-        /// Service identifier to locate a service
-        /// </summary>
-        string ServiceIdentity { get; }
-
-        /// <summary>
-        /// Method identifier to locate a method
-        /// </summary>
-        string MethodIdentifier { get; }
-
-        bool IsHeartBeat { get; }
     }
 
+    /// <summary>
+    /// RPC message type enumeration
+    /// </summary>
+    /// <remarks>
+    /// This type is obsolete. Use <see cref="DotBPE.Abstractions.Protocols.RpcMessageType"/> instead.
+    /// </remarks>
+    [Obsolete("Use DotBPE.Abstractions.Protocols.RpcMessageType instead")]
     public enum RpcMessageType : byte
     {
+        /// <summary>
+        /// Request message (expects response)
+        /// </summary>
         Request = 1,
+        /// <summary>
+        /// Response message
+        /// </summary>
         Response = 2,
-        Notify = 3, //Oneway Response
-        OnewayRequest = 4 //Oneway Request
+        /// <summary>
+        /// Notify message (one-way response)
+        /// </summary>
+        Notify = 3,
+        /// <summary>
+        /// Oneway request (no response expected)
+        /// </summary>
+        OnewayRequest = 4
     }
 }

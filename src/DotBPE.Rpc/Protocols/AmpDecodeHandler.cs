@@ -2,32 +2,25 @@
 // Licensed under MIT license
 
 using DotBPE.Rpc.Codec;
-using DotBPE.Rpc.Exceptions;
-using DotNetty.Buffers;
-using DotNetty.Transport.Channels;
-using System;
-using System.Collections.Generic;
-using System.Text;
 
 namespace DotBPE.Rpc.Protocols
 {
-    public class AmpDecodeHandler : DotNetty.Codecs.ByteToMessageDecoder
+    /// <summary>
+    /// Decoder handler for AmpMessage
+    /// </summary>
+    /// <remarks>
+    /// This type is obsolete. Use <see cref="DotBPE.Protocol.AmpDecodeHandler"/> instead.
+    /// </remarks>
+    [System.Obsolete("Use DotBPE.Protocol.AmpDecodeHandler instead")]
+    public class AmpDecodeHandler : DotBPE.Protocol.AmpDecodeHandler
     {
-        private readonly ISerializer _serializer;
-
-        public AmpDecodeHandler(ISerializer serializer)
+        /// <summary>
+        /// Creates a new AmpDecodeHandler
+        /// </summary>
+        /// <param name="serializer">The serializer to use</param>
+        public AmpDecodeHandler(DotBPE.Abstractions.ISerializer serializer) 
+            : base(serializer)
         {
-            _serializer = serializer;
-        }
-
-        protected override void Decode(IChannelHandlerContext context, IByteBuffer input, List<object> output)
-        {
-            var msg = AmpProtocol.Decode((CodecType)_serializer.CodecType, input);
-            if (msg == null)
-            {
-                return;
-            }
-            output.Add(msg);
         }
     }
 }

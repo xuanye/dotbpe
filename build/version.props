@@ -9,5 +9,6 @@
 		<ExtraProtobufPackageVersion>3.0.0</ExtraProtobufPackageVersion>			
 		<GatewayPackageVersion>3.0.1</GatewayPackageVersion>	
 		<BestPracticePackageVersion>3.0.2</BestPracticePackageVersion>	
+		<ToolingPackageVersion>1.0.0</ToolingPackageVersion>
 	</PropertyGroup>
 </Project>

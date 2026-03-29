@@ -1,0 +1,120 @@
+# Plan Compliance Audit Report
+# Date: 2026-03-29
+# Plan: dotbpe-restructure.md
+
+## MUST HAVE ITEMS
+
+### 1. .NET Standard 2.0 compatibility for all core modules
+**Status: PASS**
+- DotBPE.Abstractions: netstandard2.0 ✓
+- DotBPE.Protocol: netstandard2.0 ✓
+- DotBPE.Rpc: netstandard2.0 ✓
+- DotBPE.Extensions.Protobuf: netstandard2.0 ✓
+- DotBPE.Extensions.MessagePack: netstandard2.0 ✓
+- DotBPE.Extensions.Json: netcoreapp3.1 (expected per plan) ✓
+- DotBPE.Extensions.JsonNet: netstandard2.0 ✓
+- DotBPE.Extensions.Castle: netstandard2.0 ✓
+
+### 2. Binary protocol unchanged (AmpMessage header lengths)
+**Status: PASS**
+- VERSION_0_HEAD_LENGTH = 18 ✓
+- VERSION_1_HEAD_LENGTH = 21 ✓
+- File: src/DotBPE.Protocol/Protocols/AmpMessage.cs
+
+### 3. Serializer behavior unchanged (CodecType values)
+**Status: PASS**
+- Protobuf = 0 ✓
+- MessagePack = 1 ✓
+- JSON = 2 ✓
+- Unknown = 9 ✓
+- File: src/DotBPE.Protocol/Codec/CodecType.cs
+
+### 4. [Obsolete] forwarding for all renamed public APIs
+**Status: PARTIAL PASS**
+- Forwarding types exist in Extensions.* projects (54 [Obsolete] attributes found)
+- Files:
+  - src/DotBPE.Extensions.Castle/ExtraNamespaceForwarding.cs
+  - src/DotBPE.Extensions.Protobuf/ExtraProtobufExtensions.cs
+  - src/DotBPE.Extensions.MessagePack/ExtraNamespaceForwarding.cs
+  - src/DotBPE.Extensions.JsonNet/ (multiple files)
+  - src/DotBPE.Extensions.Json/ExtraNamespaceSupport.cs
+- ISSUE: Castle test code uses old namespace types but forwarding types have compatibility issues
+
+### 5. All existing tests continue passing
+**Status: FAIL**
+- Build fails with 8 errors in DotBPE.Extensions.Castle.Tests
+- Errors:
+  - CS0115: ServiceHandle method override not found
+  - CS0452: Generic type constraint violations
+- Root cause: Test code uses old namespace types (DotBPE.Extra.Castle) but forwarding types don't properly support the method signatures
+
+## MUST NOT HAVE ITEMS
+
+### 1. Protocol changes to AmpMessage header or AmpProtocol encoding
+**Status: PASS - No violations**
+- AmpMessage header constants unchanged
+- AmpProtocol encoding/decoding unchanged
+
+### 2. Serializer default changes or CodecType enum value changes
+**Status: PASS - No violations**
+- CodecType enum values unchanged
+- Default serializer behavior unchanged
+
+### 3. Peach dependency version changes
+**Status: PASS - No violations**
+- DotBPE.Protocol: Peach 0.2.2 ✓
+- DotBPE.Rpc: Peach 0.2.2 ✓
+
+### 4. Mandatory AI runtime dependencies in core framework modules
+**Status: PASS - No violations**
+- No AI/ML dependencies found (OpenAI, Anthropic, HuggingFace, ML.NET, ONNX, TensorFlow, PyTorch)
+
+### 5. Breaking changes to public APIs without [Obsolete] forwarding
+**Status: FAIL - Violation detected**
+- Castle test code cannot compile due to forwarding type incompatibility
+- Test code in DotBPE.Extra.Castle.Tests namespace uses old types
+- Forwarding types in DotBPE.Extra namespace don't properly support method overrides
+- This represents a breaking change for consumers using old namespace types
+
+## EVIDENCE FILES
+**Status: FAIL**
+- No evidence files found in .sisyphus/evidence/ before this audit
+- This audit creates the first evidence file
+
+## BUILD STATUS
+**Status: FAIL**
+- dotnet build DotBPE.sln -c Release exits with error code 1
+- 8 compilation errors in DotBPE.Extensions.Castle.Tests
+- 12 warnings (mostly NETSDK1138 for net6.0 EOL)
+
+## DELIVERABLES CHECKLIST
+- [x] docs/index.md exists with full navigation
+- [x] All docs/ subdirectories populated (architecture, conventions, decisions, guides, migration, reference)
+- [x] .codex/config.toml exists
+- [x] DotBPE.Abstractions project exists and builds
+- [x] DotBPE.Protocol project exists and builds
+- [x] All DotBPE.Extra.* renamed to DotBPE.Extensions.*
+- [ ] [Obsolete] forwarding types exist for renamed public APIs (PARTIAL - exists but has compatibility issues)
+- [x] Tests reorganized into unit/integration/compatibility/perf
+- [ ] dotnet build succeeds (FAILS)
+- [ ] dotnet test passes (CANNOT RUN - build fails)
+- [x] Protocol constants unchanged
+- [x] Serializer behavior unchanged
+
+## VERDICT: REJECT
+
+### Reasons for Rejection:
+1. **Build Failure**: dotnet build fails with 8 errors in Castle tests
+2. **Test Failure**: Existing tests cannot pass due to [Obsolete] forwarding type incompatibility
+3. **Breaking Change**: The [Obsolete] forwarding implementation doesn't properly support old namespace usage, creating a breaking change for consumers
+4. **Missing Evidence**: No evidence files were generated during implementation
+
+### Required Fixes:
+1. Fix the [Obsolete] forwarding types in DotBPE.Extensions.Castle to properly support method overrides
+2. Update Castle test code to use new namespace types OR fix forwarding types to be fully compatible
+3. Ensure dotnet build succeeds with exit code 0
+4. Ensure all existing tests pass
+5. Generate evidence files for each task as specified in the plan
+
+### Critical Path:
+The Castle test failures indicate that the [Obsolete] forwarding approach has a fundamental issue with abstract class inheritance and method overrides. This must be resolved before the restructuring can be considered complete.

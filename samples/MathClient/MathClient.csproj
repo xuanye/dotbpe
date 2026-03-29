@@ -9,7 +9,7 @@
 		<PackageReference Include="Microsoft.Extensions.Logging.Console" Version="2.2.0" />
 	</ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\src\DotBPE.Extra.Castle\DotBPE.Extra.Castle.csproj" />
+    <ProjectReference Include="..\..\src\DotBPE.Extensions.Castle\DotBPE.Extensions.Castle.csproj" />
     <ProjectReference Include="..\MathService.Definition\MathService.Definition.csproj" />
   </ItemGroup>
 

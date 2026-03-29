@@ -1,0 +1,41 @@
+// Copyright (c) Xuanye Wong. All rights reserved.
+// Licensed under MIT license
+
+namespace DotBPE.Protocol
+{
+    /// <summary>
+    /// RPC status codes
+    /// </summary>
+    public static class RpcStatusCodes
+    {
+        /// <summary>
+        /// Success
+        /// </summary>
+        public const int CODE_SUCCESS = 0;
+
+        /// <summary>
+        /// internal error
+        /// </summary>
+        public const int CODE_INTERNAL_ERROR = -10242500;
+
+        /// <summary>
+        /// 拒绝访问
+        /// </summary>
+        public const int CODE_ACCESS_DENIED = -10242403;
+
+        /// <summary>
+        /// service not found
+        /// </summary>
+        public const int CODE_SERVICE_NOT_FOUND = -10242404;
+
+        /// <summary>
+        /// rate limited
+        /// </summary>
+        public const int CODE_RATE_LIMITED = -10242409;
+
+        /// <summary>
+        /// timeout
+        /// </summary>
+        public const int CODE_TIMEOUT = -10242504;
+    }
+}

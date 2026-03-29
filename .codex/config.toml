@@ -1,0 +1,40 @@
+# AI Tool Isolation Configuration
+# Minimal runtime configuration for AI tool operation
+
+# Sandbox mode settings
+[sandbox]
+# Enable sandbox isolation for AI operations
+enabled = true
+# Maximum file operations per session
+max_file_operations = 100
+# Allow network requests (for documentation fetching)
+allow_network = true
+# Timeout for sandbox operations (seconds)
+timeout = 300
+
+# Approval policy for AI actions
+[approval]
+# Require approval for file system changes
+require_file_approval = true
+# Require approval for git operations
+require_git_approval = true
+# Require approval for build/run commands
+require_command_approval = false
+# Auto-approve safe read operations
+auto_approve_reads = true
+
+# Project root markers
+[project]
+# Markers that indicate project root
+markers = [
+    ".git",
+    "*.sln",
+    "*.csproj",
+    "package.json",
+    "go.mod",
+    "Cargo.toml"
+]
+# Root directory name
+root_name = "dotbpe"
+# Primary language
+primary_language = "csharp"

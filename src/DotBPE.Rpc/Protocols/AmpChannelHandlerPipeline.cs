@@ -11,9 +11,9 @@ namespace DotBPE.Rpc.Protocols
 {
     public class AmpChannelHandlerPipeline : IChannelHandlerPipeline
     {
-        private readonly ISerializer _serializer;
+        private readonly DotBPE.Abstractions.ISerializer _serializer;
 
-        public AmpChannelHandlerPipeline(ISerializer serializer)
+        public AmpChannelHandlerPipeline(DotBPE.Abstractions.ISerializer serializer)
         {
             _serializer = serializer;
         }

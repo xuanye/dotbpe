@@ -11,9 +11,9 @@
     </PropertyGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\..\src\DotBPE.Extra.Castle\DotBPE.Extra.Castle.csproj" />
-      <ProjectReference Include="..\..\src\DotBPE.Extra.Json\DotBPE.Extra.Json.csproj" />
-      <ProjectReference Include="..\..\src\DotBPE.Extra.MessagePack\DotBPE.Extra.MessagePack.csproj" />
+      <ProjectReference Include="..\..\src\DotBPE.Extensions.Castle\DotBPE.Extensions.Castle.csproj" />
+      <ProjectReference Include="..\..\src\DotBPE.Extensions.Json\DotBPE.Extensions.Json.csproj" />
+      <ProjectReference Include="..\..\src\DotBPE.Extensions.MessagePack\DotBPE.Extensions.MessagePack.csproj" />
       <ProjectReference Include="..\..\src\DotBPE.Gateway\DotBPE.Gateway.csproj" />
     </ItemGroup>
 

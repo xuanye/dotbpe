@@ -27,8 +27,8 @@
 		<None Include="..\..\icon.png" Link="icon.png" Pack="true" PackagePath="\" />
 	</ItemGroup>
 	<ItemGroup>
-		<ProjectReference Include="..\DotBPE.Extra.Castle\DotBPE.Extra.Castle.csproj" />
-		<ProjectReference Include="..\DotBPE.Extra.Protobuf\DotBPE.Extra.Protobuf.csproj" />
+		<ProjectReference Include="..\DotBPE.Extensions.Castle\DotBPE.Extensions.Castle.csproj" />
+		<ProjectReference Include="..\DotBPE.Extensions.Protobuf\DotBPE.Extensions.Protobuf.csproj" />
 	</ItemGroup>
 
 </Project>

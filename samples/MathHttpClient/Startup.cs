@@ -1,6 +1,6 @@
-using DotBPE.Extra;
+using DotBPE.Extensions;
 using DotBPE.Gateway;
-using DotBPE.Rpc.Config;
+using DotBPE.Rpc;
 using MathService.Definition;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
